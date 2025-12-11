@@ -1,0 +1,55 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+dev-debug.log
+
+# Dependency directories
+node_modules/
+__pycache__/
+*.pyc
+
+# Environment variables
+.env
+
+# Editor directories and files
+.idea
+.vscode
+.cursor/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS specific
+.DS_Store
+nul
+
+# Videos and large files
+*.mp4
+*.zip
+*.apk
+*.tgz
+
+# Video/content folders
+chunk_*/
+va_chunk_*/
+package/
+ClipboardHelper/
+
+# Screenshots and images (except for docs)
+*.png
+error_screenshots/
+
+# Batch results and state files
+batch_results_*.csv
+scheduler_state.json
+
+# XML dumps
+ui_dump*.xml
+
+# Docs that shouldn't be in repo
+*.docx

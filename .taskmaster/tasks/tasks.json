@@ -1,0 +1,429 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 11,
+        "title": "Project skeleton, configuration, and input/output handling",
+        "description": "Set up the Python project, config management, and basic CLI to load inputs (photos, bios, follow list, proxies, API keys) and write CSV output for created accounts.",
+        "details": "Implementation details:\n- Use Python 3.11+ with a simple, single-package structure (e.g., `geelark_ig_bot/`).\n- Create `config.py` to load configuration from a `.env` file (using `python-dotenv`) or a `config.yaml` file (using `pyyaml`). Keys: DAISY_SMS_KEY, TWO_CAPTCHA_KEY, ANTHROPIC_KEY, PROXY_ROTATE_URL, GEELARK_DEVICE_ID or connection params, paths for PHOTOS_DIR, BIOS_FILE, FOLLOW_FILE, OUTPUT_CSV.\n- Implement a small `models.py` with dataclasses such as `AccountProfile(photo_path, bio, follow_targets)` and `RunContext(proxy_url, device_id, session_id, logs_path)`.\n- Implement `io_inputs.py`:\n  - Load all image paths from the photos folder (validate file extensions and existence).\n  - Load bios from a text file, one bio per non-empty line.\n  - Load accounts-to-follow from a text file, one username per non-empty line.\n- Implement `io_outputs.py` with function `append_created_account(csv_path, username, password, phone, status, extra=None)` that appends a row; ensure the CSV is created with a header if missing.\n- Implement `main.py` with a CLI (using `argparse`) that supports parameters like `--accounts N`, `--device-id`, `--start-index`, `--output-csv`.\n- Add logging (built-in `logging` module) with INFO for high-level steps and DEBUG for low-level details; log to both console and a rotating file handler.\n- Ensure paths and config values are validated at startup, with clear error messages and non-zero exit codes on failure.\n- Keep architecture minimal: a main loop that calls a `create_single_account(profile: AccountProfile)` function implemented in later tasks.\n\nPseudo-code sketch:\n```python\n# main.py\nfrom config import load_config\nfrom io_inputs import load_photos, load_bios, load_follow_targets\nfrom io_outputs import append_created_account\nfrom workflow import create_single_account\n\nif __name__ == \"__main__\":\n    cfg = load_config()\n    photos = load_photos(cfg.PHOTOS_DIR)\n    bios = load_bios(cfg.BIOS_FILE)\n    follows = load_follow_targets(cfg.FOLLOW_FILE)\n\n    for i in range(cfg.NUM_ACCOUNTS):\n        profile = build_profile(photos, bios, follows, i)\n        result = create_single_account(profile, cfg)\n        append_created_account(\n            cfg.OUTPUT_CSV,\n            result.username,\n            result.password,\n            result.phone,\n            result.status,\n        )\n```",
+        "testStrategy": "- Unit test config loading with missing/invalid keys.\n- Unit test input loaders with temporary directories and sample files.\n- Unit test CSV writer: create temp file, append multiple rows, verify header and data.\n- Run a dry-run mode (no device interaction) that uses mock `create_single_account` to verify CLI, logging, and CSV pipeline behave correctly.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "Geelark device control abstraction (RPA/ADB/API)",
+        "description": "Research and implement a minimal Python abstraction to control Geelark cloud phones (screenshot, tap, type, scroll) using the most reliable available method (RPA, ADB, or API).",
+        "details": "Implementation details:\n- Investigate GeeLark’s RPA feature and any documented APIs from their dashboard/help center.[1]\n- Decide on a practical option:\n  - **Option A (preferred, if accessible):** Use GeeLark RPA/Custom tasks via HTTP or WebSocket if they expose an API to trigger actions on a running device (tap, input text, wait), or via a local bridge component.\n  - **Option B:** Connect via ADB over TCP to the cloud phone (if GeeLark exposes an ADB endpoint per phone). Use `adbutils` or `pure-python-adb` for screenshots and input events.\n  - **Option C:** If GeeLark has an official REST API to interact with cloud phones, wrap the relevant endpoints.\n- Define a Python interface `GeelarkDeviceController` in `geelark_device.py` with methods:\n  - `screenshot() -> bytes` (PNG/JPEG data)\n  - `tap(x: int, y: int)`\n  - `type_text(text: str)`\n  - `scroll(direction: Literal[\"up\",\"down\",\"left\",\"right\"], amount: int=500)`\n  - `back()` to press back button\n  - `home()` to go home\n  - `wait(seconds: float)` for simple delays.\n- Implement at least one concrete subclass, e.g., `AdbGeelarkDeviceController` or `RpaGeelarkDeviceController`, depending on what is feasible with GeeLark.\n- Include a simple device discovery/attachment function: `connect_device(device_id_or_host) -> GeelarkDeviceController`.\n- Ensure screenshot capturing is performant (e.g., ADB `exec-out screencap -p`), and images are in a format accepted by Claude Vision.\n\nExample using ADB-style pseudo-code:\n```python\nclass AdbGeelarkDeviceController(GeelarkDeviceController):\n    def __init__(self, serial: str):\n        self.adb = adbutils.AdbDevice(serial=serial)\n\n    def screenshot(self) -> bytes:\n        return self.adb.screencap()\n\n    def tap(self, x, y):\n        self.adb.shell(f\"input tap {x} {y}\")\n\n    def type_text(self, text):\n        safe = text.replace(\" \", \"%s\")\n        self.adb.shell(f\"input text '{safe}'\")\n\n    def scroll(self, direction, amount=500):\n        if direction == \"up\":\n            self.adb.shell(f\"input swipe 500 1000 500 {1000-amount}\")\n        # etc.\n```",
+        "testStrategy": "- If ADB is used, test against a local Android emulator: verify that screenshot bytes are non-empty and tapping/types produce visible effects.\n- If GeeLark RPA/API is used, integration test on a disposable cloud phone: tap a known coordinate (e.g., Settings icon) and verify manually.\n- Add a `--test-device` CLI option that runs a quick health-check: take screenshot, tap a test area, log success/failure.\n- Use mocks in unit tests to assert high-level code calls `tap`, `type_text`, etc., with expected parameters.",
+        "priority": "high",
+        "dependencies": [
+          11
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 13,
+        "title": "Claude Vision screen understanding client",
+        "description": "Implement a Python client that sends device screenshots and the current context to Claude Vision, parses its response into actionable steps with coordinates and text.",
+        "details": "Implementation details:\n- Use Anthropic’s Python SDK or plain HTTP with API key from config.\n- Define a prompt template that instructs Claude Vision explicitly:\n  - Provide **screen description**.\n  - Provide **next action** in a strict JSON format with fields like `{\"action\": \"tap\"|\"type\"|\"scroll\"|\"done\"|\"wait\",\"coordinates\": {\"x\": int, \"y\": int},\"text\": \"...\", \"reason\": \"...\"}`.\n  - Ask it to always respond with a single JSON object and no extra text.\n  - Instruct it that the goal is to create and fully set up an Instagram account according to the step list (birthday, phone, SMS, username, password, skip optional, photo, bio, creator, follow accounts).\n- Implement `claude_vision.py` with:\n  - `class ClaudeVisionClient:`\n    - `propose_action(image_bytes: bytes, state: dict) -> dict` where `state` includes progress markers (e.g., `has_entered_birthday`, `has_verified_phone`).\n- Implement robust JSON parsing:\n  - Strip any non-JSON prefix/suffix if Claude accidentally adds text.\n  - Validate that required keys exist; if not, log error and request again with a clarifying system message.\n- Include rate limiting/backoff and simple retry for network errors or malformed responses.\n- Maintain a small `state` object that encodes goal progress to share with Claude in the system/user message so it can choose the next step more reliably.\n\nPseudo-code:\n```python\nSYSTEM_PROMPT = \"\"\"You are controlling an Android phone to create a new Instagram account...\"\"\"\n\ndef propose_action(self, img, state):\n    msg = self._build_message(state)\n    resp = self.client.messages.create(\n        model=\"claude-3.5-sonnet\",  # or latest vision-capable model\n        max_tokens=300,\n        temperature=0.1,\n        messages=[\n          {\"role\": \"system\", \"content\": SYSTEM_PROMPT},\n          {\"role\": \"user\", \"content\": [\n              {\"type\": \"image\", \"source\": {\"type\": \"base64\", \"media_type\": \"image/png\", \"data\": base64.b64encode(img).decode()}},\n              {\"type\": \"text\", \"text\": msg},\n          ]},\n        ],\n    )\n    json_str = extract_json(resp)\n    return json.loads(json_str)\n```",
+        "testStrategy": "- Unit test prompt-building and JSON parsing with canned Claude-like responses.\n- Add an offline mode that uses a fake vision client returning predetermined actions for known test screenshots to validate the loop without spending API credits.\n- Log each request/response pair to a file (with redaction of secrets) and manually inspect a few runs to ensure action JSON is consistent.",
+        "priority": "high",
+        "dependencies": [
+          11
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 14,
+        "title": "DaisySMS integration for phone number and SMS code retrieval",
+        "description": "Implement integration with DaisySMS to rent phone numbers and poll for Instagram verification SMS codes.",
+        "details": "Implementation details:\n- Review DaisySMS API docs to identify endpoints for:\n  - Requesting a number for a specific service/country.\n  - Checking SMS status and retrieving the code.\n  - Canceling/finishing an activation.\n- Implement `daisysms_client.py` with:\n  - `request_number(service=\"instagram\", country=None) -> Activation` where `Activation` holds `id`, `phone_number`.\n  - `wait_for_sms(activation_id, timeout=300, poll_interval=5) -> str` returning the numeric code.\n  - `cancel_activation(activation_id)` and `finish_activation(activation_id)`.\n- Handle common failure cases: no numbers, timeout waiting for SMS, banned/invalid numbers.\n- Mask phone number in logs for privacy.\n- Provide helper to format phone for entering on the device (e.g., strip `+` if needed, or let Claude decide how to input it given the screenshot).\n\nPseudo-code sketch:\n```python\nclass DaisySmsClient:\n    def request_number(self):\n        # call API, parse JSON\n        return Activation(id=act_id, phone=phone)\n\n    def wait_for_sms(self, act_id, timeout=300):\n        # loop: GET status, parse text, extract 6-digit code via regex\n```",
+        "testStrategy": "- Unit test JSON parsing with sample DaisySMS responses.\n- Use a mock HTTP server (e.g., `responses` or `httpretty`) for DaisySMS endpoints to validate retry and timeout behavior.\n- In a staging run, manually request a number and send a test SMS from another phone to verify code extraction logic.\n- Simulate failure modes (no number, timeout, malformed SMS) and confirm the calling workflow handles them gracefully (marks account as failed, logs reason, releases activation).",
+        "priority": "high",
+        "dependencies": [
+          11
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 15,
+        "title": "2Captcha integration for solving Instagram captchas",
+        "description": "Integrate with 2Captcha to submit Instagram captchas (image or possibly hCaptcha/ReCaptcha) and retrieve solutions when they appear during signup.",
+        "details": "Implementation details:\n- Check 2Captcha docs for supported captcha types on Instagram flows (likely image captcha or hCaptcha/ReCaptcha). Implement at least generic image captcha support; leave hooks for sitekey-based captchas if needed.\n- Implement `twocaptcha_client.py` with:\n  - `submit_image_captcha(image_bytes) -> captcha_id`.\n  - `wait_for_solution(captcha_id, timeout=180, poll_interval=5) -> str`.\n- Integrate with the main flow via a simple contract: when Claude identifies a captcha on the screen and indicates an `action: \"captcha\"` (we can define this), capture a high-resolution screenshot and crop if necessary:\n  - Either ask Claude to provide bounding box coordinates, then crop the relevant region before sending to 2Captcha.\n- After receiving the solution string, pass it back to the device using `type_text` or `tap`/`type` sequences as directed by Claude.\n- Implement error handling: if 2Captcha returns an error or times out, mark run as failed and log details.\n\nPseudo-code:\n```python\nclass TwoCaptchaClient:\n    def submit_image_captcha(self, img):\n        # POST multipart/form-data to 2Captcha\n\n    def wait_for_solution(self, cap_id, timeout):\n        # poll /res.php until status=1\n```",
+        "testStrategy": "- Unit test polling and response parsing using mocked 2Captcha HTTP endpoints.\n- Manual integration test with a known captcha image to confirm that 2Captcha returns the expected text.\n- Simulate failures such as `ERROR_CAPTCHA_UNSOLVABLE` and ensure workflow either retries with a new captcha or aborts with a clear status.",
+        "priority": "medium",
+        "dependencies": [
+          11
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 16,
+        "title": "Mobile proxy rotation and network setup",
+        "description": "Implement proxy rotation via a mobile proxy rotation URL before each new account and ensure all external calls from the device go through the rotated IP.",
+        "details": "Implementation details:\n- Use the provided `PROXY_ROTATE_URL` config: before starting each new account creation, send a simple HTTP GET to this URL and wait a short delay (e.g., 5–10 seconds) for IP to change.\n- If GeeLark supports per-device proxy assignment, ensure the cloud phone is configured to use the mobile proxy; otherwise, rely on proxy at network edge.\n- Implement `proxy.py` with:\n  - `rotate_proxy() -> bool` which returns True on HTTP 2xx, False otherwise.\n- Add logging to record rotation attempts and results.\n- Optionally verify IP change using a cheap `https://api.ipify.org` style service via the device’s browser or host network (config-driven; disabled by default to avoid extra calls).\n- Integrate into `create_single_account` workflow: call `rotate_proxy()` once at the very beginning of each account run.\n\nPseudo-code:\n```python\ndef rotate_proxy(url, timeout=10):\n    try:\n        r = requests.get(url, timeout=timeout)\n        r.raise_for_status()\n        logger.info(\"Proxy rotated\")\n        time.sleep(8)\n        return True\n    except Exception as e:\n        logger.error(f\"Proxy rotation failed: {e}\")\n        return False\n```",
+        "testStrategy": "- Unit test `rotate_proxy` with mocked HTTP responses (success, timeout, non-200).\n- In staging, call rotation multiple times and verify IP change manually using an external IP-check service.\n- Add a debug flag to log detected IPs (host-level) before and after rotation for manual verification.",
+        "priority": "high",
+        "dependencies": [
+          11
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 17,
+        "title": "Core action loop: screenshot → Claude → device actions",
+        "description": "Implement the main control loop that repeatedly screenshots the Geelark device, asks Claude Vision what to do, executes the returned action (tap/type/scroll), and tracks progress toward account creation.",
+        "details": "Implementation details:\n- Implement `workflow.py` with a function `run_screen_loop(device: GeelarkDeviceController, vision: ClaudeVisionClient, state: dict, max_steps=200) -> state`.\n- Loop behavior:\n  - For each step:\n    - Take screenshot via `device.screenshot()`.\n    - Call `vision.propose_action(image_bytes, state)`.\n    - Parse action JSON and execute:\n      - `action == \"tap\"`: call `device.tap(x, y)`.\n      - `action == \"type\"`: call `device.type_text(text)`.\n      - `action == \"scroll\"`: call `device.scroll(direction, amount)`.\n      - `action == \"wait\"`: call `device.wait(seconds)`.\n      - `action == \"back\"`/`\"home\"`: call corresponding methods.\n      - `action == \"done\"`: break loop and return.\n      - `action == \"captcha\"`: delegate to 2Captcha handler (Task 15) then feed solution back.\n    - Update `state` with any progress hints returned (e.g., `state[\"phase\"] = resp[\"phase\"]`).\n    - Add random small delays (0.5–1.5 s) to mimic human interaction and let UI update.\n- Implement safety guards:\n  - If `max_steps` reached without `done`, mark run as failed.\n  - Detect repeated identical actions (same tap coordinates for many steps) and break to avoid loops.\n- Ensure the state encodes key information for later steps (e.g., whether phone number has been used, SMS verified, username set, account switched to creator, followed 20 accounts).\n\nPseudo-code:\n```python\ndef run_screen_loop(device, vision, state, max_steps=200):\n    for i in range(max_steps):\n        img = device.screenshot()\n        action = vision.propose_action(img, state)\n        if action[\"action\"] == \"done\":\n            state[\"status\"] = \"done\"\n            break\n        execute_action(device, action, state)\n    return state\n```",
+        "testStrategy": "- Implement unit tests for `execute_action` using a mock `GeelarkDeviceController` to verify correct calls for each action type.\n- Use an offline fake-vision client (from Task 13 tests) returning a deterministic series of actions to validate that the loop terminates correctly and state progresses.\n- On a test device with Instagram already on a simple form screen, run a short loop and confirm taps and typing correspond roughly to what Claude suggests (manual spot check using logs and video capture).",
+        "priority": "high",
+        "dependencies": [
+          12,
+          13,
+          15
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 18,
+        "title": "Account setup orchestration and Instagram-specific flow",
+        "description": "Orchestrate a full Instagram account setup run, coordinating proxy rotation, device control, Claude-driven steps, DaisySMS phone/SMS handling, captchas, and the business logic for username/password, bio, photo, creator switch, and following accounts.",
+        "details": "Implementation details:\n- Implement `create_single_account(profile: AccountProfile, cfg) -> AccountResult` in `workflow.py`.\n- High-level sequence:\n  1. Rotate proxy using Task 16.\n  2. Connect to Geelark device (Task 12) and ensure Instagram app is launched (via explicit launch intent or by tapping icon; you can teach Claude to tap the Instagram icon from home screen as part of loop).\n  3. Initialize `state` with:\n     - `target_bio`, `target_photo_path`, `follow_targets`.\n     - Flags: `birthday_entered`, `phone_requested`, `sms_verified`, `username_set`, `password_set`, `creator_switched`, `followed_count`.\n  4. Request DaisySMS number when the flow reaches phone entry stage:\n     - Either pre-request the number before starting, or better, when `state` indicates phone will be needed (e.g., when Claude says \"now enter phone number\").\n     - Store number and activation id in `state`.\n  5. Run `run_screen_loop` until `state[\"status\"] == \"done\"` or error.\n  6. In the loop integration, insert hooks based on `state`:\n     - When a screen expects the phone number, programmatically supply the DaisySMS number (you may give Claude the number in the context so it types it itself).\n     - After submitting phone, start a background `wait_for_sms` and when code is received, provide it to Claude in the next prompt so it can type it.\n     - For username/password, either auto-generate values in Python (e.g., random letters+digits) and provide them to Claude, or let Claude propose them but ensure Python records them in `state` so they can be output to CSV.\n  7. Ensure optional steps (such as contacts, notifications, etc.) are skipped—rely on Claude’s screen understanding but mention this explicitly in the prompt.\n  8. After reaching home feed, direct Claude (via state goal) to:\n     - Add profile photo from gallery: upload `target_photo_path` to the device or ensure the device already has a set of photos (outside of script scope) and instruct Claude accordingly.\n     - Add bio using `target_bio`.\n     - Switch to Creator account via settings (state flag `creator_switched=True` when done).\n     - Follow ~20 accounts from `follow_targets` list (give the list or next target to Claude in context, track `followed_count`).\n- Implement `AccountResult(username, password, phone, status, error_message=None)` dataclass.\n- On any unrecoverable error (DaisySMS/2Captcha failure, loop timeout, device disconnection), set `status=\"failed\"` and include `error_message`.\n",
+        "testStrategy": "- Unit test orchestration logic with mocks for DaisySMS, 2Captcha, device controller, and Claude client to ensure correct call ordering and state changes.\n- Implement a dry-run mode that skips actual external calls and produces synthetic `AccountResult` to verify CSV output and control flow.\n- Run an end-to-end test on a single GeeLark device with manual observation, logging all key decisions; verify that a full account is created and appears in Instagram.\n- After a successful single-account run, test a small batch (e.g., 3 accounts) in series to validate that proxy rotation and resource cleanup between runs behave correctly.",
+        "priority": "high",
+        "dependencies": [
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 19,
+        "title": "Profile data assignment and username/password generation",
+        "description": "Implement logic to map input photos, bios, and follow lists to each new account and deterministically generate secure usernames and passwords.",
+        "details": "Implementation details:\n- Implement `profiles.py` with:\n  - `build_profile(photos, bios, follows, index) -> AccountProfile` using round-robin or randomized selection.\n  - `generate_username(index, base=None) -> str` using a configurable pattern (e.g., random adjectives+noun+digits) and allowed Instagram constraints.\n  - `generate_password() -> str` with 12–16 chars including letters, digits, and symbols.\n- Ensure that for each account run, `AccountProfile` includes:\n  - `photo_path`: may be None if fewer photos than accounts; handle gracefully (skip photo step).\n  - `bio`: may be randomly chosen or selected sequentially.\n  - `follow_targets`: either the full list or a subset of ~20 selected per account.\n- Pass generated username and password into `state` to be shared with Claude so it types them when appropriate.\n- Avoid reusing the same username; if Instagram rejects a username, have Claude propose alternatives but keep track in state and update `AccountResult` accordingly.\n\nPseudo-code:\n```python\n@dataclass\nclass AccountProfile:\n    username: str\n    password: str\n    photo_path: Optional[str]\n    bio: Optional[str]\n    follow_targets: list[str]\n```",
+        "testStrategy": "- Unit test profile building to ensure fair rotation of bios/photos and correct slicing of follow targets (~20 per account).\n- Unit test username/password generation for uniqueness and complexity constraints.\n- Use a mock Claude client to simulate username rejection; verify that state and `AccountResult` update to the new accepted username.",
+        "priority": "medium",
+        "dependencies": [
+          11
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 20,
+        "title": "Logging, error handling, and basic scaling for multiple accounts",
+        "description": "Harden the script with structured logging, error handling, cleanup between runs, and simple sequential multi-account execution.",
+        "details": "Implementation details:\n- Extend logging from Task 11:\n  - Include per-account correlation ID in all logs.\n  - Log key milestones (proxy rotated, number acquired, SMS received, captcha solved, account created, failures).\n- Implement a central exception handler in `main.py` that catches unexpected errors per account, records a failed `AccountResult`, and continues to the next account instead of crashing the whole batch.\n- Add cleanup hooks:\n  - Release DaisySMS activations on error.\n  - Optionally reset Instagram app state between runs (e.g., clear data or log out via Claude instructions at end of run).\n- For scaling:\n  - Keep initial implementation strictly sequential (one account after another) to minimize complexity.\n  - Design the code to allow future parallelization (e.g., by making `create_single_account` stateless other than its arguments and return value), but do not add concurrency yet.\n- Expose a few runtime knobs via CLI/config: `MAX_STEPS`, `SMS_TIMEOUT`, `CAPTCHA_TIMEOUT`, `RETRY_LIMIT`.\n",
+        "testStrategy": "- Simulate multiple account runs with mocks where some accounts succeed and others fail; verify that all results are written to CSV and script exits cleanly.\n- Inject failures (e.g., raise exceptions from DaisySMS/2Captcha/Claude clients) and confirm they are caught and logged and do not stop subsequent accounts.\n- Manual multi-account test (2–3 accounts) to verify logs are readable and correlated with account IDs.",
+        "priority": "medium",
+        "dependencies": [
+          18
+        ],
+        "status": "pending",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-12-10T03:59:28.494Z",
+      "updated": "2025-12-10T04:21:12.826Z",
+      "description": "Tasks for master context"
+    }
+  },
+  "posting": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Set up project structure, configuration, and API key management",
+        "description": "Initialize a Python project for Geelark Instagram posting automation, including config management for CSV paths, Claude Vision, proxy rotation URL, and 2Captcha keys.",
+        "details": "Implementation details:\n- Use Python 3.11+.\n- Create a package structure, e.g. `geelark_ig_bot/` with modules: `config.py`, `csv_io.py`, `geelark_control.py`, `instagram_flow.py`, `logging_utils.py`, `main.py`.\n- Use `python-dotenv` or similar to load secrets from `.env` (ANTHROPIC_API_KEY, CAPTCHA_API_KEY, PROXY_ROTATION_URL, etc.).\n- Define a `Config` dataclass in `config.py` holding: `input_csv_path`, `output_log_csv_path`, `video_root_dir`, `proxy_rotation_url`, `anthropic_api_key`, `captcha_api_key`, `geelark_api_base`, `mvp_mode` (single device vs multi-account).\n- Add a `requirements.txt` including: `requests`, `pandas` or `python-csv` (standard), `python-dotenv`, `anthropic` (official Claude client), and any chosen Geelark control SDK or ADB wrapper.\n- Provide a simple YAML or JSON config file for non-secret settings (file paths, default timeouts, retry counts).\n- Pseudo-code example:\n```python\n# config.py\nfrom dataclasses import dataclass\nimport os\n\n@dataclass\nclass Config:\n    input_csv_path: str\n    output_log_csv_path: str\n    video_root_dir: str\n    proxy_rotation_url: str\n    anthropic_api_key: str\n    captcha_api_key: str | None\n    geelark_api_base: str\n    mvp_mode: bool = True\n\n\ndef load_config() -> Config:\n    return Config(\n        input_csv_path=os.getenv(\"INPUT_CSV\", \"input.csv\"),\n        output_log_csv_path=os.getenv(\"OUTPUT_LOG_CSV\", \"post_log.csv\"),\n        video_root_dir=os.getenv(\"VIDEO_ROOT_DIR\", \"./videos\"),\n        proxy_rotation_url=os.getenv(\"PROXY_ROTATION_URL\", \"\"),\n        anthropic_api_key=os.environ[\"ANTHROPIC_API_KEY\"],\n        captcha_api_key=os.getenv(\"CAPTCHA_API_KEY\"),\n        geelark_api_base=os.getenv(\"GEELARK_API_BASE\", \"http://localhost:8000\"),\n    )\n```",
+        "testStrategy": "- Unit test `load_config()` with different environment variable scenarios.\n- Verify that secrets are not hardcoded (only read from env/.env).\n- Run a dry `python -m geelark_ig_bot.main --dry-run` to confirm project imports and config loading work without runtime errors.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "Implement CSV input parsing and output logging",
+        "description": "Create robust utilities to read posting instructions from a CSV and log results to an output CSV log file.",
+        "details": "Implementation details:\n- Define required input columns: `account_name`, `video_path`, `caption`.\n- Implement `read_jobs(csv_path: str) -> list[PostJob]` where `PostJob` is a dataclass with `account_name`, `video_path`, `caption`.\n- Validate CSV: check mandatory columns exist; trim whitespace; skip or flag empty rows.\n- Normalize `video_path` by joining with `video_root_dir` if it is not absolute.\n- Implement `append_log_row(log_path, account, video, status, error=None, timestamp=None)` that appends to CSV, creating header if file does not exist.\n- Ensure logs are flushed after every job for crash resilience.\n- Pseudo-code:\n```python\n# csv_io.py\nfrom dataclasses import dataclass\nimport csv, os, datetime\n\n@dataclass\nclass PostJob:\n    account_name: str\n    video_path: str\n    caption: str\n\n\ndef read_jobs(path: str, video_root_dir: str) -> list[PostJob]:\n    jobs = []\n    with open(path, newline='', encoding='utf-8') as f:\n        reader = csv.DictReader(f)\n        for row in reader:\n            if not row.get('account_name') or not row.get('video_path'):\n                continue\n            vp = row['video_path']\n            if not os.path.isabs(vp):\n                vp = os.path.join(video_root_dir, vp)\n            jobs.append(PostJob(row['account_name'].strip(), vp, row.get('caption', '')))\n    return jobs\n\n\ndef append_log_row(path: str, account: str, video: str, status: str, error: str | None = None):\n    file_exists = os.path.exists(path)\n    with open(path, 'a', newline='', encoding='utf-8') as f:\n        writer = csv.writer(f)\n        if not file_exists:\n            writer.writerow(['timestamp', 'account', 'video', 'status', 'error'])\n        ts = datetime.datetime.utcnow().isoformat()\n        writer.writerow([ts, account, video, status, error or ''])\n```",
+        "testStrategy": "- Unit test `read_jobs` with:\n  - Valid CSV.\n  - Missing columns (expect exception or empty list based on design).\n  - Relative vs absolute video paths.\n- Unit test `append_log_row`:\n  - First write creates header.\n  - Subsequent calls append new rows.\n  - Inspect resulting CSV to match expected line count and fields.\n- Perform an end-to-end dry run reading a small sample CSV and writing a sample log.",
+        "priority": "high",
+        "dependencies": [
+          "1"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "Design Geelark device control abstraction",
+        "description": "Create an abstraction layer to control Geelark cloud phones for screenshots, taps, typing, app launching, and file transfer, independent of the underlying mechanism (RPA, ADB, or API).",
+        "details": "Implementation details:\n- Define an interface `GeelarkDeviceController` with methods:\n  - `connect(account_name: str) -> DeviceHandle`\n  - `launch_app(device: DeviceHandle, app_id: str)` (e.g. Instagram)\n  - `tap(device, x: int, y: int)`\n  - `type_text(device, text: str)`\n  - `screenshot(device) -> bytes` (PNG/JPEG bytes)\n  - `swipe(device, x1, y1, x2, y2, duration_ms)`\n  - `upload_file(device, local_path: str, remote_path: str) -> str` (returns remote path or URI).\n- Implement an initial MVP adapter that talks to Geelark via whichever is available first (e.g. ADB over TCP or a Geelark HTTP API). For now, define stub methods that raise `NotImplementedError` but with clear signatures.\n- Provide a mapping from `account_name` to `device_id` (config or simple dict) for the MVP single device.\n- Include sensible timeouts and retry wrappers around network calls.\n- Pseudo-code skeleton:\n```python\n# geelark_control.py\nfrom dataclasses import dataclass\n\n@dataclass\nclass DeviceHandle:\n    id: str\n\n\nclass GeelarkDeviceController:\n    def connect(self, account_name: str) -> DeviceHandle:\n        # map account -> device_id (MVP: single device)\n        raise NotImplementedError\n\n    def launch_app(self, device: DeviceHandle, app_id: str):\n        raise NotImplementedError\n\n    def tap(self, device: DeviceHandle, x: int, y: int):\n        raise NotImplementedError\n\n    def type_text(self, device: DeviceHandle, text: str):\n        raise NotImplementedError\n\n    def screenshot(self, device: DeviceHandle) -> bytes:\n        raise NotImplementedError\n\n    def upload_file(self, device: DeviceHandle, local_path: str, remote_path: str) -> str:\n        raise NotImplementedError\n```\n- Later tasks will fill implementations using the chosen low-level mechanism.",
+        "testStrategy": "- Unit test that the interface exists and that stub methods raise `NotImplementedError`.\n- Create a fake/mock implementation `MockGeelarkDeviceController` for testing higher-level logic without real devices.\n- Verify that `account_name` to `device_id` mapping works as expected using the MVP single-device configuration.",
+        "priority": "high",
+        "dependencies": [
+          "1"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Implement low-level Geelark control (screenshots, taps, typing, file transfer)",
+        "description": "Provide a concrete implementation of the Geelark device control abstraction using the chosen RPA/ADB/API mechanism.",
+        "details": "Implementation details:\n- Decide a concrete mechanism based on what Geelark exposes:\n  - If Geelark offers an HTTP API: implement calls like `POST /devices/{id}/tap`, `POST /devices/{id}/type`, `GET /devices/{id}/screenshot`, etc.\n  - If using ADB: use `subprocess` to call `adb -s <serial> shell input tap x y`, `input text`, `screencap -p`, and `adb push` for file transfer.\n- Implement `GeelarkDeviceController` methods:\n  - `connect`: resolve `account_name` to a device identifier (e.g. `device_serial`), possibly via config mapping; validate connectivity.\n  - `launch_app`: `adb shell monkey -p com.instagram.android 1` or equivalent API.\n  - `tap`: execute appropriate tap command.\n  - `type_text`: escape special characters for ADB; for longer captions, implement paste via clipboard if device API supports it.\n  - `screenshot`: capture and return raw bytes; ensure correct image format for Claude Vision.\n  - `upload_file`: transfer video from host to device; return the device-side file path.\n- Add minimal rate limiting to avoid overwhelming Geelark/API.\n- Pseudo-code example (ADB-style):\n```python\nimport subprocess, io\n\nclass AdbGeelarkDeviceController(GeelarkDeviceController):\n    def __init__(self, mapping: dict[str, str]):\n        self.mapping = mapping\n\n    def connect(self, account_name: str) -> DeviceHandle:\n        serial = self.mapping.get(account_name) or next(iter(self.mapping.values()))\n        return DeviceHandle(serial)\n\n    def tap(self, device: DeviceHandle, x: int, y: int):\n        subprocess.run([\"adb\", \"-s\", device.id, \"shell\", \"input\", \"tap\", str(x), str(y)], check=True)\n\n    def screenshot(self, device: DeviceHandle) -> bytes:\n        out = subprocess.check_output([\"adb\", \"-s\", device.id, \"exec-out\", \"screencap\", \"-p\"])\n        return out\n\n    def upload_file(self, device: DeviceHandle, local_path: str, remote_path: str) -> str:\n        subprocess.run([\"adb\", \"-s\", device.id, \"push\", local_path, remote_path], check=True)\n        return remote_path\n```",
+        "testStrategy": "- If using ADB: run integration tests against a test device or emulator.\n  - Verify `connect` returns a valid handle.\n  - Call `screenshot` and confirm returned bytes decode as an image.\n  - Call `tap` and `type_text` while observing the device screen.\n  - Transfer a small dummy video file and confirm existence on the device.\n- If using HTTP API: use a mock server to validate request payloads, paths, and error handling.\n- Add negative tests: simulate command/API failures and verify that exceptions are raised and propagated up.",
+        "priority": "high",
+        "dependencies": [
+          "3"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Integrate proxy rotation before each post",
+        "description": "Implement a simple proxy rotation step that hits the configured rotation URL before each posting job.",
+        "details": "Implementation details:\n- Add a `rotate_proxy()` function in a `network_utils.py` module.\n- Use `requests.get(config.proxy_rotation_url, timeout=10)` or equivalent; treat non-2xx responses as failures.\n- Add small backoff and retry (e.g. 3 attempts with exponential backoff) because this is a network call.\n- Pseudo-code:\n```python\nimport time, requests\n\ndef rotate_proxy(url: str, retries: int = 3, base_delay: float = 1.0) -> bool:\n    for attempt in range(retries):\n        try:\n            r = requests.get(url, timeout=10)\n            if 200 <= r.status_code < 300:\n                return True\n        except requests.RequestException:\n            pass\n        time.sleep(base_delay * (2 ** attempt))\n    return False\n```\n- Hook `rotate_proxy()` into the main posting loop: call it before connecting to the Geelark device for each row.\n- Log proxy rotation success/failure per job (but continue posting even if rotation fails if that is acceptable per requirements).",
+        "testStrategy": "- Unit test `rotate_proxy` using a requests-mock server returning:\n  - 200: expect success on first attempt.\n  - 500: expect retries and final failure.\n  - Network timeout: expect retries and final failure.\n- In an integration-like test, configure a local HTTP server as rotation URL and verify that it is hit once per job in a multi-row CSV.",
+        "priority": "medium",
+        "dependencies": [
+          "1"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Implement Claude Vision client for Instagram UI navigation",
+        "description": "Create a module that sends device screenshots and minimal context to Claude Vision and receives structured navigation instructions for the Instagram posting flow.",
+        "details": "Implementation details:\n- Use the official Anthropic Python SDK (`anthropic` package) and Claude Vision model.\n- Define a `ClaudeNavigator` class with:\n  - `plan_next_action(screenshot_bytes: bytes, context: dict) -> Action` where `Action` is a dataclass describing an operation such as `tap(x,y)`, `type(text)`, `wait(seconds)`, `verify_posted`.\n- Provide a system prompt that explains the device context (Android Instagram app on a cloud phone), the goal (post a Reel/video with a given caption), and a JSON schema for response.\n- Example pseudo-code:\n```python\nfrom anthropic import Anthropic\nimport base64, json\n\n@dataclass\nclass Action:\n    kind: str  # 'tap', 'type', 'wait', 'done', 'error'\n    x: int | None = None\n    y: int | None = None\n    text: str | None = None\n    seconds: float | None = None\n\n\nclass ClaudeNavigator:\n    def __init__(self, api_key: str):\n        self.client = Anthropic(api_key=api_key)\n\n    def plan_next_action(self, screenshot_bytes: bytes, context: dict) -> Action:\n        img_b64 = base64.b64encode(screenshot_bytes).decode('ascii')\n        messages = [\n            {\n                \"role\": \"user\",\n                \"content\": [\n                    {\n                        \"type\": \"input_image\",\n                        \"source\": {\"type\": \"base64\", \"media_type\": \"image/png\", \"data\": img_b64},\n                    },\n                    {\n                        \"type\": \"text\",\n                        \"text\": json.dumps(context),\n                    },\n                ],\n            }\n        ]\n        resp = self.client.messages.create(\n            model=\"claude-3-5-sonnet\",  # example vision-capable model\n            max_tokens=512,\n            messages=messages,\n            system=\"You control an Android Instagram app. Respond ONLY with a JSON object describing the next action to create and publish a video post.\",\n        )\n        action_dict = json.loads(resp.content[0].text)\n        return Action(**action_dict)\n```\n- The `context` should include the current step: e.g. `{\"step\": \"open_plus\", \"caption\": \"...\"}`.\n- Keep actions atomic and loop until `kind == 'done'` or an error is detected.",
+        "testStrategy": "- Unit test `ClaudeNavigator` parsing: mock Anthropic client responses with known JSON and ensure `Action` is constructed correctly.\n- Add validation on returned actions (e.g. coordinates within screen bounds, non-empty `text` for `type` actions) and test these validators.\n- For manual testing, feed screenshots of Instagram app (from a real device) and confirm that the model returns sensible next-step actions by logging them without executing on device.",
+        "priority": "high",
+        "dependencies": [
+          "1"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Orchestrate Instagram posting flow with device control and Claude Vision",
+        "description": "Combine CSV jobs, Geelark control, proxy rotation, and Claude Vision navigation to automate the full Instagram posting flow per row, including caption entry and success verification for one device (MVP).",
+        "details": "Implementation details:\n- Implement a high-level function `run_post_job(job: PostJob, config: Config, controller: GeelarkDeviceController, navigator: ClaudeNavigator)` that:\n  1) Rotates proxy.\n  2) Connects to the Geelark device for `job.account_name`.\n  3) Ensures the Instagram app is running (`launch_app`).\n  4) Transfers the video file to the device via `upload_file` and records the device path.\n  5) Enters a loop to perform the posting flow:\n     - Take a `screenshot`.\n     - Provide `context` to Claude, including:\n       - `goal`: \"Post the specified video to this Instagram account as a Reel or standard video post.\"\n       - `step_state`: track state such as `{\"video_uploaded\": false, \"caption_pasted\": false}`.\n       - `video_device_path` and `caption`.\n     - Receive `Action` from `ClaudeNavigator`.\n     - Map `Action` to `GeelarkDeviceController` calls (`tap`, `type_text`, etc.).\n     - Track timeouts and max steps (e.g. 30 steps) to avoid infinite loops.\n  6) After `Action.kind == 'done'`, confirm success by having Claude inspect a final screenshot with a `verify_posted` context.\n- Ensure that errors (exceptions, invalid actions, timeouts) raise a `PostJobError` that carries a human-readable message.\n- Pseudo-code skeleton:\n```python\ndef run_post_job(job, config, controller, navigator):\n    rotate_proxy(config.proxy_rotation_url)\n    device = controller.connect(job.account_name)\n    controller.launch_app(device, app_id=\"com.instagram.android\")\n    remote_video_path = controller.upload_file(device, job.video_path, \"/sdcard/Download/post_video.mp4\")\n\n    state = {\"video_uploaded\": False, \"caption_pasted\": False, \"remote_video_path\": remote_video_path}\n    for step in range(30):\n        screenshot = controller.screenshot(device)\n        context = {\"goal\": \"post_video\", \"caption\": job.caption, \"state\": state}\n        action = navigator.plan_next_action(screenshot, context)\n        if action.kind == \"tap\":\n            controller.tap(device, action.x, action.y)\n        elif action.kind == \"type\":\n            controller.type_text(device, action.text)\n        elif action.kind == \"wait\":\n            time.sleep(action.seconds)\n        elif action.kind == \"done\":\n            break\n        else:\n            raise PostJobError(f\"Unknown action: {action.kind}\")\n\n    # final verification screenshot\n    final_shot = controller.screenshot(device)\n    verify_action = navigator.plan_next_action(final_shot, {\"goal\": \"verify_posted\"})\n    if verify_action.kind != \"done\":\n        raise PostJobError(\"Unable to verify post was successful\")\n```\n- Make the orchestrator initially target MVP: one device and single job; then scale to loop over all jobs from CSV in `main.py`.\n- Capture and return a success/failure status and error message to the caller for logging.",
+        "testStrategy": "- Implement integration tests in a `--dry-run` mode where `GeelarkDeviceController` is a mock and `ClaudeNavigator` is replaced by a deterministic fake that returns a scripted sequence of actions; verify steps executed in correct order.\n- On a real Geelark device, manually run one job and visually confirm that Instagram opens, video is selected, caption is filled, and post is shared.\n- Test failure paths: simulate `upload_file` failure, invalid actions from navigator, and assert that errors propagate to logging.\n- Verify that the loop stops when max steps are reached and logs an appropriate error.",
+        "priority": "high",
+        "dependencies": [
+          "2",
+          "4",
+          "5",
+          "6"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Handle login prompts, captchas, and rate limits",
+        "description": "Add edge-case handling for Instagram login requests, captchas via 2Captcha, and rate-limit detection with backoff and retry.",
+        "details": "Implementation details:\n- Extend Claude prompts to explicitly ask it to identify when the screen shows:\n  - A login screen.\n  - A captcha challenge.\n  - A rate-limit or \"try again later\" message.\n- In `ClaudeNavigator`, allow an `Action.kind` of `\"login_required\"`, `\"captcha\"`, or `\"rate_limited\"` with additional metadata if needed.\n- Implement logic in the orchestrator:\n  - `login_required`: for MVP, either skip the job and log `login_required`, or if credentials are available in config, allow navigator-guided login by providing `username`/`password` in context.\n  - `captcha`: integrate 2Captcha by:\n    - Taking a screenshot of the captcha area (or whole screen) and sending to 2Captcha's image API.\n    - Polling for the solved text and then issuing `type_text` or `tap` actions accordingly.\n  - `rate_limited`: pause posting for a configurable cooldown (e.g. 10–30 minutes per account/device) before retrying the current job once; if still rate limited, mark as failed and move on.\n- Pseudo-code snippet for 2Captcha integration:\n```python\nimport requests, time\n\nclass CaptchaSolver:\n    def __init__(self, api_key: str):\n        self.api_key = api_key\n\n    def solve_image(self, image_bytes: bytes) -> str:\n        # send\n        resp = requests.post(\"http://2captcha.com/in.php\", data={\n            \"key\": self.api_key,\n            \"method\": \"base64\",\n            \"body\": base64.b64encode(image_bytes).decode('ascii'),\n            \"json\": 1,\n        })\n        captcha_id = resp.json()[\"request\"]\n        # poll result\n        for _ in range(24):\n            r = requests.get(\"http://2captcha.com/res.php\", params={\n                \"key\": self.api_key,\n                \"action\": \"get\",\n                \"id\": captcha_id,\n                \"json\": 1,\n            })\n            data = r.json()\n            if data[\"status\"] == 1:\n                return data[\"request\"]\n            time.sleep(5)\n        raise TimeoutError(\"Captcha solving timed out\")\n```\n- Log all edge-case events distinctly so they can be monitored later.",
+        "testStrategy": "- Unit test captcha solver using mocked 2Captcha endpoints with typical success and timeout responses.\n- Extend fake `ClaudeNavigator` in tests to return `login_required`, `captcha`, and `rate_limited` actions and verify that the orchestrator:\n  - For `login_required`, either skips or performs login based on test configuration.\n  - For `captcha`, calls `CaptchaSolver.solve_image` and then attempts to type the solution.\n  - For `rate_limited`, waits the configured cooldown and retries at most once.\n- Manually induce a login-required state on a test account and confirm that it is handled as designed and logged appropriately.",
+        "priority": "medium",
+        "dependencies": [
+          "6",
+          "7"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Implement main loop, error handling, and structured logging",
+        "description": "Create the main entrypoint that iterates over CSV rows, invokes the posting orchestrator per job, and writes structured logs with status, timestamp, and errors.",
+        "details": "Implementation details:\n- In `main.py`, implement:\n  - `load_config()`.\n  - Initialize `GeelarkDeviceController`, `ClaudeNavigator`, and optionally `CaptchaSolver`.\n  - Load jobs via `read_jobs(config.input_csv_path, config.video_root_dir)`.\n  - For each job:\n    - Call `run_post_job` inside a `try/except` block.\n    - On success, call `append_log_row(..., status=\"success\")`.\n    - On failure, log `status=\"fail\"` with the exception message.\n- Use Python `logging` module with JSON-ish log format (e.g. `%(asctime)s %(levelname)s %(message)s`) and include job identifiers.\n- Allow CLI flags/env for:\n  - `--mvp` (single job from CSV).\n  - `--max-jobs` to limit for testing.\n- Pseudo-code:\n```python\ndef main():\n    config = load_config()\n    controller = AdbGeelarkDeviceController(mapping=load_account_device_mapping())\n    navigator = ClaudeNavigator(api_key=config.anthropic_api_key)\n    jobs = read_jobs(config.input_csv_path, config.video_root_dir)\n\n    for i, job in enumerate(jobs):\n        try:\n            run_post_job(job, config, controller, navigator)\n            append_log_row(config.output_log_csv_path, job.account_name, job.video_path, \"success\")\n        except Exception as e:\n            append_log_row(config.output_log_csv_path, job.account_name, job.video_path, \"fail\", str(e))\n```\n- Ensure that an exception in one job does not terminate the loop; always continue to next row.\n- Optionally, add a small random delay between jobs to reduce pattern-like behavior and mitigate rate limits.",
+        "testStrategy": "- Use a mock controller and navigator to simulate successful and failing jobs; verify that the main loop continues after failures and that the log CSV contains correct rows.\n- Run end-to-end in a test environment with 2–3 dummy jobs, visually inspect logs and confirm that timestamps and statuses are correct.\n- Intentionally raise an exception inside `run_post_job` for one job and confirm that others are still processed.",
+        "priority": "high",
+        "dependencies": [
+          "2",
+          "5",
+          "7"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "MVP validation and scaling to multiple accounts/devices",
+        "description": "Validate the MVP by successfully posting one video with caption on a single Geelark device, then extend to handle multiple accounts/devices from the spreadsheet.",
+        "details": "Implementation details:\n- MVP validation steps:\n  - Configure one `account_name` in the CSV, one `video_path`, and a simple caption.\n  - Map that account to a Geelark device in the controller configuration.\n  - Run the tool and visually confirm that the video is posted with the correct caption.\n  - Confirm that the output log records `success` for this job.\n- Scaling steps:\n  - Extend account-to-device mapping to support many accounts; use a config file like `devices.yaml` with entries `{account_name, device_id}`.\n  - In `connect(account_name)`, look up the correct `device_id` and fall back to a default or raise an error if unmapped.\n  - If Geelark supports parallel control, optionally add a future-ready abstraction to run jobs concurrently (e.g. via a worker pool); for now keep them sequential to minimize complexity.\n  - Ensure that proxy rotation is still called once per job and that rate-limit logic is per account/device.\n- Add documentation (README) describing:\n  - How to prepare the CSV.\n  - How to organize video files.\n  - How to configure API keys and device mappings.\n  - Known edge cases and limitations.",
+        "testStrategy": "- For MVP:\n  - Run manual test: verify the real post appears on Instagram from the target account with the expected caption and time.\n  - Check that logs show a single `success` entry with accurate timestamp and video path.\n- For multi-account:\n  - Prepare a CSV with at least 2 accounts mapped to different devices (or sequential runs on same device if that is the Geelark constraint).\n  - Run and verify that each account posts its respective video.\n  - Inspect logs to ensure each row has correct `account`, `video`, and `status`.\n- Perform a small load test with ~10 rows to confirm there are no memory leaks or unhandled exceptions across many iterations.",
+        "priority": "medium",
+        "dependencies": [
+          "4",
+          "7",
+          "8",
+          "9"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "Fix ADBKeyboard installation on Geelark cloud phones",
+        "description": "Pivot to using Appium for Unicode text input on Geelark cloud phones, abandoning the ADBKeyboard approach due to Android 15 incompatibility where the package is hidden at the framework level and cannot be restored via ADB commands.",
+        "status": "in-progress",
+        "dependencies": [
+          "4"
+        ],
+        "priority": "high",
+        "details": "PROBLEM SUMMARY:\n- ADBKeyboard works on Android 12/13 (SDK 31-33) but is blocked on Android 15 (SDK 35) with hidden=true flag at Android framework level\n- All ADB remediation attempts failed: pm uninstall, pm enable, pm unhide, cmd package install-existing all return success but package remains hidden\n- Geelark phones do not provide root access (su returns command not found)\n- ClipboardHelper + KEYCODE_PASTE fallback tested and FAILED - keyboard not visible during paste, text does not appear\n- Only podmindstudio (Android 13) works; reelwisdompod_ and talktrackhub (Android 15) are broken\n\nNEW APPROACH - APPIUM:\nPivot to using Appium for text input, which handles Unicode natively across all Android versions without requiring a custom keyboard IME.\n\nAppium UIAutomator2 driver can:\n- Type text directly into focused fields via send_keys() or mobile:type command\n- Works with Unicode/emojis natively\n- No need for ADBKeyboard, ClipboardHelper, or any IME installation\n- Connects to devices via ADB (same as current setup)\n- Cross-platform Android version support (works on Android 15)\n\nIMPLEMENTATION PLAN:\n1. Set up Appium server (can run locally or on a server)\n   - Install Node.js if not present\n   - npm install -g appium\n   - appium driver install uiautomator2\n\n2. Install Python Appium client:\n   - pip install Appium-Python-Client\n\n3. Connect to Geelark phones via Appium:\n   - Use ADB connection info from Geelark API (same as current flow)\n   - Create Appium driver session with desired capabilities:\n     - platformName: Android\n     - automationName: UiAutomator2\n     - deviceName: {adb_device_id}\n     - noReset: true\n     - appPackage/appActivity for Instagram\n\n4. Update post_reel_smart.py to use Appium:\n   - Create new AppiumController class or add Appium methods to SmartInstagramPoster\n   - Replace type_text() method (lines 225-245) with Appium's send_keys()\n   - Keep ADB for non-typing operations (tap, swipe, screenshot)\n   - Or migrate entirely to Appium for all interactions\n\n5. Testing:\n   - Test on Android 15 device (reelwisdompod_) first\n   - Verify Unicode/emoji typing works correctly\n   - Test full Instagram posting flow\n\nRELEVANT FILES TO MODIFY:\n- post_reel_smart.py: Replace type_text() with Appium-based implementation\n- requirements.txt: Add Appium-Python-Client dependency\n- New file: appium_controller.py (optional, for Appium setup logic)\n\nEXISTING ASSETS:\n- appium-uiautomator2-server.apk already exists in project root\n- package/ directory contains io.appium.settings source (UnicodeIME) but not needed with direct Appium approach\n- ADB connection flow in post_reel_smart.py connect() method can be reused",
+        "testStrategy": "- Set up Appium server locally\n- Test Appium connection to reelwisdompod_ (Android 15) device first\n- Create test script that: 1) connects via Appium, 2) opens Instagram, 3) navigates to caption field, 4) types text with emojis using send_keys()\n- Verify text appears correctly in the caption field including Unicode characters and emojis\n- Run full posting flow on Android 15 device\n- Verify same flow still works on Android 13 device (podmindstudio) for backwards compatibility\n- Compare posting success rates before/after migration",
+        "subtasks": [
+          {
+            "id": 3,
+            "title": "Complete ADBKeyboard remediation research and document Android 15 blocker",
+            "description": "Document the comprehensive ADBKeyboard remediation attempts and confirm that Android 15 hidden=true state is an unresolvable blocker without root access, leading to pivot to Appium.",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "All ADBKeyboard remediation approaches exhausted:\n- pm uninstall/install: Returns success but package remains hidden\n- cmd package install-existing: Returns success but pm path empty\n- pm enable/unhide: Requires root access not available on Geelark\n- Alternative keyboards: Same hidden=true issue affects new installs\n- ClipboardHelper fallback: FAILED - keyboard not visible during paste\n- Root API: Error 43016 indicates phones don't support root\n\nConclusion: ADBKeyboard approach is fundamentally incompatible with Android 15 on Geelark phones. Pivoting to Appium which handles Unicode typing natively without requiring IME installation.",
+            "status": "done",
+            "testStrategy": "Document all attempted remediation commands and their results. Confirm Android version correlation (SDK 35 = broken, SDK <= 33 = working).",
+            "parentId": "undefined"
+          },
+          {
+            "id": 4,
+            "title": "Set up Appium server and install UiAutomator2 driver",
+            "description": "Install and configure Appium server locally with UiAutomator2 driver for Android automation that supports native Unicode text input across all Android versions.",
+            "dependencies": [],
+            "details": "Installation steps:\n1. Verify Node.js is installed (node --version), install if needed from https://nodejs.org\n2. Install Appium globally: npm install -g appium\n3. Install UiAutomator2 driver: appium driver install uiautomator2\n4. Verify installation: appium driver list (should show uiautomator2)\n5. Start Appium server: appium --allow-insecure chromedriver_autodownload\n6. Verify server is running on http://localhost:4723\n\nServer configuration:\n- Default port: 4723\n- May need to configure ANDROID_HOME environment variable pointing to Android SDK\n- May need to ensure platform-tools (adb) is in PATH\n\nFiles to create:\n- requirements.txt: Add 'Appium-Python-Client>=3.0.0'\n- Optional: appium_setup.py script to verify/start Appium service\n<info added on 2025-12-11T04:22:32.422Z>\nCOMPLETED SETUP STATUS:\n- Appium version: 3.1.2 installed globally via npm\n- UiAutomator2 driver: installed via appium driver install uiautomator2\n- Android SDK: ANDROID_HOME=C:/Users/asus/Downloads/android-sdk with platform-tools symlinked\n- Successfully connected to Geelark cloud phone at 98.98.125.37:20865 running Android 15 (SDK 35)\n- Connection verified via test_appium.py script which captured screenshot (appium_test.png) proving connection works\n- Appium-Python-Client needs to be added to requirements.txt (currently only has python-dotenv, requests, anthropic)\n- Platform version confirmed via driver.capabilities after successful Remote connection to http://127.0.0.1:4723\n</info added on 2025-12-11T04:22:32.422Z>",
+            "status": "done",
+            "testStrategy": "1) Run 'appium --version' to verify installation\n2) Run 'appium driver list' to verify uiautomator2 is installed\n3) Start Appium server and verify it responds on localhost:4723\n4) Create simple test script that imports appium and verifies client library version",
+            "updatedAt": "2025-12-11T04:21:52.916Z",
+            "parentId": "undefined"
+          },
+          {
+            "id": 5,
+            "title": "Implement Appium connection to Geelark cloud phones",
+            "description": "Create AppiumController class that connects to Geelark devices via Appium using existing ADB connection info from GeelarkClient, enabling Unicode text input on Android 15.",
+            "dependencies": [
+              4
+            ],
+            "details": "Implementation in new file appium_controller.py:\n\nCreate AppiumController class with methods:\n- connect(): Get phone info from GeelarkClient, start phone, enable ADB, connect via Appium with UiAutomator2Options\n- type_text(text): Use driver.switch_to.active_element.send_keys(text) for Unicode support\n- close(): Quit Appium driver session\n\nKey Appium capabilities:\n- platformName: 'Android'\n- automationName: 'UiAutomator2'\n- deviceName: ADB device string (ip:port)\n- noReset: True (preserve app state)\n- newCommandTimeout: 300\n\nIntegration with existing code:\n- Reuse GeelarkClient for phone discovery and ADB setup\n- Reuse ADB connection logic from post_reel_smart.py lines 115-170\n- Add error handling for Appium connection failures",
+            "status": "done",
+            "testStrategy": "1) Connect to reelwisdompod_ (Android 15) via Appium\n2) Verify driver session is established\n3) Run driver.page_source to confirm UI access\n4) Take screenshot via driver.get_screenshot_as_png()\n5) Verify connection works on both Android 15 and Android 13 devices",
+            "parentId": "undefined",
+            "updatedAt": "2025-12-11T04:35:32.773Z"
+          },
+          {
+            "id": 6,
+            "title": "Update post_reel_smart.py to use Appium for text input",
+            "description": "Modify the SmartInstagramPoster class to use Appium's send_keys() for typing captions instead of ADBKeyboard broadcast, while keeping ADB for other operations.",
+            "dependencies": [
+              4,
+              5
+            ],
+            "details": "Changes to post_reel_smart.py:\n\n1) Add Appium imports at top:\nfrom appium import webdriver\nfrom appium.options.android import UiAutomator2Options\n\n2) Add Appium driver initialization in connect() method\n\n3) Replace type_text() method (lines 225-245) with Appium-based implementation:\n- Use self.appium_driver.switch_to.active_element.send_keys(text)\n- Remove typing_method check since Appium works universally\n- Handle emojis and Unicode natively\n\n4) Add cleanup for Appium driver in disconnect/cleanup\n\n5) Keep existing ADB methods for tap(), swipe(), screenshot, etc.\n\nAlternative: Hybrid approach - try Appium first, fall back to ADBKeyboard if Appium unavailable for Android 13 devices",
+            "status": "done",
+            "testStrategy": "1) Start Appium server\n2) Run test on Android 15 device (reelwisdompod_) with caption containing emojis\n3) Verify caption appears correctly in Instagram caption field\n4) Run full posting flow and verify success\n5) Run same test on Android 13 device (podmindstudio) for backwards compatibility",
+            "parentId": "undefined",
+            "updatedAt": "2025-12-11T04:35:36.719Z"
+          },
+          {
+            "id": 7,
+            "title": "Add Appium dependencies and update requirements.txt",
+            "description": "Add Appium-Python-Client and any other required dependencies to the project requirements file.",
+            "dependencies": [],
+            "details": "Update requirements.txt to add:\nAppium-Python-Client>=3.0.0\nselenium>=4.0.0\n\nInstallation command: pip install Appium-Python-Client\n\nVerify installation:\nimport appium\nprint(appium.__version__)\n\nNote: Appium-Python-Client depends on selenium, which will be installed automatically.\n\nPreserve existing dependencies:\n- anthropic (for Claude API)\n- requests (for HTTP calls)\n- python-dotenv (for .env loading)",
+            "status": "done",
+            "testStrategy": "1) Run pip install -r requirements.txt\n2) Verify no dependency conflicts\n3) Test import: python -c \"from appium import webdriver; print('OK')\"\n4) Verify existing imports still work",
+            "parentId": "undefined",
+            "updatedAt": "2025-12-11T04:22:51.801Z"
+          },
+          {
+            "id": 8,
+            "title": "Test full Instagram posting flow with Appium on Android 15",
+            "description": "Perform end-to-end testing of the complete Instagram Reel posting workflow using Appium for text input on an Android 15 device to validate the pivot from ADBKeyboard.",
+            "dependencies": [
+              4,
+              5,
+              6,
+              7
+            ],
+            "details": "Test procedure:\n\n1) Pre-requisites:\n- Appium server running\n- Android 15 device available (reelwisdompod_ or talktrackhub)\n- Test video file and caption with Unicode/emojis prepared\n\n2) Test execution:\nStart Appium server in terminal 1: appium\nRun posting script in terminal 2: python post_reel_smart.py reelwisdompod_ test_video.mp4 \"Test caption with emojis 🎉✨🔥\"\n\n3) Verification steps:\n- Phone connects successfully\n- Instagram app opens\n- Video upload works (existing ADB-based file transfer)\n- Caption field is focused\n- Appium types caption including emojis correctly\n- Post is shared successfully\n- Verify post appears on Instagram with correct caption\n\n4) Performance comparison:\n- Time to type caption: Appium vs ADBKeyboard\n- Overall posting time\n- Success rate over multiple posts",
+            "status": "pending",
+            "testStrategy": "1) Execute full posting flow on Android 15 device with emoji-rich caption\n2) Verify caption appears correctly on published post\n3) Repeat test 3-5 times to verify consistency\n4) Test on Android 13 device for backwards compatibility\n5) Run batch_post.py with mix of Android versions to verify multi-device support",
+            "parentId": "undefined"
+          },
+          {
+            "id": 1,
+            "title": "Research Android package manager ghost package and signature mismatch behaviors (cloud phones)",
+            "description": "Investigate how Android handles ghost/orphaned package entries and INSTALL_FAILED_UPDATE_INCOMPATIBLE errors, especially on non-rootable or cloud-hosted devices like Geelark, and document feasible ADB-only remedies.",
+            "dependencies": [],
+            "details": "Use Perplexity to search Android developer docs, StackOverflow, and XDA for: (1) causes and fixes of INSTALL_FAILED_UPDATE_INCOMPATIBLE when pm uninstall fails; (2) techniques to clear or bypass ghost/orphaned packages without root (e.g., user 0 uninstall, package clear, disabling users, testharness, or resetting app state); (3) behavior differences for system apps vs. user apps in /system/app and /system/priv-app. Summarize which approaches are viable when you only have adb shell and no root, and call out any device-OEM-specific caveats relevant to cloud/virtual devices.\n<info added on 2025-12-11T02:49:23.733Z>\nBased on the codebase analysis and research findings, here is the new text to append:\n\nResearch findings for ADB-only ghost package remediation on Geelark cloud phones:\n\n1) Ghost package removal without root: Use `pm uninstall --user 0 com.android.adbkeyboard` (do NOT use -k flag as it keeps data and leaves ghost state). This removes the package for the current user even when standard pm uninstall fails with DELETE_FAILED_INTERNAL_ERROR.\n\n2) Restoring orphaned system apps: If ADBKeyboard was previously a system app (like on podmindstudio at /system/app/AdbKeyboard/AdbKeyboard.apk), use `cmd package install-existing com.android.adbkeyboard` to restore it from the system image.\n\n3) Alternative for DELETE_FAILED_INTERNAL_ERROR: Try `pm disable-user --user 0 com.android.adbkeyboard` first to disable the ghost entry before attempting uninstall.\n\n4) Detecting ghost packages: Compare output of `pm list packages` (installed) vs `pm list packages -u` (includes uninstalled-but-retained). Packages appearing only in -u output are ghosts.\n\n5) Fallback typing without ADBKeyboard: The codebase already has ClipboardHelper (setup_clipboard_helper.py) which sets clipboard via `am start -n com.geelark.clipboard/.CopyActivity -a com.geelark.clipboard.COPY --es base64 <b64text>`. After setting clipboard, use `input keyevent 279` (KEYCODE_PASTE) to paste content. This approach supports Unicode and emojis without requiring ADBKeyboard.\n\n6) Current setup_adbkeyboard.py (line 102) uses basic `pm uninstall` which fails on ghost packages. Fix requires updating to use `pm uninstall --user 0` approach.\n\nSources: XDA Forums, bayton.org, droidwin.com\n</info added on 2025-12-11T02:49:23.733Z>",
+            "status": "done",
+            "testStrategy": null,
+            "updatedAt": "2025-12-11T02:49:43.751Z",
+            "parentId": "undefined"
+          },
+          {
+            "id": 2,
+            "title": "Probe Geelark cloud phones for ADBKeyboard package state and system app presence",
+            "description": "Systematically inspect all relevant Geelark devices to understand current ADBKeyboard installation state, including ghost entries and potential system app copies.",
+            "dependencies": [
+              1
+            ],
+            "details": "On each Geelark phone (podmindstudio, miccliparchive, reelwisdompod_, talktrackhub), run a scripted adb diagnostic sequence: (1) `pm list packages | grep adbkeyboard`; (2) `pm list packages -s` and `-3` to see if it’s system or user; (3) `pm path com.android.adbkeyboard`; (4) `cmd package resolve-activity` and `dumpsys package com.android.adbkeyboard` to detect ghost entries or disabled states; (5) search filesystem for the APK (e.g., `/system/app`, `/system/priv-app`, `/product/app`) using `ls` patterns where allowed; (6) check `settings get secure default_input_method` and `ime list -a` to see if the IME is registered but disabled. Capture outputs in logs per device and infer whether each device has a system app copy, a broken/ghost entry, or no trace at all.\n<info added on 2025-12-11T02:52:30.810Z>\nDiagnosis Results:\n\n1) podmindstudio: INSTALLED and working - System app located at /system/app/AdbKeyboard/AdbKeyboard.apk. IME properly set to com.android.adbkeyboard/.AdbIME. No remediation needed.\n\n2) miccliparchive: GHOST PACKAGE - APK exists in /system/app but package uninstalled for user 0. Current IME set to Google keyboard (com.google.android.inputmethod.latin). Package appears in `pm list packages -u` but not in `pm list packages`. Remediation: Use `cmd package install-existing com.android.adbkeyboard` to restore system app for current user, then set IME.\n\n3) reelwisdompod_: GHOST PACKAGE - APK exists in /system/app but package uninstalled for user 0. IME setting still points to ADBKeyboard but keyboard non-functional since package not installed for user. Remediation: Same as miccliparchive - use `cmd package install-existing com.android.adbkeyboard` to restore.\n\n4) talktrackhub: NOT INSTALLED - Clean slate, no ADBKeyboard APK anywhere on the filesystem. No ghost package entries. Remediation options: (a) Copy APK from podmindstudio via `adb pull/push` and install, or (b) Use clipboard-based text input as fallback.\n\nFix Strategy for setup_adbkeyboard.py: Add detection logic to differentiate ghost package vs clean slate states. For ghost packages (miccliparchive, reelwisdompod_), use `cmd package install-existing com.android.adbkeyboard` instead of standard pm install. For clean installs (talktrackhub), either pull APK from working phone or use local ADBKeyboard.apk with pm install.\n</info added on 2025-12-11T02:52:30.810Z>",
+            "status": "done",
+            "testStrategy": null,
+            "parentId": "undefined",
+            "updatedAt": "2025-12-11T02:52:49.620Z"
+          }
+        ],
+        "updatedAt": "2025-12-11T04:35:36.719Z"
+      },
+      {
+        "id": 12,
+        "title": "Investigate and fix empty Appium page_source on Android 15 Instagram sessions",
+        "description": "Debug and instrument the Appium-based Android 15 setup so that page_source / dump_ui() returns a non-empty, correctly structured UI hierarchy for the Instagram app, and determine whether issues stem from app launch, hierarchy generation, or XML parsing.",
+        "details": "Implementation plan:\n\n1. **Set up a focused Android 15/Appium debug harness**\n- Create a standalone Python script or test module (e.g. `debug/appium_source_debug.py`) that:\n  - Connects to the same Geelark Android 15 device configuration used in Task 11.\n  - Uses the same Appium capabilities (platformName, platformVersion, deviceName/UDID, automationName=UiAutomator2, appPackage/appActivity for Instagram, noReset, etc.).\n  - Logs all capabilities and the Appium server version at startup for reproducibility.\n- Ensure the harness is runnable independently from the main posting flow to speed up iteration.\n\n2. **Compare Appium page_source vs. uiautomator dump formats**\n- Use Appium’s `driver.page_source` and log the raw return value to a file (e.g. `artifacts/appium_source_raw.xml`) for multiple states: before Instagram launch, after launch, and after navigating to a known screen.[2]\n- On the same device and screen, use `adb shell uiautomator dump /sdcard/view.xml && adb pull /sdcard/view.xml artifacts/uiautomator_view.xml` and compare:\n  - Root element tag names and attributes (`hierarchy`, `node`, bounds, text, resource-id, content-desc).\n  - Character encoding and XML declaration.\n  - Presence/absence of expected views (e.g., Instagram home feed, buttons, bottom nav).\n- Document differences in a short markdown note (`docs/appium_vs_uiautomator.md`), highlighting any fields Appium normalizes or omits and confirming that Appium is returning **application hierarchy XML**, not a raw uiautomator dump.[2]\n\n3. **Verify that Instagram is truly launching and in foreground**\n- From the debug harness, add explicit steps:\n  - Call `driver.start_activity(appPackage, appActivity)` (or equivalent) and wait for a few seconds.\n  - Use `adb shell dumpsys window windows | grep -E 'mCurrentFocus|mFocusedApp'` to verify that the Instagram activity is in the foreground; log this output.\n  - Capture a screenshot via Appium (`driver.get_screenshot_as_png()`) and save to `artifacts/instagram_launch.png`; visually confirm the app is open.\n- If Appium connects but Instagram is not foregrounded, log this and add retries/explicit waits (e.g. wait for known accessibility id or resource-id) before calling `page_source`.\n\n4. **Instrument the page_source / dump_ui() call itself**\n- Wrap `driver.page_source` and any `dump_ui()` helper used in Task 11 in a small utility (e.g. `debug/get_hierarchy.py`) that:\n  - Measures call latency.\n  - Catches and logs exceptions.\n  - Logs the length of the returned XML string and the first 500–1000 characters.\n- Add verbose Appium server logging (log level `debug`) for these calls, capturing:\n  - The `Get Page Source` requests and responses.\n  - Any UiAutomator2/Android errors when traversing the hierarchy.\n- If `page_source` returns an empty hierarchy but no exception, investigate whether this is a known limitation with background apps, webviews, or Android 15 specifics.[1][6]\n\n5. **Check for webview / context or invisible-element issues**\n- Enumerate contexts using `driver.contexts` and log them; if a `WEBVIEW_` context exists for Instagram, switch contexts and compare `page_source` results to the native context.\n- Confirm whether the expected elements are off-screen or lazily created (e.g., lists or RecyclerViews)[3]; scroll a small amount and re-fetch `page_source` to see if the hierarchy populates.\n- Ensure that the harness requests **native context** when expecting native XML, and document how Instagram’s UI composition (native vs webview) affects what Appium can see.[4]\n\n6. **Rule out XML parsing issues in our code**\n- If Appium returns non-empty XML but our `dump_ui()` / parser reports no nodes, add unit-level diagnostics:\n  - Create a minimal parser module (e.g. `ui_parsing/xml_utils.py`) that loads the raw Appium XML using both `xml.etree.ElementTree` and `lxml` (if available) to handle any namespace/encoding quirks.\n  - Log any parsing errors, invalid characters, or namespace prefixes.\n  - Add defensive parsing: strip BOMs, normalize encoding to UTF‑8, and handle default namespaces.\n- Implement a small CLI (`python -m ui_parsing.debug_parse artifacts/appium_source_raw.xml`) that prints root tag, number of nodes, and a few sample attributes to quickly validate parsing.\n\n7. **Constrain work to Android 15 devices**\n- Ensure the harness inspects the device’s SDK level from `adb shell getprop ro.build.version.sdk` and asserts it is 35 (Android 15); otherwise, exit with a clear message.\n- If needed, parameterize the target device but keep the scope of this task to documenting and resolving the Android 15 behavior (other OS versions can be future work).\n\n8. **Output and documentation**\n- Produce a short troubleshooting doc `docs/android15_appium_empty_source.md` summarizing:\n  - Root cause(s): app not foregrounded, context mismatch, Android 15 UiAutomator behavior, or XML parsing bug.\n  - The final, recommended way to:\n    - Confirm Instagram is open.\n    - Fetch reliable page source.\n    - Parse and inspect the hierarchy.\n  - Any Appium capabilities or flags that improved results (e.g., waitForIdleTimeout, disableWindowAnimation, etc., if changed).\n- Expose any reusable utilities (e.g., `get_page_source_debug()`, `assert_instagram_foreground()`) in a `debug_utils` module so other tasks (like Task 11 and orchestrator work) can reuse them.\n",
+        "testStrategy": "1. **Environment and connectivity sanity checks**\n- Run the debug harness against an Android 15 Geelark device and verify:\n  - Appium session is created without errors.\n  - Device SDK level is detected as 35; the script exits with an error on non‑15 devices.\n\n2. **Instagram launch verification**\n- Execute the harness with Instagram launch enabled and confirm:\n  - `dumpsys window` logs show an Instagram activity in `mCurrentFocus`/`mFocusedApp`.\n  - The saved screenshot clearly shows Instagram in the foreground.\n\n3. **Page source vs uiautomator comparison**\n- On the same screen, generate both `artifacts/appium_source_raw.xml` and `artifacts/uiautomator_view.xml`.\n- Manually inspect or script-compare them to confirm:\n  - Non-empty XML in both files.\n  - Similar numbers of nodes and presence of expected Instagram UI elements.\n\n4. **XML parsing validation**\n- Run the XML parser CLI against `appium_source_raw.xml` and verify it prints:\n  - Correct root element name.\n  - A positive node count (> 0).\n  - At least a few nodes with sensible attributes (e.g., text/resource-id not all empty).\n- Intentionally corrupt the XML file (e.g., truncate it) and confirm the parser reports clear parsing errors instead of silently returning zero nodes.\n\n5. **Context and visibility behavior tests**\n- From the harness, log `driver.contexts` and switch between native and any webview context, calling `page_source` in each and confirming non-empty output where expected.\n- Scroll within Instagram and re-run `page_source`, verifying the hierarchy updates and that elements entering/leaving the visible region appear/disappear from the XML.\n\n6. **Regression guard for empty source condition**\n- Add an automated check in the harness that fails if `page_source` length is below a small threshold (e.g., < 1 KB) while Instagram is reported as foreground.\n- Run the harness multiple times (at least 5) and confirm the check consistently passes on Android 15.\n\n7. **Documentation review**\n- Have a team member follow `docs/android15_appium_empty_source.md` on a fresh environment and verify they can reproduce the debug steps and obtain non-empty page source and parsed node counts without additional help.",
+        "status": "pending",
+        "dependencies": [
+          4,
+          11
+        ],
+        "priority": "medium",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "version": "1.0.0",
+      "lastModified": "2025-12-11T04:35:36.720Z",
+      "taskCount": 11,
+      "completedCount": 0,
+      "tags": [
+        "posting"
+      ],
+      "created": "2025-12-11T04:44:27.551Z",
+      "description": "Tasks for posting context",
+      "updated": "2025-12-11T04:45:01.015Z"
+    }
+  }
+}

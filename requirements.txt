@@ -1,0 +1,4 @@
+python-dotenv
+requests
+anthropic
+Appium-Python-Client

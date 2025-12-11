@@ -1,0 +1,66 @@
+# Geelark Instagram Posting Automation
+
+## Goal
+Automatically post videos to Instagram accounts on Geelark cloud phones. Read videos and captions from a spreadsheet, post to each account.
+
+## The Problem
+- Geelark's built-in automation is unreliable and can't add captions
+- VAs are slow and make mistakes
+- Need to post across many accounts efficiently
+
+## How It Works
+1. Load spreadsheet with: account, video file, caption
+2. For each row:
+   - Open that account's Geelark device
+   - Rotate proxy (hit rotation URL)
+   - Take screenshot
+   - Use Claude Vision to navigate Instagram posting flow
+   - Upload video, add caption, post
+   - Log result
+3. Move to next row
+
+## Posting Flow (what Claude Vision navigates)
+1. Open Instagram app
+2. Tap "+" button (create post)
+3. Select "Reel" or post type
+4. Select video from device gallery
+5. Tap "Next"
+6. Add caption (paste from spreadsheet)
+7. Tap "Share"
+8. Confirm post was successful
+9. Done
+
+## Inputs
+- **Spreadsheet (CSV)**: columns = account_name, video_path, caption
+- **Videos**: folder with video files (or already on Geelark devices)
+- **Proxy rotation URL**: to rotate IP between posts
+- **API keys**: Anthropic (Claude Vision), 2Captcha (if needed)
+
+## Geelark Control
+Need to figure out:
+- How to take screenshots from Geelark
+- How to tap/type on Geelark devices
+- How to transfer videos to Geelark devices (or are they already there?)
+- Options: RPA, ADB, API
+
+## Output
+- Log file with: account, video, status (success/fail), timestamp, error if any
+
+## Edge Cases
+- Instagram asks for login → handle or skip
+- Captcha appears → use 2Captcha
+- Post fails → log error, continue to next
+- Rate limit → wait and retry
+
+## MVP (Minimum to get working)
+1. Control ONE Geelark device
+2. Post ONE video with caption
+3. Confirm it worked
+
+Then scale to multiple accounts.
+
+## Tech
+- Python
+- Claude Vision API
+- Simple loop
+- CSV for input/output

@@ -1,0 +1,35 @@
+{
+  "jobs": [
+    {
+      "id": "TEST-RETRY-002",
+      "video_path": "chunk_01c/2bears.1cave/DMbMMftoiDC-2.mp4",
+      "caption": "Testing retry logic - this should actually post now",
+      "account": "podtalkvault",
+      "status": "in_progress",
+      "attempts": 1,
+      "max_attempts": 3,
+      "last_error": "",
+      "last_attempt": "2025-12-11T15:08:39.133309",
+      "completed_at": "",
+      "source_folder": ""
+    }
+  ],
+  "accounts": [
+    {
+      "name": "podtalkvault",
+      "last_post_date": "",
+      "posts_today": 0,
+      "total_posts": 0,
+      "total_failures": 0
+    }
+  ],
+  "settings": {
+    "max_retries": 3,
+    "retry_delay_minutes": 0.25,
+    "posts_per_account_per_day": 1,
+    "humanize": false,
+    "delay_between_posts": 30,
+    "video_folders": []
+  },
+  "saved_at": "2025-12-11T15:08:39.133343"
+}

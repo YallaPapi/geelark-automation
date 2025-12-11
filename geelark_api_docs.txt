@@ -1,0 +1,2116 @@
+Geelark api docs
+
+2025.10.29
+Added a new interface for posting video tasks in Threads
+Added a new interface for posting image and text tasks in Threads
+2025.10.22
+Added new parameters to the cloud phone startup API: hideSideBar, displayTimer
+Added a stop callback to the cloud phone callback events
+Added a new API for getting the app list
+Added a new API for adding apps to Team’s applications
+2025.10.21
+Added TikTok AI random comment-Asia task interface
+Cloud Phone with Android 9 enables ADB functionality
+2025.10.16
+Cloud phone creation now supports transferring phone numbers
+Reddit account management now supports transferring search keywords
+New browser interface instructions
+Added a new browser interface for creating browsers
+Added a new browser interface for modifying browsers
+Added a new browser interface for deleting browsers
+Added a new browser interface for querying browsers
+Added a new browser interface for starting browsers
+Added a new browser interface for closing browsers
+Added a new browser interface for transferring browsers
+2025.10.15
+The cloud phone list interface returns the monthly subscription expiration time.
+2025.08.26
+Cloud phone list now supports filtering by charge mode, and the list includes a charge mode field.
+Create TikTok to add videos/photo albums/account maintenance tasks, support transferring notes.
+2025.08.20
+New cloud phones now support setting the network connection method
+Added a new interface for setting the cloud phone network method
+Added a new interface for posting videos to Pinterest
+Added a new interface for posting images and text to Pinterest
+Set Phone Logo / Brand interface
+2025.08.19
+Upload keybox interface
+2025.07.24
+TikTok publishes videos and photo albums, and you can get sharing links
+Task query interface returns sharing link
+Added Instagram automatic login interface
+2025.07.21
+Uninstalling apps now supports specifying the application package name.
+2025.07.14
+Add Batch Task Query API
+2025.07.10
+TikTok video posting task supports transferring cover
+Added batch import of contacts to cloud phone interface
+Added keybox upload to cloud phone interface
+Added TikTok random likes-Asian interface
+Added TikTok private message-Asian interface
+Added Instagram Reels album interface
+2025.07.04
+YouTube releases Short interface, the same URL does not have to be transmitted
+2025.07.01
+The proxy query interface returns the proxy serial number
+Added new cloud phone V2 interface
+2025.06.26
+Added Reddit AI account warmup interface
+Added Publish video on Reddit interface
+Added Publish pictures and texts on Reddit interface
+Added Download apps on Google interface
+Added Open the app on Google for browsing interface
+Added Send private message on TikTok interface
+Added Send private messages on Facebook interface
+Added Send private messages on Instagram interface
+Added cloud phone transfer interface
+Added library-related APIs
+2025.06.12
+The newly added agent type of the newly built cloud mobile phone does not allow error codes
+When modifying the proxy, the newly added proxy type does not allow error codes
+When modifying the cloud phone information and adding a new proxy type, error codes are not allowed
+Add a task detail interface
+Support token verification
+2025.05.29
+TikTok offers video and photo album Posting tasks and supports tagging AI content
+2025.05.15
+Creating tasks no longer limits the time interval
+Environment group notes can contain up to 500 characters
+Create a new cloud phone interface to return cloud phone device information
+2025.04.25
+The list of cloud phones can be obtained by id query, and the proxy information is returned
+2025.04.24
+TikTok supports uploading volume when Posting videos and photo albums
+A new task process query interface has been added
+Add an interface for creating custom tasks
+A new Instagram AI account nurturing interface has been added
+2025.04.10
+Delete the cloud mobile phone interface added the error code in use
+The task query interface returns the time consuming field
+2025.04.09
+TikTok add video/image/maintenance task, If the scheduling time is smaller than the current time, the current time is used.
+2025.04.07
+TikTok maintenance task parameters modified
+2025.04.01
+Added Create X(Twitter) to publish content and upload files to the cloud machine task interface in batches
+2025.03.25
+ADB supports Android 14
+2025.03.24
+One-click new machine V2 adds a new field: changeBrandModel, which controls whether the cloud phone brand and model are randomized.
+2025.03.20
+Add automation module, which includes automation tasks for many platforms
+2025.03.13
+Added cloud mobile phone brand list interface
+New cloud mobile phone interface can transmit brand models
+2025.03.06
+The task in execution can be canceled
+When adding a task, the task schedule interval of the same cloud phone cannot be less than 10 minutes
+You can specify the retry times and timeout period for publishing videos and galleries
+Execute shell, create cloud phone support Android14
+2025.02.28
+TK Automation - Added task, publishing gallery now includes a gallery title field.
+2025.02.10
+Cloud phone management: Added cloud phone device information fields (brand, model) to the Get all cloud phones.
+2025.02.7
+New API: Send SMS to cloud phones.
+2025.01.14
+TK Automation - Added fields related to publishing video tasks in the task API.
+2024.12.25
+Launched the API to get cloud phone device IDs.
+2024.12.19
+Launched the API to set ROOT status.
+2024.11.25
+Launched screenshot-related APIs.
+2024.11.21
+Cloud Phone Management - Added device information fields for cloud phones in the cloud phone list.
+2024.10.28
+Launched the API to download files to cloud phones.
+Launched One-click New Device V2 API, which no longer relies on callbacks.
+2024.10.09
+Launched file upload-related APIs.
+TK Automation - Added fields related to publishing video tasks in the task API.
+Fixed ADB issue where retrieving ADB information failed.
+2024.09.25
+Launched One-click New Device-related APIs.
+2024.08.28
+Launched tag-related APIs.
+Launched API to set/get cloud phone GPS.
+Launched group-related APIs.
+2024.08.13
+Launched application management-related APIs.
+2024.08.09
+Launched ADB-related APIs.
+2024.06.04
+Launched API interfaces.
+
+Request Instructions
+Request Instructions
+All API requests must be initiated using POST.
+All request bodies should be in JSON format. Please set the request header Content-Type to application/json.
+There are two verification methods, including key verification and token verification.
+API rate limit: 200 requests per minute, 24,000 requests per hour
+Token verification
+When making a request, only carry the following request headers
+traceId: Use Version 4 UUID
+Authorization Set to Bearer: <The token value obtained from the client>
+Response Instructions
+Key verification
+Required Request Headers for Verification
+appId: Team AppId
+traceId: Unique request ID
+ts: Timestamp in milliseconds
+nonce: Random number
+sign: Signature result
+Verification Parameter Generation Method
+traceId: Use Version 4 UUID
+nonce: Use the first 6 characters of traceId
+sign: Concatenate the string TeamAppId + traceId + ts + nonce + TeamApiKey, then generate the SHA256 hexadecimal uppercase digest of the string.
+Example of Required Request Headers for Verification
+Assuming the team’s ApiKey is YjmFIUuq0oJgSDJ42fxLEb6R1qjjqf, the request headers would be set as follows:
+appId: eH6gQR4oHr3FsZpI36La01IW
+traceId: db6094ab-3797-4186-84d5-b0b58eebad56
+ts: 1716972892166
+nonce: db6094
+sign: 6280C080AF7C3CCE168F15C913E3444A00A618CB0E16038EED9811D6E3366BDD
+
+When the response code is 200, the response body will be in JSON format.
+Response Object Fields
+traceId: Unique request ID.
+code: Processing result code, 0 indicates success, any other value indicates failure.
+msg: Processing result description.
+data: Data. Details are as follows:
+On successful request: returns response data.
+On failed request: returns the reason for failure.
+On partially successful request: returns response data and reason for failure.
+Processing Result Code Explanation
+0 indicates success, any other value indicates failure. If an error code appears, try modifying the request based on the prompt. If the issue persists, please contact customer service and provide the appId, traceId, and the response content. Apart from global error codes, error codes specific to each API are documented in their respective descriptions. Global error codes are as follows:
+40000: Unknown error, please contact customer service if this occurs.
+40001: Failed to read request body, please contact customer service if this occurs.
+40002: The traceId in the request header cannot be empty.
+40003: Signature verification failed.
+40004: Request parameter validation failed.
+40005: Requested resource does not exist.
+40006: Partial success in the request, applicable to batch APIs.
+40007: Too many requests.The rate limit will be lifted in the next minute.
+40008: Invalid pagination parameters.
+40009: Batch processing completely failed.
+40011: Only for paid user.
+41001: Balance not enough.
+40012: The api had expire, please use the new api.
+47002: Too many concurrent requests. Please try again later.The rate limit will be lifted after two hours.
+
+Request example
+Request Example
+Token verification
+const url = "https://openapi.geelark.com/open/v1/phone/list";
+
+const appToken = "your appToken";
+
+var traceUUid = "yxxyxxxxyxyxxyxxyxxxyxxxyxxyxxyx".replace(
+ /[xy]/g,
+ function (c) {
+ var r = (Math.random() * 16) | 0, 
+ v = c == "x" ? r : (r & 0x3) | 0x8; 
+ return v.toString(16); 
+ }
+);
+
+var traceId = traceUUid.toUpperCase();
+
+var data = {
+ page: 1,
+ pageSize: 10,
+ tags: ["tagNew"],
+};
+
+fetch(url, {
+ method: "POST",
+ headers: {
+ "Content-Type": "application/json",
+ traceId: traceId,
+ Authorization: "Bearer " + appToken,
+ },
+ body: JSON.stringify(data),
+})
+ .then((res) => res.json())
+ .then((res) => {
+ console.log(res);
+ })
+ .catch((err) => {
+ console.error(err);
+ });
+
+Key verification
+const CryptoJS = require("crypto-js");
+
+const url = "https://openapi.geelark.com/open/v1/phone/list"; // Example request URL
+
+const appID = "your appID"; // Your appID
+const apiKey = "your apiKey"; // Your apiKey
+
+let timestamp = new Date().getTime().toString(); // Millisecond timestamp
+
+// Generate UUID
+var traceUUid = "yxxyxxxxyxyxxyxxyxxxyxxxyxxyxxyx".replace(
+ /[xy]/g,
+ function (c) {
+ var r = (Math.random() * 16) | 0, // Randomly generate a number between 0 and 15
+ v = c == "x" ? r : (r & 0x3) | 0x8; // If c is 'y', only take one of 8, 9, a, b
+ return v.toString(16); // Convert the number to a hexadecimal string
+ }
+);
+
+var traceId = traceUUid.toUpperCase();
+
+// nonce is the first 6 characters of traceId
+var nonce = traceId.substring(0, 6);
+
+var sign = CryptoJS.SHA256(appID + traceId + timestamp + nonce + apiKey)
+ .toString()
+ .toUpperCase();
+
+var data = {
+ page: 1,
+ pageSize: 10,
+};
+
+headers = {
+ "Content-Type": "application/json",
+ appId: appID,
+ traceId: traceId,
+ ts: timestamp,
+ nonce: nonce,
+ sign: sign,
+};
+
+console.log(headers);
+
+fetch(url, {
+ method: "POST",
+ headers: {
+ "Content-Type": "application/json",
+ appId: appID,
+ traceId: traceId,
+ ts: timestamp,
+ nonce: nonce,
+ sign: sign,
+ },
+ body: JSON.stringify(data),
+})
+ .then((res) => res.json())
+ .then((res) => {
+ console.log(res);
+ })
+ .catch((err) => {
+ console.error(err);
+ });
+
+
+Create Account Management Task: Directly call the Add Task API.
+Create Video or Image Collection Posting Task: First, upload the materials, then call the Add Task API.
+Creating Video or Image Collection Posting Task
+File Upload
+
+Use the resource access URL obtained in step 1 as the upload URL for the video or image, and then call the Add Task API.
+
+Request Instructions
+Overview
+Support local API functions
+All interface requests are initiated using POST.
+All request bodies are in json format. Please set the Content-Type request header to application/json.
+API rate limit: 200 times/min, 24,000 times/hour
+Preparation before use:
+ Check whether the client is open and logged in.
+Response Description
+When the response code is 200, the response body is json
+Response body object fields
+traceId Request unique ID.
+code Processing result code, 0 represents success, other codes represent failure.
+msg Description of the processing result.
+data The details are as follows:
+When the request is successful, the response data is returned.
+If the request fails, the failure reason is returned.
+If the request is partially successful, the response data and the failure reason are returned.
+Processing result code description
+0 indicates success, and other values indicate failure.
+If an error code appears, try modifying the request according to the prompts.
+If the problem persists, please contact customer service for feedback.
+In addition to the global error code, the error code corresponding to each interface is documented in its respective description. The global error codes are as follows:
+40000 Unknown error. If this occurs, please contact customer service.
+40001 Failed to read the request body. If this occurs, please contact customer service.
+40002 The traceId header in the request cannot be empty.
+40003 Signature verification failed.
+40004 Request parameter verification failed.
+40005 The requested resource does not exist.
+40006 The request was partially successful. This applies to batch interfaces.
+40007 Requests are too frequent. The rate limit will be lifted in the next minute.
+40008 Pagination parameter error.
+40009 All batch processing failed.
+40011 Only for paid users.
+41001 Insufficient balance.
+40012 The interface has expired. Please use the latest interface.
+47002 The number of concurrent requests is too high. Please try again later.
+40014 Requests are too frequent. The rate limit will be lifted in two hours.
+
+Request example
+Example
+const url = "http://localhost:40185/api/v1/browser/start"; // Sample request address
+
+
+
+var data = {
+ "id": "123456789xxxx"
+};
+
+fetch(url, {
+ method: "POST",
+ headers: {
+ "Content-Type": "application/json",
+ },
+ body: JSON.stringify(data),
+})
+ .then((res) => res.json())
+ .then((res) => {
+ console.log(res);
+ })
+ .catch((err) => {
+ console.error(err);
+ });
+Create new
+API Description
+The Basic plan supports the creation of only one cloud phone at a time, while the Pro plan supports batch creation.
+Request URL
+https://openapi.geelark.com/open/v1/phone/add
+Request Method
+POST
+Request Parameters
+proxyConfig Static Proxy Parameters
+proxyConfig Dynamic Proxy Parameters
+Dynamic proxy settings can be configured on the client side first, and then by setting useProxyCfg to true, you can use the already configured information without needing to provide the host, port, and other details again.
+androidVersion Corresponding Versions
+1 : Android 10
+2 : Android 11
+3 : Android 12
+4 : Android 13
+5 : Andorid 10 Live Streaming(Only supports monthly subscription charge mode)
+7 : Andorid 14
+8 : Android 15
+typeId List
+1. Static Proxy List
+1 : socks5
+2 : http
+3 : https
+2. Dynamic Proxy List
+20 IPIDEA
+21 IPHTML
+22 kookeey
+23 Lumatuo
+Request Example
+{
+  "amount": 5,
+  "androidVersion": 1,
+  "proxyConfig":{
+    "typeId": 1,
+    "server": "server.com",
+    "port": 32080,
+    "username": "123465ABCD",
+    "password": "123465ABCD"
+  },
+  "groupName": "group",
+  "tagsName": [
+    "123",
+    "ABC"
+  ],
+  "remark": ""
+}
+
+Response Example
+{
+    "traceId": "123456ABCDEF",
+    "code": 0,
+    "msg": "success",
+    "data": {
+        "totalAmount": 1,
+        "successAmount": 1,
+        "failAmount": 0,
+        "details": [
+            {
+                "index": 1,
+                "code": 0,
+                "msg": "success",
+                "id": "497652752864775437",
+                "profileName": "22 ungrouped",
+                "envSerialNo": "22",
+                "equipmentInfo": {
+                    "countryName": "Thailand",
+                    "phoneNumber": "+66877382166",
+                    "enableSim": 1,
+                    "imei": "863406055475987",
+                    "osVersion": "Android 11.0",
+                    "wifiBssid": "1C:1D:67:B1:C1:76",
+                    "mac": "9C:A5:C0:5F:C5:AD",
+                    "bluetoothMac": "D0:15:4A:5B:7E:AE",
+                    "timeZone": "Asia/Bangkok"
+                 }
+            }
+        ]
+    }
+}
+
+Response Data Description
+details Creation Response
+equipmentInfo Cloud phone equipment info <EquipmentInfo>
+Error Codes
+Below are specific error codes for this interface. For other error codes, please refer to API Documentation.
+
+Create new V2
+API Description
+The Basic plan supports the creation of only one cloud phone at a time, while the Pro plan supports batch creation.
+Supports model selection. Please first call the cloud phone brand list interface to obtain supported brand model information.
+Proxy information, added proxy, dynamic proxy must specify one, added proxy is used first, followed by proxy information.
+Request URL
+https://openapi.geelark.com/open/v1/phone/addNew
+Request Method
+POST
+Request Parameters
+Environment parameter <EnvRowApi>
+Request Example
+{
+ "mobileType": "Android 12",
+ "chargeMode": 0,
+ "data": [
+ {
+ "profileName": "myPhone",
+ "proxyInformation": "socks5://AD00xx004:3000xxx0002@100.200.200.100:30000",
+ "mobileLanguage": "default",
+ "profileGroup": "myGroup",
+ "profileTags": ["myTag"],
+ "profileNote": "remark"
+ }
+ ]
+}
+
+Response Example
+{
+    "traceId": "123456ABCDEF",
+    "code": 0,
+    "msg": "success",
+    "data": {
+        "totalAmount": 1,
+        "successAmount": 1,
+        "failAmount": 0,
+        "details": [
+            {
+                "index": 1,
+                "code": 0,
+                "msg": "success",
+                "id": "497652752864775437",
+                "profileName": "22 ungrouped",
+                "envSerialNo": "22",
+                "equipmentInfo": {
+                    "countryName": "Thailand",
+                    "phoneNumber": "+66877382166",
+                    "enableSim": 1,
+                    "imei": "863406055475987",
+                    "osVersion": "Android 11.0",
+                    "wifiBssid": "1C:1D:67:B1:C1:76",
+                    "mac": "9C:A5:C0:5F:C5:AD",
+                    "bluetoothMac": "D0:15:4A:5B:7E:AE",
+                    "timeZone": "Asia/Bangkok"
+                 }
+            }
+        ]
+    }
+}
+
+Response Data Description
+details Creation Response
+equipmentInfo Cloud phone equipment info <EquipmentInfo>
+Error Codes
+Below are specific error codes for this interface. For other error codes, please refer to API Documentation.
+
+Get all cloud phones
+API Description
+Retrieve the list of cloud phones.
+Request URL
+https://openapi.geelark.com/open/v1/phone/list
+Request Method
+POST
+Request Parameters
+Pagination Parameters
+Query Parameters (Ignored if empty)
+Request Example
+{
+    "page":1,
+    "pageSize":10,
+    "serialName": "test",
+    "remark":"",
+    "groupName":"",
+    "tags":[
+        "tag1",
+        "tag2"
+    ]
+}
+
+Response Data Description
+items Cloud Phone Data <Phone>
+group Group Information <Group>
+tags Cloud Phone Tags <Tag>
+equipmentInfo Cloud phone equipment info <EquipmentInfo>
+proxy Proxy info <Proxy>
+Response Example
+{
+    "traceId": "123456ABCDEF",
+    "code": 0,
+    "msg": "success",
+    "data": {
+        "total": 1,
+        "page": 1,
+        "pageSize": 10,
+        "items": [
+            {
+                "id": "123456ABCDEF",
+                "serialName": "test",
+                "serialNo": "1",
+                "group": {
+                    "id": "123456ABCDEF",
+                    "name": "test group",
+                    "remark": "group remark"
+                },
+                "remark": "env remark",
+                "status": 0,
+                "tags": [
+                    {"name": "hi"},
+                    {"name": "test"}
+                ],
+                "equipmentInfo": {
+                    "countryName": "Thailand",
+                    "phoneNumber": "+66877382166",
+                    "enableSim": 1,
+                    "imei": "863406055475987",
+                    "osVersion": "Android 11.0",
+                    "wifiBssid": "1C:1D:67:B1:C1:76",
+                    "mac": "9C:A5:C0:5F:C5:AD",
+                    "bluetoothMac": "D0:15:4A:5B:7E:AE",
+                    "timeZone": "Asia/Bangkok"
+                 },
+                "proxy": {
+                    "type": "socks5",
+                    "server": "129.129.129.129",
+                    "port": 30000,
+                    "username": "user",
+                    "password": "pass"
+                }
+            }
+        ]
+    }
+}
+
+Error Codes
+Error codes can be found in the API Documentation.
+
+Query status
+API Description
+Retrieve the status of cloud phones.
+Request URL
+https://openapi.geelark.com/open/v1/phone/status
+Request Method
+POST
+Request Parameters
+Query Parameters
+Request Example
+{
+    "ids":[
+        "123456ABCDEF",
+        "123456ABCDEF",
+        "123456ABCDEF",
+        "123456ABCDEF"
+    ]
+}
+
+Response Data Description
+successDetails Success Information <SuccessDetails>
+failDetails Failure Information <FailDetails>
+Response Example
+{
+    "code": 0,
+    "msg": "成功",
+    "traceId": "123456ABCDEF",
+    "data": {
+        "totalAmount": 4,
+        "successAmount": 3,
+        "failAmount": 1,
+        "successDetails": [
+            {
+                "id": "123456ABCDEF",
+                "serialName": "name1",
+                "status": 0
+            },
+            {
+                "id": "123456ABCDEF",
+                "serialName": "name2",
+                "status": 1
+            },
+            {
+                "id": "123456ABCDEF",
+                "serialName": "name3",
+                "status": 1
+            }
+        ],
+        "failDetails": [
+            {
+                "code": 42001,
+                "id": "123456ABCDEF",
+                "msg": "env not found"
+            }
+        ]
+    }
+}
+
+Error Codes
+Below are specific error codes for this interface. For other error codes, please refer to API Documentation.
+
+
+Query status
+API Description
+Retrieve the status of cloud phones.
+Request URL
+https://openapi.geelark.com/open/v1/phone/status
+Request Method
+POST
+Request Parameters
+Query Parameters
+Request Example
+{
+    "ids":[
+        "123456ABCDEF",
+        "123456ABCDEF",
+        "123456ABCDEF",
+        "123456ABCDEF"
+    ]
+}
+
+Response Data Description
+successDetails Success Information <SuccessDetails>
+failDetails Failure Information <FailDetails>
+Response Example
+{
+    "code": 0,
+    "msg": "成功",
+    "traceId": "123456ABCDEF",
+    "data": {
+        "totalAmount": 4,
+        "successAmount": 3,
+        "failAmount": 1,
+        "successDetails": [
+            {
+                "id": "123456ABCDEF",
+                "serialName": "name1",
+                "status": 0
+            },
+            {
+                "id": "123456ABCDEF",
+                "serialName": "name2",
+                "status": 1
+            },
+            {
+                "id": "123456ABCDEF",
+                "serialName": "name3",
+                "status": 1
+            }
+        ],
+        "failDetails": [
+            {
+                "code": 42001,
+                "id": "123456ABCDEF",
+                "msg": "env not found"
+            }
+        ]
+    }
+}
+
+Error Codes
+Below are specific error codes for this interface. For other error codes, please refer to API Documentation.
+
+Start cloud phone
+API Description
+Batch start cloud phones.
+Request URL
+https://openapi.geelark.com/open/v1/phone/start
+Request Method
+POST
+Request Parameters
+Request Example
+{
+    "ids":[
+        "123456ABCDEF",
+        "123456ABCDEF",
+        "123456ABCDEF",
+        "123456ABCDEF"
+    ]
+}
+
+Response Example
+{
+ "code": 0,
+ "msg": "success",
+ "traceId": "12345678ABCDEF",
+ "data": {
+ "totalAmount": 3,
+ "successAmount": 1,
+ "failAmount": 2,
+ "failDetails": [
+ {
+ "code": 43004,
+ "id": "12345678ABCDEFG",
+ "msg": "env is expired"
+ },
+ {
+ "code": 42001,
+ "id": "12345678ABCDEFG",
+ "msg": "env not found"
+ }
+ ],
+ "successDetails": [
+ {
+ "id": "12345678ABCDEFG",
+ "url": "https://speedup.geelark.com/phone-api"
+ }
+ ]
+ }
+}
+
+Response Data Description
+SuccessDetails Successed Information
+FailDetails Failure Information
+Error Codes
+Below are specific error codes for this interface. For other error codes, please refer to API Documentation.
+
+Stop cloud phone
+API Description
+Batch shut down cloud phones.
+Cloud phones can be shut down when they are in the following state:
+Idle: Can be shut down
+Remotely Connected: Cannot be shut down
+Executing Task: Cannot be shut down
+Request URL
+https://openapi.geelark.com/open/v1/phone/stop
+Request Method
+POST
+Request Parameters
+Request Example
+{
+    "ids":[
+        "123456ABCDEF",
+        "123456ABCDEF",
+        "123456ABCDEF",
+        "123456ABCDEF"
+    ]
+}
+
+Response Example
+{
+    "code": 0,
+    "msg": "成功",
+    "traceId": "123456ABCDEF",
+    "data": {
+        "totalAmount": 4,
+        "successAmount": 3,
+        "failAmount": 1,
+        "successDetails": [
+            {
+                "id": "123456ABCDEF",
+                "serialName": "name1",
+                "status": 0
+            },
+            {
+                "id": "123456ABCDEF",
+                "serialName": "name2",
+                "status": 1
+            },
+            {
+                "id": "123456ABCDEF",
+                "serialName": "name3",
+                "status": 1
+            }
+        ],
+        "failDetails": [
+            {
+                "code": 42001,
+                "id": "123456ABCDEF",
+                "msg": "env not found"
+            }
+        ]
+    }
+}
+
+Response Data Description
+failDetails Failure Information <FailDetails>
+Error Codes
+Below are specific error codes for this interface. For other error codes, please refer to API Documentation.
+
+Delete cloud phone
+API Description
+Batch Delete Cloud Phones
+Request URL
+https://openapi.geelark.com/open/v1/phone/delete
+Request Method
+POST
+Request Parameters
+Request Example
+{
+    "ids":[
+        "123456ABCDEF",
+        "123456ABCDEF"
+    ]
+}
+
+Response Data Description
+Failure Details <FailDetails>
+Response Example
+{
+    "code": 0,
+    "msg": "success",
+    "traceId": "12345ABCDEF",
+    "data": {
+        "totalAmount": 4,
+        "successAmount": 2,
+        "failAmount": 2,
+        "failDetails": [
+            {
+                "code": 42001,
+                "id": "12345ABCDEF",
+                "msg": "env not found"
+            },
+            {
+                "code": 43009,
+                "id": "12345ABCDEF",
+                "msg": "env is started"
+            }
+        ]
+    }
+}
+
+Error Codes
+Below are specific error codes for the API. For other error codes, please refer to API Call Description.
+
+
+
+Get GPS
+Interface Description
+Query the GPS information of cloud phones, including latitude and longitude.
+Request URL
+https://openapi.geelark.com/open/v1/phone/gps/get
+Request Method
+POST
+Request Parameters
+Request Example
+{
+ "ids": [
+ "528086321789535232"
+ ]
+}
+
+Response Example
+{
+ "traceId": "81CA3BD0B7BBB924A1C6B836B298ADA7",
+ "code": 0,
+ "msg": "success",
+ "data": {
+ "totalAmount": 1,
+ "successAmount": 1,
+ "failAmount": 0,
+ "list": [
+ {
+ "id": "528086321789535232",
+ "latitude": 1.3024300336837769,
+ "longitude": 103.87545776367188
+ }
+ ]
+ }
+}
+
+Response Data Description
+list GPS Information <GPS>
+Error Codes
+Below are the specific error codes for this interface. For other error codes, please refer to the API Call Instructions.
+Set GPS
+Interface Description
+Set/update the GPS information of cloud phones, including longitude and latitude.
+Longitude range: [-180.0, 180.0]
+Latitude range: [-90.0, 90.0]
+Request URL
+https://openapi.geelark.com/open/v1/phone/gps/set
+Request Method
+POST
+Request Parameters
+list Cloud Phone GPS Info <GPS>
+Request Example
+{
+ "list": [
+ {
+ "id": "528086321789535232",
+ "latitude": 1.30243,
+ "longitude": 103.87546
+ },
+ {
+ "id": "530011895768286208",
+ "latitude": 11.30243,
+ "longitude": 104.87546
+ }
+ ]
+}
+
+Response Example
+{
+ "traceId": "870AE3259C965B45A0D09C92A4EA8F81",
+ "code": 0,
+ "msg": "success",
+ "data": {
+ "totalAmount": 2,
+ "successAmount": 2,
+ "failAmount": 0
+ }
+}
+
+Response Data Description
+Error Codes
+Below are the specific error codes for this interface. For other error codes, please refer to the API Call Instructions.
+
+Modify cloud phone information
+Interface Description
+Warning: Do not operate this api while calling the API to start the cloud phone.
+Modify cloud phone information.
+Support modifying the cloud phone name.
+Support modifying the cloud phone remark.
+Support modifying the cloud phone tags.
+Support modifying the cloud phone proxy configuration.
+Support modifying the cloud phone group.
+Support modifying the cloud phone charge mode.
+Request URL
+https://openapi.geelark.com/open/v1/phone/detail/update
+Request Method
+POST
+Request Parameters
+proxyConfig Static Proxy Parameters
+proxyConfig Dynamic Proxy Parameters
+Dynamic proxy settings can be configured on the client side first, and then by setting useProxyCfg to true, you can use the already configured information without needing to provide the host, port, and other details again.
+typeId List
+1. Static Proxy List
+1 : socks5
+2 : http
+3 : https
+2. Dynamic Proxy List
+20 IPIDEA
+21 IPHTML
+22 kookeey
+23 Lumatuo
+Request Example
+{
+ "id": "528086284158239744",
+ "name": "api update",
+ "remark": "api remark",
+ "tagIDs": ["528989565877355520", "528989565877289984"],
+ "groupID": "528995439832269824",
+ "proxyConfig": {
+ "typeId": 1,
+ "server": "123.123.123.123",
+ "port": 32080,
+ "username": "username",
+ "password": "password"
+ },
+ "proxyId": "528989565877355520"
+}
+
+Response Example
+Success Response
+{
+ "traceId": "B04B0843BD86D9589AB3BAB6A9EA3D92",
+ "code": 0,
+ "msg": "success"
+}
+
+If some tags in the tag list do not exist, there will be failDetails data; if none of the tags exist, the request will directly return an error, with the code details as shown in the Error Codes section below.
+{
+ "traceId": "8B38AA778DBCD9519FB9B00D8A593DB3",
+ "code": 0,
+ "msg": "success",
+ "data": {
+ "failDetails": [
+ {
+ "code": 43022,
+ "id": "52898956587728998",
+ "msg": "tag not found"
+ }
+ ]
+ }
+}
+
+Response Data Description
+failDetails Tag Addition Failure Info <FailDetails>
+Error Codes
+Below are the specific error codes for this interface. For other error codes, please refer to the API Call Instructions.
+
+One-click new machine V2
+API Description
+One-click new machine v2 interface, directly return the execution result.
+Request URL
+https://openapi.geelark.com/open/v2/phone/newOne
+Request Method
+POST
+Request Parameters
+Request Example
+{
+    "id": "528715748189668352"
+}
+
+Response Example
+{
+ "traceId": "A62BBBF3A294487F9B49B9FFA0F84CA8",
+ "code": 0,
+ "msg": "success"
+}
+
+Error Codes
+Below are specific error codes for this interface. For other error codes, please refer to API Documentation.
+
+Screen Shot
+API Description
+Get a screen shot from cloud phone
+Request URL
+https://openapi.geelark.com/open/v1/phone/screenShot
+Request Method
+POST
+Request Parameters
+Request Example
+{
+    "id": "528715748189668352"
+}
+
+Response Example
+{
+ "traceId": "A62BBBF3A294487F9B49B9FFA0F84CA8",
+ "code": 0,
+ "msg": "success",
+    "data": {
+        "taskId": "1850726441252569088"
+    }
+}
+
+Response Data Description
+Error Codes
+The following are specific error codes for this API. For other error codes, please refer to API Call Description
+Please refer to Callback Example.
+
+Get screen shot result
+API Description
+Query the status of cloud phone screenshot task
+After requesting a screenshot, you can actively obtain the result through this interface within 30 minutes. If it expires, the retrieval will fail
+Request URL
+https://openapi.geelark.com/open/v1/phone/screenShot/result
+Request Method
+POST
+Request Parameters
+Request Example
+{
+    "taskId": "528715748189668352"
+}
+
+Response Example
+{
+ "traceId": "A62BBBF3A294487F9B49B9FFA0F84CA8",
+ "code": 0,
+ "msg": "success",
+    "data": {
+        "status": 1,
+        "downloadLink": "https://zx-cloud-phone-pre.obs.cn-southwest-2.myhuaweicloud.com/envirFileExport/1851511129017700352/IMG_20241122160248.png?AccessKeyId=UFNIPAPFJX2MAGMFGRYZ&Expires=1732264377&Signature=dqV5JYzYDdm0wwAgkZIpDrs%2FL%2FE%3D"
+    }
+}
+
+Response Data Description
+错误码
+For error codes, please refer to API Call Description.
+
+Set Root Status
+API Description
+Set root status, please start the cloud phone before setting root status.
+Request URL
+https://openapi.geelark.com/open/v1/root/setStatus
+Request Method
+POST
+Request Parameters
+Request Example
+{
+ "ids" : [
+ "526209711930868736"
+ ],
+ "open" : true
+}
+
+Response Example
+{
+ "traceId": "A24A3089958A4BC28E8B89B3AE1A61AC",
+ "code": 0,
+ "msg": "success",
+    "data": {
+ "items": [
+ {
+ "code": 42002,
+ "msg": "phone is not running",
+ "id": "543483007558772199"
+ },
+ {
+ "code": 0,
+ "msg": "success",
+ "id": "543483063829554663"
+ }
+ ]
+ }
+}
+
+Error Codes
+For error codes, please refer to API Call Description.
+
+Get device ID
+API Description
+Get the cloud phone device ID (please re-obtain the latest ID after one-click new phone), which corresponds to the cloud phone’s unique hardware device ID, which is equivalent to the system’s Andorid_ID. The App can bind to the cloud phone environment by obtaining this ID on the cloud phone. How to obtain the device ID on the App side:
+Android 13 system: execute the getprop ro.boot.serialno command through adb
+Other systems: execute the getprop ro.serialno command through adb
+if(android.os.Build.VERSION.SDK_INT == 33){
+ serialNo = Command.exeCommand("getprop ro.boot.serialno");
+}else {
+ serialNo = Command.exeCommand("getprop ro.serialno");
+}
+
+Request URL
+https://openapi.geelark.com/open/v1/phone/serialNum/get
+Request Method
+POST
+Request Parameters
+Request Example
+{
+    "id": "528715748189668352"
+}
+
+Response Example
+{
+ "traceId": "89D8C3C08DA4DB5089069D34A3786494",
+ "code": 0,
+ "msg": "success",
+ "data": {
+ "serialNum": "r2cbvzlx5bs"
+ }
+}
+
+Response Data Description
+Error Codes
+The following are specific error codes for this API. For other error codes, please refer to API Call Description
+
+Send SMS to cloud phone
+API Documentation
+Send SMS to cloud phone. Before sending, please start the cloud phone first.
+Request URL
+https://openapi.geelark.com/open/v1/phone/sendSms
+Request Method
+POST
+Request Parameters
+Request Example
+{
+ "id": "526209711930868736",
+ "phoneNumber": "+17723504471",
+ "text": "your tk code: 6666"
+}
+
+
+{
+ "traceId": "9E681400B2983A5390F4B7C8BF1BF2B7",
+ "code": 0,
+ "msg": "success",
+ "data": {}
+}
+
+
+List of cloud mobile phone brands
+API Description
+Get a list of cloud phone brands
+Request URL
+https://openapi.geelark.com/open/v1/phone/brand/list
+Request Method
+POST
+Request Parameters
+Request Example
+{
+    "androidVer" : 10
+}
+
+Response Example
+{
+    "traceId": "B0BA8FF29AB60B8ABF4E9A26BF08F7B9",
+    "code": 0,
+    "msg": "success",
+    "data": [
+        {
+            "surfaceBrandName": "samsung",
+            "surfaceModelName": "Galaxy S20+"
+        }
+    ]
+}
+
+Response Data Description
+Error Codes
+For error codes, please refer to API Call Description
+
+Transfer Cloud Phone
+API Description
+Transfer Cloud Phone
+Request URL
+https://openapi.geelark.com/open/v1/phone/transfer
+Request Method
+POST
+Request Parameters
+Request Example
+{
+ "ids": [
+ "539893235657500146"
+ ],
+ "account": "Anna@geelark.com",
+ "transferOption": [
+ "name",
+ "proxy",
+ "tag",
+ "remark"
+ ]
+}
+
+Response Example
+{
+    "traceId": "B0BA8FF29AB60B8ABF4E9A26BF08F7B9",
+    "code": 0,
+    "msg": "success",
+    "data": [
+        {
+            "successCount": 10,
+            "failCount": 2,
+            "failEnvIds" : ["539893235657500146"]
+        }
+    ]
+}
+
+Response Data Description
+Error Codes
+For error codes, please refer to API Call Description
+
+Set net type
+API Description
+Set up the cloud phone network connection mode
+Request URL
+https://openapi.geelark.com/open/v1/phone/net/set
+Request Method
+POST
+Request Parameters
+Request Example
+{
+  "id": "528086284158239744",
+ "netType": 0
+}
+
+Response Example
+{
+  "traceId": "B04B0843BD86D9589AB3BAB6A9EA3D92",
+  "code": 0,
+  "msg": "success"
+}
+
+Error Codes
+For error codes, please refer to API Call Description.
+
+Query task
+API Description
+Task Query
+Request URL
+https://openapi.geelark.com/open/v1/task/query
+Request Method
+POST
+Request Parameters
+Query Parameters (Ignore if empty)
+Request Example
+{
+    "ids": ["123321", "456654"]
+}
+
+Response Data Description
+Task
+Task Failure Codes and Reasons
+Response Example
+Task Completed
+{
+    "traceId": "123456ABCDEF",
+    "code": 0,
+    "msg": "success",
+    "data": {
+        "total": 1,
+        "items": [
+            {
+                "id": "123456ABCDEF",
+                "planName": "plan123456ABCDEF",
+                "taskType": 2,
+                "serialName": "test",
+                "envId": "123456654321",
+                "scheduleAt": 1718744459,
+                "status": 3
+            }
+        ]
+    }
+}
+
+Task Failed
+{
+    "traceId": "123456ABCDEF",
+    "code": 0,
+    "msg": "success",
+    "data": {
+        "total": 1,
+        "items": [
+            {
+                "id": "123456ABCDEF",
+                "planName": "plan123456ABCDEF",
+                "taskType": 2,
+                "serialName": "test",
+                "envId": "123456654321",
+                "scheduleAt": 1718744459,
+                "status": 4,
+                "failCode": 29999,
+                "failDesc": "some reason"
+            }
+        ]
+    }
+}
+
+Error Codes
+For error codes, please refer to API Call Description
+
+--- TABLE ---
+Parameter Name | Required | Type | Description | Example
+amount | Yes | integer | Total number of cloud phones to create (range: 1-100) | 10
+androidVersion | Yes | integer | Cloud phone system version | 1
+proxyId | No | string | Proxy ID. You must provide either a Proxy ID or Proxy configuration. Proxy ID takes precedence. | 497548067550006541
+proxyConfig | No | object | Proxy configuration | See request example
+remark | No | string | Remarks, up to 1500 characters | 12ABCDEF
+groupName | No | string | Group name, created automatically if not existing, up to 50 characters | group1
+tagsName | No | array[string] | Tag names, created automatically if not existing. The maximum length of a single label is 30 characters | See request example
+region | No | string | Specify where the cloud phone is located, optional parameters：cn, sgp | cn
+chargeMode | No | int | charge mode | 0 pay per minute, 1 monthly subscription; default is pay per minute
+language | No | string | Language of the cloud phone | baseOnIP/default (default is English)，If this parameter is not provided, it will default to English
+surfaceBrandName | No | string | Mobile phone brand, obtain the value corresponding to the Android version from the brand list interface, and the brand model should be transmitted at the same time | samsung
+surfaceModelName | No | string | Mobile phone model, obtain the value corresponding to the Android version from the brand list interface, and the brand model should be transmitted at the same time | Galaxy S23
+netType | No | integer | Networking. 0-Wi-Fi, 1-Mobile. Only supported on Android 12/Android 13/Android 15. Default to mobile network | 0
+phoneNumber | No | string | Mobile phone number, automatically generated if empty | +66817806147
+--- TABLE ---
+Parameter Name | Required | Type | Description | Example
+typeId | Yes | integer | Proxy type ID | 1
+server | Yes | string | Proxy server hostname | server.com
+port | Yes | integer | Proxy server port | 1234
+username | Yes | string | Proxy server username | user
+password | Yes | string | Proxy server password | password
+--- TABLE ---
+Parameter Name | Required | Type | Description | Example
+useProxyCfg | Yes | bool | Whether to use the already configured proxy | true
+typeId | Yes | integer | Proxy type ID | 20
+protocol | No | integer | Proxy protocol type: 1 for SOCKS5, 2 for HTTP. | 1
+server | No | string | Proxy server hostname | server.com
+port | No | integer | Proxy server port | 1234
+username | No | string | Proxy server username | user
+password | No | string | Proxy server password | password
+country | No | string | country | us
+region | No | string | region | alabama
+city | No | string | city | mobile
+--- TABLE ---
+Parameter Name | Type | Description
+totalAmount | integer | Total number of cloud phones created
+successAmount | integer | Number of successful creations
+failAmount | integer | Number of failed creations
+details | array | Creation response details
+--- TABLE ---
+Parameter Name | Type | Description
+index | integer | Creation index
+code | integer | Result code, 0 for success
+msg | string | Result message
+id | string | Cloud phone ID
+profileName | string | Cloud phone name
+envSerialNo | string | Cloud phone serial number
+equipmentInfo | EquipmentInfo | cloud phone equipment info
+--- TABLE ---
+Parameter Name | Type | Description
+countryName | string | country name
+phoneNumber | string | phone number
+enableSim | int | is Sim enable : 0 unable 1 enable
+imei | string | IMEI
+osVersion | string | system version
+wifiBssid | string | Wi-Fi MAC Address
+mac | string | phone Wi-Fi MAC Address
+bluetoothMac | string | bluetooth Mac Address
+timeZone | string | timezone
+deviceBrand | string | brand
+deviceModel | string | model
+--- TABLE ---
+Error Code | Description
+44001 | Batch creation is not allowed, please upgrade to the Pro plan
+44002 | Batch creation is not allowed, cloud phone creation limit reached for the plan
+44004 | Batch creation is not allowed, maximum daily cloud phone creation limit reached
+44006 | phone out of stock
+45003 | Proxy banned
+45004 | Proxy verification failed
+45005 | Region not supported
+45001 | The proxy does not exist.
+43017 | not enough devices for the monthly plan
+43019 | The charge mode of this androidVersion only supports monthly subscription
+45008 | Proxy type not allow
+--- TABLE ---
+Parameter Name | Required | Type | Description | Example
+mobileType | Yes | string | Cloud phone type, can be set
+Android 10
+Android 11
+Android 12
+Android 13
+Android 14
+Android 15 | Android 10
+chargeMode | No | int | Billing mode, 0-on-demand, 1-monthly, default is on-demand | 0
+region | No | string | Specify the computer room where the cloud phone is located. Optional parameters: cn, sgp | cn
+data | Yes | array[EnvRowApi] | Environment parameter array, up to 100 | Reference Request Example
+--- TABLE ---
+Parameter Name | Required | Type | Description | Example
+profileName | Yes | string | Cloud Phone Name | myPhone
+proxyInformation | No | string | Proxy information, supports http, https, socks5 types | socks5://AD00xx004:3000xxx0002@100.200.200.100:30000
+refreshUrl | No | string | Proxy refresh url | http://someaddr
+proxyNumber | No | integer | The serial number of the added proxy | 1
+dynamicProxy | No | string | Saved dynamic proxy, can be set IPIDEA/IPHTML/kookeey/Luminati(BrightData)/rolaip | IPIDEA
+dynamicProxyLocation | No | string | Dynamic proxy country, required when specifying a dynamic proxy | us
+mobileLanguage | No | string | The language of the cloud phone. If you set baseOnIP, it will be based on the proxy settings. If you set default or do not set it, it will be in English. | default
+profileGroup | No | string | Group name, if it does not exist, create a new one automatically | myGroup
+profileTags | No | array[string] | Tag name, if it does not exist, create a new one automatically | Reference Request Example
+profileNote | No | string | Remark | remark
+surfaceBrandName | No | string | Mobile phone brand, obtain the value corresponding to the Android version from the brand list interface, and the brand model should be transmitted at the same time | samsung
+surfaceModelName | No | string | Mobile phone model, obtain the value corresponding to the Android version from the brand list interface, and the brand model should be transmitted at the same time | Galaxy S23
+netType | No | integer | Networking. 0-Wi-Fi, 1-Mobile. Only supported on Android 12/Android 13/Android 15. Default to mobile network | 0
+phoneNumber | No | string | Mobile phone number, automatically generated if empty | +66817806147
+--- TABLE ---
+Parameter Name | Type | Description
+totalAmount | integer | Total number of cloud phones created
+successAmount | integer | Number of successful creations
+failAmount | integer | Number of failed creations
+details | array | Creation response details
+--- TABLE ---
+Parameter Name | Type | Description
+index | integer | Creation index
+code | integer | Result code, 0 for success
+msg | string | Result message
+id | string | Cloud phone ID
+profileName | string | Cloud phone name
+envSerialNo | string | Cloud phone serial number
+equipmentInfo | EquipmentInfo | cloud phone equipment info
+--- TABLE ---
+Parameter Name | Type | Description
+countryName | string | country name
+phoneNumber | string | phone number
+enableSim | int | is Sim enable : 0 unable 1 enable
+imei | string | IMEI
+osVersion | string | system version
+wifiBssid | string | Wi-Fi MAC Address
+mac | string | phone Wi-Fi MAC Address
+bluetoothMac | string | bluetooth Mac Address
+timeZone | string | timezone
+deviceBrand | string | brand
+deviceModel | string | model
+--- TABLE ---
+Error Code | Description
+44001 | Batch creation is not allowed, please upgrade to the Pro plan
+44002 | Batch creation is not allowed, cloud phone creation limit reached for the plan
+44004 | Batch creation is not allowed, maximum daily cloud phone creation limit reached
+50000 | Unknown error
+--- TABLE ---
+Parameter Name | Required | Type | Description | Example
+page | No | integer | Page number, minimum is 1 | 1
+pageSize | No | integer | Number of records per page, minimum is 1, maximum is 100 | 10
+--- TABLE ---
+Parameter Name | Required | Type | Description | Example
+ids | No | array[string] | Cloud phone ID array，The maximum length of the array is 100. If the array is not empty, these two parameters： page pageSize, will not take effect | [“5213214343124321”]
+serialName | No | string | Cloud phone name | test
+remark | No | string | Cloud phone remark | test
+groupName | No | string | Cloud phone group name | test group
+tags | No | array[string] | List of cloud phone tag names | See example
+chargeMode | No | int | charge mode | 0 pay per minute, 1 monthly subscription; If this field is left empty, all charge mode will be queried.
+--- TABLE ---
+Parameter Name | Type | Description
+total | integer | Total number of cloud phones
+page | integer | Page number
+pageSize | integer | Page size
+items | array[Phone] | List of cloud phones
+--- TABLE ---
+Parameter Name | Type | Description
+id | string | Cloud phone ID
+serialName | string | Cloud phone name
+serialNo | string | Cloud phone serial number
+group | Group | Cloud phone group information
+remark | string | Cloud phone remark
+status | int | Cloud phone status
+0 - Started
+1 - Starting
+2 - Shut down
+tags | array[Tag] | List of cloud phone tags
+equipmentInfo | EquipmentInfo | cloud phone equipment info
+proxy | Proxy | Proxy info
+chargeMode | int | charge mode: 0 pay per minute, 1 monthly subscription
+hasBind | bool | Is the device bound to a monthly subscription
+monthlyExpire | int | Monthly subscription expiration time, timestamp in seconds
+--- TABLE ---
+Parameter Name | Type | Description
+id | string | Group ID
+name | string | Group name
+remark | string | Group remark
+--- TABLE ---
+Parameter Name | Type | Description
+name | string | Cloud phone tag name
+--- TABLE ---
+Parameter Name | Type | Description
+countryName | string | country name
+phoneNumber | string | phone number
+enableSim | int | is Sim enable : 0 unable 1 enable
+imei | string | IMEI
+osVersion | string | system version
+wifiBssid | string | Wi-Fi MAC Address
+mac | string | phone Wi-Fi MAC Address
+bluetoothMac | string | bluetooth Mac Address
+timeZone | string | timezone
+deviceBrand | string | brand
+deviceModel | string | model
+--- TABLE ---
+Parameter Name | Type | Description
+type | string | Proxy type (socks5, http, https)
+server | string | Proxy server
+port | int | Proxy port
+username | string | Proxy username
+password | string | Proxy password
+--- TABLE ---
+Error Code | Description
+42001 | Cloud phone does not exist
+--- TABLE ---
+Parameter Name | Required | Type | Description | Example
+ids | Yes | array[string] | List of cloud phone IDs, Limit to 100 elements | See request example
+--- TABLE ---
+Parameter Name | Type | Description
+totalAmount | integer | Total number of requested IDs
+successAmount | integer | Total number of successful responses
+failAmount | integer | Total number of failed responses
+successDetails | array[SuccessDetails] | Information about successful responses
+failDetails | array[FailDetails] | Information about failed responses
+--- TABLE ---
+Parameter Name | Type | Description
+id | string | ID of the successful cloud phone
+serialName | string | Name of the successful cloud phone
+status | integer | Cloud phone status code
+0 - Started
+1 - Starting
+2 - Shut down
+3 - Expired
+--- TABLE ---
+Parameter Name | Type | Description
+code | int | Failure code 42001: Cloud phone does not exist
+id | string | ID of the failed cloud phone
+msg | string | Failure message
+--- TABLE ---
+Error Code | Description
+42001 | Cloud phone does not exist
+--- TABLE ---
+Parameter Name | Required | Type | Description | Example
+ids | Yes | array[string] | List of cloud phone IDs, Limit to 100 elements | See request example
+--- TABLE ---
+Parameter Name | Type | Description
+totalAmount | integer | Total number of requested IDs
+successAmount | integer | Total number of successful responses
+failAmount | integer | Total number of failed responses
+successDetails | array[SuccessDetails] | Information about successful responses
+failDetails | array[FailDetails] | Information about failed responses
+--- TABLE ---
+Parameter Name | Type | Description
+id | string | ID of the successful cloud phone
+serialName | string | Name of the successful cloud phone
+status | integer | Cloud phone status code
+0 - Started
+1 - Starting
+2 - Shut down
+3 - Expired
+--- TABLE ---
+Parameter Name | Type | Description
+code | int | Failure code 42001: Cloud phone does not exist
+id | string | ID of the failed cloud phone
+msg | string | Failure message
+--- TABLE ---
+Error Code | Description
+42001 | Cloud phone does not exist
+--- TABLE ---
+Parameter Name | Required | Type | Description | Example
+ids | Yes | array[string] | List of cloud phone IDs | See request example
+hideSideBar | No | bool | Whether to hide the sidebar | false, defaults to false if not provided
+displayTimer | No | bool | Whether to display the timer | false, defaults to false if not provided
+--- TABLE ---
+Parameter Name | Type | Description
+totalAmount | integer | Total number of requested IDs
+successAmount | integer | Number of successful starts
+successDetails | array[SuccessDetails] | Information about successed
+failAmount | integer | Number of failed starts
+failDetails | array[FailDetails] | Information about failures
+--- TABLE ---
+Parameter Name | Type | Description
+id | string | ID of the cloud phone
+url | string | remote url
+--- TABLE ---
+Parameter Name | Type | Description
+code | integer | Failure code
+id | string | ID of the failed cloud phone
+msg | string | Failure message
+--- TABLE ---
+Error Code | Description
+42001 | Cloud phone does not exist
+43004 | Cloud phone has expired
+47004 | Device associated with cloud phone does not exist
+43007 | Cloud phone is already in use by another user
+45002 | Cloud phone proxy is unavailable
+47002 | Cloud phone resources are insufficient
+43020 | Cloud phone is currently unavailable, please try again later
+--- TABLE ---
+Parameter Name | Required | Type | Description | Example
+ids | Yes | array[string] | List of cloud phone IDs | See request example
+--- TABLE ---
+Parameter Name | Type | Description
+totalAmount | integer | Total number of requested IDs
+successAmount | integer | Number of successfully shut down IDs
+failAmount | integer | Number of failed IDs
+failDetails | array[FailDetails] | Information about failures
+--- TABLE ---
+Parameter Name | Type | Description
+code | integer | Error code
+id | integer | Cloud phone ID
+msg | string | Error message
+--- TABLE ---
+Error Code | Description
+42001 | Cloud phone does not exist
+43005 | Cloud phone is executing a task
+43006 | Cloud phone is being remotely connected
+--- TABLE ---
+Parameter | Required | Type | Description | Example
+ids | Yes | array[string] | List of cloud phone IDs, Limit to 100 elements | Refer to the request example
+--- TABLE ---
+Parameter | Type | Description
+totalAmount | integer | Total number of requested IDs
+successAmount | integer | Total number of successful IDs
+failAmount | integer | Total number of failed IDs
+failDetails | array[FailDetails] | Failure details
+--- TABLE ---
+Parameter | Type | Description
+code | integer | Error code
+id | integer | Cloud phone ID
+msg | string | Error message
+--- TABLE ---
+Error Code | Description
+42001 | Cloud phone does not exist
+43009 | Cloud phone is started, cannot delete
+43010 | Cloud phone is starting, cannot delete
+43021 | The cloud phone is in use, please try again later
+--- TABLE ---
+Parameter Name | Required | Type | Description | Example
+ids | Yes | array[string] | List of cloud phone IDs | Refer to Request Example
+--- TABLE ---
+Parameter Name | Type | Description
+totalAmount | integer | Total number of requested IDs
+successAmount | integer | Total number of successful requests
+failAmount | integer | Total number of failed requests
+list | GPS | GPS information
+--- TABLE ---
+Parameter Name | Type | Description
+id | string | Cloud phone ID
+latitude | float | Latitude
+longitude | float | Longitude
+--- TABLE ---
+Error Code | Description
+42001 | Cloud phone does not exist
+--- TABLE ---
+Parameter Name | Required | Type | Description | Example
+list | Yes | array[GPS] | Cloud phone GPS info | Refer to Request Example
+--- TABLE ---
+Parameter Name | Required | Type | Description | Example
+id | Yes | string | Cloud phone ID | Refer to Request Example
+longitude | Yes | float | Longitude | Refer to Request Example
+latitude | Yes | float | Latitude | Refer to Request Example
+--- TABLE ---
+Parameter Name | Type | Description
+totalAmount | integer | Total number of requested IDs
+successAmount | integer | Total number of successful requests
+failAmount | integer | Total number of failed requests
+--- TABLE ---
+Error Code | Description
+42001 | Cloud phone does not exist
+43012 | Latitude/longitude range error
+--- TABLE ---
+Parameter Name | Required | Type | Description | Example
+id | Yes | string | Cloud phone ID | 
+name | No | string | New cloud phone name, up to 100 characters | 
+remark | No | string | New cloud phone remark, up to 1500 characters | 
+groupID | No | string | New cloud phone group ID | 
+tagIDs | No | array[string] | New cloud phone tag IDs | 
+proxyConfig | No | Proxy | New cloud phone proxy config | 
+proxyId | No | string | Proxy Id | 
+--- TABLE ---
+Parameter Name | Required | Type | Description | Example
+typeId | Yes | integer | Proxy type ID | 1
+server | Yes | string | Proxy server hostname | server.com
+port | Yes | integer | Proxy server port | 1234
+username | Yes | string | Proxy server username | user
+password | Yes | string | Proxy server password | password
+--- TABLE ---
+Parameter Name | Required | Type | Description | Example
+useProxyCfg | Yes | bool | Whether to use the already configured proxy | true
+typeId | Yes | integer | Proxy type ID | 20
+protocol | No | integer | Proxy protocol type: 1 for SOCKS5, 2 for HTTP. | 1
+server | No | string | Proxy server hostname | server.com
+port | No | integer | Proxy server port | 1234
+username | No | string | Proxy server username | user
+password | No | string | Proxy server password | password
+country | No | string | country | us
+region | No | string | region | alabama
+city | No | string | city | mobile
+--- TABLE ---
+Parameter Name | Type | Description
+failDetails | array[FailDetails] | Tag addition failure info
+--- TABLE ---
+Parameter Name | Type | Description
+code | integer | Error code
+id | integer | Tag ID
+msg | string | Error msg
+--- TABLE ---
+Error Code | Description
+42001 | Cloud phone does not exist
+43022 | Tag does not exist
+43032 | Group does not exist
+45003 | Proxy region not allowed
+45004 | Proxy check failed, check config
+45008 | Proxy type not allow
+--- TABLE ---
+Parameter Name | Required | Type | Description | Example
+id | Yes | string | Cloud Phone ID | See request example
+changeBrandModel | No | bool | Whether to randomize the brand and model. true: randomize, false: keep unchanged; if not provided, it remains randomize. | true
+--- TABLE ---
+错误码 | 说明
+42001 | cloud phone not exist
+44004 | maximum daily cloud phone creation limit reached
+43005 | cloud phone is executing task
+43006 | cloud phone is occupied by remote
+43015 | this cloud phone is not support One-click new machine
+45004 | proxy detect fail
+--- TABLE ---
+Parameter Name | Required | Type | Description | Example
+id | Yes | string | clound phone id | Refer to request example
+--- TABLE ---
+Parameter Name | Type | Description
+taskId | string | task id
+--- TABLE ---
+Error Code | Description
+42001 | Cloud phone does not exist
+42002 | Cloud phone is not running
+--- TABLE ---
+Parameter Name | Required | Type | Description | Example
+taskId | Yes | string | task id | Refer to request example
+--- TABLE ---
+Parameter Name | Type | Description
+status | int | 0 Acquisition failed；1 In progress；2 Execution succeeded；3 Execution failed
+downloadLink | downloadLink | screen shot download link
+--- TABLE ---
+Parameter Name | Required | Type | Description | Example
+ids | Yes | array[string] | List of cloud phone IDs ( currently supports Android 12,13,14,15 ) | Refer to request example
+open | Yes | bool | open/close | false
+--- TABLE ---
+Error Code | Description
+42001 | cloud phone not found
+42002 | cloud phone is not running
+43016 | this cloud phone does not support root
+--- TABLE ---
+Parameter Name | Required | Type | Description | Example
+id | Yes | string | clound phone id | Refer to request example
+--- TABLE ---
+Parameter Name | Type | Description
+serialNum | string | cloud phone device ID
+--- TABLE ---
+Error Code | Description
+42001 | Cloud phone does not exist
+--- TABLE ---
+Parameter Name | Required | Type | Description | Example
+id | Yes | string | Cloud phone environment ID (Currently supports only Android 12 , 13, 15 devices) | 526209711930868736
+phoneNumber | Yes | string | Phone number | +17723504471
+text | Yes | string | SMS content | xxxx
+--- TABLE ---
+Error Code | Description
+52001 | This type of cloud phone does not support sending SMS.
+--- TABLE ---
+Parameter Name | Required | Type | Description | Example
+androidVer | Yes | integer | android version, 10-15 | 10
+--- TABLE ---
+Parameter Name | Type | Description
+surfaceBrandName | string | mobile phone brand
+surfaceModelName | string | mobile phone model
+--- TABLE ---
+Parameter Name | Required | Type | Description | Example
+account | yes | string | target account | Anna@geelark.com
+ids | yes | array[string] | The maximum length limit for the array of the cloud phone ID to be transferred is 200, and any part exceeding 200 will be ignored | 
+transferOption | no | arrry[string] | Transfer options with optional parameters：name：cloud phone name，proxy：cloud phone proxy，tag：cloud phone tag，remark：cloud phone remark | [ “name”,”proxy”, “tag”,”remark” ]
+--- TABLE ---
+Parameter Name | Type | Description
+successCount | int | success count
+failCount | int | fail count
+failEnvIds | array[string] | transfer failed cloud phone id (currently in use or does not exist)
+--- TABLE ---
+Error Code | Description
+40013 | target account not found
+43022 | can not transfer to myself
+--- TABLE ---
+Parameter Name | Required | Type | Description
+id | Yes | string | Cloud Phone ID
+netType | Yes | integer | Networking. 0-Wi-Fi, 1-Mobile. Only supported on Android 12/Android 13/Android 15
+--- TABLE ---
+Error Code | Description
+42001 | cloud phone not found
+--- TABLE ---
+Parameter Name | Required | Type | Description | Example
+ids | Yes | array[string] | Array of task IDs, up to 100 | See request example
+--- TABLE ---
+Parameter Name | Type | Description
+total | integer | Total number of tasks
+items | array[Task] | Array of tasks
+--- TABLE ---
+Parameter Name | Type | Description
+id | string | Task ID
+planName | string | Task plan name
+taskType | integer | Task type
+1 TikTok video posting
+2 TikTok AI account warmup
+3 TikTok carousel posting
+4 TikTok account login
+6 TikTok profile editing
+42 Custom(Including Facebook, YouTube and other platforms)
+serialName | string | Cloud phone name
+envId | string | Cloud phone ID
+scheduleAt | integer | Scheduled time, timestamp in seconds
+status | integer | Task status
+1 Waiting
+2 In progress
+3 Completed
+4 Failed
+7 Cancelled
+failCode | integer | Failure code, refer to task failure codes and reasons
+failDesc | string | Failure reason, refer to task failure codes and reasons
+cost | integer | The time a task takes to complete or fail (in seconds)
+shareLink | string | Share link
+--- TABLE ---
+Failure Code | Failure Reason
+20002 | The machine is performing other tasks
+20003 | Execution timeout. Please view the publication on TikTok.
+20005 | Task canceled
+20006 | The same task was canceled
+20007 | Unsupported task type
+20008 | Failed because the APP language was modified. You need to change the APP language to English and run it again.
+20100 | No network connection
+20101 | Agent parameter error
+20102 | Failed to set modification parameters
+20103 | Failed to restart device
+20104 | After successful login, an error occurs when saving login information to the service.
+20105 | Installation of tiktok failed
+20106 | Failed to install 163 mailbox
+20107 | Unable to load video
+20108 | No network connection
+20109 | Setting proxy via interface failed
+20110 | Failed to obtain proxy ip
+20111 | Installation of auxiliary apk failed
+20112 | Failed to start secondary apk
+20113 | The IP address is the same before and after setting the proxy
+20114 | The node_addr field is parsed into an entity class error
+20115 | Check login failure
+20116 | The account is not logged in
+20117 | No email account and password
+20118 | Failed to obtain IP before setting proxy
+20119 | Failed to bind NetService
+20120 | Failed to obtain tiktok cookie
+20121 | Failed to obtain tiktokInfo
+20122 | Failed to start tiktok
+20123 | Failed to obtain geoip
+20124 | The waiting time to enter the homepage is too long
+20125 | Login failed, too many attempts
+20126 | Login failed, email not found
+20127 | Login failed when switching to email username
+20128 | Login failure
+20129 | Device offline
+20130 | Account password is wrong
+20131 | Too many attempts
+20132 | Login loading time exceeds 2 minutes
+20133 | Slider loading time is too long
+20134 | No network when verifying slider
+20135 | Failed to obtain tiktok UserName
+20136 | Account blocked
+20137 | The account has been blocked and you can appeal.
+20138 | The circular verification code slider takes too long to load
+20139 | Circle slider validation failed
+20140 | Slider verification fails to obtain screenshots
+20141 | There is no network during circular verification
+20142 | Graphic validation failed
+20143 | Maximum number of attempts reached
+20144 | Incorrect account or password
+20145 | Your account has repeatedly violated community guidelines
+20200 | Failed to download file, please check the network or try again later
+20201 | Failed to upload video, please check whether the network is smooth or try again later
+20202 | Failed to upload the video. It has been 0% for five minutes. Please check the network or try again later.
+20203 | Failed to upload video, failed for 15 minutes, please check the network or try again later
+20204 | Video upload was rejected
+20205 | Failed to click the capture button on the main page
+20206 | Failed to upload when clicking on the album page
+20207 | Album file type click failed
+20208 | Failed to download the video file. The specified download file was not found. Please check the network or try again later.
+20209 | Failed to select video
+20210 | Album next step failed
+20211 | Next step of preview page failed
+20212 | Preview completed and click Next failed.
+20213 | Clicking Publish on the publish page fails
+20214 | Clicking Publish Now failed
+20215 | Preview completed and waiting for video processing failed
+20216 | Failed to push stream to camera
+20217 | Recording video from camera failed
+20218 | Green screen filter not found
+20219 | Failed to switch rear camera
+20220 | Download video file connection is empty
+20221 | Couldn’t decode. select anther video
+20222 | Video sound is not available
+20223 | Can’t select Stickers
+20224 | Stickers list not found
+20225 | Stickers list failed to load
+20226 | Failed to download MENTION stickers
+20227 | MENTION sticker input box not found
+20228 | Publish video@user list failed to load
+20229 | The specified user was not found
+20230 | Handle video timeout
+20231 | Add link control not found
+20232 | Add product control not found
+20233 | Failed to enter product page
+20234 | Product not found
+20235 | Modify product name control not found
+20236 | Failed to add product
+20237 | Product sold out
+20238 | Video source is not set for push streaming
+20239 | Audio source is not set for push streaming
+20240 | Camera recording video waiting timeout
+20241 | Product unavailable
+20242 | Failed to jump to video details
+20243 | Failed to click the Use Music button
+20244 | Video music removed
+20245 | Timeout waiting for video to load
+20246 | Video ID does not exist
+20247 | Failed to switch seconds
+20248 | Search button not found
+20249 | Product URL input box not found
+20250 | Add product button not found
+20251 | Video publishing failed, saved to drafts
+20252 | Background music infringement
+20253 | Background music is muted causing failure
+20254 | Failed to set default audience
+20255 | Your account is permanently restricted from selling products
+20256 | Failed to enter product title editing page
+20257 | Video upload timed out
+20258 | Element not found
+20259 | Mention user not found
+20260 | Mention user button not found
+20261 | User search not found
+20262 | When entering the product page, it prompts that there is no network connection.
+20263 | Product name contains inappropriate words
+20264 | Account temporarily restricted
+20265 | Shooting the same video had special effects, causing the mission to fail.
+20266 | Failed to add product name, please check whether the product name is compliant
+20300 | Registration slider verification failed
+20301 | Registration circular verification failed to obtain screenshots
+20302 | Failed to enter email verification code
+20303 | The email verification code was not found within the specified time.
+20304 | Failed to register account and create new password
+20305 | Failed to jump to homepage via email
+20306 | No clickable registration button found
+20307 | Date of birth is illegal or failed to obtain
+20308 | Registration failed by clicking on the email address
+20309 | Failed to enter email
+20310 | The next step after clicking to enter the email address fails.
+20311 | The next step after clicking Create Password fails.
+20312 | Verification countdown not found
+20313 | Resend verification code not found
+20314 | Failed to start mailbox app
+20315 | Verification code sent too many times
+20316 | Skip creation of username failed
+20317 | TikTok prompts you to try too many times when registering
+20318 | Email login failed
+20319 | Email login failed, account locked
+20320 | Email login failed, account password is wrong
+20321 | Email login failed
+20322 | Login password control not found
+20323 | Waiting too long after entering the verification code
+20324 | Account or password incorrect
+20325 | Fail to register
+20326 | Account has been registered
+20327 | Waiting too long after entering the verification code
+20328 | An error message appears after entering the password
+20329 | Email verification is required but currently only supports 163 email addresses
+20330 | Email is registered
+20331 | Birthday next step failed
+20332 | Determine the registration entrance failed
+20333 | Circular verification code processing exception
+20334 | Email verification required
+20335 | An exception occurred during registration
+20336 | Email verification code execution failed
+20337 | The email verification code has expired or timed out
+20338 | The input box control for filling in the email verification code was not found.
+20339 | The email verification code decoding interface returns an invalid verification code.
+20340 | Interests selection failed
+20401 | Failed to jump to me
+20402 | Failed to click to edit information
+20403 | Unable to edit data
+20501 | Failed to jump to user page
+20502 | There is no network when jumping to the user page
+20503 | The specified user could not be found
+20504 | An exception occurred when jumping to the user page
+20505 | Fan list page failed to load
+20506 | Fan list page loading timeout
+20507 | Fan list loading timeout
+20508 | Failed to load more fans list
+20601 | Failed to click window option
+20602 | Failed to jump to showcase page
+20603 | Failed to jump to add product page
+20604 | Failed to enter product URL page
+20605 | Failed to enter product URL
+20606 | Failed to add product
+20607 | This account does not have a shopping cart
+20700 | Unsupported type
+20701 | Failed to open developer tools
+20702 | TikTok Shop button does not exist
+20703 | Failed to enter TikTok Shop
+20704 | Failed to open shopping cart
+20705 | Failed to enter the invitation page
+20706 | Agree to invitation page exception
+20707 | Failed to click to agree to the invitation
+20708 | Invitation failed
+20709 | Failed to enter revenue page
+20710 | Authorization revenue page exception
+20711 | Authorization revenue failed
+20712 | Access data authorization failed
+20713 | Data authorization failed
+20714 | Failed to detect shopping cart permissions
+20715 | Click Account Settings Failed
+20801 | @ button not found
+20802 | List element not found
+20803 | No users mentioned were found
+20804 | Edit input box not found
+20901 | No delete button found
+21001 | Top button not found
+29997 | Insufficient balance
+29998 | The cloud phone has been deleted
+29999 | Unknown error

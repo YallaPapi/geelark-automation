@@ -1,0 +1,54 @@
+# Geelark Instagram Account Setup Automation
+
+## Goal
+Automate Instagram account creation on Geelark cloud phones. One script, simple flow.
+
+## How It Works
+1. Take screenshot of Geelark device
+2. Send to Claude Vision: "What screen is this? What should I tap/type? Give coordinates."
+3. Execute the action (tap, type, scroll)
+4. Repeat until account is created and set up
+
+## External Services
+- **DaisySMS**: Get phone number, receive SMS codes
+- **2Captcha**: Solve captchas when they appear
+- **Mobile Proxy**: Hit rotation URL before each new account
+
+## Geelark Control
+Research needed: How to programmatically control Geelark devices
+- Option A: Their RPA feature
+- Option B: ADB connection
+- Option C: Their API (if exists)
+
+## Account Setup Steps
+Handle whatever Instagram shows (order varies):
+- Enter birthday
+- Enter phone number (from DaisySMS)
+- Enter SMS code (from DaisySMS)
+- Create username
+- Create password
+- Solve captcha if shown (via 2Captcha)
+- Skip optional steps
+- Add profile photo
+- Add bio
+- Switch to Creator account
+- Follow ~20 accounts
+
+## Inputs
+- Profile photos (folder of images)
+- Bios (text file, one per line)
+- Accounts to follow (text file)
+- Proxy rotation URL
+- API keys (DaisySMS, 2Captcha, Anthropic)
+
+## Output
+- CSV with created accounts: username, password, phone used, status
+
+## Success
+- Create one account end-to-end
+- Then scale to multiple
+
+## Tech
+- Python
+- Claude Vision API for screen reading
+- Simple loop, no fancy architecture
