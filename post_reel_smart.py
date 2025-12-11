@@ -59,39 +59,55 @@ class SmartInstagramPoster:
         )
         return result.stdout.strip() if result.stdout else ""
 
+    def is_uiautomator2_crash(self, exception):
+        """Check if exception indicates UiAutomator2 crashed on device"""
+        error_msg = str(exception).lower()
+        return any(indicator in error_msg for indicator in [
+            'instrumentation process is not running',
+            'uiautomator2 server',
+            'cannot be proxied',
+            'probably crashed',
+        ])
+
+    def reconnect_appium(self):
+        """Reconnect Appium driver after UiAutomator2 crash"""
+        print("  [RECOVERY] Reconnecting Appium driver...")
+        try:
+            if self.appium_driver:
+                self.appium_driver.quit()
+        except:
+            pass
+        self.appium_driver = None
+        time.sleep(2)
+        return self.connect_appium()
+
     def tap(self, x, y):
-        """Tap at coordinates using Appium"""
+        """Tap at coordinates using Appium (required)"""
         print(f"  [TAP] ({x}, {y})")
-        if self.appium_driver:
-            self.appium_driver.tap([(x, y)])
-        else:
-            self.adb(f"input tap {x} {y}")
+        if not self.appium_driver:
+            raise Exception("Appium driver not connected - cannot tap")
+        self.appium_driver.tap([(x, y)])
         time.sleep(1.5)
 
     def swipe(self, x1, y1, x2, y2, duration_ms=300):
-        """Swipe from one point to another using Appium"""
-        if self.appium_driver:
-            self.appium_driver.swipe(x1, y1, x2, y2, duration_ms)
-        else:
-            self.adb(f"input swipe {x1} {y1} {x2} {y2} {duration_ms}")
+        """Swipe from one point to another using Appium (required)"""
+        if not self.appium_driver:
+            raise Exception("Appium driver not connected - cannot swipe")
+        self.appium_driver.swipe(x1, y1, x2, y2, duration_ms)
 
     def press_key(self, keycode):
-        """Press a key using Appium or ADB. Keycode can be int or string like 'KEYCODE_BACK'"""
-        if self.appium_driver:
-            # Convert string keycode to int if needed
-            key_map = {
-                'KEYCODE_BACK': 4,
-                'KEYCODE_HOME': 3,
-                'KEYCODE_ENTER': 66,
-            }
-            if isinstance(keycode, str):
-                keycode = key_map.get(keycode, 4)  # Default to BACK
-            self.appium_driver.press_keycode(keycode)
-        else:
-            if isinstance(keycode, int):
-                self.adb(f"input keyevent {keycode}")
-            else:
-                self.adb(f"input keyevent {keycode}")
+        """Press a key using Appium (required). Keycode can be int or string like 'KEYCODE_BACK'"""
+        if not self.appium_driver:
+            raise Exception("Appium driver not connected - cannot press key")
+        # Convert string keycode to int if needed
+        key_map = {
+            'KEYCODE_BACK': 4,
+            'KEYCODE_HOME': 3,
+            'KEYCODE_ENTER': 66,
+        }
+        if isinstance(keycode, str):
+            keycode = key_map.get(keycode, 4)  # Default to BACK
+        self.appium_driver.press_keycode(keycode)
 
     def random_delay(self, min_sec=0.5, max_sec=2.0):
         """Random delay between actions to appear more human"""
@@ -450,21 +466,34 @@ class SmartInstagramPoster:
             return False
 
     def dump_ui(self):
-        """Dump UI hierarchy and return parsed elements using Appium"""
+        """Dump UI hierarchy and return parsed elements using Appium (required)"""
         elements = []
         xml_str = ""
 
-        # Use Appium's page_source if connected
-        if self.appium_driver:
-            try:
-                xml_str = self.appium_driver.page_source
-            except Exception as e:
-                print(f"  Appium page_source error: {e}")
-                return elements, xml_str
-        else:
-            # Fallback to ADB (won't work if Appium was ever connected)
-            self.adb("uiautomator dump /sdcard/ui.xml")
-            xml_str = self.adb("cat /sdcard/ui.xml")
+        if not self.appium_driver:
+            raise Exception("Appium driver not connected - cannot dump UI")
+
+        try:
+            xml_str = self.appium_driver.page_source
+        except Exception as e:
+            error_str = str(e)
+            error_type = type(e).__name__
+            print(f"  [UI DUMP ERROR] {error_type}: {error_str[:200]}")
+
+            if self.is_uiautomator2_crash(e):
+                print(f"  [RECOVERY] UiAutomator2 crashed, reconnecting...")
+                if self.reconnect_appium():
+                    try:
+                        xml_str = self.appium_driver.page_source
+                    except Exception as e2:
+                        raise Exception(f"Appium reconnect failed: {type(e2).__name__}: {e2}")
+                else:
+                    raise Exception("Appium reconnect failed")
+            else:
+                # Capture full error details for debugging
+                import traceback
+                print(f"  [FULL ERROR]\n{traceback.format_exc()}")
+                raise Exception(f"UI dump failed ({error_type}): {error_str[:100]}")
 
         if '<?xml' not in xml_str:
             return elements, xml_str
@@ -571,24 +600,60 @@ CRITICAL RULES - NEVER GIVE UP:
 - IMPORTANT: Return "done" ONLY when Share button clicked is True AND you see "Sharing to Reels" confirmation
 - If Share button clicked is False but you see "Sharing to Reels", that's from a previous post - ignore it and start the posting flow
 - Set share_clicked=true when you tap the Share button
+- CRITICAL OK BUTTON RULE: After caption has been entered (Caption entered: True), if you see an "OK" button visible on screen (text='OK' or desc='OK'), you MUST tap the OK button FIRST before tapping Next or Share. This OK button dismisses the keyboard or a dialog and must be tapped for Next/Share to work properly.
 
 Only output JSON."""
 
-        response = self.anthropic.messages.create(
-            model="claude-sonnet-4-20250514",
-            max_tokens=500,
-            messages=[{"role": "user", "content": prompt}]
-        )
+        # Retry Claude API calls for transient errors
+        for attempt in range(3):
+            try:
+                response = self.anthropic.messages.create(
+                    model="claude-sonnet-4-20250514",
+                    max_tokens=500,
+                    messages=[{"role": "user", "content": prompt}]
+                )
 
-        text = response.content[0].text.strip()
-        # Handle markdown code blocks
-        if text.startswith("```"):
-            text = text.split("```")[1]
-            if text.startswith("json"):
-                text = text[4:]
-            text = text.strip()
+                # Check for empty response
+                if not response.content:
+                    if attempt < 2:
+                        time.sleep(1)
+                        continue
+                    raise ValueError("Claude returned empty response")
 
-        return json.loads(text)
+                text = response.content[0].text.strip()
+
+                # Check for empty text
+                if not text:
+                    if attempt < 2:
+                        time.sleep(1)
+                        continue
+                    raise ValueError("Claude returned empty text")
+
+                # Handle markdown code blocks
+                if text.startswith("```"):
+                    text = text.split("```")[1]
+                    if text.startswith("json"):
+                        text = text[4:]
+                    text = text.strip()
+
+                try:
+                    return json.loads(text)
+                except json.JSONDecodeError as e:
+                    # Log full raw response for debugging JSON issues
+                    print(f"  [JSON PARSE ERROR] attempt {attempt+1}: {e}")
+                    print(f"  Raw response (full): {text}")
+                    if attempt < 2:
+                        time.sleep(1)
+                        continue
+                    raise ValueError(f"JSON parse failed after 3 attempts: {e}. Response: {text[:100]}")
+
+            except Exception as e:
+                if attempt < 2 and "rate" not in str(e).lower():
+                    time.sleep(1)
+                    continue
+                raise
+
+        raise ValueError("Failed to get valid response from Claude after 3 attempts")
 
     def connect(self):
         """Find phone and connect via ADB"""
@@ -660,8 +725,8 @@ Only output JSON."""
 
         return True
 
-    def connect_appium(self):
-        """Connect Appium driver for text input - works on all Android versions"""
+    def connect_appium(self, retries=3):
+        """Connect Appium driver - REQUIRED for automation to work"""
         print("Connecting Appium driver...")
 
         options = UiAutomator2Options()
@@ -670,23 +735,30 @@ Only output JSON."""
         options.device_name = self.device
         options.udid = self.device
         options.no_reset = True
-        options.new_command_timeout = 300
-        options.set_capability("appium:adbExecTimeout", 60000)
-        options.set_capability("appium:uiautomator2ServerInstallTimeout", 120000)
+        options.new_command_timeout = 60  # Reduced from 300 - fail faster
+        options.set_capability("appium:adbExecTimeout", 30000)  # 30s instead of 60s
+        options.set_capability("appium:uiautomator2ServerInstallTimeout", 60000)  # 60s instead of 120s
 
-        try:
-            self.appium_driver = webdriver.Remote(
-                command_executor=APPIUM_SERVER,
-                options=options
-            )
-            platform_ver = self.appium_driver.capabilities.get('platformVersion', 'unknown')
-            print(f"  Appium connected! (Android {platform_ver})")
-            return True
-        except Exception as e:
-            print(f"  Appium connection failed: {e}")
-            print("  Make sure Appium server is running: appium --address 127.0.0.1 --port 4723")
-            self.appium_driver = None
-            return False
+        last_error = None
+        for attempt in range(retries):
+            try:
+                self.appium_driver = webdriver.Remote(
+                    command_executor=APPIUM_SERVER,
+                    options=options
+                )
+                platform_ver = self.appium_driver.capabilities.get('platformVersion', 'unknown')
+                print(f"  Appium connected! (Android {platform_ver})")
+                return True
+            except Exception as e:
+                last_error = e
+                print(f"  Appium connection failed (attempt {attempt + 1}/{retries}): {e}")
+                self.appium_driver = None
+                if attempt < retries - 1:
+                    print(f"  Retrying in 5 seconds...")
+                    time.sleep(5)
+
+        # All retries failed - raise exception
+        raise Exception(f"Appium connection failed after {retries} attempts: {last_error}")
 
     def upload_video(self, video_path):
         """Upload video to phone"""
@@ -907,6 +979,12 @@ Only output JSON."""
             self.client.disable_adb(self.phone_id)
         except:
             pass
+        # Stop the cloud phone to save Geelark billing minutes
+        try:
+            self.client.stop_phone(self.phone_id)
+            print("  Phone stopped (saving billing minutes)")
+        except Exception as e:
+            print(f"  Warning: Could not stop phone: {e}")
 
 
 def main():

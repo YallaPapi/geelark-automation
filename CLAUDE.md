@@ -1,5 +1,35 @@
 # Claude Code Instructions
 
+## CRITICAL: ALWAYS STOP PHONES
+
+**THIS IS THE MOST IMPORTANT RULE. PHONES COST MONEY WHEN RUNNING.**
+
+### When to Stop Phones:
+1. **EVERY TIME you kill a batch test** - IMMEDIATELY run the stop script
+2. **After ANY test completes** - success or failure
+3. **Before starting a new test** - verify no phones running
+4. **When user interrupts** - FIRST thing to do is stop phones
+
+### How to Stop ALL Running Phones:
+```bash
+cd /c/Users/asus/Desktop/projects/geelark-automation && python -c "
+from geelark_client import GeelarkClient
+client = GeelarkClient()
+for page in range(1, 20):
+    result = client.list_phones(page=page, page_size=100)
+    for phone in result['items']:
+        if phone['status'] == 1:
+            client.stop_phone(phone['id'])
+            print(f'STOPPED: {phone[\"serialName\"]}')
+    if len(result['items']) < 100:
+        break
+"
+```
+
+**NEVER leave phones running. Check and stop phones PROACTIVELY.**
+
+---
+
 ## Task Master AI Instructions
 
 **Import Task Master's development workflow commands and guidelines, treat as if import is in the main CLAUDE.md file.**
@@ -7,39 +37,71 @@
 
 Always use taskmaster to research the best solution any time I ask you to do something. Do not use web search. Use taskmaster.
 
+## MAIN SCRIPT: posting_scheduler.py
+
+**ALWAYS use `posting_scheduler.py` for batch posting.**
+
+### NEVER RUN THESE SCRIPTS:
+- `batch_post.py` - **ARCHIVED** - No tracking, causes duplicate posts
+- `batch_post_concurrent.py` - **ARCHIVED** - Same issues
+- `batch_post_ARCHIVED.py` - Old version, DO NOT USE
+
+### Why posting_scheduler.py:
+- Tracks all posted videos in `scheduler_state.json`
+- Loads from `batch_results_*.csv` to prevent duplicates across restarts
+- Auto-retry failed posts (configurable attempts)
+- Per-account daily limits
+- Per-phase timeouts (connect: 90s, instagram_post: bounded by Appium timeouts)
+- Full logging to `geelark_batch.log` with phase info
+
+### Usage:
+```bash
+# Add videos and accounts, then run
+python posting_scheduler.py --add-folder chunk_01c --add-accounts phone1 phone2 --run
+
+# Check status
+python posting_scheduler.py --status
+
+# Retry all failed
+python posting_scheduler.py --retry-all
+```
+
+### Tracking:
+- **JSON state**: `scheduler_state.json` - jobs, accounts, settings
+- **CSV logs**: `batch_results_*.csv` - historical record
+- **Error log**: `geelark_batch.log` - full stack traces with phase info
+- **API log**: `geelark_api.log` - Geelark API responses for debugging
+
 ---
-
-## Project Overview
-
-This project automates Instagram Reel posting to Geelark cloud phones. It uses:
-- **Geelark API** for phone management (start/stop, ADB enable, file upload)
-- **Appium + UIAutomator2** for Android UI automation (tapping, typing, navigation)
-- **Claude AI** for intelligent UI analysis and decision-making
-
-## Architecture
-
-```
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│   batch_post.py │────▶│post_reel_smart.py│────▶│  Geelark API    │
-│ (orchestrator)  │     │ (single phone)  │     │ (cloud phones)  │
-└─────────────────┘     └────────┬────────┘     └─────────────────┘
-                                 │
-                    ┌────────────┴────────────┐
-                    ▼                         ▼
-            ┌───────────────┐         ┌───────────────┐
-            │ Appium Server │         │  Claude API   │
-            │ (UI control)  │         │ (UI analysis) │
-            └───────────────┘         └───────────────┘
-```
 
 ## Key Files
 
 | File | Purpose |
 |------|---------|
-| `post_reel_smart.py` | Core posting logic - connects to phone, uploads video, navigates Instagram |
-| `batch_post.py` | Posts multiple videos across multiple phones in round-robin fashion |
-| `batch_post_concurrent.py` | Parallel version using multiple Appium ports |
-| `geelark_client.py` | Geelark API wrapper |
+| `posting_scheduler.py` | **MAIN SCRIPT** - scheduler with tracking, retry, state persistence |
+| `post_reel_smart.py` | Core posting logic for single phone (Appium timeout: 60s) |
+| `geelark_client.py` | Geelark API wrapper (upload timeout: 60s) |
+| `dashboard.py` | Real-time web dashboard (http://localhost:5000) |
+| `scheduler_state.json` | Persistent state (auto-generated) |
+| `geelark_batch.log` | Execution log with phase info |
+| `geelark_api.log` | API response log (for Geelark support) |
+
+## Dashboard
+
+Real-time monitoring at http://localhost:5000
+
+```bash
+# Start dashboard (in separate terminal)
+python dashboard.py
+```
+
+Features:
+- Live stats: success/active/pending/failed counts
+- Account status with color-coded progress
+- Recent activity feed
+- Live log streaming (when scheduler uses TeeWriter)
+
+---
 
 ## Setup Requirements
 
@@ -98,20 +160,18 @@ The original ADBKeyboard approach broke on Android 15. We migrated to Appium for
 
 ## Usage
 
-### Single Phone Post
+### Single Phone Post (for testing)
 ```bash
 python post_reel_smart.py <phone_name> <video_path> <caption>
 
 # Example
-python post_reel_smart.py reelwisdompod_ video.mp4 "Check this out! 🎬"
+python post_reel_smart.py reelwisdompod_ video.mp4 "Check this out!"
 ```
 
-### Batch Posting
+### Batch Posting (ALWAYS USE THIS)
 ```bash
-python batch_post.py <chunk_folder> <phone1> <phone2> ... [--limit N]
-
-# Example
-python batch_post.py chunk_01c reelwisdompod_ podmindstudio --limit 3
+# Using posting_scheduler.py (the ONLY correct way)
+python posting_scheduler.py --add-folder chunk_01c --add-accounts phone1 phone2 --run
 ```
 
 ## Chunk Data Format

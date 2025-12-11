@@ -5,12 +5,21 @@ import os
 import uuid
 import time
 import hashlib
+import logging
 import requests
 from dotenv import load_dotenv
 
 load_dotenv()
 
 API_BASE = "https://openapi.geelark.com"
+
+# Setup logging for API responses (useful for debugging with Geelark support)
+logging.basicConfig(
+    filename="geelark_api.log",
+    level=logging.DEBUG,
+    format="%(asctime)s %(levelname)s %(message)s"
+)
+api_logger = logging.getLogger("geelark_api")
 
 
 class GeelarkClient:
@@ -29,16 +38,31 @@ class GeelarkClient:
         }
 
     def _request(self, endpoint, data=None):
-        """Make API request"""
+        """Make API request with full response logging"""
         url = f"{API_BASE}{endpoint}"
         headers = self._get_headers()
+
+        # Log request
+        start_time = time.time()
+        api_logger.debug(f"REQUEST: {endpoint} data={data}")
+
         resp = requests.post(url, json=data or {}, headers=headers)
+        elapsed = time.time() - start_time
+
+        # Log full response info (for Geelark developer debugging)
+        api_logger.info(
+            f"RESPONSE: endpoint={endpoint} status={resp.status_code} "
+            f"elapsed={elapsed:.2f}s headers={dict(resp.headers)} "
+            f"body={resp.text[:1000]}"
+        )
 
         if resp.status_code != 200:
+            api_logger.error(f"HTTP ERROR: {resp.status_code} - {resp.text}")
             raise Exception(f"API error: {resp.status_code} - {resp.text}")
 
         result = resp.json()
         if result.get("code") != 0:
+            api_logger.error(f"API ERROR: code={result.get('code')} msg={result.get('msg')}")
             raise Exception(f"API error: {result.get('code')} - {result.get('msg')}")
 
         return result.get("data")
@@ -152,7 +176,7 @@ class GeelarkClient:
         """Query the upload status of a file to cloud phone"""
         return self._request("/open/v1/phone/uploadFile/result", {"taskId": task_id})
 
-    def wait_for_upload(self, task_id, timeout=180, verbose=True):
+    def wait_for_upload(self, task_id, timeout=60, verbose=True):
         """Wait for file upload to phone to complete"""
         start = time.time()
         last_print = 0

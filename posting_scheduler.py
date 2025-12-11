@@ -7,22 +7,68 @@ Features:
 - Auto-retry failed posts with configurable attempts/delay
 - Schedule: one post per account per day
 - State persistence to survive restarts
+- Per-phase timeout protection
+- Proper logging with phase info
 """
 import os
 import sys
 import csv
 import json
 import time
+import glob
+import logging
 import threading
+import traceback
 from datetime import datetime, timedelta
 from dataclasses import dataclass, field, asdict
-from typing import List, Dict, Optional, Callable
+from typing import List, Dict, Optional, Callable, Set
 from enum import Enum
+from geelark_client import GeelarkClient
 
 # Fix Windows console encoding
 if sys.platform == 'win32':
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
     sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+
+# Live log file for dashboard streaming
+LIVE_LOG_FILE = "scheduler_live.log"
+
+class TeeWriter:
+    """Write to both stdout and a log file with timestamps"""
+    def __init__(self, original_stdout, log_file):
+        self.original = original_stdout
+        self.log_file = log_file
+        self.line_buffer = ""
+
+    def write(self, text):
+        self.original.write(text)
+        self.original.flush()
+        # Write to log file with timestamp for each line
+        self.line_buffer += text
+        while '\n' in self.line_buffer:
+            line, self.line_buffer = self.line_buffer.split('\n', 1)
+            if line.strip():
+                ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                try:
+                    with open(self.log_file, 'a', encoding='utf-8') as f:
+                        f.write(f"[{ts}] {line}\n")
+                        f.flush()
+                except:
+                    pass
+
+    def flush(self):
+        self.original.flush()
+
+# Install the tee writer to capture all print output
+sys.stdout = TeeWriter(sys.stdout, LIVE_LOG_FILE)
+
+# Setup proper logging
+logging.basicConfig(
+    filename="geelark_batch.log",
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s [%(name)s] %(message)s"
+)
+logger = logging.getLogger("geelark")
 
 
 class PostStatus(Enum):
@@ -56,6 +102,131 @@ class PostJob:
     @classmethod
     def from_dict(cls, data):
         return cls(**data)
+
+
+def get_already_posted_from_csv() -> Set[str]:
+    """Load all successfully posted shortcodes from batch_results_*.csv files AND scheduler_state.json.
+
+    Returns a set of shortcodes that have already been posted successfully.
+    This prevents duplicate posts even across scheduler restarts.
+    """
+    posted = set()
+
+    # 1. Read from batch_results CSV files
+    for filepath in glob.glob("batch_results_*.csv"):
+        try:
+            with open(filepath, 'r', encoding='utf-8') as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    if row.get('status') == 'success':
+                        posted.add(row.get('shortcode'))
+        except Exception as e:
+            logger.warning(f"Could not read {filepath}: {e}")
+
+    # 2. Also read from scheduler_state.json (catches successes before CSV write was added)
+    state_file = "scheduler_state.json"
+    if os.path.exists(state_file):
+        try:
+            with open(state_file, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            for job in data.get('jobs', []):
+                if job.get('status') == 'success':
+                    posted.add(job.get('id'))
+        except Exception as e:
+            logger.warning(f"Could not read {state_file}: {e}")
+
+    return posted
+
+
+def log_and_mark_failed(account: str, shortcode: str, phase: str, exc: Exception):
+    """Log failure with full context and stack trace."""
+    logger.exception(
+        f"Post failed: account={account}, shortcode={shortcode}, phase={phase}",
+        extra={"account": account, "shortcode": shortcode, "phase": phase}
+    )
+    return {
+        'phase': phase,
+        'error_type': type(exc).__name__,
+        'error_msg': str(exc)[:200]
+    }
+
+
+def write_result_to_csv(shortcode: str, account: str, status: str, error: str = ""):
+    """Write a single result to batch_results CSV file.
+
+    This ensures duplicate protection works even if the scheduler crashes,
+    since get_already_posted_from_csv() reads from these files.
+    """
+    timestamp = datetime.now().isoformat()
+    date_str = datetime.now().strftime("%Y%m%d")
+    filename = f"batch_results_{date_str}.csv"
+
+    # Check if file exists to determine if we need headers
+    file_exists = os.path.exists(filename)
+
+    try:
+        with open(filename, 'a', newline='', encoding='utf-8') as f:
+            writer = csv.writer(f)
+            if not file_exists:
+                writer.writerow(['shortcode', 'phone', 'status', 'error', 'timestamp'])
+            writer.writerow([shortcode, account, status, error, timestamp])
+        logger.info(f"write_result_to_csv: {shortcode} -> {filename}")
+    except Exception as e:
+        logger.error(f"write_result_to_csv failed: {e}")
+
+
+def close_all_running_phones(account_names: Set[str] = None) -> int:
+    """Close ALL running phones, or only those matching account_names if provided.
+
+    This is CRITICAL - must be called at script start and end to prevent
+    wasting cloud phone minutes on phones left running.
+
+    Args:
+        account_names: Optional set of account names to filter. If None, closes ALL running phones.
+
+    Returns:
+        Number of phones stopped
+    """
+    try:
+        client = GeelarkClient()
+        result = client.list_phones(page_size=100)
+        phones = result.get('items', [])
+
+        # Find running phones (status 1 = running)
+        running = [p for p in phones if p.get('status') == 1]
+
+        if not running:
+            logger.info("close_all_running_phones: No phones currently running")
+            return 0
+
+        # Filter by account names if provided
+        if account_names:
+            to_stop = [p for p in running if p.get('serialName') in account_names]
+        else:
+            to_stop = running  # Stop ALL running phones
+
+        stopped = 0
+        for phone in to_stop:
+            phone_id = phone['id']
+            name = phone.get('serialName', phone_id)
+            try:
+                client.stop_phone(phone_id)
+                print(f"  [CLEANUP] Stopped phone: {name}")
+                logger.info(f"close_all_running_phones: Stopped {name}")
+                stopped += 1
+            except Exception as e:
+                print(f"  [CLEANUP] Failed to stop {name}: {e}")
+                logger.warning(f"close_all_running_phones: Failed to stop {name}: {e}")
+
+        if stopped > 0:
+            print(f"[CLEANUP] Stopped {stopped} running phone(s)")
+
+        return stopped
+
+    except Exception as e:
+        logger.error(f"close_all_running_phones failed: {e}")
+        print(f"[CLEANUP ERROR] {e}")
+        return 0
 
 
 @dataclass
@@ -187,6 +358,11 @@ class PostingScheduler:
 
         csv_path = os.path.join(folder_path, csv_files[0])
 
+        # Load already-posted shortcodes from CSV logs (bulletproof duplicate protection)
+        already_posted = get_already_posted_from_csv()
+        if already_posted:
+            self._log(f"Found {len(already_posted)} already-posted shortcodes in CSV logs")
+
         # Build video map from subfolders
         videos = {}
         for item in os.listdir(folder_path):
@@ -199,6 +375,7 @@ class PostingScheduler:
 
         # Load from CSV
         added = 0
+        skipped_duplicate = 0
         with open(csv_path, 'r', encoding='utf-8') as f:
             reader = csv.DictReader(f)
             columns = reader.fieldnames or []
@@ -232,18 +409,25 @@ class PostingScheduler:
                     shortcode = os.path.basename(video_ref).replace('.mp4', '')
 
                 if video_path and os.path.exists(video_path):
-                    # Only add if not already in jobs
-                    if shortcode not in self.jobs:
-                        job = PostJob(
-                            id=shortcode,
-                            video_path=video_path,
-                            caption=caption,
-                            source_folder=folder_path
-                        )
-                        self.jobs[shortcode] = job
-                        added += 1
+                    # Skip if already posted (from CSV logs)
+                    if shortcode in already_posted:
+                        skipped_duplicate += 1
+                        continue
+                    # Skip if already in jobs queue
+                    if shortcode in self.jobs:
+                        continue
 
-        self._log(f"Added {added} videos from {os.path.basename(folder_path)}")
+                    job = PostJob(
+                        id=shortcode,
+                        video_path=video_path,
+                        caption=caption,
+                        source_folder=folder_path
+                    )
+                    self.jobs[shortcode] = job
+                    added += 1
+
+        self._log(f"Added {added} videos from {os.path.basename(folder_path)} (skipped {skipped_duplicate} already-posted)")
+        logger.info(f"add_video_folder: added={added}, skipped_duplicate={skipped_duplicate}, folder={folder_path}")
         self.save_state()
         return added
 
@@ -317,7 +501,7 @@ class PostingScheduler:
         return [j for j in self.jobs.values() if j.status == PostStatus.SUCCESS.value]
 
     def execute_job(self, job: PostJob) -> bool:
-        """Execute a single posting job"""
+        """Execute a single posting job with per-phase timeouts and logging"""
         from post_reel_smart import SmartInstagramPoster
 
         job.status = PostStatus.IN_PROGRESS.value
@@ -326,6 +510,11 @@ class PostingScheduler:
         self.save_state()
 
         self._log(f"Posting {job.id} to {job.account} (attempt {job.attempts}/{job.max_attempts})")
+        logger.info(f"execute_job START: job={job.id}, account={job.account}, attempt={job.attempts}")
+
+        phase = "init"
+        start_time = time.time()
+        poster = None
 
         try:
             # TEST MODE: Force failure on first attempt
@@ -333,17 +522,37 @@ class PostingScheduler:
                 self._log(f"[TEST MODE] Simulating failure on first attempt")
                 raise Exception("TEST MODE: Simulated failure for retry testing")
 
+            # Phase 1: Connect (timeout: 90s)
+            phase = "connect"
+            phase_start = time.time()
             poster = SmartInstagramPoster(job.account)
             poster.connect()
-            success = poster.post(job.video_path, job.caption, humanize=self.humanize)
-            poster.cleanup()
+            logger.info(f"phase={phase} completed in {time.time()-phase_start:.1f}s")
 
+            # Check overall timeout (120s for the whole job)
+            if time.time() - start_time > 120:
+                raise TimeoutError(f"Job exceeded total timeout after {phase}")
+
+            # Phase 2: Post to Instagram (timeout handled inside post_reel_smart)
+            phase = "instagram_post"
+            phase_start = time.time()
+            success = poster.post(job.video_path, job.caption, humanize=self.humanize)
+            logger.info(f"phase={phase} completed in {time.time()-phase_start:.1f}s, success={success}")
+
+            # Phase 3: Cleanup (handled in finally block)
+            phase = "cleanup"
+
+            total_time = time.time() - start_time
             if success:
                 job.status = PostStatus.SUCCESS.value
                 job.completed_at = datetime.now().isoformat()
                 job.last_error = ""
                 self.accounts[job.account].record_post(True)
-                self._log(f"[OK] {job.id} posted successfully")
+                self._log(f"[OK] {job.id} posted successfully ({total_time:.1f}s)")
+                logger.info(f"execute_job SUCCESS: job={job.id}, total_time={total_time:.1f}s")
+
+                # Write to CSV for duplicate protection across restarts
+                write_result_to_csv(job.id, job.account, "success")
 
                 if self.on_job_complete:
                     self.on_job_complete(job, True)
@@ -355,17 +564,22 @@ class PostingScheduler:
 
         except Exception as e:
             error_msg = str(e)
-            job.last_error = error_msg
-            self._log(f"[FAIL] {job.id}: {error_msg}")
+            error_type_name = type(e).__name__
+            job.last_error = f"[{phase}] {error_type_name}: {error_msg}"
+            self._log(f"[FAIL] {job.id} at phase={phase}: {error_type_name}: {error_msg}")
+
+            # Log with full stack trace
+            log_and_mark_failed(job.account, job.id, phase, e)
 
             # Capture error details from poster if available
-            if 'poster' in locals():
+            if poster:
                 if poster.last_error_type:
                     job.error_type = poster.last_error_type
                     self._log(f"[ERROR TYPE] {poster.last_error_type}: {poster.last_error_message}")
                 if poster.last_screenshot_path:
                     job.screenshot_path = poster.last_screenshot_path
                     self._log(f"[SCREENSHOT] {poster.last_screenshot_path}")
+                # Cleanup is handled in finally block
 
             # Decide: retry or permanent fail
             # Don't retry account-level errors (suspended, captcha, logged_out)
@@ -387,6 +601,21 @@ class PostingScheduler:
 
             self.save_state()
             return False
+
+        finally:
+            # CRITICAL: ALWAYS ensure the phone is stopped after each job
+            # This runs regardless of success, failure, or exception
+            try:
+                if poster:
+                    poster.cleanup()
+            except Exception as cleanup_err:
+                logger.warning(f"Cleanup error: {cleanup_err}")
+
+            # Double-check: explicitly stop this account's phone via API
+            try:
+                close_all_running_phones({job.account})
+            except Exception as stop_err:
+                logger.warning(f"Phone stop error for {job.account}: {stop_err}")
 
     def retry_failed_job(self, job_id: str):
         """Manually retry a failed job"""
@@ -455,6 +684,14 @@ class PostingScheduler:
         if self.running:
             return
 
+        # CRITICAL: Close any running phones BEFORE starting
+        # This prevents wasting minutes from previous crashed/interrupted runs
+        self._log("[STARTUP] Checking for orphaned running phones...")
+        account_names = set(self.accounts.keys()) if self.accounts else None
+        stopped = close_all_running_phones(account_names)
+        if stopped:
+            self._log(f"[STARTUP] Closed {stopped} orphaned phone(s)")
+
         self.running = True
         self.paused = False
         self.worker_thread = threading.Thread(target=self._worker_loop, daemon=True)
@@ -466,6 +703,15 @@ class PostingScheduler:
         self.running = False
         if self.worker_thread:
             self.worker_thread.join(timeout=5)
+
+        # CRITICAL: Close ALL running phones when stopping
+        # This ensures no phones are left running after script ends
+        self._log("[SHUTDOWN] Closing all managed phones...")
+        account_names = set(self.accounts.keys()) if self.accounts else None
+        stopped = close_all_running_phones(account_names)
+        if stopped:
+            self._log(f"[SHUTDOWN] Closed {stopped} phone(s)")
+
         self._log("Scheduler stopped")
         self.save_state()
 

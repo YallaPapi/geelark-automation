@@ -71,12 +71,19 @@ If unexpected screens appear (Play Store, popups, wrong app):
 | `post_reel_smart.py` | Main posting script - THE WORKING ONE |
 | `geelark_client.py` | Geelark API wrapper (phones, ADB, uploads) |
 
-### Batch Scripts (use post_reel_smart.py internally)
+### Scheduler & Dashboard
 
 | File | Purpose |
 |------|---------|
-| `batch_post.py` | Sequential posting to multiple phones |
-| `batch_post_concurrent.py` | Parallel posting with ThreadPoolExecutor |
+| `posting_scheduler.py` | **MAIN SCRIPT** - scheduler with tracking, retry, state persistence |
+| `dashboard.py` | Real-time web dashboard at http://localhost:5000 |
+
+### Archived (DO NOT USE)
+
+| File | Purpose |
+|------|---------|
+| `batch_post.py` | ARCHIVED - no tracking, causes duplicates |
+| `batch_post_concurrent.py` | ARCHIVED - same issues |
 
 ## Usage
 
@@ -91,15 +98,30 @@ Example:
 python post_reel_smart.py miccliparchive video.mp4 "Check out this clip!"
 ```
 
-### Batch Post
+### Batch Post (ALWAYS USE THIS)
 
 ```bash
-python batch_post.py <chunk_folder> <phone1> <phone2> ... [--limit N]
+# Add videos and accounts, then run
+python posting_scheduler.py --add-folder chunk_01c --add-accounts phone1 phone2 --run
+
+# Check status
+python posting_scheduler.py --status
+
+# Retry all failed
+python posting_scheduler.py --retry-all
 ```
 
 Example:
 ```bash
-python batch_post.py va_chunk_05 miccliparchive reelwisdompod_ podmindstudio --limit 3
+python posting_scheduler.py --add-folder chunk_01c --add-accounts miccliparchive reelwisdompod_ podmindstudio --run
+```
+
+### Dashboard
+
+```bash
+# Start dashboard in separate terminal
+python dashboard.py
+# Open http://localhost:5000
 ```
 
 ## Setup

@@ -17,9 +17,25 @@ if sys.platform == 'win32':
 
 import csv
 import time
+import glob
 import argparse
 from datetime import datetime
 from post_reel_smart import SmartInstagramPoster
+
+
+def get_already_posted():
+    """Load all successfully posted shortcodes from batch_results_*.csv files"""
+    posted = set()
+    for filepath in glob.glob("batch_results_*.csv"):
+        try:
+            with open(filepath, 'r', encoding='utf-8') as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    if row.get('status') == 'success':
+                        posted.add(row.get('shortcode'))
+        except Exception as e:
+            print(f"Warning: Could not read {filepath}: {e}")
+    return posted
 
 
 def load_posts_from_csv(chunk_folder, csv_name=None):
@@ -120,6 +136,15 @@ def batch_post(chunk_folder, phones, limit=None, delay=10, humanize=False, csv_n
     # Load posts from CSV
     posts = load_posts_from_csv(chunk_folder, csv_name)
     print(f"Found {len(posts)} videos in {chunk_folder}")
+
+    # Filter out already posted
+    already_posted = get_already_posted()
+    if already_posted:
+        original_count = len(posts)
+        posts = [p for p in posts if p['shortcode'] not in already_posted]
+        skipped = original_count - len(posts)
+        print(f"Skipping {skipped} already-posted videos ({len(already_posted)} total in history)")
+        print(f"Remaining: {len(posts)} videos to post")
 
     if limit:
         posts = posts[:limit]
