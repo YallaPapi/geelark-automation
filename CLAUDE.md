@@ -30,6 +30,40 @@ for page in range(1, 20):
 
 ---
 
+## CURRENT POSTING RUN - 92 ACCOUNT TARGET
+
+**We are completing ONE FULL ROUND of posting to all 92 accounts in `accounts_list.txt`.**
+
+### ONE-CLICK USAGE (Parallel Scheduler):
+```bash
+python posting_scheduler_parallel.py --accounts-file accounts_list.txt --add-folder chunk_01c --workers 3 --run
+```
+
+This automatically:
+1. Loads accounts from file
+2. **Skips accounts that already posted** (checks batch_results_*.csv)
+3. Loads videos from folder
+4. Runs until all remaining accounts have posted
+
+### Tracking Files:
+| File | Purpose |
+|------|---------|
+| `accounts_list.txt` | The 92 target accounts for this posting run |
+| `batch_results_*.csv` | **PRIMARY TRACKING** - All post attempts with status (success/error/failed) |
+| `scheduler_state_parallel.json` | Parallel scheduler state |
+
+### CSV Format (batch_results_*.csv):
+```
+shortcode,phone,status,error,timestamp
+```
+
+### Rule:
+- Each account gets EXACTLY 1 successful post in this run
+- The scheduler AUTOMATICALLY checks batch_results_*.csv and skips already-posted accounts
+- No manual checking needed - just run the one-click command
+
+---
+
 ## Task Master AI Instructions
 
 **Import Task Master's development workflow commands and guidelines, treat as if import is in the main CLAUDE.md file.**

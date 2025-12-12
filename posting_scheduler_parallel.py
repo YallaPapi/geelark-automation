@@ -39,9 +39,11 @@ LIVE_LOG_FILE = "scheduler_parallel_live.log"
 BATCH_LOG_FILE = "geelark_parallel_batch.log"
 
 # Default settings
-DEFAULT_WORKERS = 2
+DEFAULT_WORKERS = 3
 DEFAULT_POSTS_PER_ACCOUNT = 1
 DEFAULT_DELAY_BETWEEN_POSTS = 10
+STALE_JOB_TIMEOUT_MINUTES = 5  # Jobs in_progress longer than this are considered stale
+CLEANUP_INTERVAL_SECONDS = 60  # How often to check for stale jobs
 
 # Fix Windows console encoding
 if sys.platform == 'win32':
@@ -111,6 +113,20 @@ def is_process_running(pid: int) -> bool:
 def acquire_lock() -> bool:
     current_pid = os.getpid()
 
+    # Check if MAIN scheduler is running (scheduler.lock)
+    if os.path.exists("scheduler.lock"):
+        try:
+            with open("scheduler.lock", 'r') as f:
+                main_lock = json.load(f)
+            main_pid = main_lock.get('pid')
+            if main_pid and is_process_running(main_pid):
+                print(f"[LOCK ERROR] Main scheduler is running (PID {main_pid})")
+                print(f"[LOCK ERROR] Stop it first: taskkill //F //PID {main_pid}")
+                return False
+        except:
+            pass
+
+    # Check if another parallel scheduler is running
     if os.path.exists(LOCK_FILE):
         try:
             with open(LOCK_FILE, 'r') as f:
@@ -186,6 +202,9 @@ class PostJob:
     last_attempt: str = ""
     completed_at: str = ""
     source_folder: str = ""
+    # Heartbeat tracking for stale job detection
+    last_heartbeat: str = ""  # ISO timestamp, updated during execution
+    worker_id: int = 0  # Which worker is processing this job (0 = none)
 
     def to_dict(self):
         return asdict(self)
@@ -193,6 +212,31 @@ class PostJob:
     @classmethod
     def from_dict(cls, data):
         return cls(**{k: v for k, v in data.items() if k in cls.__dataclass_fields__})
+
+    def update_heartbeat(self, worker_id: int = 0):
+        """Update heartbeat timestamp"""
+        self.last_heartbeat = datetime.now().isoformat()
+        if worker_id > 0:
+            self.worker_id = worker_id
+
+    def is_stale(self, timeout_minutes: int = STALE_JOB_TIMEOUT_MINUTES) -> bool:
+        """Check if job is stale (no heartbeat for too long)"""
+        if self.status != PostStatus.IN_PROGRESS.value:
+            return False
+        if not self.last_heartbeat:
+            # No heartbeat at all - use last_attempt as fallback
+            if self.last_attempt:
+                try:
+                    last = datetime.fromisoformat(self.last_attempt)
+                    return datetime.now() > last + timedelta(minutes=timeout_minutes)
+                except:
+                    return True  # Can't parse, assume stale
+            return True  # No timestamps at all, assume stale
+        try:
+            hb_time = datetime.fromisoformat(self.last_heartbeat)
+            return datetime.now() > hb_time + timedelta(minutes=timeout_minutes)
+        except:
+            return True
 
 
 @dataclass
@@ -282,6 +326,31 @@ def get_already_posted() -> Set[str]:
     return posted
 
 
+def get_accounts_already_posted() -> Set[str]:
+    """
+    Get all account names that have already received a successful post.
+    Checks batch_results_*.csv files - the PRIMARY tracking source.
+
+    This is used to ensure each account only gets 1 post per run.
+    """
+    posted_accounts = set()
+
+    # Check all batch_results_*.csv files
+    for filepath in glob.glob("batch_results_*.csv"):
+        try:
+            with open(filepath, 'r', encoding='utf-8') as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    if row.get('status') == 'success':
+                        account = row.get('phone', '')
+                        if account:
+                            posted_accounts.add(account)
+        except:
+            pass
+
+    return posted_accounts
+
+
 # === PARALLEL SCHEDULER ===
 class ParallelScheduler:
     def __init__(self, num_workers: int = DEFAULT_WORKERS):
@@ -350,6 +419,68 @@ class ParallelScheduler:
             except Exception as e:
                 logger.log(f"Error saving state: {e}")
 
+    def cleanup_stale_jobs(self, timeout_minutes: int = STALE_JOB_TIMEOUT_MINUTES) -> int:
+        """
+        Clean up stale jobs that are stuck in 'in_progress' status.
+        Returns the number of jobs cleaned up.
+
+        This prevents jobs from being permanently stuck when workers crash/timeout.
+        Similar to stopping phones - stale resources cost money and block progress.
+        """
+        cleaned = 0
+        stale_accounts = set()
+
+        with self.state_lock:
+            for job in self.jobs.values():
+                if job.is_stale(timeout_minutes):
+                    old_status = job.status
+                    old_worker = job.worker_id
+                    old_account = job.account
+
+                    # Reset job to retrying (or pending if max attempts not reached)
+                    if job.attempts < job.max_attempts:
+                        job.status = PostStatus.RETRYING.value
+                    else:
+                        job.status = PostStatus.FAILED.value
+
+                    job.worker_id = 0
+                    job.last_heartbeat = ""
+                    job.last_error = f"Stale job cleanup (was {old_status} on worker {old_worker})"
+
+                    # Track which accounts need to be released
+                    if old_account:
+                        stale_accounts.add(old_account)
+
+                    logger.log(f"[CLEANUP] Reset stale job {job.id}: {old_status} -> {job.status} "
+                             f"(worker {old_worker}, last heartbeat: {job.last_heartbeat or 'never'})")
+                    cleaned += 1
+
+        # Release any accounts that were held by stale jobs
+        if stale_accounts:
+            with self.account_lock:
+                for acc_name in stale_accounts:
+                    if acc_name in self.accounts:
+                        self.accounts[acc_name].in_use = False
+                        logger.log(f"[CLEANUP] Released account {acc_name} from stale job")
+
+        if cleaned > 0:
+            self.save_state()
+            logger.log(f"[CLEANUP] Cleaned {cleaned} stale jobs")
+
+        return cleaned
+
+    def _cleanup_loop(self):
+        """Background thread that periodically cleans up stale jobs"""
+        logger.log("[CLEANUP] Stale job cleanup thread started")
+        while self.running:
+            try:
+                time.sleep(CLEANUP_INTERVAL_SECONDS)
+                if self.running:
+                    self.cleanup_stale_jobs()
+            except Exception as e:
+                logger.log(f"[CLEANUP] Error in cleanup loop: {e}")
+        logger.log("[CLEANUP] Stale job cleanup thread stopped")
+
     def add_account(self, name: str):
         """Add an account"""
         with self.account_lock:
@@ -357,6 +488,50 @@ class ParallelScheduler:
                 self.accounts[name] = AccountState(name=name)
                 logger.log(f"Added account: {name}")
                 self.save_state()
+
+    def add_accounts_from_file(self, filepath: str) -> int:
+        """
+        Load accounts from a file (one per line) and add only those that
+        haven't already received a successful post.
+
+        This is the ONE-CLICK solution: it automatically checks batch_results_*.csv
+        and skips accounts that already posted.
+
+        Returns: number of accounts added
+        """
+        if not os.path.exists(filepath):
+            logger.log(f"Accounts file not found: {filepath}")
+            return 0
+
+        # Read all accounts from file
+        with open(filepath, 'r', encoding='utf-8') as f:
+            all_accounts = [line.strip() for line in f if line.strip()]
+
+        logger.log(f"Loaded {len(all_accounts)} accounts from {filepath}")
+
+        # Get accounts that already have successful posts
+        already_posted = get_accounts_already_posted()
+        logger.log(f"Found {len(already_posted)} accounts already posted (from batch_results_*.csv)")
+
+        # Filter and add only remaining accounts
+        added = 0
+        skipped = 0
+        with self.account_lock:
+            for acc in all_accounts:
+                if acc in already_posted:
+                    skipped += 1
+                    continue
+                if acc not in self.accounts:
+                    self.accounts[acc] = AccountState(name=acc)
+                    added += 1
+
+        logger.log(f"Added {added} accounts, skipped {skipped} already-posted")
+        logger.log(f"Total accounts ready to post: {len(self.accounts)}")
+
+        if added > 0:
+            self.save_state()
+
+        return added
 
     def add_video_folder(self, folder_path: str):
         """Add videos from a folder"""
@@ -484,6 +659,11 @@ class ParallelScheduler:
         job.attempts += 1
         job.last_attempt = datetime.now().isoformat()
 
+        # HEARTBEAT: Track that this worker is actively processing this job
+        # This allows stale job cleanup to detect crashed workers
+        job.update_heartbeat(worker_id)
+        self.save_state()  # Persist heartbeat immediately
+
         poster = None
         success = False
 
@@ -494,14 +674,21 @@ class ParallelScheduler:
 
         try:
             poster = SmartInstagramPoster(job.account, system_port=system_port)
+
+            # Update heartbeat after connection attempt
+            job.update_heartbeat(worker_id)
             poster.connect()
 
+            # Update heartbeat before posting
+            job.update_heartbeat(worker_id)
             success = poster.post(job.video_path, job.caption, humanize=self.humanize)
 
             if success:
                 job.status = PostStatus.SUCCESS.value
                 job.completed_at = datetime.now().isoformat()
                 job.last_error = ""
+                job.worker_id = 0  # Clear worker since job is done
+                job.last_heartbeat = ""  # Clear heartbeat since job is done
 
                 with self.account_lock:
                     if job.account in self.accounts:
@@ -514,6 +701,8 @@ class ParallelScheduler:
         except Exception as e:
             error_msg = str(e)
             job.last_error = error_msg
+            job.worker_id = 0  # Clear worker since job is no longer being processed
+            job.last_heartbeat = ""  # Clear heartbeat
             logger.log(f"FAILED: {job.id} - {error_msg[:100]}")
 
             with self.account_lock:
@@ -582,7 +771,21 @@ class ParallelScheduler:
             return
 
         logger.log(f"Starting parallel scheduler with {self.num_workers} workers")
+
+        # CRITICAL: Clean up stale jobs from previous crashed runs BEFORE starting
+        # This is like stopping phones - stale resources cost money and block progress
+        logger.log("[STARTUP] Checking for stale jobs from previous runs...")
+        cleaned = self.cleanup_stale_jobs()
+        if cleaned > 0:
+            logger.log(f"[STARTUP] Cleaned {cleaned} stale jobs from previous run")
+        else:
+            logger.log("[STARTUP] No stale jobs found")
+
         self.running = True
+
+        # Start cleanup thread for periodic stale job detection
+        self.cleanup_thread = threading.Thread(target=self._cleanup_loop, daemon=True)
+        self.cleanup_thread.start()
 
         # Start worker threads
         self.executor = ThreadPoolExecutor(max_workers=self.num_workers)
@@ -663,17 +866,42 @@ class ParallelScheduler:
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Parallel Posting Scheduler (TEST)')
+    parser = argparse.ArgumentParser(description='''
+Parallel Posting Scheduler
+
+ONE-CLICK USAGE:
+  python posting_scheduler_parallel.py --accounts-file accounts_list.txt --add-folder chunk_01c --workers 3 --run
+
+This will:
+  1. Load accounts from file
+  2. Automatically skip accounts that already posted (checks batch_results_*.csv)
+  3. Load videos from folder
+  4. Run with specified workers until all accounts have posted
+''', formatter_class=argparse.RawDescriptionHelpFormatter)
+
     parser.add_argument('--status', action='store_true', help='Show status')
     parser.add_argument('--run', action='store_true', help='Run the scheduler')
-    parser.add_argument('--workers', type=int, default=DEFAULT_WORKERS, help='Number of workers')
-    parser.add_argument('--add-accounts', nargs='+', help='Add test accounts')
+    parser.add_argument('--workers', type=int, default=DEFAULT_WORKERS, help='Number of workers (default: 3)')
+    parser.add_argument('--accounts-file', type=str, help='Load accounts from file (auto-skips already-posted)')
+    parser.add_argument('--add-accounts', nargs='+', help='Add specific accounts manually')
     parser.add_argument('--add-folder', type=str, help='Add video folder')
+    parser.add_argument('--fresh-state', action='store_true', help='Clear scheduler state and start fresh')
 
     args = parser.parse_args()
 
+    # Fresh state option - clears the parallel scheduler state
+    if args.fresh_state:
+        if os.path.exists(STATE_FILE):
+            os.remove(STATE_FILE)
+            print(f"Cleared {STATE_FILE}")
+
     scheduler = ParallelScheduler(num_workers=args.workers)
 
+    # Load accounts from file (auto-filters already-posted)
+    if args.accounts_file:
+        scheduler.add_accounts_from_file(args.accounts_file)
+
+    # Manual account addition
     if args.add_accounts:
         for acc in args.add_accounts:
             scheduler.add_account(acc)
