@@ -25,8 +25,6 @@ import json
 import random
 import xml.etree.ElementTree as ET
 import anthropic
-import threading
-import concurrent.futures
 from geelark_client import GeelarkClient
 
 # Appium imports
@@ -36,7 +34,6 @@ from appium.webdriver.common.appiumby import AppiumBy
 
 ADB_PATH = r"C:\Users\asus\Downloads\platform-tools-latest-windows\platform-tools\adb.exe"
 APPIUM_SERVER = "http://127.0.0.1:4723"
-APPIUM_CONNECT_TIMEOUT = 15  # seconds - connection typically takes 3-6s
 
 
 class SmartInstagramPoster:
@@ -706,24 +703,55 @@ Only output JSON."""
         self.device = f"{adb_info['ip']}:{adb_info['port']}"
         password = adb_info['pwd']
 
+        # Clean any stale connection to this device first
+        subprocess.run([ADB_PATH, "disconnect", self.device], capture_output=True)
+        time.sleep(1)
+
         print(f"Connecting to {self.device}...")
-        subprocess.run([ADB_PATH, "connect", self.device], capture_output=True)
+        connect_result = subprocess.run([ADB_PATH, "connect", self.device], capture_output=True, encoding='utf-8')
+        print(f"  ADB connect: {connect_result.stdout.strip()}")
 
-        # Geelark requires glogin
-        login_result = self.adb(f"glogin {password}")
-        print(f"ADB: {login_result or 'connected'}")
-
-        # Wait for device to be stable in ADB
+        # Wait for device to appear in ADB devices list BEFORE running glogin
         print("Waiting for ADB connection to stabilize...")
-        for attempt in range(5):
+        device_ready = False
+        for attempt in range(10):  # Increased attempts
             time.sleep(2)
             result = subprocess.run([ADB_PATH, "devices"], capture_output=True, encoding='utf-8')
-            if self.device in result.stdout and "device" in result.stdout.split(self.device)[1].split('\n')[0]:
-                print(f"  Device {self.device} is ready")
+            if self.device in result.stdout:
+                # Check if device status is "device" (not "offline" or "unauthorized")
+                lines = result.stdout.strip().split('\n')
+                for line in lines:
+                    if self.device in line and '\tdevice' in line:
+                        device_ready = True
+                        print(f"  Device {self.device} is ready")
+                        break
+                if device_ready:
+                    break
+            print(f"  Waiting... (attempt {attempt + 1}/10)")
+
+        if not device_ready:
+            print(f"  Warning: Device not in ADB device list after 20s")
+
+        # NOW run glogin after device is ready - with retry
+        print("Authenticating with glogin...")
+        glogin_success = False
+        for glogin_attempt in range(3):
+            login_result = self.adb(f"glogin {password}")
+            # Check both stdout and for error indicators
+            if login_result and "error" not in login_result.lower():
+                print(f"  glogin: {login_result}")
+                glogin_success = True
                 break
-            print(f"  Waiting... (attempt {attempt + 1}/5)")
-        else:
-            print(f"  Warning: Device may not be fully connected")
+            elif "success" in login_result.lower():
+                print(f"  glogin: {login_result}")
+                glogin_success = True
+                break
+            else:
+                print(f"  glogin attempt {glogin_attempt + 1}/3 returned: [{login_result}]")
+                time.sleep(2)
+
+        if not glogin_success:
+            print(f"  Warning: glogin may not have succeeded")
 
         # Connect Appium for UI interaction
         self.connect_appium()
@@ -749,20 +777,12 @@ Only output JSON."""
         last_error = None
         for attempt in range(retries):
             try:
-                # Use ThreadPoolExecutor for timeout on webdriver.Remote()
-                # Connection normally takes 3-6s, timeout at APPIUM_CONNECT_TIMEOUT
-                def create_driver():
-                    return webdriver.Remote(
-                        command_executor=APPIUM_SERVER,
-                        options=options
-                    )
-
-                with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
-                    future = executor.submit(create_driver)
-                    try:
-                        self.appium_driver = future.result(timeout=APPIUM_CONNECT_TIMEOUT)
-                    except concurrent.futures.TimeoutError:
-                        raise Exception(f"Appium connection timeout after {APPIUM_CONNECT_TIMEOUT}s")
+                # Direct connection - removed ThreadPoolExecutor which left orphaned sessions
+                # Appium's own timeouts (adbExecTimeout, uiautomator2ServerLaunchTimeout) handle slow connections
+                self.appium_driver = webdriver.Remote(
+                    command_executor=APPIUM_SERVER,
+                    options=options
+                )
 
                 platform_ver = self.appium_driver.capabilities.get('platformVersion', 'unknown')
                 print(f"  Appium connected! (Android {platform_ver})")
