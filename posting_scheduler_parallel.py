@@ -388,12 +388,14 @@ class ParallelScheduler:
                     acc = AccountState(**{k: v for k, v in acc_data.items() if k != 'in_use'})
                     self.accounts[acc.name] = acc
 
-                # Load settings
-                settings = data.get('settings', {})
+                # Load settings (but NEVER num_workers - that comes from CLI only)
+                settings = data.get('settings', {}) or {}
+                settings.pop('num_workers', None)  # HARD STRIP - never let this leak back in
+
                 self.posts_per_account_per_day = settings.get('posts_per_account_per_day', DEFAULT_POSTS_PER_ACCOUNT)
                 self.delay_between_posts = settings.get('delay_between_posts', DEFAULT_DELAY_BETWEEN_POSTS)
                 self.humanize = settings.get('humanize', True)
-                self.num_workers = settings.get('num_workers', self.num_workers)
+                # num_workers is NEVER loaded from state - CLI is the single source of truth
 
                 logger.log(f"Loaded state: {len(self.jobs)} jobs, {len(self.accounts)} accounts")
             except Exception as e:
@@ -409,7 +411,8 @@ class ParallelScheduler:
                     'posts_per_account_per_day': self.posts_per_account_per_day,
                     'delay_between_posts': self.delay_between_posts,
                     'humanize': self.humanize,
-                    'num_workers': self.num_workers,
+                    # NOTE: num_workers is intentionally NOT saved - it must come from CLI
+                    # This prevents stale values from being loaded on restart
                 },
                 'last_saved': datetime.now().isoformat(),
             }
@@ -705,6 +708,24 @@ class ParallelScheduler:
             job.last_heartbeat = ""  # Clear heartbeat
             logger.log(f"FAILED: {job.id} - {error_msg[:100]}")
 
+            # TASK 32: Appium errors = single failure, no tight retry loops
+            # The job will be marked failed and can be retried in a future run
+            appium_error_patterns = [
+                "appium" in error_msg.lower(),
+                "HTTPConnectionPool" in error_msg,
+                "instrumentation" in error_msg.lower(),
+                "could not proxy command" in error_msg.lower(),
+                "invalid session id" in error_msg.lower(),
+                "socket hang up" in error_msg.lower(),
+                "AdbReadinessError" in error_msg,
+                "GloginReadinessError" in error_msg,
+            ]
+            if any(appium_error_patterns):
+                # Single health check with bounded timeout (5s) - no retry loop
+                if not check_appium_health():
+                    logger.log(f"[WARNING] Appium may be down. Job failed - will not retry immediately.")
+                    logger.log(f"[WARNING] Consider restarting Appium before next run.")
+
             with self.account_lock:
                 if job.account in self.accounts:
                     self.accounts[job.account].record_post(False)
@@ -770,7 +791,14 @@ class ParallelScheduler:
         if self.running:
             return
 
-        logger.log(f"Starting parallel scheduler with {self.num_workers} workers")
+        # IMPORTANT: num_workers is ALWAYS from CLI, never loaded from state file
+        logger.log(f"Starting parallel scheduler with {self.num_workers} workers (from CLI argument)")
+
+        # TASK 32: Deprecation warning for multi-worker mode sharing one Appium
+        if self.num_workers > 1:
+            logger.log("[DEPRECATION WARNING] Multi-worker mode with shared Appium is deprecated!")
+            logger.log("[DEPRECATION WARNING] Consider using posting_lane.py with separate Appium instances per lane.")
+            logger.log("[DEPRECATION WARNING] See lane_config.py for multi-lane setup.")
 
         # CRITICAL: Clean up stale jobs from previous crashed runs BEFORE starting
         # This is like stopping phones - stale resources cost money and block progress
@@ -792,13 +820,15 @@ class ParallelScheduler:
         self.futures = []
 
         for i in range(1, self.num_workers + 1):
+            system_port = 8200 + i
+            logger.log(f"[STARTUP] Creating Worker {i} with systemPort {system_port}")
             future = self.executor.submit(self.worker_loop, i)
             self.futures.append(future)
             # Stagger worker startup by 2s to avoid simultaneous Appium connections
             if i < self.num_workers:
                 time.sleep(2)
 
-        logger.log("All workers started")
+        logger.log(f"All workers started (total: {self.num_workers})")
 
     def stop(self):
         """Stop the scheduler"""

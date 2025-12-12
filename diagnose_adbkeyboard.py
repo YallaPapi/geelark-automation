@@ -7,7 +7,7 @@ import time
 import subprocess
 from geelark_client import GeelarkClient
 
-ADB_PATH = r"C:\Users\asus\Downloads\platform-tools-latest-windows\platform-tools\adb.exe"
+ADB_PATH = r"C:\Users\asus\Downloads\android-sdk\platform-tools\adb.exe"
 
 PHONES = ["podmindstudio", "miccliparchive", "reelwisdompod_", "talktrackhub"]
 

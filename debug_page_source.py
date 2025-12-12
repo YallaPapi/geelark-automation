@@ -9,7 +9,7 @@ from appium import webdriver
 from appium.options.android import UiAutomator2Options
 import subprocess
 
-ADB_PATH = r"C:\Users\asus\Downloads\platform-tools-latest-windows\platform-tools\adb.exe"
+ADB_PATH = r"C:\Users\asus\Downloads\android-sdk\platform-tools\adb.exe"
 
 # Use a device that's already connected
 result = subprocess.run([ADB_PATH, "devices"], capture_output=True, encoding='utf-8')

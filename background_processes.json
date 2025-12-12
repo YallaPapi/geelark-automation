@@ -1,0 +1,17 @@
+{
+  "description": "Tracks background processes started by automation scripts",
+  "processes": [
+    {
+      "label": "parallel_scheduler",
+      "pid": 38064,
+      "command": "python -u posting_scheduler_parallel.py --fresh-state --accounts-file accounts_list.txt --add-folder chunk_01c --workers 1 --run",
+      "started": "2025-12-12T18:44:37.884105"
+    },
+    {
+      "label": "appium_lane1",
+      "pid": 37548,
+      "command": "appium --address 127.0.0.1 --port 4723",
+      "started": "2025-12-12T20:17:06.919475"
+    }
+  ]
+}

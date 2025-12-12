@@ -32,12 +32,27 @@ from appium import webdriver
 from appium.options.android import UiAutomator2Options
 from appium.webdriver.common.appiumby import AppiumBy
 
-ADB_PATH = r"C:\Users\asus\Downloads\platform-tools-latest-windows\platform-tools\adb.exe"
+ADB_PATH = r"C:\Users\asus\Downloads\android-sdk\platform-tools\adb.exe"
 APPIUM_SERVER = "http://127.0.0.1:4723"
+
+# Task 27: Configurable ADB readiness gate settings
+ADB_MAX_WAIT_SECONDS = 60  # Max time to wait for ADB device to become ready
+ADB_POLL_INTERVAL_SECONDS = 3  # How often to poll adb devices
+GLOGIN_MAX_RETRIES = 3  # Max glogin attempts before failing
+
+
+class AdbReadinessError(RuntimeError):
+    """Raised when ADB device fails to become ready within timeout"""
+    pass
+
+
+class GloginReadinessError(RuntimeError):
+    """Raised when glogin fails repeatedly (e.g., returns empty [] 3 times)"""
+    pass
 
 
 class SmartInstagramPoster:
-    def __init__(self, phone_name, system_port=None):
+    def __init__(self, phone_name, system_port=None, appium_url=None):
         self.client = GeelarkClient()
         self.anthropic = anthropic.Anthropic()
         self.phone_name = phone_name
@@ -50,6 +65,9 @@ class SmartInstagramPoster:
         # Unique port for parallel execution (8200, 8201, 8202, etc.)
         # Each device MUST have a unique systemPort to avoid Appium conflicts
         self.system_port = system_port
+        # Task 28: Configurable Appium URL for lane-based architecture
+        # Each lane can use a different Appium server (e.g., 4723, 4725, 4727)
+        self.appium_url = appium_url or APPIUM_SERVER
         # Error tracking
         self.last_error_type = None
         self.last_error_message = None
@@ -713,6 +731,9 @@ Only output JSON."""
         self.device = f"{adb_info['ip']}:{adb_info['port']}"
         password = adb_info['pwd']
 
+        # Refresh ADB server to ensure clean state
+        subprocess.run([ADB_PATH, "start-server"], capture_output=True)
+
         # Clean any stale connection to this device first
         subprocess.run([ADB_PATH, "disconnect", self.device], capture_output=True)
         time.sleep(1)
@@ -721,47 +742,73 @@ Only output JSON."""
         connect_result = subprocess.run([ADB_PATH, "connect", self.device], capture_output=True, encoding='utf-8')
         print(f"  ADB connect: {connect_result.stdout.strip()}")
 
-        # Wait for device to appear in ADB devices list BEFORE running glogin
-        print("Waiting for ADB connection to stabilize...")
+        # TASK 27: Strict ADB readiness gate
+        # Poll adb devices until we see "ip:port\tdevice" (not offline/missing)
+        # RAISE EXCEPTION if device never becomes ready - do NOT continue to Appium
+        print(f"Waiting for ADB device to be ready (max {ADB_MAX_WAIT_SECONDS}s)...")
         device_ready = False
-        for attempt in range(10):  # Increased attempts
-            time.sleep(2)
+        last_status = None
+
+        for elapsed in range(0, ADB_MAX_WAIT_SECONDS, ADB_POLL_INTERVAL_SECONDS):
+            # Refresh ADB server and check devices
+            subprocess.run([ADB_PATH, "start-server"], capture_output=True)
             result = subprocess.run([ADB_PATH, "devices"], capture_output=True, encoding='utf-8')
-            if self.device in result.stdout:
-                # Check if device status is "device" (not "offline" or "unauthorized")
-                lines = result.stdout.strip().split('\n')
-                for line in lines:
-                    if self.device in line and '\tdevice' in line:
-                        device_ready = True
-                        print(f"  Device {self.device} is ready")
-                        break
-                if device_ready:
-                    break
-            print(f"  Waiting... (attempt {attempt + 1}/10)")
+
+            # Parse adb devices output - require exact "ip:port\tdevice" format
+            for line in result.stdout.strip().split('\n'):
+                if self.device in line:
+                    parts = line.split('\t')
+                    if len(parts) >= 2:
+                        last_status = parts[1].strip()
+                        if last_status == "device":
+                            device_ready = True
+                            print(f"  ADB device {self.device} is ready (status=device) after {elapsed}s")
+                            break
+                        elif last_status == "offline":
+                            print(f"  ADB device {self.device} is offline, waiting...")
+                        elif last_status == "unauthorized":
+                            print(f"  ADB device {self.device} is unauthorized, waiting...")
+            if device_ready:
+                break
+            print(f"  Waiting for ADB device {self.device}... {elapsed}/{ADB_MAX_WAIT_SECONDS}s")
+            time.sleep(ADB_POLL_INTERVAL_SECONDS)
 
         if not device_ready:
-            print(f"  Warning: Device not in ADB device list after 20s")
+            # TASK 27: HARD FAIL - raise exception so scheduler marks job as failed
+            error_msg = f"ADB readiness failed: device {self.device} never reached status 'device' within {ADB_MAX_WAIT_SECONDS}s (last_status={last_status})"
+            print(f"  ERROR: {error_msg}")
+            raise AdbReadinessError(error_msg)
 
-        # NOW run glogin after device is ready - with retry
+        # TASK 27: Run glogin with strict failure handling
+        # Treat repeated empty/failed glogin as ADB-readiness failure and RAISE EXCEPTION
         print("Authenticating with glogin...")
         glogin_success = False
-        for glogin_attempt in range(3):
+        empty_count = 0
+
+        for glogin_attempt in range(GLOGIN_MAX_RETRIES):
             login_result = self.adb(f"glogin {password}")
-            # Check both stdout and for error indicators
-            if login_result and "error" not in login_result.lower():
+
+            # Check for success indicators
+            if login_result and "success" in login_result.lower():
                 print(f"  glogin: {login_result}")
                 glogin_success = True
                 break
-            elif "success" in login_result.lower():
+            elif login_result and "error" not in login_result.lower() and login_result.strip() not in ["", "[]"]:
                 print(f"  glogin: {login_result}")
                 glogin_success = True
                 break
             else:
-                print(f"  glogin attempt {glogin_attempt + 1}/3 returned: [{login_result}]")
-                time.sleep(2)
+                # Empty or error result - count as failure
+                empty_count += 1
+                print(f"  glogin attempt {glogin_attempt + 1}/{GLOGIN_MAX_RETRIES} returned: [{login_result}]")
+                if glogin_attempt < GLOGIN_MAX_RETRIES - 1:
+                    time.sleep(2)
 
         if not glogin_success:
-            print(f"  Warning: glogin may not have succeeded")
+            # TASK 27: HARD FAIL - glogin returning empty [] 3 times is treated as ADB-readiness failure
+            error_msg = f"glogin readiness failed: empty/error result returned {empty_count} times; aborting before Appium"
+            print(f"  ERROR: {error_msg}")
+            raise GloginReadinessError(error_msg)
 
         # Connect Appium for UI interaction
         self.connect_appium()
@@ -790,13 +837,64 @@ Only output JSON."""
             options.set_capability("appium:systemPort", self.system_port)
             print(f"  Using systemPort: {self.system_port}")
 
+        # TASK 29: Pre-Appium cleanup - only when BOTH system_port AND device are valid
+        # This prevents port busy errors from previous failed sessions
+        if self.system_port and self.device:
+            print(f"  Pre-Appium cleanup for {self.device} on port {self.system_port}...")
+
+            # 1. Force-stop UiAutomator2 on device (this is what actually holds the port)
+            try:
+                subprocess.run(
+                    [ADB_PATH, "-s", self.device, "shell", "am", "force-stop", "io.appium.uiautomator2.server"],
+                    capture_output=True, timeout=10
+                )
+            except Exception as e:
+                print(f"    Warning: UiAutomator2 force-stop failed: {e}")
+
+            # 2. Remove stale ADB forward for this device (MUST specify device when multiple connected)
+            try:
+                subprocess.run(
+                    [ADB_PATH, "-s", self.device, "forward", "--remove", f"tcp:{self.system_port}"],
+                    capture_output=True, timeout=5
+                )
+            except Exception:
+                pass  # Ignore - forward might not exist
+
+            # 3. Also try to remove forward from ALL devices for this port
+            # This handles the case where a different device left a stale forward
+            try:
+                # Get all forwards and remove any using our systemPort
+                result = subprocess.run([ADB_PATH, "forward", "--list"], capture_output=True, text=True, timeout=5)
+                for line in result.stdout.strip().split('\n'):
+                    if f"tcp:{self.system_port}" in line and line.strip():
+                        parts = line.split()
+                        if parts:
+                            stale_device = parts[0]
+                            print(f"    Removing stale forward from {stale_device} on port {self.system_port}")
+                            subprocess.run(
+                                [ADB_PATH, "-s", stale_device, "forward", "--remove", f"tcp:{self.system_port}"],
+                                capture_output=True, timeout=5
+                            )
+            except Exception as e:
+                print(f"    Warning: Could not clean stale forwards: {e}")
+
+        # 3. Ensure no stale driver from previous failed attempt
+        if self.appium_driver:
+            try:
+                self.appium_driver.quit()
+                print(f"  Closed stale Appium driver")
+            except Exception:
+                pass
+            self.appium_driver = None
+
         last_error = None
+        print(f"  Connecting to Appium at {self.appium_url}...")
         for attempt in range(retries):
             try:
-                # Direct connection - removed ThreadPoolExecutor which left orphaned sessions
-                # Appium's own timeouts (adbExecTimeout, uiautomator2ServerLaunchTimeout) handle slow connections
+                # Task 28: Use self.appium_url instead of hardcoded APPIUM_SERVER
+                # This enables lane-based architecture with multiple Appium instances
                 self.appium_driver = webdriver.Remote(
-                    command_executor=APPIUM_SERVER,
+                    command_executor=self.appium_url,
                     options=options
                 )
 

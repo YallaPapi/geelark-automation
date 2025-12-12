@@ -15,7 +15,7 @@ import subprocess
 import base64
 from geelark_client import GeelarkClient
 
-ADB_PATH = r"C:\Users\asus\Downloads\platform-tools-latest-windows\platform-tools\adb.exe"
+ADB_PATH = r"C:\Users\asus\Downloads\android-sdk\platform-tools\adb.exe"
 APK_PATH = os.path.join(os.path.dirname(__file__), "ADBKeyboard.apk")
 SYSTEM_APK_PATH = os.path.join(os.path.dirname(__file__), "ADBKeyboard_system.apk")
 

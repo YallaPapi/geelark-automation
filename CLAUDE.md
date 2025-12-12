@@ -30,6 +30,35 @@ for page in range(1, 20):
 
 ---
 
+## MANDATORY DEBUGGING WORKFLOW - RESEARCH BEFORE FIXING
+
+**USE TASK MASTER TO RESEARCH SOLUTIONS BEFORE IMPLEMENTING FIXES.**
+
+### When errors occur, follow this sequence:
+
+1. **Document the error** - note exact error messages and context
+2. **Use Task Master research to find proper solutions**:
+   ```bash
+   task-master add-task --prompt="<describe the error and what you need to fix>" --research --priority=high
+   ```
+3. **Review the researched solution** - Task Master will provide detailed implementation guidance
+4. **Implement the fix** based on the researched solution
+5. **Test the fix** with a fresh run
+
+### KEY RULES:
+- **ALWAYS research before implementing** - use Task Master's `--research` flag
+- **NO guessing** - don't make assumptions about what might fix the issue
+- **ONE fix at a time** - implement the researched solution, then test
+- **Task Master knows best** - trust the researched guidance over intuition
+
+### Why This Matters:
+- Task Master has access to Perplexity AI for real-time research
+- Researched solutions are based on actual documentation and best practices
+- Random fixes without research create more bugs
+- This workflow has proven to work (see Task 25 and 26 fixes)
+
+---
+
 ## CURRENT POSTING RUN - 92 ACCOUNT TARGET
 
 **We are completing ONE FULL ROUND of posting to all 92 accounts in `accounts_list.txt`.**
@@ -61,6 +90,56 @@ shortcode,phone,status,error,timestamp
 - Each account gets EXACTLY 1 successful post in this run
 - The scheduler AUTOMATICALLY checks batch_results_*.csv and skips already-posted accounts
 - No manual checking needed - just run the one-click command
+
+---
+
+## RECOMMENDED: Multi-Lane Architecture (NEW)
+
+**For stable parallel posting, use the lane-based architecture instead of shared Appium.**
+
+### Why Lanes?
+- Each lane has its own Appium server (no port collisions)
+- Each lane uses isolated systemPort range (no cross-talk)
+- Failures in one lane don't affect others
+- Much more stable than multi-worker mode
+
+### Quick Start - 2 Lanes:
+```bash
+# Start 2 Appium servers + 2 posting processes:
+python start_lanes.py --lanes 2 --accounts-file accounts_list.txt --add-folder chunk_01c
+
+# Stop everything:
+python start_lanes.py --stop-all
+```
+
+### Manual Lane Setup:
+```bash
+# Terminal 1 - Start Appium for lane1 (port 4723):
+appium --address 127.0.0.1 --port 4723
+
+# Terminal 2 - Start Appium for lane2 (port 4725):
+appium --address 127.0.0.1 --port 4725
+
+# Terminal 3 - Run lane1:
+python posting_lane.py --lane-name lane1 --accounts-file accounts_list.txt --add-folder chunk_01c
+
+# Terminal 4 - Run lane2:
+python posting_lane.py --lane-name lane2 --accounts-file accounts_list.txt --add-folder chunk_01c
+```
+
+### Lane Config (lane_config.py):
+| Lane | Appium Port | systemPort Base |
+|------|-------------|-----------------|
+| lane1 | 4723 | 8200 |
+| lane2 | 4725 | 8300 |
+| lane3 | 4727 | 8400 |
+
+### Key Files:
+| File | Purpose |
+|------|---------|
+| `posting_lane.py` | Single-lane posting script |
+| `lane_config.py` | Lane configuration (ports, URLs) |
+| `start_lanes.py` | Helper to start multiple lanes |
 
 ---
 
@@ -164,7 +243,21 @@ ANDROID_HOME=C:\Users\asus\Downloads\android-sdk
 
 ### 3. ADB Platform Tools
 
-Path: `C:\Users\asus\Downloads\platform-tools-latest-windows\platform-tools\adb.exe`
+**CRITICAL: ALL SCRIPTS MUST USE THE SAME ADB PATH AS APPIUM**
+
+The ADB path MUST match the one in ANDROID_HOME/ANDROID_SDK_ROOT:
+```
+ADB_PATH = r"C:\Users\asus\Downloads\android-sdk\platform-tools\adb.exe"
+```
+
+**WHY THIS MATTERS:**
+- Appium uses ANDROID_HOME/platform-tools/adb.exe
+- If your script uses a DIFFERENT adb.exe, they run SEPARATE ADB servers
+- The device connected via script's ADB won't be visible to Appium's ADB
+- This causes "Device not in list of connected devices" errors
+
+**NEVER use:** `C:\Users\asus\Downloads\platform-tools-latest-windows\platform-tools\adb.exe`
+**ALWAYS use:** `C:\Users\asus\Downloads\android-sdk\platform-tools\adb.exe`
 
 ## Appium Integration (Android 15 Fix)
 

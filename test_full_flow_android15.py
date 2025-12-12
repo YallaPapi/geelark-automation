@@ -67,7 +67,7 @@ time.sleep(1)
 # Start Instagram via am start (using Appium's executeScript)
 # Note: This requires adb_shell to be enabled, fallback to regular ADB
 import subprocess
-ADB = r"C:\Users\asus\Downloads\platform-tools-latest-windows\platform-tools\adb.exe"
+ADB = r"C:\Users\asus\Downloads\android-sdk\platform-tools\adb.exe"
 subprocess.run([ADB, "-s", DEVICE, "shell", "am", "force-stop", "com.instagram.android"])
 time.sleep(1)
 subprocess.run([ADB, "-s", DEVICE, "shell", "monkey", "-p", "com.instagram.android", "1"])
