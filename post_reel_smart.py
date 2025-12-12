@@ -846,6 +846,12 @@ Only output JSON."""
         if humanize:
             self.humanize_before_post()
 
+        # Loop detection - track recent actions to detect stuck states
+        recent_actions = []  # List of (action_type, x, y) tuples
+        LOOP_THRESHOLD = 5  # If 5 consecutive same actions, we're stuck
+        loop_recovery_count = 0  # How many times we've tried to recover
+        MAX_LOOP_RECOVERIES = 2  # Give up after this many recovery attempts
+
         # Vision-action loop
         for step in range(max_steps):
             print(f"\n--- Step {step + 1} ---")
@@ -994,6 +1000,43 @@ Only output JSON."""
 
             elif action['action'] == 'scroll_up':
                 self.adb("input swipe 360 400 360 900 300")
+
+            # Track action for loop detection
+            action_signature = action['action']
+            if action['action'] == 'tap' and 'element_index' in action:
+                idx = action.get('element_index', 0)
+                if 0 <= idx < len(elements):
+                    x, y = elements[idx]['center']
+                    action_signature = f"tap_{x}_{y}"
+            recent_actions.append(action_signature)
+            if len(recent_actions) > LOOP_THRESHOLD:
+                recent_actions.pop(0)
+
+            # Check for loop - if last N actions are all identical, we're stuck
+            if len(recent_actions) >= LOOP_THRESHOLD and len(set(recent_actions)) == 1:
+                loop_recovery_count += 1
+                print(f"\n  [LOOP DETECTED] Same action '{recent_actions[0]}' repeated {LOOP_THRESHOLD} times!")
+                print(f"  [RECOVERY] Attempt {loop_recovery_count}/{MAX_LOOP_RECOVERIES}")
+
+                if loop_recovery_count > MAX_LOOP_RECOVERIES:
+                    print("  [ABORT] Too many loop recoveries, giving up")
+                    return False
+
+                # Recovery: press back 5 times and restart Instagram
+                print("  Pressing BACK 5 times to escape stuck state...")
+                for _ in range(5):
+                    self.press_key('KEYCODE_BACK')
+                    time.sleep(0.5)
+
+                print("  Reopening Instagram...")
+                self.adb("am force-stop com.instagram.android")
+                time.sleep(2)
+                self.adb("monkey -p com.instagram.android 1")
+                time.sleep(5)
+
+                # Reset action tracking
+                recent_actions = []
+                print("  [RECOVERY] Restarted - continuing from step", step + 1)
 
             time.sleep(1)
 
