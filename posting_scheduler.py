@@ -9,9 +9,14 @@ Features:
 - State persistence to survive restarts
 - Per-phase timeout protection
 - Proper logging with phase info
+- Single-instance lock to prevent multiple schedulers
 """
 import os
 import sys
+
+# Set ANDROID_HOME early for Appium - MUST be before any Appium imports
+os.environ['ANDROID_HOME'] = r'C:\Users\asus\Downloads\android-sdk'
+os.environ['ANDROID_SDK_ROOT'] = r'C:\Users\asus\Downloads\android-sdk'
 import csv
 import json
 import time
@@ -19,11 +24,226 @@ import glob
 import logging
 import threading
 import traceback
+import atexit
 from datetime import datetime, timedelta
 from dataclasses import dataclass, field, asdict
 from typing import List, Dict, Optional, Callable, Set
 from enum import Enum
 from geelark_client import GeelarkClient
+
+# === SINGLE-INSTANCE LOCK MECHANISM ===
+LOCK_FILE = "scheduler.lock"
+
+def is_process_running(pid: int) -> bool:
+    """Check if a process with given PID is still running."""
+    if sys.platform == 'win32':
+        try:
+            import ctypes
+            kernel32 = ctypes.windll.kernel32
+            PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
+            handle = kernel32.OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, False, pid)
+            if handle:
+                kernel32.CloseHandle(handle)
+                return True
+            return False
+        except:
+            # Fallback: try tasklist
+            import subprocess
+            result = subprocess.run(['tasklist', '/FI', f'PID eq {pid}'],
+                                   capture_output=True, text=True)
+            return str(pid) in result.stdout
+    else:
+        # Unix/Linux/Mac
+        try:
+            os.kill(pid, 0)
+            return True
+        except OSError:
+            return False
+
+def acquire_lock() -> bool:
+    """Acquire single-instance lock. Returns True if successful, False if another instance running."""
+    current_pid = os.getpid()
+    stale_threshold_minutes = 2  # Lock considered stale if heartbeat older than this
+
+    if os.path.exists(LOCK_FILE):
+        try:
+            with open(LOCK_FILE, 'r') as f:
+                lock_data = json.load(f)
+            old_pid = lock_data.get('pid')
+            old_started = lock_data.get('started', 'unknown')
+            last_heartbeat = lock_data.get('last_heartbeat')
+
+            if old_pid and is_process_running(old_pid):
+                # Process is running, but check if heartbeat is stale
+                if last_heartbeat:
+                    try:
+                        hb_time = datetime.fromisoformat(last_heartbeat)
+                        if datetime.now() - hb_time > timedelta(minutes=stale_threshold_minutes):
+                            print(f"[LOCK] Lock heartbeat stale (last: {last_heartbeat}). Process may be hung.")
+                            print(f"[LOCK] Taking over from stale lock (PID {old_pid})")
+                            # Proceed to take over
+                        else:
+                            # Process running and heartbeat recent - truly in use
+                            print(f"[LOCK ERROR] Another scheduler instance is already running!")
+                            print(f"  PID: {old_pid}")
+                            print(f"  Started: {old_started}")
+                            print(f"  Last heartbeat: {last_heartbeat}")
+                            print(f"  Lock file: {LOCK_FILE}")
+                            print(f"\nIf you're sure no other instance is running, delete {LOCK_FILE} and try again.")
+                            return False
+                    except:
+                        # Can't parse heartbeat, check process only
+                        print(f"[LOCK ERROR] Another scheduler instance is already running!")
+                        print(f"  PID: {old_pid}")
+                        print(f"  Started: {old_started}")
+                        print(f"  Lock file: {LOCK_FILE}")
+                        print(f"\nIf you're sure no other instance is running, delete {LOCK_FILE} and try again.")
+                        return False
+                else:
+                    # No heartbeat recorded yet, trust process check
+                    print(f"[LOCK ERROR] Another scheduler instance is already running!")
+                    print(f"  PID: {old_pid}")
+                    print(f"  Started: {old_started}")
+                    print(f"  Lock file: {LOCK_FILE}")
+                    print(f"\nIf you're sure no other instance is running, delete {LOCK_FILE} and try again.")
+                    return False
+            else:
+                print(f"[LOCK] Stale lock file found (PID {old_pid} not running). Taking over.")
+        except Exception as e:
+            print(f"[LOCK] Could not read lock file: {e}. Taking over.")
+
+    # Write new lock file
+    lock_data = {
+        'pid': current_pid,
+        'started': datetime.now().isoformat(),
+        'hostname': os.environ.get('COMPUTERNAME', 'unknown')
+    }
+    with open(LOCK_FILE, 'w') as f:
+        json.dump(lock_data, f)
+
+    print(f"[LOCK] Acquired lock (PID {current_pid})")
+    return True
+
+def release_lock():
+    """Release the single-instance lock."""
+    current_pid = os.getpid()
+
+    if os.path.exists(LOCK_FILE):
+        try:
+            with open(LOCK_FILE, 'r') as f:
+                lock_data = json.load(f)
+            # Only delete if we own the lock
+            if lock_data.get('pid') == current_pid:
+                os.remove(LOCK_FILE)
+                print(f"[LOCK] Released lock (PID {current_pid})")
+        except Exception as e:
+            print(f"[LOCK] Error releasing lock: {e}")
+
+# Register cleanup on exit
+atexit.register(release_lock)
+# === END SINGLE-INSTANCE LOCK ===
+
+
+# === APPIUM HEALTH CHECK ===
+def check_appium_health(port: int = 4723) -> bool:
+    """Check if Appium server is running and healthy."""
+    import urllib.request
+    import urllib.error
+
+    try:
+        url = f"http://127.0.0.1:{port}/status"
+        req = urllib.request.Request(url, method='GET')
+        with urllib.request.urlopen(req, timeout=5) as response:
+            data = json.loads(response.read().decode())
+            return data.get('value', {}).get('ready', False)
+    except (urllib.error.URLError, ConnectionRefusedError, TimeoutError, Exception) as e:
+        return False
+
+def kill_appium_processes():
+    """Kill Appium server processes only (NOT all node.exe - that would kill Claude Code!)."""
+    import subprocess
+    if sys.platform == 'win32':
+        # Use WMIC to find and kill only Appium node processes
+        # This targets processes with 'appium' in command line, not ALL node.exe
+        try:
+            # Find Appium process IDs using WMIC
+            result = subprocess.run(
+                ['wmic', 'process', 'where', "commandline like '%appium%'", 'get', 'processid'],
+                capture_output=True, text=True
+            )
+            for line in result.stdout.strip().split('\n'):
+                line = line.strip()
+                if line and line.isdigit():
+                    subprocess.run(['taskkill', '/F', '/PID', line], capture_output=True)
+                    print(f"[APPIUM] Killed Appium process PID {line}")
+        except Exception as e:
+            logger.warning(f"Error killing Appium processes: {e}")
+    else:
+        subprocess.run(['pkill', '-f', 'appium'], capture_output=True)
+    time.sleep(2)
+
+def get_android_env() -> dict:
+    """Get environment with ANDROID_HOME/ANDROID_SDK_ROOT properly set.
+
+    This ensures Appium can find the Android SDK regardless of how
+    the parent process was started.
+    """
+    env = os.environ.copy()
+
+    # Set both ANDROID_HOME and ANDROID_SDK_ROOT for maximum compatibility
+    android_sdk = r'C:\Users\asus\Downloads\android-sdk'
+
+    env['ANDROID_HOME'] = android_sdk
+    env['ANDROID_SDK_ROOT'] = android_sdk
+
+    # Add platform-tools to PATH if not already there
+    platform_tools = os.path.join(android_sdk, 'platform-tools')
+    if platform_tools not in env.get('PATH', ''):
+        env['PATH'] = platform_tools + os.pathsep + env.get('PATH', '')
+
+    return env
+
+
+def restart_appium(port: int = 4723) -> bool:
+    """Attempt to restart Appium server with proper Android SDK environment."""
+    print("[APPIUM] Killing existing Appium processes only...")
+    kill_appium_processes()
+
+    print("[APPIUM] Starting fresh Appium server...")
+    import subprocess
+
+    # Get environment with ANDROID_HOME properly set
+    env = get_android_env()
+    print(f"[APPIUM] Using ANDROID_HOME={env.get('ANDROID_HOME')}")
+
+    # Start Appium in background with proper environment
+    if sys.platform == 'win32':
+        subprocess.Popen(
+            ['appium', '--address', '127.0.0.1', '--port', str(port)],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            env=env,
+            creationflags=subprocess.CREATE_NEW_PROCESS_GROUP
+        )
+    else:
+        subprocess.Popen(
+            ['appium', '--address', '127.0.0.1', '--port', str(port)],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            env=env,
+            start_new_session=True
+        )
+
+    # Wait for Appium to start
+    for i in range(30):
+        time.sleep(1)
+        if check_appium_health(port):
+            print(f"[APPIUM] Server ready on port {port}")
+            return True
+
+    print("[APPIUM] Failed to start server after 30s")
+    return False
+# === END APPIUM HEALTH CHECK ===
 
 # Fix Windows console encoding
 if sys.platform == 'win32':
@@ -119,7 +339,10 @@ def get_already_posted_from_csv() -> Set[str]:
                 reader = csv.DictReader(f)
                 for row in reader:
                     if row.get('status') == 'success':
-                        posted.add(row.get('shortcode'))
+                        # Handle both 'shortcode' column and first column as shortcode
+                        shortcode = row.get('shortcode') or list(row.values())[0] if row else None
+                        if shortcode:
+                            posted.add(shortcode)
         except Exception as e:
             logger.warning(f"Could not read {filepath}: {e}")
 
@@ -136,6 +359,45 @@ def get_already_posted_from_csv() -> Set[str]:
             logger.warning(f"Could not read {state_file}: {e}")
 
     return posted
+
+
+def get_accounts_posted_today() -> Set[str]:
+    """Get all accounts that have successfully posted TODAY.
+
+    This prevents the same account from posting twice in one day.
+    """
+    today = datetime.now().strftime("%Y%m%d")
+    posted_accounts = set()
+
+    # 1. Read from today's batch_results CSV files
+    for filepath in glob.glob(f"batch_results_{today}*.csv"):
+        try:
+            with open(filepath, 'r', encoding='utf-8') as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    if row.get('status') == 'success':
+                        # Handle both 'phone' and 'account' column names
+                        account = row.get('phone') or row.get('account')
+                        if account:
+                            posted_accounts.add(account)
+        except Exception as e:
+            logger.warning(f"Could not read {filepath}: {e}")
+
+    # 2. Also read from scheduler_state.json
+    state_file = "scheduler_state.json"
+    if os.path.exists(state_file):
+        try:
+            with open(state_file, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            for job in data.get('jobs', []):
+                if job.get('status') == 'success':
+                    account = job.get('account')
+                    if account:
+                        posted_accounts.add(account)
+        except Exception as e:
+            logger.warning(f"Could not read {state_file}: {e}")
+
+    return posted_accounts
 
 
 def log_and_mark_failed(account: str, shortcode: str, phase: str, exc: Exception):
@@ -237,6 +499,8 @@ class AccountState:
     posts_today: int = 0
     total_posts: int = 0
     total_failures: int = 0
+    consecutive_failures: int = 0  # Track consecutive failures for backoff
+    cooldown_until: str = ""  # ISO timestamp when account can be used again
 
     def can_post_today(self, max_per_day: int = 1) -> bool:
         today = datetime.now().strftime("%Y-%m-%d")
@@ -244,17 +508,43 @@ class AccountState:
             return True
         return self.posts_today < max_per_day
 
-    def record_post(self, success: bool):
+    def is_on_cooldown(self) -> bool:
+        """Check if account is in cooldown period."""
+        if not self.cooldown_until:
+            return False
+        try:
+            cooldown_end = datetime.fromisoformat(self.cooldown_until)
+            return datetime.now() < cooldown_end
+        except:
+            return False
+
+    def record_post(self, success: bool, is_infra_error: bool = False):
+        """Record a post attempt.
+
+        Args:
+            success: Whether the post succeeded
+            is_infra_error: True if failure was infrastructure (ADB/Appium/glogin)
+        """
         today = datetime.now().strftime("%Y-%m-%d")
         if self.last_post_date != today:
             self.posts_today = 0
         self.last_post_date = today
-        # Only count successful posts against daily limit
+
         if success:
             self.posts_today += 1
             self.total_posts += 1
+            self.consecutive_failures = 0  # Reset on success
+            self.cooldown_until = ""  # Clear any cooldown
         else:
             self.total_failures += 1
+            self.consecutive_failures += 1
+
+            # Apply backoff for repeated infra failures
+            if is_infra_error and self.consecutive_failures >= 3:
+                # Put account on 10-minute cooldown
+                cooldown_minutes = min(10 * self.consecutive_failures, 60)  # Max 60 min
+                self.cooldown_until = (datetime.now() + timedelta(minutes=cooldown_minutes)).isoformat()
+                logger.warning(f"Account {self.name} on cooldown for {cooldown_minutes}min after {self.consecutive_failures} consecutive failures")
 
 
 class PostingScheduler:
@@ -271,15 +561,21 @@ class PostingScheduler:
         self.retry_delay_minutes = 0.25  # 15 seconds
         self.posts_per_account_per_day = 1
         self.humanize = True
-        self.delay_between_posts = 30  # seconds
+        self.delay_between_posts = 10  # seconds
         self.test_retry_mode = False  # If True, first attempt always fails
 
         # Runtime
         self.running = False
         self.paused = False
         self.worker_thread: Optional[threading.Thread] = None
+        self.heartbeat_thread: Optional[threading.Thread] = None
+        self.heartbeat_interval = 30  # seconds
         self.on_status_update: Optional[Callable] = None  # callback for GUI
         self.on_job_complete: Optional[Callable] = None
+
+        # Appium health tracking
+        self.appium_consecutive_failures = 0
+        self.max_appium_failures_before_restart = 3
 
         # Load saved state
         self.load_state()
@@ -307,7 +603,7 @@ class PostingScheduler:
                 self.retry_delay_minutes = settings.get('retry_delay_minutes', 5)
                 self.posts_per_account_per_day = settings.get('posts_per_account_per_day', 1)
                 self.humanize = settings.get('humanize', True)
-                self.delay_between_posts = settings.get('delay_between_posts', 30)
+                self.delay_between_posts = settings.get('delay_between_posts', 10)
                 self.video_folders = settings.get('video_folders', [])
 
                 self._log(f"Loaded state: {len(self.jobs)} jobs, {len(self.accounts)} accounts")
@@ -446,11 +742,21 @@ class PostingScheduler:
 
     def get_next_job(self) -> Optional[PostJob]:
         """Get next job that's ready to post"""
-        # Find accounts that can post today
+        # Get accounts that already posted today from CSV logs (this is the ground truth)
+        accounts_posted_today = get_accounts_posted_today()
+
+        # Find accounts that can post today (not in CSV logs as already posted, not on cooldown)
         available_accounts = [
             acc for acc in self.accounts.values()
             if acc.can_post_today(self.posts_per_account_per_day)
+            and acc.name not in accounts_posted_today
+            and not acc.is_on_cooldown()  # Skip accounts on infra error cooldown
         ]
+
+        # Log accounts on cooldown for visibility
+        on_cooldown = [acc.name for acc in self.accounts.values() if acc.is_on_cooldown()]
+        if on_cooldown:
+            logger.debug(f"Accounts on cooldown: {on_cooldown}")
 
         if not available_accounts:
             return None
@@ -571,6 +877,20 @@ class PostingScheduler:
             # Log with full stack trace
             log_and_mark_failed(job.account, job.id, phase, e)
 
+            # Classify infrastructure errors (ADB/Appium/glogin issues)
+            infra_error_patterns = [
+                'ADB', 'adb', 'device offline', 'glogin', 'phone not running',
+                'Appium', 'appium', 'UiAutomator', 'WebDriver', 'uiautomator',
+                'connection refused', 'Connection refused', 'timeout', 'Timeout',
+                'EADDRINUSE', 'actively refused', 'Cannot connect'
+            ]
+            is_infra_error = any(pattern in error_msg for pattern in infra_error_patterns) or \
+                any(pattern in error_type_name for pattern in infra_error_patterns)
+
+            if is_infra_error:
+                self._log(f"[INFRA ERROR] Detected infrastructure error for {job.account}")
+                logger.warning(f"Infrastructure error for {job.account}: {error_msg[:100]}")
+
             # Capture error details from poster if available
             if poster:
                 if poster.last_error_type:
@@ -594,7 +914,8 @@ class PostingScheduler:
                 job.status = PostStatus.RETRYING.value
                 self._log(f"[RETRY] {job.id} will retry in {self.retry_delay_minutes} min")
 
-            self.accounts[job.account].record_post(False)
+            # Record with is_infra_error to trigger account cooldown if needed
+            self.accounts[job.account].record_post(False, is_infra_error=is_infra_error)
 
             if self.on_job_complete:
                 self.on_job_complete(job, False)
@@ -639,43 +960,102 @@ class PostingScheduler:
             self._log(f"Reset {count} failed jobs for retry")
             self.save_state()
 
+    def _heartbeat_loop(self):
+        """Periodically update lock file to prove we're still alive.
+
+        This allows other instances to detect truly stale locks
+        (process crashed without releasing lock).
+        """
+        while self.running:
+            try:
+                if os.path.exists(LOCK_FILE):
+                    with open(LOCK_FILE, 'r') as f:
+                        lock_data = json.load(f)
+                    # Only update if we own the lock
+                    if lock_data.get('pid') == os.getpid():
+                        lock_data['last_heartbeat'] = datetime.now().isoformat()
+                        with open(LOCK_FILE, 'w') as f:
+                            json.dump(lock_data, f)
+            except Exception as e:
+                logger.warning(f"Heartbeat error: {e}")
+            time.sleep(self.heartbeat_interval)
+
     def _worker_loop(self):
-        """Main worker loop"""
+        """Main worker loop - robust with exception handling and Appium health checks"""
         self._log("Worker started")
 
         while self.running:
-            if self.paused:
-                time.sleep(1)
+            try:
+                if self.paused:
+                    time.sleep(1)
+                    continue
+
+                # === APPIUM HEALTH CHECK ===
+                # Check Appium health before processing a job
+                if not check_appium_health():
+                    self.appium_consecutive_failures += 1
+                    self._log(f"[APPIUM] Health check failed ({self.appium_consecutive_failures}/{self.max_appium_failures_before_restart})")
+
+                    if self.appium_consecutive_failures >= self.max_appium_failures_before_restart:
+                        self._log("[APPIUM] Attempting auto-restart...")
+                        if restart_appium():
+                            self.appium_consecutive_failures = 0
+                            self._log("[APPIUM] Restart successful")
+                        else:
+                            self._log("[APPIUM] Restart failed, waiting 60s...")
+                            time.sleep(60)
+                            continue
+                    else:
+                        # Wait and retry health check
+                        time.sleep(10)
+                        continue
+                else:
+                    # Reset counter on successful health check
+                    if self.appium_consecutive_failures > 0:
+                        self._log("[APPIUM] Health check passed, resetting failure counter")
+                    self.appium_consecutive_failures = 0
+                # === END APPIUM HEALTH CHECK ===
+
+                job = self.get_next_job()
+
+                if job:
+                    self.execute_job(job)
+
+                    # Delay before next post
+                    if self.running and not self.paused:
+                        self._log(f"Waiting {self.delay_between_posts}s before next post...")
+                        time.sleep(self.delay_between_posts)
+                else:
+                    # No jobs ready, check for retry jobs
+                    retry_jobs = self.get_retry_jobs()
+                    if retry_jobs:
+                        # Find next retry time
+                        next_retry = None
+                        for rj in retry_jobs:
+                            if rj.last_attempt:
+                                retry_at = datetime.fromisoformat(rj.last_attempt) + timedelta(minutes=self.retry_delay_minutes)
+                                if next_retry is None or retry_at < next_retry:
+                                    next_retry = retry_at
+
+                        if next_retry:
+                            wait_secs = (next_retry - datetime.now()).total_seconds()
+                            if wait_secs > 0:
+                                self._log(f"Next retry in {int(wait_secs)}s")
+
+                    # Wait before checking again
+                    time.sleep(5)
+
+            except Exception as loop_error:
+                # Catch ANY exception to keep the worker loop alive
+                self._log(f"[WORKER ERROR] Unexpected error in worker loop: {type(loop_error).__name__}: {loop_error}")
+                logger.exception("Worker loop exception - continuing")
+                # Save state and continue
+                try:
+                    self.save_state()
+                except:
+                    pass
+                time.sleep(10)  # Brief pause before continuing
                 continue
-
-            job = self.get_next_job()
-
-            if job:
-                self.execute_job(job)
-
-                # Delay before next post
-                if self.running and not self.paused:
-                    self._log(f"Waiting {self.delay_between_posts}s before next post...")
-                    time.sleep(self.delay_between_posts)
-            else:
-                # No jobs ready, check for retry jobs
-                retry_jobs = self.get_retry_jobs()
-                if retry_jobs:
-                    # Find next retry time
-                    next_retry = None
-                    for rj in retry_jobs:
-                        if rj.last_attempt:
-                            retry_at = datetime.fromisoformat(rj.last_attempt) + timedelta(minutes=self.retry_delay_minutes)
-                            if next_retry is None or retry_at < next_retry:
-                                next_retry = retry_at
-
-                    if next_retry:
-                        wait_secs = (next_retry - datetime.now()).total_seconds()
-                        if wait_secs > 0:
-                            self._log(f"Next retry in {int(wait_secs)}s")
-
-                # Wait before checking again
-                time.sleep(5)
 
         self._log("Worker stopped")
 
@@ -694,6 +1074,13 @@ class PostingScheduler:
 
         self.running = True
         self.paused = False
+
+        # Start heartbeat thread to keep lock file fresh
+        self.heartbeat_thread = threading.Thread(target=self._heartbeat_loop, daemon=True)
+        self.heartbeat_thread.start()
+        self._log("[HEARTBEAT] Started heartbeat thread")
+
+        # Start worker thread
         self.worker_thread = threading.Thread(target=self._worker_loop, daemon=True)
         self.worker_thread.start()
         self._log("Scheduler started")
@@ -727,6 +1114,7 @@ class PostingScheduler:
 
     def get_stats(self) -> dict:
         """Get current statistics"""
+        accounts_on_cooldown = [acc.name for acc in self.accounts.values() if acc.is_on_cooldown()]
         return {
             'total_jobs': len(self.jobs),
             'pending': len(self.get_pending_jobs()),
@@ -734,8 +1122,10 @@ class PostingScheduler:
             'retrying': len(self.get_retry_jobs()),
             'failed': len(self.get_failed_jobs()),
             'accounts': len(self.accounts),
+            'accounts_on_cooldown': accounts_on_cooldown,
             'running': self.running,
             'paused': self.paused,
+            'appium_healthy': check_appium_health(),
         }
 
     def generate_error_report(self) -> dict:
@@ -855,8 +1245,20 @@ if __name__ == "__main__":
     parser.add_argument('--status', action='store_true', help='Show status')
     parser.add_argument('--run', action='store_true', help='Run scheduler')
     parser.add_argument('--retry-all', action='store_true', help='Retry all failed jobs')
+    parser.add_argument('--force', action='store_true', help='Force run even if lock exists')
 
     args = parser.parse_args()
+
+    # Acquire single-instance lock if running the scheduler
+    if args.run:
+        if args.force and os.path.exists(LOCK_FILE):
+            print(f"[FORCE] Removing existing lock file")
+            os.remove(LOCK_FILE)
+
+        if not acquire_lock():
+            print("\n[ABORT] Cannot start scheduler - another instance is running.")
+            print("Use --force to override (only if you're sure no other instance is running)")
+            sys.exit(1)
 
     scheduler = PostingScheduler()
 
@@ -881,6 +1283,33 @@ if __name__ == "__main__":
         print(f"Accounts: {stats['accounts']}")
         print(f"Running: {stats['running']}")
 
+        # Show Appium health
+        appium_status = "HEALTHY" if stats['appium_healthy'] else "NOT READY"
+        print(f"\nAppium: {appium_status}")
+
+        # Show accounts on cooldown
+        if stats['accounts_on_cooldown']:
+            print(f"\nAccounts on cooldown ({len(stats['accounts_on_cooldown'])}):")
+            for acc in stats['accounts_on_cooldown']:
+                print(f"  - {acc}")
+
+        # Show lock status
+        if os.path.exists(LOCK_FILE):
+            try:
+                with open(LOCK_FILE, 'r') as f:
+                    lock_data = json.load(f)
+                pid = lock_data.get('pid')
+                started = lock_data.get('started', 'unknown')
+                last_hb = lock_data.get('last_heartbeat', 'never')
+                running = is_process_running(pid) if pid else False
+                print(f"\nLock: PID {pid} ({'RUNNING' if running else 'STALE'})")
+                print(f"  Started: {started}")
+                print(f"  Last heartbeat: {last_hb}")
+            except:
+                print(f"\nLock: {LOCK_FILE} exists but unreadable")
+        else:
+            print(f"\nLock: No active lock")
+
     if args.run:
         print("Starting scheduler (Ctrl+C to stop)...")
         scheduler.start()
@@ -889,3 +1318,4 @@ if __name__ == "__main__":
                 time.sleep(1)
         except KeyboardInterrupt:
             scheduler.stop()
+            release_lock()

@@ -10,8 +10,10 @@ import os
 
 # Fix Windows console encoding for emojis
 if sys.platform == 'win32':
-    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
-    sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+    if hasattr(sys.stdout, 'reconfigure'):
+        sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+    if hasattr(sys.stderr, 'reconfigure'):
+        sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 
 # Set ANDROID_HOME for Appium
 os.environ['ANDROID_HOME'] = r'C:\Users\asus\Downloads\android-sdk'
@@ -735,9 +737,11 @@ Only output JSON."""
         options.device_name = self.device
         options.udid = self.device
         options.no_reset = True
-        options.new_command_timeout = 60  # Reduced from 300 - fail faster
-        options.set_capability("appium:adbExecTimeout", 30000)  # 30s instead of 60s
-        options.set_capability("appium:uiautomator2ServerInstallTimeout", 60000)  # 60s instead of 120s
+        options.new_command_timeout = 120  # Allow time for slow cloud phone operations
+        options.set_capability("appium:adbExecTimeout", 120000)  # 120s for slow cloud connections
+        options.set_capability("appium:uiautomator2ServerInstallTimeout", 120000)  # 120s for install
+        options.set_capability("appium:uiautomator2ServerLaunchTimeout", 10000)  # 10s for launch - binary: works in ~1s or not at all
+        options.set_capability("appium:androidDeviceReadyTimeout", 60)  # 60s to wait for device ready
 
         last_error = None
         for attempt in range(retries):
@@ -754,8 +758,8 @@ Only output JSON."""
                 print(f"  Appium connection failed (attempt {attempt + 1}/{retries}): {e}")
                 self.appium_driver = None
                 if attempt < retries - 1:
-                    print(f"  Retrying in 5 seconds...")
-                    time.sleep(5)
+                    print(f"  Retrying in 2 seconds...")
+                    time.sleep(2)  # Binary: works in ~1s or not at all, no point waiting
 
         # All retries failed - raise exception
         raise Exception(f"Appium connection failed after {retries} attempts: {last_error}")
