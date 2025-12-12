@@ -25,6 +25,8 @@ import json
 import random
 import xml.etree.ElementTree as ET
 import anthropic
+import threading
+import concurrent.futures
 from geelark_client import GeelarkClient
 
 # Appium imports
@@ -34,6 +36,7 @@ from appium.webdriver.common.appiumby import AppiumBy
 
 ADB_PATH = r"C:\Users\asus\Downloads\platform-tools-latest-windows\platform-tools\adb.exe"
 APPIUM_SERVER = "http://127.0.0.1:4723"
+APPIUM_CONNECT_TIMEOUT = 15  # seconds - connection typically takes 3-6s
 
 
 class SmartInstagramPoster:
@@ -746,10 +749,21 @@ Only output JSON."""
         last_error = None
         for attempt in range(retries):
             try:
-                self.appium_driver = webdriver.Remote(
-                    command_executor=APPIUM_SERVER,
-                    options=options
-                )
+                # Use ThreadPoolExecutor for timeout on webdriver.Remote()
+                # Connection normally takes 3-6s, timeout at APPIUM_CONNECT_TIMEOUT
+                def create_driver():
+                    return webdriver.Remote(
+                        command_executor=APPIUM_SERVER,
+                        options=options
+                    )
+
+                with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+                    future = executor.submit(create_driver)
+                    try:
+                        self.appium_driver = future.result(timeout=APPIUM_CONNECT_TIMEOUT)
+                    except concurrent.futures.TimeoutError:
+                        raise Exception(f"Appium connection timeout after {APPIUM_CONNECT_TIMEOUT}s")
+
                 platform_ver = self.appium_driver.capabilities.get('platformVersion', 'unknown')
                 print(f"  Appium connected! (Android {platform_ver})")
                 return True
