@@ -37,7 +37,7 @@ APPIUM_SERVER = "http://127.0.0.1:4723"
 
 
 class SmartInstagramPoster:
-    def __init__(self, phone_name):
+    def __init__(self, phone_name, system_port=None):
         self.client = GeelarkClient()
         self.anthropic = anthropic.Anthropic()
         self.phone_name = phone_name
@@ -47,6 +47,9 @@ class SmartInstagramPoster:
         self.caption_entered = False
         self.share_clicked = False
         self.appium_driver = None  # Appium WebDriver for typing
+        # Unique port for parallel execution (8200, 8201, 8202, etc.)
+        # Each device MUST have a unique systemPort to avoid Appium conflicts
+        self.system_port = system_port
         # Error tracking
         self.last_error_type = None
         self.last_error_message = None
@@ -345,6 +348,9 @@ class SmartInstagramPoster:
                 'your account was disabled',
                 'we suspended your account',
                 'account is disabled',
+                'we disabled your account',
+                'no longer have access to',
+                'account disabled on',
             ],
             'captcha': [
                 'confirm it\'s you',
@@ -566,7 +572,11 @@ Instagram posting flow:
    - Some have "Create New" in top left corner (only visible from Profile tab)
    - If you don't see Create, tap "Profile" tab first to find "Create New"
 2. Select "Reel" option if a menu appears
-3. Select the video from gallery (look for video thumbnails, usually most recent)
+3. GALLERY SELECTION - THIS IS CRITICAL:
+   - You will see video thumbnails with descriptions like "Video thumbnail created on..."
+   - TAP THE MOST RECENT VIDEO THUMBNAIL (the one with the most recent date)
+   - DO NOT tap REEL/POST/STORY at the bottom - those are mode switches, you're already in REEL mode
+   - The video thumbnail is usually in the top area, look for "Video thumbnail" in the desc field
 4. Tap "Next" to proceed to editing
 5. Tap "Next" again to proceed to sharing
 6. When you see the caption field ("Write a caption" or similar), return "type" action with the caption text
@@ -593,8 +603,8 @@ CRITICAL RULES - NEVER GIVE UP:
 - If you don't see Create button, tap Profile tab first
 - Look for "Create New" in desc field (top left area, small button)
 - Look for "Profile" in desc field (bottom nav, usually id=profile_tab)
-- If you see "Reel" or "Create new reel" option, tap it
-- If you see gallery thumbnails with video, tap the video
+- If you see "Reel" or "Create new reel" option in a MENU, tap it
+- CRITICAL GALLERY RULE: When in the gallery/camera view (you see video thumbnails with desc like "Video thumbnail created on..."), TAP THE VIDEO THUMBNAIL, NOT the REEL/POST/STORY tabs at the bottom! Those tabs are for switching modes - you're ALREADY in REEL mode. Select the most recent video thumbnail to proceed.
 - If you see "Next" button anywhere, tap it
 - IMPORTANT: When you see a caption field (text containing "Write a caption", "Add a caption", or similar placeholder) AND "Caption entered" is False, return action="tap_and_type" with the element_index of the caption field and text set to the caption
 - CRITICAL: If "Caption entered: True" is shown above, DO NOT return tap_and_type! The caption is already typed. Just tap the Share button directly.
@@ -773,6 +783,12 @@ Only output JSON."""
         options.set_capability("appium:uiautomator2ServerInstallTimeout", 120000)  # 120s for install
         options.set_capability("appium:uiautomator2ServerLaunchTimeout", 10000)  # 10s for launch - binary: works in ~1s or not at all
         options.set_capability("appium:androidDeviceReadyTimeout", 60)  # 60s to wait for device ready
+
+        # CRITICAL for parallel execution: Each device needs a unique systemPort
+        # Default is 8200, conflicts cause "instrumentation process cannot be initialized" errors
+        if self.system_port:
+            options.set_capability("appium:systemPort", self.system_port)
+            print(f"  Using systemPort: {self.system_port}")
 
         last_error = None
         for attempt in range(retries):
