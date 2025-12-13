@@ -5,8 +5,10 @@ import subprocess
 import time
 import os
 
-# ADB executable path
-ADB_PATH = r"C:\Users\asus\Downloads\platform-tools-latest-windows\platform-tools\adb.exe"
+from config import Config
+
+# ADB executable path - use centralized config for consistency
+ADB_PATH = Config.ADB_PATH
 
 
 class ADBController:

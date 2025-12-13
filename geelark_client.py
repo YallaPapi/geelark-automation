@@ -7,11 +7,16 @@ import time
 import hashlib
 import logging
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 from dotenv import load_dotenv
 
 load_dotenv()
 
 API_BASE = "https://openapi.geelark.com"
+
+# Default HTTP timeout in seconds (prevents hanging requests)
+DEFAULT_HTTP_TIMEOUT = 30
 
 # Setup logging for API responses (useful for debugging with Geelark support)
 logging.basicConfig(
@@ -22,11 +27,45 @@ logging.basicConfig(
 api_logger = logging.getLogger("geelark_api")
 
 
+class GeelarkCredentialError(Exception):
+    """Raised when Geelark credentials are missing or invalid."""
+    pass
+
+
 class GeelarkClient:
-    def __init__(self):
+    def __init__(self, token: str = None):
+        """
+        Initialize GeelarkClient with credential validation and connection pooling.
+
+        Args:
+            token: Optional token override. If not provided, reads from GEELARK_TOKEN env var.
+
+        Raises:
+            GeelarkCredentialError: If GEELARK_TOKEN is missing.
+        """
         self.app_id = os.getenv("GEELARK_APP_ID")
         self.api_key = os.getenv("GEELARK_API_KEY")
-        self.token = os.getenv("GEELARK_TOKEN")
+        self.token = token or os.getenv("GEELARK_TOKEN")
+
+        # FAIL FAST: Validate credentials at initialization, not deep in posting flow
+        if not self.token:
+            raise GeelarkCredentialError(
+                "GEELARK_TOKEN not found. Set it in .env file or pass token parameter."
+            )
+
+        # Create HTTP session with connection pooling for reliability under parallel load
+        self.session = requests.Session()
+        adapter = HTTPAdapter(
+            pool_connections=10,  # Number of connection pools
+            pool_maxsize=10,      # Max connections per pool
+            max_retries=Retry(
+                total=3,
+                backoff_factor=0.5,
+                status_forcelist=[500, 502, 503, 504]
+            )
+        )
+        self.session.mount('https://', adapter)
+        self.session.mount('http://', adapter)
 
     def _get_headers(self):
         """Generate headers for token-based authentication"""
@@ -37,16 +76,18 @@ class GeelarkClient:
             "Authorization": f"Bearer {self.token}"
         }
 
-    def _request(self, endpoint, data=None):
-        """Make API request with full response logging"""
+    def _request(self, endpoint, data=None, timeout=None):
+        """Make API request with full response logging and timeout."""
         url = f"{API_BASE}{endpoint}"
         headers = self._get_headers()
+        timeout = timeout or DEFAULT_HTTP_TIMEOUT
 
         # Log request
         start_time = time.time()
         api_logger.debug(f"REQUEST: {endpoint} data={data}")
 
-        resp = requests.post(url, json=data or {}, headers=headers)
+        # Use session for connection pooling, add timeout to prevent hanging
+        resp = self.session.post(url, json=data or {}, headers=headers, timeout=timeout)
         elapsed = time.time() - start_time
 
         # Log full response info (for Geelark developer debugging)
@@ -156,9 +197,9 @@ class GeelarkClient:
         upload_url = result.get("uploadUrl")
         resource_url = result.get("resourceUrl")
 
-        # Upload file via PUT
+        # Upload file via PUT with timeout (use longer timeout for large files)
         with open(local_path, "rb") as f:
-            resp = requests.put(upload_url, data=f)
+            resp = self.session.put(upload_url, data=f, timeout=120)
 
         if resp.status_code not in [200, 201]:
             raise Exception(f"Failed to upload file: {resp.status_code} {resp.text}")
