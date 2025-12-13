@@ -87,7 +87,13 @@ Only output the JSON, nothing else."""
             text = text[4:]
         text = text.strip()
 
-    return json.loads(text)
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError as e:
+        return {
+            "action": "error",
+            "message": f"JSON parse error: {e}. Raw response: {text[:200]}"
+        }
 
 
 def analyze_for_instagram_post(image_path, caption, video_uploaded=False):
@@ -171,7 +177,14 @@ Only output the JSON, nothing else."""
             text = text[4:]
         text = text.strip()
 
-    return json.loads(text)
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError as e:
+        return {
+            "action": "error",
+            "message": f"JSON parse error: {e}. Raw response: {text[:200]}",
+            "video_selected": False
+        }
 
 
 if __name__ == "__main__":

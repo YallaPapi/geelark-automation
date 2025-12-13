@@ -14,9 +14,10 @@ Features:
 import os
 import sys
 
-# Set ANDROID_HOME early for Appium - MUST be before any Appium imports
-os.environ['ANDROID_HOME'] = r'C:\Users\asus\Downloads\android-sdk'
-os.environ['ANDROID_SDK_ROOT'] = r'C:\Users\asus\Downloads\android-sdk'
+# Import centralized config and set up environment FIRST (before any Appium imports)
+from config import Config, setup_environment
+setup_environment()
+
 import csv
 import json
 import time
@@ -188,20 +189,8 @@ def get_android_env() -> dict:
     This ensures Appium can find the Android SDK regardless of how
     the parent process was started.
     """
-    env = os.environ.copy()
-
-    # Set both ANDROID_HOME and ANDROID_SDK_ROOT for maximum compatibility
-    android_sdk = r'C:\Users\asus\Downloads\android-sdk'
-
-    env['ANDROID_HOME'] = android_sdk
-    env['ANDROID_SDK_ROOT'] = android_sdk
-
-    # Add platform-tools to PATH if not already there
-    platform_tools = os.path.join(android_sdk, 'platform-tools')
-    if platform_tools not in env.get('PATH', ''):
-        env['PATH'] = platform_tools + os.pathsep + env.get('PATH', '')
-
-    return env
+    from config import Config, get_adb_env
+    return get_adb_env()
 
 
 def restart_appium(port: int = 4723) -> bool:
