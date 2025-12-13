@@ -576,8 +576,10 @@ class ProgressTracker:
 
                     elif status == self.STATUS_FAILED:
                         # Failure - check if we should retry
-                        attempts = int(job.get('attempts', 0)) + 1
-                        max_attempts = int(job.get('max_attempts', self.DEFAULT_MAX_ATTEMPTS))
+                        attempts_str = job.get('attempts') or '0'
+                        attempts = int(attempts_str) + 1
+                        max_attempts_str = job.get('max_attempts') or str(self.DEFAULT_MAX_ATTEMPTS)
+                        max_attempts = int(max_attempts_str)
                         job['attempts'] = str(attempts)
 
                         # Classify the error
