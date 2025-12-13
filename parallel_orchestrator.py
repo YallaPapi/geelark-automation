@@ -492,34 +492,38 @@ def validate_progress_file(progress_file: str) -> bool:
     """
     Check if progress file is valid (not empty/corrupt).
 
+    CRITICAL: This function NO LONGER deletes files automatically.
+    The progress file is the daily ledger and must be preserved.
+    If the file is empty or corrupt, operator must manually use --reset-day.
+
     Returns:
         True if file is valid or doesn't exist
-        False if file exists but is empty/corrupt (will be deleted)
+        False if file exists but is empty/corrupt (DOES NOT DELETE - requires manual fix)
     """
     if not os.path.exists(progress_file):
         return True
 
     try:
+        # Check file size first
+        file_size = os.path.getsize(progress_file)
+        if file_size == 0:
+            logger.error(f"Progress file {progress_file} is empty (0 bytes). "
+                        f"Use --reset-day to archive and create a fresh ledger.")
+            return False
+
         import csv
         with open(progress_file, 'r', encoding='utf-8') as f:
             reader = csv.DictReader(f)
             rows = list(reader)
             if len(rows) == 0:
-                logger.warning(f"Progress file {progress_file} is empty (header only), removing...")
-                os.remove(progress_file)
-                if os.path.exists(progress_file + '.lock'):
-                    os.remove(progress_file + '.lock')
-                return True  # File was removed, now "valid" (doesn't exist)
+                logger.error(f"Progress file {progress_file} has header but no data rows. "
+                            f"Use --reset-day to archive and create a fresh ledger.")
+                return False
         return True
     except Exception as e:
-        logger.warning(f"Progress file {progress_file} appears corrupt: {e}, removing...")
-        try:
-            os.remove(progress_file)
-            if os.path.exists(progress_file + '.lock'):
-                os.remove(progress_file + '.lock')
-        except:
-            pass
-        return True
+        logger.error(f"Progress file {progress_file} appears corrupt: {e}. "
+                    f"Use --reset-day to archive and create a fresh ledger.")
+        return False
 
 
 def full_cleanup(config: ParallelConfig, release_claims: bool = True) -> None:
@@ -1000,6 +1004,17 @@ Examples:
             sys.exit(1)
 
     elif args.run:
+        # SAFETY CHECK: --force-reseed requires --reset-day to prevent accidental mid-day reseeds
+        # that could result in duplicate posts or exceeded daily limits
+        if args.force_reseed and os.path.exists(config.progress_file):
+            logger.error("SAFETY: --force-reseed is not allowed when progress file exists!")
+            logger.error("  The progress file is the daily ledger and tracks posting limits.")
+            logger.error("  Reseeding mid-day can cause duplicate posts and exceed daily limits.")
+            logger.error("")
+            logger.error("  To start a new day: python parallel_orchestrator.py --reset-day")
+            logger.error("  Then run normally without --force-reseed")
+            sys.exit(1)
+
         results = run_parallel_posting(
             num_workers=args.workers,
             state_file=args.state_file,

@@ -223,6 +223,35 @@ class ProgressTracker:
                         success_counts[acc] = success_counts.get(acc, 0) + 1
         return success_counts
 
+    def _load_assigned_counts(self) -> Dict[str, int]:
+        """
+        Load assigned counts per account from existing progress file.
+
+        Assigned = pending + claimed + success + retrying (any job that "counts" toward daily limit)
+
+        CRITICAL: This prevents reusing accounts within a batch when reseeding.
+        For max_posts_per_account_per_day=1, each account should only appear once
+        in the entire day's ledger (pending/claimed/success/retrying).
+
+        Returns:
+            Dict mapping account name to number of assigned jobs
+        """
+        assigned_counts = {}
+        if not os.path.exists(self.progress_file):
+            return assigned_counts
+
+        active_statuses = {self.STATUS_PENDING, self.STATUS_CLAIMED,
+                          self.STATUS_SUCCESS, self.STATUS_RETRYING}
+
+        with open(self.progress_file, 'r', encoding='utf-8', newline='') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if row.get('status') in active_statuses:
+                    acc = row.get('account', '')
+                    if acc:
+                        assigned_counts[acc] = assigned_counts.get(acc, 0) + 1
+        return assigned_counts
+
     def seed_from_scheduler_state(
         self,
         state_file: str,
@@ -257,9 +286,10 @@ class ProgressTracker:
         jobs_data = state.get('jobs', [])
         accounts = account_list or [acc['name'] for acc in state.get('accounts', [])]
 
-        # CRITICAL: Build success_count_by_account from existing progress file
-        # This tracks how many successful posts each account has TODAY
-        success_count_by_account = self._load_success_counts()
+        # CRITICAL: Build assigned_count_by_account from existing progress file
+        # This tracks ALL jobs assigned to each account TODAY (pending, claimed, success, retrying)
+        # Using assigned counts (not just success) prevents same-account reuse within a batch
+        assigned_count_by_account = self._load_assigned_counts()
         existing_job_ids = set()
         existing_jobs = []
 
@@ -269,14 +299,14 @@ class ProgressTracker:
                 existing_job_ids.add(job.get('job_id', ''))
 
         # Log accounts that are at or over the daily limit
-        accounts_at_limit = [acc for acc in accounts if success_count_by_account.get(acc, 0) >= max_posts_per_account_per_day]
+        accounts_at_limit = [acc for acc in accounts if assigned_count_by_account.get(acc, 0) >= max_posts_per_account_per_day]
         if accounts_at_limit:
             logger.info(f"EXCLUDING {len(accounts_at_limit)} accounts at daily limit ({max_posts_per_account_per_day}): {sorted(accounts_at_limit)}")
 
-        # Filter accounts - only those with success_count < max_posts_per_account_per_day
+        # Filter accounts - only those with assigned_count < max_posts_per_account_per_day
         available_accounts = [
             acc for acc in accounts
-            if success_count_by_account.get(acc, 0) < max_posts_per_account_per_day
+            if assigned_count_by_account.get(acc, 0) < max_posts_per_account_per_day
         ]
         logger.info(f"Available accounts for new jobs: {len(available_accounts)} (excluded {len(accounts_at_limit)} at daily limit)")
 
@@ -295,27 +325,27 @@ class ProgressTracker:
             return 0
 
         # CRITICAL: Assign jobs with daily limit tracking
-        # Copy success counts to track in-memory during this seeding pass
-        seeding_success_counts = dict(success_count_by_account)
+        # Copy assigned counts to track in-memory during this seeding pass
+        seeding_assigned_counts = dict(assigned_count_by_account)
         new_jobs = []
         accounts_used_this_batch = set()  # Each account gets at most 1 job per batch
 
         for job in pending_jobs:
             # Find an account that:
             # 1. Is not already used in this batch
-            # 2. Has success_count < max_posts_per_account_per_day
+            # 2. Has assigned_count < max_posts_per_account_per_day
             assigned_account = ''
             for acc in available_accounts:
                 if acc in accounts_used_this_batch:
                     continue
-                if seeding_success_counts.get(acc, 0) >= max_posts_per_account_per_day:
+                if seeding_assigned_counts.get(acc, 0) >= max_posts_per_account_per_day:
                     continue
                 assigned_account = acc
                 accounts_used_this_batch.add(acc)
-                # Increment in-memory count (as if this will succeed)
+                # Increment in-memory count
                 # This prevents assigning more than max_posts_per_account_per_day jobs
                 # even when max > 1
-                seeding_success_counts[acc] = seeding_success_counts.get(acc, 0) + 1
+                seeding_assigned_counts[acc] = seeding_assigned_counts.get(acc, 0) + 1
                 break
 
             new_jobs.append({
