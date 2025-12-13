@@ -148,93 +148,112 @@ class SmartInstagramPoster:
         delay = random.uniform(min_sec, max_sec)
         time.sleep(delay)
 
+    def _humanize_scroll_feed(self):
+        """Scroll through the feed randomly. Returns True if action performed."""
+        print("  - Scrolling feed...")
+        scroll_count = random.randint(1, 3)
+        for _ in range(scroll_count):
+            self.swipe(360, 900, 360, 400, random.randint(200, 400))
+            self.random_delay(1.0, 3.0)
+        # Scroll back up sometimes
+        if random.random() < 0.3:
+            self.swipe(360, 400, 360, 900, 300)
+            self.random_delay(0.5, 1.5)
+        return True
+
+    def _humanize_view_story(self):
+        """View stories randomly. Returns True if action performed."""
+        print("  - Viewing a story...")
+        elements, _ = self.dump_ui()
+        story_elements = [e for e in elements if 'story' in e.get('desc', '').lower() and 'unseen' in e.get('desc', '').lower()]
+        if not story_elements:
+            return False
+
+        story = random.choice(story_elements)
+        self.tap(story['center'][0], story['center'][1])
+        view_time = random.uniform(3, 8)
+        print(f"    Watching for {view_time:.1f}s...")
+        time.sleep(view_time)
+        # Tap through a few more stories sometimes
+        if random.random() < 0.5:
+            for _ in range(random.randint(1, 3)):
+                self.tap(650, 640)  # Tap right side to skip to next story
+                time.sleep(random.uniform(2, 5))
+        # Go back
+        self.press_key('KEYCODE_BACK')
+        self.random_delay(1.0, 2.0)
+        return True
+
+    def _humanize_scroll_reels(self):
+        """Browse reels randomly. Returns True if action performed."""
+        print("  - Browsing reels...")
+        elements, _ = self.dump_ui()
+        reels_tab = [e for e in elements if 'reels' in e.get('desc', '').lower() and e['clickable']]
+        if not reels_tab:
+            return False
+
+        self.tap(reels_tab[0]['center'][0], reels_tab[0]['center'][1])
+        self.random_delay(2.0, 4.0)
+        # Watch a few reels
+        for _ in range(random.randint(1, 3)):
+            watch_time = random.uniform(3, 10)
+            print(f"    Watching reel for {watch_time:.1f}s...")
+            time.sleep(watch_time)
+            # Sometimes double-tap to like
+            if random.random() < 0.15:
+                print("    Double-tap like!")
+                self.tap(360, 640)
+                time.sleep(0.1)
+                self.tap(360, 640)
+                self.random_delay(0.5, 1.0)
+            # Swipe to next reel
+            self.swipe(360, 1000, 360, 300, 200)
+            self.random_delay(0.5, 1.5)
+        # Go back to home
+        elements, _ = self.dump_ui()
+        home_tab = [e for e in elements if 'home' in e.get('desc', '').lower() and e['clickable']]
+        if home_tab:
+            self.tap(home_tab[0]['center'][0], home_tab[0]['center'][1])
+        self.random_delay(1.0, 2.0)
+        return True
+
+    def _humanize_check_notifications(self):
+        """Check notifications randomly. Returns True if action performed."""
+        print("  - Checking notifications...")
+        elements, _ = self.dump_ui()
+        notif_btn = [e for e in elements if ('notification' in e.get('desc', '').lower() or 'activity' in e.get('desc', '').lower()) and e['clickable']]
+        if not notif_btn:
+            return False
+
+        self.tap(notif_btn[0]['center'][0], notif_btn[0]['center'][1])
+        self.random_delay(2.0, 4.0)
+        # Scroll through notifications
+        if random.random() < 0.5:
+            self.swipe(360, 800, 360, 400, 300)
+            self.random_delay(1.0, 2.0)
+        # Go back
+        self.press_key('KEYCODE_BACK')
+        self.random_delay(1.0, 2.0)
+        return True
+
     def humanize_before_post(self):
         """Perform random human-like actions before posting"""
         print("\n[HUMANIZE] Performing random actions before posting...")
         actions_done = 0
         max_actions = random.randint(2, 4)
 
+        # Dispatch table for humanize actions
+        action_handlers = {
+            'scroll_feed': self._humanize_scroll_feed,
+            'view_story': self._humanize_view_story,
+            'scroll_reels': self._humanize_scroll_reels,
+            'check_notifications': self._humanize_check_notifications,
+        }
+
         for _ in range(max_actions):
-            action = random.choice(['scroll_feed', 'view_story', 'scroll_reels', 'check_notifications'])
-
-            if action == 'scroll_feed':
-                print("  - Scrolling feed...")
-                scroll_count = random.randint(1, 3)
-                for _ in range(scroll_count):
-                    self.swipe(360, 900, 360, 400, random.randint(200, 400))
-                    self.random_delay(1.0, 3.0)
-                # Scroll back up sometimes
-                if random.random() < 0.3:
-                    self.swipe(360, 400, 360, 900, 300)
-                    self.random_delay(0.5, 1.5)
+            action = random.choice(list(action_handlers.keys()))
+            if action_handlers[action]():
                 actions_done += 1
-
-            elif action == 'view_story':
-                print("  - Viewing a story...")
-                elements, _ = self.dump_ui()
-                story_elements = [e for e in elements if 'story' in e.get('desc', '').lower() and 'unseen' in e.get('desc', '').lower()]
-                if story_elements:
-                    story = random.choice(story_elements)
-                    self.tap(story['center'][0], story['center'][1])
-                    view_time = random.uniform(3, 8)
-                    print(f"    Watching for {view_time:.1f}s...")
-                    time.sleep(view_time)
-                    # Tap through a few more stories sometimes
-                    if random.random() < 0.5:
-                        for _ in range(random.randint(1, 3)):
-                            self.tap(650, 640)  # Tap right side to skip to next story
-                            time.sleep(random.uniform(2, 5))
-                    # Go back
-                    self.press_key('KEYCODE_BACK')
-                    self.random_delay(1.0, 2.0)
-                    actions_done += 1
-
-            elif action == 'scroll_reels':
-                print("  - Browsing reels...")
-                elements, _ = self.dump_ui()
-                reels_tab = [e for e in elements if 'reels' in e.get('desc', '').lower() and e['clickable']]
-                if reels_tab:
-                    self.tap(reels_tab[0]['center'][0], reels_tab[0]['center'][1])
-                    self.random_delay(2.0, 4.0)
-                    # Watch a few reels
-                    for _ in range(random.randint(1, 3)):
-                        watch_time = random.uniform(3, 10)
-                        print(f"    Watching reel for {watch_time:.1f}s...")
-                        time.sleep(watch_time)
-                        # Sometimes double-tap to like
-                        if random.random() < 0.15:
-                            print("    Double-tap like!")
-                            self.tap(360, 640)
-                            time.sleep(0.1)
-                            self.tap(360, 640)
-                            self.random_delay(0.5, 1.0)
-                        # Swipe to next reel
-                        self.swipe(360, 1000, 360, 300, 200)
-                        self.random_delay(0.5, 1.5)
-                    # Go back to home
-                    elements, _ = self.dump_ui()
-                    home_tab = [e for e in elements if 'home' in e.get('desc', '').lower() and e['clickable']]
-                    if home_tab:
-                        self.tap(home_tab[0]['center'][0], home_tab[0]['center'][1])
-                    self.random_delay(1.0, 2.0)
-                    actions_done += 1
-
-            elif action == 'check_notifications':
-                print("  - Checking notifications...")
-                elements, _ = self.dump_ui()
-                notif_btn = [e for e in elements if ('notification' in e.get('desc', '').lower() or 'activity' in e.get('desc', '').lower()) and e['clickable']]
-                if notif_btn:
-                    self.tap(notif_btn[0]['center'][0], notif_btn[0]['center'][1])
-                    self.random_delay(2.0, 4.0)
-                    # Scroll through notifications
-                    if random.random() < 0.5:
-                        self.swipe(360, 800, 360, 400, 300)
-                        self.random_delay(1.0, 2.0)
-                    # Go back
-                    self.press_key('KEYCODE_BACK')
-                    self.random_delay(1.0, 2.0)
-                    actions_done += 1
-
             if actions_done >= max_actions:
                 break
 
@@ -445,6 +464,119 @@ class SmartInstagramPoster:
             print(f"    Failed to save screenshot: {e}")
 
         return None
+
+    def _handle_tap_and_type(self, action, elements, caption):
+        """Handle tap_and_type action - keyboard management and caption typing.
+
+        Returns True if caller should `continue` to next loop iteration.
+        """
+        # Prevent re-typing if caption already entered - just tap Share instead
+        if self.caption_entered:
+            print("  [SKIP] Caption already entered! Tapping Share instead.")
+            share_elements = [e for e in elements if e.get('text', '').lower() == 'share' or e.get('desc', '').lower() == 'share']
+            if share_elements:
+                self.tap(share_elements[0]['center'][0], share_elements[0]['center'][1])
+                self.share_clicked = True
+            return True  # continue to next step
+
+        idx = action.get('element_index', 0)
+        text = action.get('text', caption)
+
+        # Step 1: Check if keyboard is already up
+        print("  Checking if keyboard is up...")
+        keyboard_up = self.is_keyboard_visible()
+
+        if not keyboard_up:
+            # Step 2: Tap the caption field
+            if 0 <= idx < len(elements):
+                elem = elements[idx]
+                print(f"  Keyboard not up. Tapping caption field at ({elem['center'][0]}, {elem['center'][1]})")
+                self.tap(elem['center'][0], elem['center'][1])
+                time.sleep(1.5)
+
+            # Step 3: Check again if keyboard is up
+            print("  Checking keyboard again...")
+            keyboard_up = self.is_keyboard_visible()
+
+            if not keyboard_up:
+                # Step 4: Try tapping again
+                print("  Keyboard still not up. Tapping again...")
+                if 0 <= idx < len(elements):
+                    elem = elements[idx]
+                    self.tap(elem['center'][0], elem['center'][1])
+                    time.sleep(1.5)
+                keyboard_up = self.is_keyboard_visible()
+
+        if keyboard_up:
+            print(f"  Keyboard is up. Typing: {text[:50]}...")
+            self.type_text(text)
+            time.sleep(1)
+
+            # Step 5: Best-effort verification (uiautomator often hides caption text)
+            print("  Verifying caption was typed...")
+            verify_elements, _ = self.dump_ui()
+            caption_found = any(text[:20] in elem.get('text', '') for elem in verify_elements)
+            if caption_found:
+                print("  Caption appears in UI dump.")
+            else:
+                print("  Caption not visible in UI dump (normal for IG caption field); assuming entered.")
+            self.caption_entered = True
+
+            # Hide keyboard
+            self.press_key('KEYCODE_BACK')
+            time.sleep(0.5)
+        else:
+            print("  ERROR: Could not get keyboard to appear. Will retry on next step.")
+
+        return False  # don't skip, continue normally
+
+    def _track_action_for_loop_detection(self, action, elements, recent_actions, loop_threshold):
+        """Track action signature for loop detection.
+
+        Modifies recent_actions in place.
+        """
+        action_signature = action['action']
+        if action['action'] == 'tap' and 'element_index' in action:
+            idx = action.get('element_index', 0)
+            if 0 <= idx < len(elements):
+                x, y = elements[idx]['center']
+                action_signature = f"tap_{x}_{y}"
+        recent_actions.append(action_signature)
+        if len(recent_actions) > loop_threshold:
+            recent_actions.pop(0)
+
+    def _check_and_recover_from_loop(self, recent_actions, loop_recovery_count, loop_threshold, max_recoveries):
+        """Check for stuck loop and attempt recovery.
+
+        Returns tuple: (should_abort: bool, new_recovery_count: int, should_clear_actions: bool)
+        """
+        # Check for loop - if last N actions are all identical, we're stuck
+        if len(recent_actions) < loop_threshold or len(set(recent_actions)) != 1:
+            return (False, loop_recovery_count, False)  # No loop detected
+
+        # Loop detected!
+        loop_recovery_count += 1
+        print(f"\n  [LOOP DETECTED] Same action '{recent_actions[0]}' repeated {loop_threshold} times!")
+        print(f"  [RECOVERY] Attempt {loop_recovery_count}/{max_recoveries}")
+
+        if loop_recovery_count > max_recoveries:
+            print("  [ABORT] Too many loop recoveries, giving up")
+            return (True, loop_recovery_count, False)  # Should abort
+
+        # Recovery: press back 5 times and restart Instagram
+        print("  Pressing BACK 5 times to escape stuck state...")
+        for _ in range(5):
+            self.press_key('KEYCODE_BACK')
+            time.sleep(0.5)
+
+        print("  Reopening Instagram...")
+        self.adb("am force-stop com.instagram.android")
+        time.sleep(2)
+        self.adb("monkey -p com.instagram.android 1")
+        time.sleep(5)
+
+        print("  [RECOVERY] Restarted - continuing")
+        return (False, loop_recovery_count, True)  # Continue, but clear actions
 
     def is_keyboard_visible(self):
         """Check if the keyboard is currently visible on screen"""
@@ -699,63 +831,8 @@ class SmartInstagramPoster:
                     print(f"  Invalid element index: {idx}")
 
             elif action['action'] == 'tap_and_type':
-                # Prevent re-typing if caption already entered - just tap Share instead
-                if self.caption_entered:
-                    print("  [SKIP] Caption already entered! Tapping Share instead.")
-                    share_elements = [e for e in elements if e.get('text', '').lower() == 'share' or e.get('desc', '').lower() == 'share']
-                    if share_elements:
-                        self.tap(share_elements[0]['center'][0], share_elements[0]['center'][1])
-                        self.share_clicked = True
-                    continue
-
-                idx = action.get('element_index', 0)
-                text = action.get('text', caption)
-
-                # Step 1: Check if keyboard is already up
-                print("  Checking if keyboard is up...")
-                keyboard_up = self.is_keyboard_visible()
-
-                if not keyboard_up:
-                    # Step 2: Tap the caption field
-                    if 0 <= idx < len(elements):
-                        elem = elements[idx]
-                        print(f"  Keyboard not up. Tapping caption field at ({elem['center'][0]}, {elem['center'][1]})")
-                        self.tap(elem['center'][0], elem['center'][1])
-                        time.sleep(1.5)
-
-                    # Step 3: Check again if keyboard is up
-                    print("  Checking keyboard again...")
-                    keyboard_up = self.is_keyboard_visible()
-
-                    if not keyboard_up:
-                        # Step 4: Try tapping again
-                        print("  Keyboard still not up. Tapping again...")
-                        if 0 <= idx < len(elements):
-                            elem = elements[idx]
-                            self.tap(elem['center'][0], elem['center'][1])
-                            time.sleep(1.5)
-                        keyboard_up = self.is_keyboard_visible()
-
-                if keyboard_up:
-                    print(f"  Keyboard is up. Typing: {text[:50]}...")
-                    self.type_text(text)
-                    time.sleep(1)
-
-                    # Step 5: Best-effort verification (uiautomator often hides caption text)
-                    print("  Verifying caption was typed...")
-                    verify_elements, _ = self.dump_ui()
-                    caption_found = any(text[:20] in elem.get('text', '') for elem in verify_elements)
-                    if caption_found:
-                        print("  Caption appears in UI dump.")
-                    else:
-                        print("  Caption not visible in UI dump (normal for IG caption field); assuming entered.")
-                    self.caption_entered = True
-
-                    # Hide keyboard
-                    self.press_key('KEYCODE_BACK')
-                    time.sleep(0.5)
-                else:
-                    print("  ERROR: Could not get keyboard to appear. Will retry on next step.")
+                if self._handle_tap_and_type(action, elements, caption):
+                    continue  # Helper handled it and wants to skip to next step
 
             elif action['action'] == 'back':
                 self.press_key('KEYCODE_BACK')
@@ -766,42 +843,15 @@ class SmartInstagramPoster:
             elif action['action'] == 'scroll_up':
                 self.adb("input swipe 360 400 360 900 300")
 
-            # Track action for loop detection
-            action_signature = action['action']
-            if action['action'] == 'tap' and 'element_index' in action:
-                idx = action.get('element_index', 0)
-                if 0 <= idx < len(elements):
-                    x, y = elements[idx]['center']
-                    action_signature = f"tap_{x}_{y}"
-            recent_actions.append(action_signature)
-            if len(recent_actions) > LOOP_THRESHOLD:
-                recent_actions.pop(0)
-
-            # Check for loop - if last N actions are all identical, we're stuck
-            if len(recent_actions) >= LOOP_THRESHOLD and len(set(recent_actions)) == 1:
-                loop_recovery_count += 1
-                print(f"\n  [LOOP DETECTED] Same action '{recent_actions[0]}' repeated {LOOP_THRESHOLD} times!")
-                print(f"  [RECOVERY] Attempt {loop_recovery_count}/{MAX_LOOP_RECOVERIES}")
-
-                if loop_recovery_count > MAX_LOOP_RECOVERIES:
-                    print("  [ABORT] Too many loop recoveries, giving up")
-                    return False
-
-                # Recovery: press back 5 times and restart Instagram
-                print("  Pressing BACK 5 times to escape stuck state...")
-                for _ in range(5):
-                    self.press_key('KEYCODE_BACK')
-                    time.sleep(0.5)
-
-                print("  Reopening Instagram...")
-                self.adb("am force-stop com.instagram.android")
-                time.sleep(2)
-                self.adb("monkey -p com.instagram.android 1")
-                time.sleep(5)
-
-                # Reset action tracking
-                recent_actions = []
-                print("  [RECOVERY] Restarted - continuing from step", step + 1)
+            # Track action and check for stuck loops
+            self._track_action_for_loop_detection(action, elements, recent_actions, LOOP_THRESHOLD)
+            should_abort, loop_recovery_count, should_clear = self._check_and_recover_from_loop(
+                recent_actions, loop_recovery_count, LOOP_THRESHOLD, MAX_LOOP_RECOVERIES
+            )
+            if should_abort:
+                return False
+            if should_clear:
+                recent_actions.clear()
 
             time.sleep(1)
 
