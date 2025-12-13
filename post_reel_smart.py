@@ -37,7 +37,7 @@ APPIUM_SERVER = "http://127.0.0.1:4723"
 
 
 class SmartInstagramPoster:
-    def __init__(self, phone_name):
+    def __init__(self, phone_name, system_port=8200, appium_url=None):
         self.client = GeelarkClient()
         self.anthropic = anthropic.Anthropic()
         self.phone_name = phone_name
@@ -47,6 +47,9 @@ class SmartInstagramPoster:
         self.caption_entered = False
         self.share_clicked = False
         self.appium_driver = None  # Appium WebDriver for typing
+        # Appium configuration for multi-worker support
+        self.system_port = system_port
+        self.appium_url = appium_url or APPIUM_SERVER
         # Error tracking
         self.last_error_type = None
         self.last_error_message = None
@@ -693,13 +696,65 @@ Only output JSON."""
                 print(f"  Booting... ({(i+1)*2}s)")
             time.sleep(5)
 
-        # Enable ADB
-        print("Enabling ADB...")
-        self.client.enable_adb(self.phone_id)
-        time.sleep(5)
+        # Enable ADB with retry loop - Geelark API can fail with "server err"
+        adb_info = None
+        max_enable_retries = 3
+        for enable_retry in range(max_enable_retries):
+            print(f"Enabling ADB... (attempt {enable_retry + 1}/{max_enable_retries})")
+            try:
+                self.client.enable_adb(self.phone_id)
+            except Exception as e:
+                print(f"  enable_adb() API error: {e}")
+                if enable_retry < max_enable_retries - 1:
+                    print(f"  Retrying in 5s...")
+                    time.sleep(5)
+                    continue
+                else:
+                    raise Exception(f"enable_adb() failed after {max_enable_retries} attempts: {e}")
 
-        # Get ADB info
-        adb_info = self.client.get_adb_info(self.phone_id)
+            # CRITICAL: Don't just wait blindly - VERIFY ADB is actually enabled
+            # get_adb_info() will return IP/port/password when ADB is ready, or raise exception if not
+            print("Verifying ADB is enabled...")
+            max_adb_attempts = 30  # 30 attempts × 2 seconds = 60 seconds max
+            for adb_attempt in range(max_adb_attempts):
+                try:
+                    adb_info = self.client.get_adb_info(self.phone_id)
+                    if adb_info and adb_info.get('ip') and adb_info.get('port'):
+                        print(f"  ADB enabled and ready (took {(adb_attempt + 1) * 2}s)")
+                        break
+                except Exception as e:
+                    if adb_attempt == 0:
+                        print(f"  ADB not ready yet, waiting... ({e})")
+                    elif adb_attempt % 5 == 4:  # Print every 10 seconds
+                        print(f"  Still waiting for ADB... ({(adb_attempt + 1) * 2}s / {max_adb_attempts * 2}s)")
+                time.sleep(2)
+
+            if adb_info and adb_info.get('ip'):
+                break  # Success - exit retry loop
+            else:
+                print(f"  ADB verification failed after 60s")
+                if enable_retry < max_enable_retries - 1:
+                    print(f"  Restarting phone and retrying...")
+                    # Stop and restart phone to reset ADB state
+                    try:
+                        self.client.stop_phone(self.phone_id)
+                        time.sleep(3)
+                        self.client.start_phone(self.phone_id)
+                        # Wait for phone to boot
+                        for i in range(30):
+                            time.sleep(2)
+                            status_result = self.client.get_phone_status([self.phone_id])
+                            items = status_result.get("successDetails", [])
+                            if items and items[0].get("status") == 0:
+                                print(f"  Phone restarted (took ~{(i+1)*2}s)")
+                                break
+                        time.sleep(3)
+                    except Exception as restart_err:
+                        print(f"  Phone restart failed: {restart_err}")
+
+        if not adb_info or not adb_info.get('ip'):
+            raise Exception(f"ADB failed to enable after {max_enable_retries} attempts - enable_adb() did not work")
+
         self.device = f"{adb_info['ip']}:{adb_info['port']}"
         password = adb_info['pwd']
 
@@ -712,9 +767,11 @@ Only output JSON."""
         print(f"  ADB connect: {connect_result.stdout.strip()}")
 
         # Wait for device to appear in ADB devices list BEFORE running glogin
+        # With multiple concurrent connections, cloud phones need more time to stabilize
         print("Waiting for ADB connection to stabilize...")
         device_ready = False
-        for attempt in range(10):  # Increased attempts
+        max_attempts = 30  # 30 attempts × 2 seconds = 60 seconds max (was 10 × 2 = 20s)
+        for attempt in range(max_attempts):
             time.sleep(2)
             result = subprocess.run([ADB_PATH, "devices"], capture_output=True, encoding='utf-8')
             if self.device in result.stdout:
@@ -723,14 +780,15 @@ Only output JSON."""
                 for line in lines:
                     if self.device in line and '\tdevice' in line:
                         device_ready = True
-                        print(f"  Device {self.device} is ready")
+                        print(f"  Device {self.device} is ready (took {(attempt + 1) * 2}s)")
                         break
                 if device_ready:
                     break
-            print(f"  Waiting... (attempt {attempt + 1}/10)")
+            if attempt % 5 == 4:  # Print every 10 seconds
+                print(f"  Waiting... ({(attempt + 1) * 2}s / {max_attempts * 2}s)")
 
         if not device_ready:
-            print(f"  Warning: Device not in ADB device list after 20s")
+            raise Exception(f"Device {self.device} never appeared in ADB devices list after {max_attempts * 2}s")
 
         # NOW run glogin after device is ready - with retry
         print("Authenticating with glogin...")
@@ -758,9 +816,53 @@ Only output JSON."""
 
         return True
 
+    def verify_adb_connection(self):
+        """Verify device is still connected via ADB. Returns True if connected."""
+        result = subprocess.run([ADB_PATH, "devices"], capture_output=True, encoding='utf-8')
+        if self.device in result.stdout:
+            lines = result.stdout.strip().split('\n')
+            for line in lines:
+                if self.device in line and '\tdevice' in line:
+                    return True
+        return False
+
+    def reconnect_adb(self):
+        """Re-establish ADB connection if it dropped. Returns True on success."""
+        print(f"  [ADB RECONNECT] Device {self.device} offline, reconnecting...")
+
+        # Get fresh ADB info from Geelark
+        try:
+            adb_info = self.client.get_adb_info(self.phone_id)
+            password = adb_info['pwd']
+        except Exception as e:
+            print(f"  [ADB RECONNECT] Failed to get ADB info: {e}")
+            return False
+
+        # Disconnect stale connection
+        subprocess.run([ADB_PATH, "disconnect", self.device], capture_output=True)
+        time.sleep(1)
+
+        # Reconnect
+        connect_result = subprocess.run([ADB_PATH, "connect", self.device], capture_output=True, encoding='utf-8')
+        print(f"  [ADB RECONNECT] adb connect: {connect_result.stdout.strip()}")
+
+        # Wait for device to appear
+        for attempt in range(10):
+            time.sleep(2)
+            if self.verify_adb_connection():
+                print(f"  [ADB RECONNECT] Device ready after {attempt + 1} attempts")
+                # Re-run glogin
+                login_result = self.adb(f"glogin {password}")
+                print(f"  [ADB RECONNECT] glogin: {login_result}")
+                return True
+            print(f"  [ADB RECONNECT] Waiting... ({attempt + 1}/10)")
+
+        print(f"  [ADB RECONNECT] Failed to reconnect after 10 attempts")
+        return False
+
     def connect_appium(self, retries=3):
         """Connect Appium driver - REQUIRED for automation to work"""
-        print("Connecting Appium driver...")
+        print(f"Connecting Appium driver to {self.appium_url}...")
 
         options = UiAutomator2Options()
         options.platform_name = "Android"
@@ -773,14 +875,27 @@ Only output JSON."""
         options.set_capability("appium:uiautomator2ServerInstallTimeout", 120000)  # 120s for install
         options.set_capability("appium:uiautomator2ServerLaunchTimeout", 10000)  # 10s for launch - binary: works in ~1s or not at all
         options.set_capability("appium:androidDeviceReadyTimeout", 60)  # 60s to wait for device ready
+        options.set_capability("appium:systemPort", self.system_port)  # Unique port for each worker
 
         last_error = None
         for attempt in range(retries):
+            # CRITICAL: Verify ADB connection BEFORE each Appium attempt
+            # The device may have gone offline since connect() ran
+            if not self.verify_adb_connection():
+                print(f"  [ATTEMPT {attempt + 1}] ADB connection lost, attempting to reconnect...")
+                if not self.reconnect_adb():
+                    print(f"  [ATTEMPT {attempt + 1}] ADB reconnect failed, skipping Appium attempt")
+                    last_error = Exception("ADB connection lost and reconnect failed")
+                    if attempt < retries - 1:
+                        time.sleep(2)
+                    continue
+                print(f"  [ATTEMPT {attempt + 1}] ADB reconnected, proceeding with Appium")
+
             try:
                 # Direct connection - removed ThreadPoolExecutor which left orphaned sessions
                 # Appium's own timeouts (adbExecTimeout, uiautomator2ServerLaunchTimeout) handle slow connections
                 self.appium_driver = webdriver.Remote(
-                    command_executor=APPIUM_SERVER,
+                    command_executor=self.appium_url,
                     options=options
                 )
 
@@ -793,7 +908,7 @@ Only output JSON."""
                 self.appium_driver = None
                 if attempt < retries - 1:
                     print(f"  Retrying in 2 seconds...")
-                    time.sleep(2)  # Binary: works in ~1s or not at all, no point waiting
+                    time.sleep(2)
 
         # All retries failed - raise exception
         raise Exception(f"Appium connection failed after {retries} attempts: {last_error}")
@@ -845,6 +960,12 @@ Only output JSON."""
         # Humanize before posting
         if humanize:
             self.humanize_before_post()
+
+        # Loop detection - track recent actions to detect stuck states
+        recent_actions = []  # List of (action_type, x, y) tuples
+        LOOP_THRESHOLD = 5  # If 5 consecutive same actions, we're stuck
+        loop_recovery_count = 0  # How many times we've tried to recover
+        MAX_LOOP_RECOVERIES = 2  # Give up after this many recovery attempts
 
         # Vision-action loop
         for step in range(max_steps):
@@ -994,6 +1115,43 @@ Only output JSON."""
 
             elif action['action'] == 'scroll_up':
                 self.adb("input swipe 360 400 360 900 300")
+
+            # Track action for loop detection
+            action_signature = action['action']
+            if action['action'] == 'tap' and 'element_index' in action:
+                idx = action.get('element_index', 0)
+                if 0 <= idx < len(elements):
+                    x, y = elements[idx]['center']
+                    action_signature = f"tap_{x}_{y}"
+            recent_actions.append(action_signature)
+            if len(recent_actions) > LOOP_THRESHOLD:
+                recent_actions.pop(0)
+
+            # Check for loop - if last N actions are all identical, we're stuck
+            if len(recent_actions) >= LOOP_THRESHOLD and len(set(recent_actions)) == 1:
+                loop_recovery_count += 1
+                print(f"\n  [LOOP DETECTED] Same action '{recent_actions[0]}' repeated {LOOP_THRESHOLD} times!")
+                print(f"  [RECOVERY] Attempt {loop_recovery_count}/{MAX_LOOP_RECOVERIES}")
+
+                if loop_recovery_count > MAX_LOOP_RECOVERIES:
+                    print("  [ABORT] Too many loop recoveries, giving up")
+                    return False
+
+                # Recovery: press back 5 times and restart Instagram
+                print("  Pressing BACK 5 times to escape stuck state...")
+                for _ in range(5):
+                    self.press_key('KEYCODE_BACK')
+                    time.sleep(0.5)
+
+                print("  Reopening Instagram...")
+                self.adb("am force-stop com.instagram.android")
+                time.sleep(2)
+                self.adb("monkey -p com.instagram.android 1")
+                time.sleep(5)
+
+                # Reset action tracking
+                recent_actions = []
+                print("  [RECOVERY] Restarted - continuing from step", step + 1)
 
             time.sleep(1)
 

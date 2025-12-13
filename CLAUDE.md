@@ -1,5 +1,38 @@
 # Claude Code Instructions
 
+## CRITICAL: ALWAYS READ ENTIRE FILES
+
+**When reviewing Python scripts, ALWAYS read the ENTIRE file.**
+- Use `Read` tool WITHOUT offset/limit to get the whole file
+- Scripts with 1000+ lines need FULL review to understand the logic
+- NEVER read just 50-80 lines - that leads to wrong conclusions
+- Be thorough, not lazy
+
+---
+
+## CRITICAL: LIVE TESTS OVER TEST SCRIPTS
+
+**ALWAYS prioritize live tests with actual functionality over creating test scripts.**
+
+### DO:
+- Test directly with `python posting_scheduler.py --run` or `python parallel_orchestrator.py --run`
+- Use real accounts, real videos, real captions
+- Monitor logs in real-time
+- Fix issues as they appear in production
+
+### DO NOT:
+- Create `test_*.py` scripts to test isolated functionality
+- Pollute the project with debugging scripts
+- Write unit tests when you could just run the actual code
+- Add test files that won't be maintained
+
+### Why:
+- Test scripts get stale and don't reflect real behavior
+- Live tests expose real integration issues
+- The actual scripts ARE the tests
+
+---
+
 ## CRITICAL: ALWAYS STOP PHONES
 
 **THIS IS THE MOST IMPORTANT RULE. PHONES COST MONEY WHEN RUNNING.**
@@ -27,6 +60,103 @@ for page in range(1, 20):
 ```
 
 **NEVER leave phones running. Check and stop phones PROACTIVELY.**
+
+---
+
+## CRITICAL: ACCOUNT MANAGEMENT
+
+**ONLY USE ACCOUNTS FROM accounts.txt - NEVER USE RANDOM GEELARK ACCOUNTS**
+
+### Single Source of Truth:
+- **`accounts.txt`** - List of 82 approved accounts (one per line)
+- **`scheduler_state.json`** - Tracks posting history per account (posts_today, last_post_date, failures, cooldowns)
+
+### STRICT RULES:
+1. **NEVER post to accounts not in accounts.txt** - even if they exist in Geelark
+2. **NEVER post multiple times to the same account in one batch** - accounts will get BANNED
+3. **ALWAYS check scheduler_state.json for posting history** before selecting accounts
+4. **ALWAYS verify account exists in accounts.txt** before using it
+
+### How Accounts Are Tracked:
+```json
+// scheduler_state.json -> accounts array
+{
+  "name": "podclipcrafters",
+  "last_post_date": "2025-12-12",
+  "posts_today": 1,
+  "total_posts": 5,
+  "total_failures": 2,
+  "consecutive_failures": 0,
+  "cooldown_until": ""
+}
+```
+
+### Before Running ANY Batch:
+```bash
+# 1. Verify accounts.txt exists and has 82 accounts
+wc -l accounts.txt
+
+# 2. Check which accounts have been posted to today
+python -c "
+import json
+from datetime import date
+with open('scheduler_state.json', 'r') as f:
+    state = json.load(f)
+today = str(date.today())
+posted_today = [a['name'] for a in state['accounts'] if a.get('last_post_date') == today]
+print(f'Posted today ({len(posted_today)}): {posted_today}')
+"
+```
+
+### DO NOT:
+- Use the 173+ Geelark accounts (bubblegumlampspin, crookedwafflezing, etc.)
+- Those are NOT our posting accounts
+- Only the 82 accounts in accounts.txt are authorized for posting
+
+---
+
+## CRITICAL: PROGRESS FILE MANAGEMENT (parallel_progress.csv)
+
+**NEVER DELETE THE PROGRESS FILE MANUALLY. EVER.**
+
+### The Daily Ledger Rule:
+- `parallel_progress.csv` is the **daily ledger** tracking all posts
+- It tracks which accounts have successfully posted TODAY
+- Deleting it = wiping the success history = accounts can get multiple posts
+- This is how you get 6 posts on one account in one day
+
+### Per-Account Daily Limits:
+- Each account can have at most `max_posts_per_account_per_day` successful posts (default: 1)
+- This is enforced at BOTH seeding time AND claim time (defense in depth)
+- Once an account has N successes, it is EXCLUDED from all future jobs that day
+
+### Starting a New Day:
+```bash
+# ONLY use --reset-day to start fresh for a new posting day
+python parallel_orchestrator.py --reset-day
+```
+This will:
+1. Check no orchestrators are running
+2. Archive current progress to `parallel_progress_YYYYMMDD.csv`
+3. Create a fresh empty progress file
+
+### NEVER Do This:
+```bash
+# NEVER delete the progress file manually
+rm parallel_progress.csv  # WRONG - NEVER DO THIS
+del parallel_progress.csv  # WRONG - NEVER DO THIS
+
+# NEVER delete mid-day to "fix" something
+# NEVER delete because "it seems corrupt"
+# NEVER delete to "start fresh" during the day
+```
+
+### Check Before Running Orchestrator:
+```bash
+# Always check for other running orchestrators first
+python parallel_orchestrator.py --status
+```
+The orchestrator will automatically detect and refuse to start if another is running.
 
 ---
 
