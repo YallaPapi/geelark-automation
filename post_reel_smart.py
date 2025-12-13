@@ -33,6 +33,13 @@ from appium import webdriver
 from appium.options.android import UiAutomator2Options
 from appium.webdriver.common.appiumby import AppiumBy
 
+# Device connection management (extracted for better separation)
+from device_connection import DeviceConnectionManager
+# AI analysis (extracted for better separation)
+from claude_analyzer import ClaudeUIAnalyzer
+# UI interactions (extracted for better separation)
+from appium_ui_controller import AppiumUIController
+
 # Use centralized paths
 ADB_PATH = Config.ADB_PATH
 APPIUM_SERVER = Config.DEFAULT_APPIUM_URL
@@ -40,22 +47,68 @@ APPIUM_SERVER = Config.DEFAULT_APPIUM_URL
 
 class SmartInstagramPoster:
     def __init__(self, phone_name, system_port=8200, appium_url=None):
-        self.client = GeelarkClient()
-        self.anthropic = anthropic.Anthropic()
+        # Use DeviceConnectionManager for all connection lifecycle
+        self._conn = DeviceConnectionManager(
+            phone_name=phone_name,
+            system_port=system_port,
+            appium_url=appium_url or APPIUM_SERVER
+        )
+        # Expose client for compatibility
+        self.client = self._conn.client
+        # AI analyzer for UI analysis (extracted for better separation)
+        self._analyzer = ClaudeUIAnalyzer()
+        self.anthropic = self._analyzer.client  # For backwards compatibility
         self.phone_name = phone_name
-        self.phone_id = None
-        self.device = None
+        # UI controller (created lazily when Appium is connected)
+        self._ui_controller = None
+        # State tracking
         self.video_uploaded = False
         self.caption_entered = False
         self.share_clicked = False
-        self.appium_driver = None  # Appium WebDriver for typing
-        # Appium configuration for multi-worker support
-        self.system_port = system_port
-        self.appium_url = appium_url or APPIUM_SERVER
         # Error tracking
         self.last_error_type = None
         self.last_error_message = None
         self.last_screenshot_path = None
+
+    # Properties to expose connection state for compatibility
+    @property
+    def phone_id(self):
+        return self._conn.phone_id
+
+    @phone_id.setter
+    def phone_id(self, value):
+        self._conn.phone_id = value
+
+    @property
+    def device(self):
+        return self._conn.device
+
+    @device.setter
+    def device(self, value):
+        self._conn.device = value
+
+    @property
+    def appium_driver(self):
+        return self._conn.appium_driver
+
+    @appium_driver.setter
+    def appium_driver(self, value):
+        self._conn.appium_driver = value
+
+    @property
+    def system_port(self):
+        return self._conn.system_port
+
+    @property
+    def appium_url(self):
+        return self._conn.appium_url
+
+    @property
+    def ui_controller(self):
+        """Get or create the UI controller (requires Appium to be connected)."""
+        if self._ui_controller is None and self.appium_driver is not None:
+            self._ui_controller = AppiumUIController(self.appium_driver)
+        return self._ui_controller
 
     def adb(self, cmd, timeout=30):
         """Run ADB shell command"""
@@ -68,53 +121,34 @@ class SmartInstagramPoster:
 
     def is_uiautomator2_crash(self, exception):
         """Check if exception indicates UiAutomator2 crashed on device"""
-        error_msg = str(exception).lower()
-        return any(indicator in error_msg for indicator in [
-            'instrumentation process is not running',
-            'uiautomator2 server',
-            'cannot be proxied',
-            'probably crashed',
-        ])
+        return self._conn.is_uiautomator2_crash(exception)
 
     def reconnect_appium(self):
         """Reconnect Appium driver after UiAutomator2 crash"""
-        print("  [RECOVERY] Reconnecting Appium driver...")
-        try:
-            if self.appium_driver:
-                self.appium_driver.quit()
-        except:
-            pass
-        self.appium_driver = None
-        time.sleep(2)
-        return self.connect_appium()
+        # Reset UI controller since driver is being replaced
+        self._ui_controller = None
+        return self._conn.reconnect_appium()
 
     def tap(self, x, y):
-        """Tap at coordinates using Appium (required)"""
-        print(f"  [TAP] ({x}, {y})")
-        if not self.appium_driver:
+        """Tap at coordinates using Appium - delegates to AppiumUIController"""
+        if self.ui_controller:
+            self.ui_controller.tap(x, y)
+        else:
             raise Exception("Appium driver not connected - cannot tap")
-        self.appium_driver.tap([(x, y)])
-        time.sleep(1.5)
 
     def swipe(self, x1, y1, x2, y2, duration_ms=300):
-        """Swipe from one point to another using Appium (required)"""
-        if not self.appium_driver:
+        """Swipe from one point to another - delegates to AppiumUIController"""
+        if self.ui_controller:
+            self.ui_controller.swipe(x1, y1, x2, y2, duration_ms)
+        else:
             raise Exception("Appium driver not connected - cannot swipe")
-        self.appium_driver.swipe(x1, y1, x2, y2, duration_ms)
 
     def press_key(self, keycode):
-        """Press a key using Appium (required). Keycode can be int or string like 'KEYCODE_BACK'"""
-        if not self.appium_driver:
+        """Press a key - delegates to AppiumUIController"""
+        if self.ui_controller:
+            self.ui_controller.press_key(keycode)
+        else:
             raise Exception("Appium driver not connected - cannot press key")
-        # Convert string keycode to int if needed
-        key_map = {
-            'KEYCODE_BACK': 4,
-            'KEYCODE_HOME': 3,
-            'KEYCODE_ENTER': 66,
-        }
-        if isinstance(keycode, str):
-            keycode = key_map.get(keycode, 4)  # Default to BACK
-        self.appium_driver.press_keycode(keycode)
 
     def random_delay(self, min_sec=0.5, max_sec=2.0):
         """Random delay between actions to appear more human"""
@@ -439,37 +473,11 @@ class SmartInstagramPoster:
         return False
 
     def type_text(self, text):
-        """Type text using Appium. Supports Unicode/emojis/newlines on all Android versions."""
-        if not self.appium_driver:
+        """Type text - delegates to AppiumUIController"""
+        if self.ui_controller:
+            return self.ui_controller.type_text(text)
+        else:
             print("    ERROR: Appium driver not connected!")
-            return False
-
-        print(f"    Typing via Appium ({len(text)} chars)...")
-        try:
-            # Find the currently focused EditText element
-            edit_texts = self.appium_driver.find_elements(AppiumBy.CLASS_NAME, "android.widget.EditText")
-            if edit_texts:
-                # Use the first visible/focused EditText
-                for et in edit_texts:
-                    if et.is_displayed():
-                        et.send_keys(text)
-                        print("    Appium: text sent successfully")
-                        time.sleep(0.8)
-                        return True
-
-            # Fallback: try to type using the active element
-            active = self.appium_driver.switch_to.active_element
-            if active:
-                active.send_keys(text)
-                print("    Appium: text sent to active element")
-                time.sleep(0.8)
-                return True
-
-            print("    ERROR: No text field found to type into")
-            return False
-
-        except Exception as e:
-            print(f"    Appium typing error: {e}")
             return False
 
     def dump_ui(self):
@@ -537,383 +545,30 @@ class SmartInstagramPoster:
         return elements, xml_str
 
     def analyze_ui(self, elements, caption):
-        """Use Claude to analyze UI and decide next action"""
-
-        # Format elements for Claude
-        ui_description = "Current UI elements:\n"
-        for i, elem in enumerate(elements):
-            parts = []
-            if elem['text']:
-                parts.append(f"text=\"{elem['text']}\"")
-            if elem['desc']:
-                parts.append(f"desc=\"{elem['desc']}\"")
-            if elem['id']:
-                parts.append(f"id={elem['id']}")
-            if elem['clickable']:
-                parts.append("CLICKABLE")
-            ui_description += f"{i}. {elem['bounds']} center={elem['center']} | {' | '.join(parts)}\n"
-
-        prompt = f"""You are controlling an Android phone to post a Reel to Instagram.
-
-Current state:
-- Video uploaded to phone: {self.video_uploaded}
-- Caption entered: {self.caption_entered}
-- Share button clicked: {self.share_clicked}
-- Caption to post: "{caption}"
-
-{ui_description}
-
-Based on the UI elements, decide the next action to take.
-
-Instagram posting flow:
-1. Find and tap Create/+ button. IMPORTANT: On different Instagram versions:
-   - Some have "Create" in bottom nav bar
-   - Some have "Create New" in top left corner (only visible from Profile tab)
-   - If you don't see Create, tap "Profile" tab first to find "Create New"
-2. Select "Reel" option if a menu appears
-3. Select the video from gallery (look for video thumbnails, usually most recent)
-4. Tap "Next" to proceed to editing
-5. Tap "Next" again to proceed to sharing
-6. When you see the caption field ("Write a caption" or similar), return "type" action with the caption text
-7. Tap "Share" to publish
-8. Done when you see confirmation, "Sharing to Reels", or back on feed
-
-Respond with JSON:
-{{
-    "action": "tap" | "tap_and_type" | "back" | "scroll_down" | "scroll_up" | "home" | "open_instagram" | "done",
-    "element_index": <index of element to tap>,
-    "text": "<text to type if action is tap_and_type>",
-    "reason": "<brief explanation>",
-    "video_selected": true/false,
-    "caption_entered": true/false,
-    "share_clicked": true/false
-}}
-
-CRITICAL RULES - NEVER GIVE UP:
-- NEVER return "error". There is no error action. Always try to recover.
-- If you see Play Store, Settings, or any non-Instagram app: return "home" to go back to home screen
-- If you see home screen or launcher: return "open_instagram" to reopen Instagram
-- If you see a popup, dialog, or unexpected screen: return "back" to dismiss it
-- If you're lost or confused: return "back" and try again
-- If you don't see Create button, tap Profile tab first
-- Look for "Create New" in desc field (top left area, small button)
-- Look for "Profile" in desc field (bottom nav, usually id=profile_tab)
-- If you see "Reel" or "Create new reel" option, tap it
-- If you see gallery thumbnails with video, tap the video
-- If you see "Next" button anywhere, tap it
-- IMPORTANT: When you see a caption field (text containing "Write a caption", "Add a caption", or similar placeholder) AND "Caption entered" is False, return action="tap_and_type" with the element_index of the caption field and text set to the caption
-- CRITICAL: If "Caption entered: True" is shown above, DO NOT return tap_and_type! The caption is already typed. Just tap the Share button directly.
-- Allow/OK buttons should be tapped for permissions
-- IMPORTANT: Return "done" ONLY when Share button clicked is True AND you see "Sharing to Reels" confirmation
-- If Share button clicked is False but you see "Sharing to Reels", that's from a previous post - ignore it and start the posting flow
-- Set share_clicked=true when you tap the Share button
-- CRITICAL OK BUTTON RULE: After caption has been entered (Caption entered: True), if you see an "OK" button visible on screen (text='OK' or desc='OK'), you MUST tap the OK button FIRST before tapping Next or Share. This OK button dismisses the keyboard or a dialog and must be tapped for Next/Share to work properly.
-
-Only output JSON."""
-
-        # Retry Claude API calls for transient errors
-        for attempt in range(3):
-            try:
-                response = self.anthropic.messages.create(
-                    model="claude-sonnet-4-20250514",
-                    max_tokens=500,
-                    messages=[{"role": "user", "content": prompt}]
-                )
-
-                # Check for empty response
-                if not response.content:
-                    if attempt < 2:
-                        time.sleep(1)
-                        continue
-                    raise ValueError("Claude returned empty response")
-
-                text = response.content[0].text.strip()
-
-                # Check for empty text
-                if not text:
-                    if attempt < 2:
-                        time.sleep(1)
-                        continue
-                    raise ValueError("Claude returned empty text")
-
-                # Handle markdown code blocks
-                if text.startswith("```"):
-                    text = text.split("```")[1]
-                    if text.startswith("json"):
-                        text = text[4:]
-                    text = text.strip()
-
-                try:
-                    return json.loads(text)
-                except json.JSONDecodeError as e:
-                    # Log full raw response for debugging JSON issues
-                    print(f"  [JSON PARSE ERROR] attempt {attempt+1}: {e}")
-                    print(f"  Raw response (full): {text}")
-                    if attempt < 2:
-                        time.sleep(1)
-                        continue
-                    raise ValueError(f"JSON parse failed after 3 attempts: {e}. Response: {text[:100]}")
-
-            except Exception as e:
-                if attempt < 2 and "rate" not in str(e).lower():
-                    time.sleep(1)
-                    continue
-                raise
-
-        raise ValueError("Failed to get valid response from Claude after 3 attempts")
+        """Use Claude to analyze UI and decide next action - delegates to ClaudeUIAnalyzer"""
+        return self._analyzer.analyze(
+            elements=elements,
+            caption=caption,
+            video_uploaded=self.video_uploaded,
+            caption_entered=self.caption_entered,
+            share_clicked=self.share_clicked
+        )
 
     def connect(self):
-        """Find phone and connect via ADB"""
-        print(f"Looking for phone: {self.phone_name}")
-
-        # Search across multiple pages
-        phone = None
-        for page in range(1, 10):
-            result = self.client.list_phones(page=page, page_size=100)
-            for p in result["items"]:
-                if p["serialName"] == self.phone_name or p["id"] == self.phone_name:
-                    phone = p
-                    break
-            if phone or len(result["items"]) < 100:
-                break
-
-        if not phone:
-            raise Exception(f"Phone not found: {self.phone_name}")
-
-        self.phone_id = phone["id"]
-        print(f"Found: {phone['serialName']} (ID: {self.phone_id}, Status: {phone['status']})")
-
-        # Start phone if not running
-        if phone["status"] != 0:
-            print("Starting phone...")
-            self.client.start_phone(self.phone_id)
-            print("Waiting for phone to boot...")
-            for i in range(60):
-                time.sleep(2)
-                status_result = self.client.get_phone_status([self.phone_id])
-                items = status_result.get("successDetails", [])
-                if items and items[0].get("status") == 0:
-                    print(f"  Phone ready! (took ~{(i+1)*2}s)")
-                    break
-                print(f"  Booting... ({(i+1)*2}s)")
-            time.sleep(5)
-
-        # Enable ADB with retry loop - Geelark API can fail with "server err"
-        adb_info = None
-        max_enable_retries = 3
-        for enable_retry in range(max_enable_retries):
-            print(f"Enabling ADB... (attempt {enable_retry + 1}/{max_enable_retries})")
-            try:
-                self.client.enable_adb(self.phone_id)
-            except Exception as e:
-                print(f"  enable_adb() API error: {e}")
-                if enable_retry < max_enable_retries - 1:
-                    print(f"  Retrying in 5s...")
-                    time.sleep(5)
-                    continue
-                else:
-                    raise Exception(f"enable_adb() failed after {max_enable_retries} attempts: {e}")
-
-            # CRITICAL: Don't just wait blindly - VERIFY ADB is actually enabled
-            # get_adb_info() will return IP/port/password when ADB is ready, or raise exception if not
-            print("Verifying ADB is enabled...")
-            max_adb_attempts = 30  # 30 attempts × 2 seconds = 60 seconds max
-            for adb_attempt in range(max_adb_attempts):
-                try:
-                    adb_info = self.client.get_adb_info(self.phone_id)
-                    if adb_info and adb_info.get('ip') and adb_info.get('port'):
-                        print(f"  ADB enabled and ready (took {(adb_attempt + 1) * 2}s)")
-                        break
-                except Exception as e:
-                    if adb_attempt == 0:
-                        print(f"  ADB not ready yet, waiting... ({e})")
-                    elif adb_attempt % 5 == 4:  # Print every 10 seconds
-                        print(f"  Still waiting for ADB... ({(adb_attempt + 1) * 2}s / {max_adb_attempts * 2}s)")
-                time.sleep(2)
-
-            if adb_info and adb_info.get('ip'):
-                break  # Success - exit retry loop
-            else:
-                print(f"  ADB verification failed after 60s")
-                if enable_retry < max_enable_retries - 1:
-                    print(f"  Restarting phone and retrying...")
-                    # Stop and restart phone to reset ADB state
-                    try:
-                        self.client.stop_phone(self.phone_id)
-                        time.sleep(3)
-                        self.client.start_phone(self.phone_id)
-                        # Wait for phone to boot
-                        for i in range(30):
-                            time.sleep(2)
-                            status_result = self.client.get_phone_status([self.phone_id])
-                            items = status_result.get("successDetails", [])
-                            if items and items[0].get("status") == 0:
-                                print(f"  Phone restarted (took ~{(i+1)*2}s)")
-                                break
-                        time.sleep(3)
-                    except Exception as restart_err:
-                        print(f"  Phone restart failed: {restart_err}")
-
-        if not adb_info or not adb_info.get('ip'):
-            raise Exception(f"ADB failed to enable after {max_enable_retries} attempts - enable_adb() did not work")
-
-        self.device = f"{adb_info['ip']}:{adb_info['port']}"
-        password = adb_info['pwd']
-
-        # Clean any stale connection to this device first
-        subprocess.run([ADB_PATH, "disconnect", self.device], capture_output=True)
-        time.sleep(1)
-
-        print(f"Connecting to {self.device}...")
-        connect_result = subprocess.run([ADB_PATH, "connect", self.device], capture_output=True, encoding='utf-8')
-        print(f"  ADB connect: {connect_result.stdout.strip()}")
-
-        # Wait for device to appear in ADB devices list BEFORE running glogin
-        # With multiple concurrent connections, cloud phones need more time to stabilize
-        print("Waiting for ADB connection to stabilize...")
-        device_ready = False
-        max_attempts = 30  # 30 attempts × 2 seconds = 60 seconds max (was 10 × 2 = 20s)
-        for attempt in range(max_attempts):
-            time.sleep(2)
-            result = subprocess.run([ADB_PATH, "devices"], capture_output=True, encoding='utf-8')
-            if self.device in result.stdout:
-                # Check if device status is "device" (not "offline" or "unauthorized")
-                lines = result.stdout.strip().split('\n')
-                for line in lines:
-                    if self.device in line and '\tdevice' in line:
-                        device_ready = True
-                        print(f"  Device {self.device} is ready (took {(attempt + 1) * 2}s)")
-                        break
-                if device_ready:
-                    break
-            if attempt % 5 == 4:  # Print every 10 seconds
-                print(f"  Waiting... ({(attempt + 1) * 2}s / {max_attempts * 2}s)")
-
-        if not device_ready:
-            raise Exception(f"Device {self.device} never appeared in ADB devices list after {max_attempts * 2}s")
-
-        # NOW run glogin after device is ready - with retry
-        print("Authenticating with glogin...")
-        glogin_success = False
-        for glogin_attempt in range(3):
-            login_result = self.adb(f"glogin {password}")
-            # Check both stdout and for error indicators
-            if login_result and "error" not in login_result.lower():
-                print(f"  glogin: {login_result}")
-                glogin_success = True
-                break
-            elif "success" in login_result.lower():
-                print(f"  glogin: {login_result}")
-                glogin_success = True
-                break
-            else:
-                print(f"  glogin attempt {glogin_attempt + 1}/3 returned: [{login_result}]")
-                time.sleep(2)
-
-        if not glogin_success:
-            print(f"  Warning: glogin may not have succeeded")
-
-        # Connect Appium for UI interaction
-        self.connect_appium()
-
-        return True
+        """Find phone and connect via ADB - delegates to DeviceConnectionManager"""
+        return self._conn.connect()
 
     def verify_adb_connection(self):
         """Verify device is still connected via ADB. Returns True if connected."""
-        result = subprocess.run([ADB_PATH, "devices"], capture_output=True, encoding='utf-8')
-        if self.device in result.stdout:
-            lines = result.stdout.strip().split('\n')
-            for line in lines:
-                if self.device in line and '\tdevice' in line:
-                    return True
-        return False
+        return self._conn.verify_adb_connection()
 
     def reconnect_adb(self):
         """Re-establish ADB connection if it dropped. Returns True on success."""
-        print(f"  [ADB RECONNECT] Device {self.device} offline, reconnecting...")
-
-        # Get fresh ADB info from Geelark
-        try:
-            adb_info = self.client.get_adb_info(self.phone_id)
-            password = adb_info['pwd']
-        except Exception as e:
-            print(f"  [ADB RECONNECT] Failed to get ADB info: {e}")
-            return False
-
-        # Disconnect stale connection
-        subprocess.run([ADB_PATH, "disconnect", self.device], capture_output=True)
-        time.sleep(1)
-
-        # Reconnect
-        connect_result = subprocess.run([ADB_PATH, "connect", self.device], capture_output=True, encoding='utf-8')
-        print(f"  [ADB RECONNECT] adb connect: {connect_result.stdout.strip()}")
-
-        # Wait for device to appear
-        for attempt in range(10):
-            time.sleep(2)
-            if self.verify_adb_connection():
-                print(f"  [ADB RECONNECT] Device ready after {attempt + 1} attempts")
-                # Re-run glogin
-                login_result = self.adb(f"glogin {password}")
-                print(f"  [ADB RECONNECT] glogin: {login_result}")
-                return True
-            print(f"  [ADB RECONNECT] Waiting... ({attempt + 1}/10)")
-
-        print(f"  [ADB RECONNECT] Failed to reconnect after 10 attempts")
-        return False
+        return self._conn.reconnect_adb()
 
     def connect_appium(self, retries=3):
         """Connect Appium driver - REQUIRED for automation to work"""
-        print(f"Connecting Appium driver to {self.appium_url}...")
-
-        options = UiAutomator2Options()
-        options.platform_name = "Android"
-        options.automation_name = "UiAutomator2"
-        options.device_name = self.device
-        options.udid = self.device
-        options.no_reset = True
-        options.new_command_timeout = 120  # Allow time for slow cloud phone operations
-        options.set_capability("appium:adbExecTimeout", 120000)  # 120s for slow cloud connections
-        options.set_capability("appium:uiautomator2ServerInstallTimeout", 120000)  # 120s for install
-        options.set_capability("appium:uiautomator2ServerLaunchTimeout", 10000)  # 10s for launch - binary: works in ~1s or not at all
-        options.set_capability("appium:androidDeviceReadyTimeout", 60)  # 60s to wait for device ready
-        options.set_capability("appium:systemPort", self.system_port)  # Unique port for each worker
-
-        last_error = None
-        for attempt in range(retries):
-            # CRITICAL: Verify ADB connection BEFORE each Appium attempt
-            # The device may have gone offline since connect() ran
-            if not self.verify_adb_connection():
-                print(f"  [ATTEMPT {attempt + 1}] ADB connection lost, attempting to reconnect...")
-                if not self.reconnect_adb():
-                    print(f"  [ATTEMPT {attempt + 1}] ADB reconnect failed, skipping Appium attempt")
-                    last_error = Exception("ADB connection lost and reconnect failed")
-                    if attempt < retries - 1:
-                        time.sleep(2)
-                    continue
-                print(f"  [ATTEMPT {attempt + 1}] ADB reconnected, proceeding with Appium")
-
-            try:
-                # Direct connection - removed ThreadPoolExecutor which left orphaned sessions
-                # Appium's own timeouts (adbExecTimeout, uiautomator2ServerLaunchTimeout) handle slow connections
-                self.appium_driver = webdriver.Remote(
-                    command_executor=self.appium_url,
-                    options=options
-                )
-
-                platform_ver = self.appium_driver.capabilities.get('platformVersion', 'unknown')
-                print(f"  Appium connected! (Android {platform_ver})")
-                return True
-            except Exception as e:
-                last_error = e
-                print(f"  Appium connection failed (attempt {attempt + 1}/{retries}): {e}")
-                self.appium_driver = None
-                if attempt < retries - 1:
-                    print(f"  Retrying in 2 seconds...")
-                    time.sleep(2)
-
-        # All retries failed - raise exception
-        raise Exception(f"Appium connection failed after {retries} attempts: {last_error}")
+        return self._conn.connect_appium(retries=retries)
 
     def upload_video(self, video_path):
         """Upload video to phone"""
@@ -1161,28 +816,14 @@ Only output JSON."""
         return False
 
     def cleanup(self):
-        """Cleanup after posting"""
+        """Cleanup after posting - delegates to DeviceConnectionManager"""
         print("\nCleaning up...")
         try:
             self.adb("rm -f /sdcard/Download/*.mp4")
         except:
             pass
-        try:
-            if self.appium_driver:
-                self.appium_driver.quit()
-                print("  Appium driver closed")
-        except:
-            pass
-        try:
-            self.client.disable_adb(self.phone_id)
-        except:
-            pass
-        # Stop the cloud phone to save Geelark billing minutes
-        try:
-            self.client.stop_phone(self.phone_id)
-            print("  Phone stopped (saving billing minutes)")
-        except Exception as e:
-            print(f"  Warning: Could not stop phone: {e}")
+        # Delegate connection cleanup to DeviceConnectionManager
+        self._conn.disconnect()
 
 
 def main():
