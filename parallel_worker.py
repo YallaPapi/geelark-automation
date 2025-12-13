@@ -32,6 +32,8 @@ from typing import Optional
 os.environ['ANDROID_HOME'] = r'C:\Users\asus\Downloads\android-sdk'
 os.environ['ANDROID_SDK_ROOT'] = r'C:\Users\asus\Downloads\android-sdk'
 
+import subprocess
+
 from parallel_config import ParallelConfig, WorkerConfig, get_config
 from appium_server_manager import AppiumServerManager, AppiumServerError
 from progress_tracker import ProgressTracker
@@ -40,6 +42,135 @@ from geelark_client import GeelarkClient
 
 # Global flag for clean shutdown
 _shutdown_requested = False
+
+# ADB path (same as used in post_reel_smart.py)
+ADB_PATH = r'C:\Users\asus\Downloads\android-sdk\platform-tools\adb.exe'
+
+
+# Worker lifecycle states (for state machine approach)
+class WorkerState:
+    """
+    Worker lifecycle states for the state machine approach.
+
+    State transitions:
+        STARTING -> ADB_PENDING -> ADB_READY -> APPIUM_READY -> JOB_RUNNING
+        Any state -> ERROR_RECOVERY -> STARTING
+        Any state -> SHUTDOWN
+    """
+    STARTING = 'starting'        # Worker initializing
+    ADB_PENDING = 'adb_pending'  # Waiting for ADB device to appear
+    ADB_READY = 'adb_ready'      # ADB device is connected
+    APPIUM_READY = 'appium_ready'  # Appium session is ready
+    JOB_RUNNING = 'job_running'  # Executing a posting job
+    ERROR_RECOVERY = 'error_recovery'  # Handling errors, restarting
+    SHUTDOWN = 'shutdown'        # Clean shutdown requested
+
+
+def wait_for_adb(device_id: str, timeout: int = 90, logger=None) -> bool:
+    """
+    Wait for a device to appear in ADB devices list.
+
+    This is an explicit ADB readiness gate that should be called AFTER
+    starting the phone but BEFORE creating an Appium session.
+
+    Args:
+        device_id: The device identifier (e.g., "192.168.1.100:5555")
+        timeout: Maximum seconds to wait (default 90)
+        logger: Optional logger for status updates
+
+    Returns:
+        True if device is ready, False if timeout reached
+    """
+    deadline = time.time() + timeout
+    check_count = 0
+
+    while time.time() < deadline:
+        check_count += 1
+        try:
+            result = subprocess.run(
+                [ADB_PATH, "devices"],
+                capture_output=True, text=True, timeout=10
+            )
+            for line in result.stdout.splitlines():
+                if device_id in line and "device" in line and "offline" not in line:
+                    if logger:
+                        logger.info(f"ADB ready for {device_id} (took {check_count * 2}s)")
+                    return True
+        except Exception as e:
+            if logger:
+                logger.debug(f"ADB check error: {e}")
+
+        time.sleep(2)
+
+    if logger:
+        logger.error(f"ADB timeout ({timeout}s) waiting for {device_id}")
+    return False
+
+
+def ensure_device_alive(device_id: str, logger=None) -> bool:
+    """
+    Check if a device is still present in ADB.
+
+    Call this periodically during job execution to detect ADB/device loss.
+    On failure, the caller should trigger recovery (stop Appium, stop phone,
+    restart both).
+
+    Args:
+        device_id: The device identifier (e.g., "192.168.1.100:5555")
+        logger: Optional logger for status updates
+
+    Returns:
+        True if device is alive, False if device has been lost
+    """
+    try:
+        result = subprocess.run(
+            [ADB_PATH, "devices"],
+            capture_output=True, text=True, timeout=10
+        )
+        for line in result.stdout.splitlines():
+            if device_id in line and "device" in line and "offline" not in line:
+                return True
+        if logger:
+            logger.warning(f"Device {device_id} not found in ADB devices")
+        return False
+    except Exception as e:
+        if logger:
+            logger.warning(f"ADB devices check failed: {e}")
+        return False
+
+
+def reconnect_adb(device_id: str, logger=None) -> bool:
+    """
+    Attempt to reconnect an ADB device.
+
+    Args:
+        device_id: The device identifier (e.g., "192.168.1.100:5555")
+        logger: Optional logger for status updates
+
+    Returns:
+        True if reconnect successful, False otherwise
+    """
+    try:
+        # First disconnect
+        subprocess.run([ADB_PATH, "disconnect", device_id],
+                      capture_output=True, timeout=10)
+
+        # Then reconnect
+        result = subprocess.run([ADB_PATH, "connect", device_id],
+                               capture_output=True, text=True, timeout=30)
+
+        if "connected" in result.stdout.lower():
+            if logger:
+                logger.info(f"Reconnected ADB to {device_id}")
+            return True
+        else:
+            if logger:
+                logger.warning(f"ADB reconnect failed: {result.stdout}")
+            return False
+    except Exception as e:
+        if logger:
+            logger.warning(f"ADB reconnect error: {e}")
+        return False
 
 
 def setup_signal_handlers():
