@@ -160,6 +160,21 @@ The orchestrator will automatically detect and refuse to start if another is run
 
 ---
 
+## CRITICAL: CODE REVIEW IMPLEMENTATION
+
+**If conversation gets compacted, CHECK THESE FIRST:**
+1. Run `task-master list --status pending` to see pending tasks
+2. Read `reviews/review1.txt` for full implementation details
+3. Tasks 21-24 contain the review implementation plan
+
+**Review Tasks (in order of implementation):**
+- Task 21: Port retry logic from PostingScheduler
+- Task 22: Fix per-account daily cap enforcement
+- Task 23: Add ADB/Appium lifecycle state machine
+- Task 24: Enforce strict worker-phone-Appium bindings
+
+---
+
 ## Task Master AI Instructions
 
 **Import Task Master's development workflow commands and guidelines, treat as if import is in the main CLAUDE.md file.**

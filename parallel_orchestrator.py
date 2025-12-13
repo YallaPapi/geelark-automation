@@ -776,6 +776,7 @@ def show_status(config: ParallelConfig) -> None:
         print(f"  Total jobs:  {stats['total']}")
         print(f"  Pending:     {stats['pending']}")
         print(f"  In-progress: {stats['claimed']}")
+        print(f"  Retrying:    {stats.get('retrying', 0)}")
         print(f"  Success:     {stats['success']}")
         print(f"  Failed:      {stats['failed']}")
 
@@ -910,9 +911,10 @@ def run_parallel_posting(
     final_stats = tracker.get_stats()
     logger.info("="*60)
     logger.info("FINAL RESULTS")
-    logger.info(f"  Success: {final_stats['success']}")
-    logger.info(f"  Failed:  {final_stats['failed']}")
-    logger.info(f"  Pending: {final_stats['pending']}")
+    logger.info(f"  Success:  {final_stats['success']}")
+    logger.info(f"  Failed:   {final_stats['failed']}")
+    logger.info(f"  Retrying: {final_stats.get('retrying', 0)}")
+    logger.info(f"  Pending:  {final_stats['pending']}")
     logger.info("="*60)
 
     return final_stats

@@ -299,13 +299,20 @@ def run_worker(
             if released > 0:
                 logger.info(f"Released {released} stale job claims")
 
-            # Try to claim a job (with defense-in-depth daily limit check)
-            job = tracker.claim_next_job(worker_id, max_posts_per_account_per_day=config.max_posts_per_account_per_day)
+            # Try to claim a RETRY job first (jobs that failed but can be retried)
+            job = tracker.claim_retry_job(worker_id, max_posts_per_account_per_day=config.max_posts_per_account_per_day)
+            is_retry = job is not None
 
             if job is None:
-                # No pending jobs, but some might be claimed by other workers
-                if progress_stats['claimed'] > 0:
-                    logger.debug("Waiting for claimed jobs to complete...")
+                # No retry jobs, try to claim a regular pending job
+                job = tracker.claim_next_job(worker_id, max_posts_per_account_per_day=config.max_posts_per_account_per_day)
+
+            if job is None:
+                # No jobs available - check if we should wait or exit
+                # Also check for retrying jobs that might become ready
+                retry_jobs = tracker.get_retry_jobs()
+                if progress_stats['claimed'] > 0 or len(retry_jobs) > 0:
+                    logger.debug(f"Waiting for jobs... (claimed: {progress_stats['claimed']}, retrying: {len(retry_jobs)})")
                     time.sleep(5)
                     continue
                 else:
@@ -315,6 +322,9 @@ def run_worker(
 
             # Execute the job
             job_id = job['job_id']
+            attempt_info = f" (retry attempt {job.get('attempts', '?')})" if is_retry else ""
+            logger.info(f"Processing job {job_id}{attempt_info}")
+
             try:
                 success, error = execute_posting_job(
                     job, worker_config, config, logger,
@@ -325,13 +335,20 @@ def run_worker(
                     tracker.update_job_status(job_id, 'success', worker_id)
                     stats['jobs_completed'] += 1
                 else:
-                    tracker.update_job_status(job_id, 'failed', worker_id, error=error)
+                    # Pass retry_delay_minutes for automatic retry handling
+                    tracker.update_job_status(
+                        job_id, 'failed', worker_id, error=error,
+                        retry_delay_minutes=config.retry_delay_minutes
+                    )
                     stats['jobs_failed'] += 1
 
             except Exception as e:
                 error_msg = f"{type(e).__name__}: {str(e)}"
                 logger.error(f"Unhandled exception processing job {job_id}: {error_msg}")
-                tracker.update_job_status(job_id, 'failed', worker_id, error=error_msg)
+                tracker.update_job_status(
+                    job_id, 'failed', worker_id, error=error_msg,
+                    retry_delay_minutes=config.retry_delay_minutes
+                )
                 stats['jobs_failed'] += 1
 
             # Delay before next job

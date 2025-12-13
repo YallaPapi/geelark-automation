@@ -77,6 +77,8 @@ class ParallelConfig:
     job_timeout: int = 300  # 5 minutes per job
     delay_between_jobs: int = 10
     max_posts_per_account_per_day: int = 1  # CRITICAL: Default 1, can be 1-4
+    max_attempts: int = 3  # Max retry attempts per job
+    retry_delay_minutes: float = 5.0  # Minutes to wait before retry
     android_sdk_path: str = r"C:\Users\asus\Downloads\android-sdk"
     adb_path: str = r"C:\Users\asus\Downloads\android-sdk\platform-tools\adb.exe"
 

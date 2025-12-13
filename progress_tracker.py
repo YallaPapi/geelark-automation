@@ -1,5 +1,5 @@
 """
-CSV-Based Progress Tracker with File Locking.
+CSV-Based Progress Tracker with File Locking and Retry Support.
 
 This module provides thread-safe and process-safe job tracking for parallel workers.
 It uses file locking to ensure only one worker can claim a job at a time, preventing
@@ -10,7 +10,9 @@ Key features:
 - Atomic writes via temp file + rename
 - Claim jobs with worker_id tracking
 - Resume support - unclaimed jobs stay pending across restarts
-- Status transitions: pending -> claimed -> success/failed
+- Status transitions: pending -> claimed -> success/failed/retrying
+- Automatic retry with configurable max_attempts and retry_delay
+- Non-retryable error classification (suspended, captcha, loggedout, actionblocked)
 
 Usage:
     tracker = ProgressTracker("progress.csv")
@@ -23,6 +25,9 @@ Usage:
     if job:
         # ... process job ...
         tracker.update_job_status(job['job_id'], 'success', worker_id=0)
+        # Or on failure with retry:
+        tracker.update_job_status(job['job_id'], 'failed', worker_id=0, error='...',
+                                  max_attempts=3, retry_delay_minutes=5)
 """
 
 import os
@@ -69,10 +74,11 @@ class ProgressTracker:
         - error: Error message if failed
     """
 
-    # CSV columns
+    # CSV columns (extended for retry support)
     COLUMNS = [
         'job_id', 'account', 'video_path', 'caption', 'status',
-        'worker_id', 'claimed_at', 'completed_at', 'error'
+        'worker_id', 'claimed_at', 'completed_at', 'error',
+        'attempts', 'max_attempts', 'retry_at', 'error_type'
     ]
 
     # Valid status values
@@ -81,6 +87,14 @@ class ProgressTracker:
     STATUS_SUCCESS = 'success'
     STATUS_FAILED = 'failed'
     STATUS_SKIPPED = 'skipped'
+    STATUS_RETRYING = 'retrying'
+
+    # Non-retryable error types - these failures should not be retried
+    NON_RETRYABLE_ERRORS = {'suspended', 'captcha', 'loggedout', 'actionblocked', 'banned'}
+
+    # Default retry settings
+    DEFAULT_MAX_ATTEMPTS = 3
+    DEFAULT_RETRY_DELAY_MINUTES = 5
 
     def __init__(self, progress_file: str, lock_timeout: float = 30.0):
         """
@@ -313,7 +327,11 @@ class ProgressTracker:
                 'worker_id': '',
                 'claimed_at': '',
                 'completed_at': '',
-                'error': ''
+                'error': '',
+                'attempts': '0',
+                'max_attempts': str(self.DEFAULT_MAX_ATTEMPTS),
+                'retry_at': '',
+                'error_type': ''
             })
 
         # Combine existing jobs with new jobs
@@ -490,51 +508,215 @@ class ProgressTracker:
 
         return self._locked_operation(_verify_operation)
 
+    def _classify_error(self, error: str) -> str:
+        """
+        Classify an error message into an error type.
+
+        Returns one of the NON_RETRYABLE_ERRORS or empty string for retryable errors.
+        """
+        error_lower = error.lower() if error else ''
+
+        if 'suspended' in error_lower or 'account has been suspended' in error_lower:
+            return 'suspended'
+        elif 'captcha' in error_lower or 'verify' in error_lower:
+            return 'captcha'
+        elif 'log in' in error_lower or 'logged out' in error_lower or 'sign up' in error_lower:
+            return 'loggedout'
+        elif 'action blocked' in error_lower or 'try again later' in error_lower:
+            return 'actionblocked'
+        elif 'banned' in error_lower or 'disabled' in error_lower:
+            return 'banned'
+        else:
+            return ''  # Retryable
+
     def update_job_status(
         self,
         job_id: str,
         status: str,
         worker_id: int,
-        error: str = ''
+        error: str = '',
+        retry_delay_minutes: float = None
     ) -> bool:
         """
-        Update the status of a job.
+        Update the status of a job with automatic retry logic.
 
-        IMPORTANT: When a job completes (success or fail), its account is freed.
-        If there are unassigned jobs waiting, one will be assigned to this account.
+        RETRY BEHAVIOR:
+        - On success: marks job as success
+        - On failure:
+          - Increments attempts counter
+          - If error is non-retryable (suspended, captcha, loggedout, actionblocked, banned):
+            marks as failed immediately
+          - If attempts < max_attempts: marks as retrying with retry_at timestamp
+          - If attempts >= max_attempts: marks as failed (permanent)
 
         Args:
             job_id: The job ID to update
             status: New status (success/failed/skipped)
             worker_id: Worker that processed the job
             error: Error message if failed
+            retry_delay_minutes: Minutes before retry (default: DEFAULT_RETRY_DELAY_MINUTES)
 
         Returns:
             True if job was found and updated
         """
-        def _update_operation(jobs):
-            freed_account = None
+        if retry_delay_minutes is None:
+            retry_delay_minutes = self.DEFAULT_RETRY_DELAY_MINUTES
 
+        def _update_operation(jobs):
             for job in jobs:
                 if job.get('job_id') == job_id:
-                    freed_account = job.get('account', '')
-                    job['status'] = status
                     job['worker_id'] = str(worker_id)
                     job['completed_at'] = datetime.now().isoformat()
                     job['error'] = error[:500] if error else ''  # Truncate long errors
-                    logger.info(f"Worker {worker_id} updated job {job_id} to {status}")
-                    break
-            else:
-                logger.warning(f"Job {job_id} not found in progress file")
-                return jobs, False
 
-            # DO NOT reassign freed accounts! Each account gets exactly 1 post per batch.
-            # The account is now "used" for this batch and will not be used again.
-            # Jobs without accounts will remain unassigned until the next batch.
+                    if status == self.STATUS_SUCCESS:
+                        # Success - job is done
+                        job['status'] = self.STATUS_SUCCESS
+                        logger.info(f"Worker {worker_id} completed job {job_id} successfully")
 
-            return jobs, True
+                    elif status == self.STATUS_FAILED:
+                        # Failure - check if we should retry
+                        attempts = int(job.get('attempts', 0)) + 1
+                        max_attempts = int(job.get('max_attempts', self.DEFAULT_MAX_ATTEMPTS))
+                        job['attempts'] = str(attempts)
+
+                        # Classify the error
+                        error_type = self._classify_error(error)
+                        job['error_type'] = error_type
+
+                        if error_type in self.NON_RETRYABLE_ERRORS:
+                            # Non-retryable error - fail permanently
+                            job['status'] = self.STATUS_FAILED
+                            logger.warning(f"Worker {worker_id} job {job_id} FAILED (non-retryable: {error_type})")
+
+                        elif attempts >= max_attempts:
+                            # Max attempts reached - fail permanently
+                            job['status'] = self.STATUS_FAILED
+                            logger.warning(f"Worker {worker_id} job {job_id} FAILED (max attempts {max_attempts} reached)")
+
+                        else:
+                            # Retryable - set to retrying with delay
+                            job['status'] = self.STATUS_RETRYING
+                            from datetime import timedelta
+                            retry_at = datetime.now() + timedelta(minutes=retry_delay_minutes)
+                            job['retry_at'] = retry_at.isoformat()
+                            logger.info(f"Worker {worker_id} job {job_id} will RETRY in {retry_delay_minutes} min (attempt {attempts}/{max_attempts})")
+
+                    else:
+                        # Other status (skipped, etc.)
+                        job['status'] = status
+                        logger.info(f"Worker {worker_id} updated job {job_id} to {status}")
+
+                    return jobs, True
+
+            logger.warning(f"Job {job_id} not found in progress file")
+            return jobs, False
 
         return self._locked_operation(_update_operation)
+
+    def get_retry_jobs(self) -> List[Dict[str, Any]]:
+        """
+        Get all jobs that are in RETRYING status and ready to be retried.
+
+        A job is ready for retry if:
+        - status == RETRYING
+        - retry_at timestamp has passed (or is empty)
+
+        Returns:
+            List of job dicts ready for retry
+        """
+        if not os.path.exists(self.progress_file):
+            return []
+
+        jobs = self._read_all_jobs()
+        ready_jobs = []
+        now = datetime.now()
+
+        for job in jobs:
+            if job.get('status') == self.STATUS_RETRYING:
+                retry_at_str = job.get('retry_at', '')
+                if retry_at_str:
+                    try:
+                        retry_at = datetime.fromisoformat(retry_at_str)
+                        if now >= retry_at:
+                            ready_jobs.append(job)
+                    except ValueError:
+                        # Invalid timestamp, allow retry
+                        ready_jobs.append(job)
+                else:
+                    # No retry_at set, allow immediately
+                    ready_jobs.append(job)
+
+        return ready_jobs
+
+    def claim_retry_job(self, worker_id: int, max_posts_per_account_per_day: int = 1) -> Optional[Dict[str, Any]]:
+        """
+        Claim a job that is ready to be retried.
+
+        Similar to claim_next_job but only looks at RETRYING jobs whose
+        retry_at timestamp has passed.
+
+        Args:
+            worker_id: ID of the worker claiming the job
+            max_posts_per_account_per_day: Max successful posts per account per day
+
+        Returns:
+            The claimed job dict, or None if no retry jobs available
+        """
+        def _claim_retry_operation(jobs):
+            now = datetime.now()
+
+            # Build success counts for daily limit check
+            success_counts = {}
+            accounts_in_use = set()
+
+            for job in jobs:
+                acc = job.get('account', '')
+                if not acc:
+                    continue
+                if job.get('status') == self.STATUS_CLAIMED:
+                    accounts_in_use.add(acc)
+                elif job.get('status') == self.STATUS_SUCCESS:
+                    success_counts[acc] = success_counts.get(acc, 0) + 1
+
+            # Find a RETRYING job ready to retry
+            for job in jobs:
+                if job.get('status') != self.STATUS_RETRYING:
+                    continue
+
+                acc = job.get('account', '')
+                if not acc:
+                    continue
+
+                # Check retry_at
+                retry_at_str = job.get('retry_at', '')
+                if retry_at_str:
+                    try:
+                        retry_at = datetime.fromisoformat(retry_at_str)
+                        if now < retry_at:
+                            continue  # Not ready yet
+                    except ValueError:
+                        pass  # Invalid timestamp, allow retry
+
+                # Check account not in use
+                if acc in accounts_in_use:
+                    continue
+
+                # Check daily limit
+                if success_counts.get(acc, 0) >= max_posts_per_account_per_day:
+                    continue
+
+                # Claim this job
+                job['status'] = self.STATUS_CLAIMED
+                job['worker_id'] = str(worker_id)
+                job['claimed_at'] = now.isoformat()
+                job['retry_at'] = ''  # Clear retry_at
+                logger.info(f"Worker {worker_id} claimed RETRY job {job['job_id']} (account: {acc}, attempt {job.get('attempts', '?')})")
+                return jobs, dict(job)
+
+            return jobs, None
+
+        return self._locked_operation(_claim_retry_operation)
 
     def release_claimed_job(self, job_id: str, worker_id: int) -> bool:
         """
@@ -603,7 +785,8 @@ class ProgressTracker:
             'claimed': 0,
             'success': 0,
             'failed': 0,
-            'skipped': 0
+            'skipped': 0,
+            'retrying': 0
         }
         for job in jobs:
             status = job.get('status', '')
@@ -630,9 +813,9 @@ class ProgressTracker:
         return worker_stats
 
     def is_complete(self) -> bool:
-        """Check if all jobs are complete (no pending or claimed)."""
+        """Check if all jobs are complete (no pending, claimed, or retrying)."""
         stats = self.get_stats()
-        return stats['pending'] == 0 and stats['claimed'] == 0
+        return stats['pending'] == 0 and stats['claimed'] == 0 and stats['retrying'] == 0
 
 
 if __name__ == "__main__":
