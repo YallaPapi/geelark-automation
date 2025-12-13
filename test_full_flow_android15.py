@@ -2,8 +2,9 @@
 import sys
 if sys.platform == 'win32':
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
-import os
-os.environ['ANDROID_HOME'] = r'C:\Users\asus\Downloads\android-sdk'
+
+from config import Config, setup_environment
+setup_environment()
 
 from appium import webdriver
 from appium.options.android import UiAutomator2Options
@@ -67,7 +68,7 @@ time.sleep(1)
 # Start Instagram via am start (using Appium's executeScript)
 # Note: This requires adb_shell to be enabled, fallback to regular ADB
 import subprocess
-ADB = r"C:\Users\asus\Downloads\platform-tools-latest-windows\platform-tools\adb.exe"
+ADB = Config.ADB_PATH
 subprocess.run([ADB, "-s", DEVICE, "shell", "am", "force-stop", "com.instagram.android"])
 time.sleep(1)
 subprocess.run([ADB, "-s", DEVICE, "shell", "monkey", "-p", "com.instagram.android", "1"])

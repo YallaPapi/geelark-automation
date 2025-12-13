@@ -17,8 +17,9 @@ import sys
 import time
 import subprocess
 from geelark_client import GeelarkClient
+from config import Config
 
-ADB_PATH = r"C:\Users\asus\Downloads\platform-tools-latest-windows\platform-tools\adb.exe"
+ADB_PATH = Config.ADB_PATH
 
 
 def adb(device, cmd, timeout=30):

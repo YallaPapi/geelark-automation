@@ -2,14 +2,15 @@
 import sys
 if sys.platform == 'win32':
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
-import os
-os.environ['ANDROID_HOME'] = r'C:\Users\asus\Downloads\android-sdk'
+
+from config import Config, setup_environment
+setup_environment()
 
 from appium import webdriver
 from appium.options.android import UiAutomator2Options
 import subprocess
 
-ADB_PATH = r"C:\Users\asus\Downloads\platform-tools-latest-windows\platform-tools\adb.exe"
+ADB_PATH = Config.ADB_PATH
 
 # Use a device that's already connected
 result = subprocess.run([ADB_PATH, "devices"], capture_output=True, encoding='utf-8')

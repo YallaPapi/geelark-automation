@@ -37,7 +37,7 @@ import time
 import shutil
 import tempfile
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Optional, Dict, List, Any
 from dataclasses import dataclass
 
@@ -629,7 +629,6 @@ class ProgressTracker:
                         else:
                             # Retryable - set to retrying with delay
                             job['status'] = self.STATUS_RETRYING
-                            from datetime import timedelta
                             retry_at = datetime.now() + timedelta(minutes=retry_delay_minutes)
                             job['retry_at'] = retry_at.isoformat()
                             logger.info(f"Worker {worker_id} job {job_id} will RETRY in {retry_delay_minutes} min (attempt {attempts}/{max_attempts})")
