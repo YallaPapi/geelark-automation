@@ -530,6 +530,57 @@ class SmartInstagramPoster:
 
         return False  # don't skip, continue normally
 
+    # --- Action handlers for dispatch table (Command pattern) ---
+
+    def _action_home(self, action, elements):
+        """Handle 'home' action - go to home screen."""
+        print("  [HOME] Going to home screen...")
+        self.press_key('KEYCODE_HOME')
+        time.sleep(2)
+
+    def _action_open_instagram(self, action, elements):
+        """Handle 'open_instagram' action - restart Instagram app."""
+        print("  [OPEN] Opening Instagram...")
+        self.adb("am force-stop com.instagram.android")
+        time.sleep(1)
+        self.adb("monkey -p com.instagram.android 1")
+        time.sleep(4)
+
+    def _action_tap(self, action, elements):
+        """Handle 'tap' action - tap an element by index."""
+        idx = action.get('element_index', 0)
+        if 0 <= idx < len(elements):
+            elem = elements[idx]
+            self.tap(elem['center'][0], elem['center'][1])
+        else:
+            print(f"  Invalid element index: {idx}")
+
+    def _action_back(self, action, elements):
+        """Handle 'back' action - press back key."""
+        self.press_key('KEYCODE_BACK')
+
+    def _action_scroll_down(self, action, elements):
+        """Handle 'scroll_down' action - swipe down."""
+        self.adb("input swipe 360 900 360 400 300")
+
+    def _action_scroll_up(self, action, elements):
+        """Handle 'scroll_up' action - swipe up."""
+        self.adb("input swipe 360 400 360 900 300")
+
+    def _get_action_handlers(self):
+        """Return dispatch table mapping action names to handler methods.
+
+        Note: 'done' and 'tap_and_type' have special handling in post() and are not included.
+        """
+        return {
+            'home': self._action_home,
+            'open_instagram': self._action_open_instagram,
+            'tap': self._action_tap,
+            'back': self._action_back,
+            'scroll_down': self._action_scroll_down,
+            'scroll_up': self._action_scroll_up,
+        }
+
     def _track_action_for_loop_detection(self, action, elements, recent_actions, loop_threshold):
         """Track action signature for loop detection.
 
@@ -798,8 +849,11 @@ class SmartInstagramPoster:
             if action.get('share_clicked'):
                 self.share_clicked = True
 
-            # Execute action
-            if action['action'] == 'done':
+            # Execute action using dispatch table (Command pattern)
+            action_name = action['action']
+
+            # Special case: 'done' - returns from function
+            if action_name == 'done':
                 print("\n[SUCCESS] Share initiated!")
                 # Wait for upload to actually complete (poll UI for confirmation)
                 if self.wait_for_upload_complete(timeout=60):
@@ -810,38 +864,15 @@ class SmartInstagramPoster:
                     self.humanize_after_post()
                 return True
 
-            elif action['action'] == 'home':
-                print("  [HOME] Going to home screen...")
-                self.press_key('KEYCODE_HOME')
-                time.sleep(2)
-
-            elif action['action'] == 'open_instagram':
-                print("  [OPEN] Opening Instagram...")
-                self.adb("am force-stop com.instagram.android")
-                time.sleep(1)
-                self.adb("monkey -p com.instagram.android 1")
-                time.sleep(4)
-
-            elif action['action'] == 'tap':
-                idx = action.get('element_index', 0)
-                if 0 <= idx < len(elements):
-                    elem = elements[idx]
-                    self.tap(elem['center'][0], elem['center'][1])
-                else:
-                    print(f"  Invalid element index: {idx}")
-
-            elif action['action'] == 'tap_and_type':
+            # Special case: 'tap_and_type' - needs caption and has continue logic
+            if action_name == 'tap_and_type':
                 if self._handle_tap_and_type(action, elements, caption):
                     continue  # Helper handled it and wants to skip to next step
 
-            elif action['action'] == 'back':
-                self.press_key('KEYCODE_BACK')
-
-            elif action['action'] == 'scroll_down':
-                self.adb("input swipe 360 900 360 400 300")
-
-            elif action['action'] == 'scroll_up':
-                self.adb("input swipe 360 400 360 900 300")
+            # Dispatch table for standard actions
+            action_handlers = self._get_action_handlers()
+            if action_name in action_handlers:
+                action_handlers[action_name](action, elements)
 
             # Track action and check for stuck loops
             self._track_action_for_loop_detection(action, elements, recent_actions, LOOP_THRESHOLD)

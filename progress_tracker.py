@@ -92,6 +92,16 @@ class ProgressTracker:
     # Non-retryable error types - these failures should not be retried
     NON_RETRYABLE_ERRORS = {'suspended', 'captcha', 'loggedout', 'actionblocked', 'banned'}
 
+    # Error classification patterns (Strategy pattern)
+    # Maps error_type -> list of substrings to match in error message
+    ERROR_PATTERNS = {
+        'suspended': ['suspended', 'account has been suspended'],
+        'captcha': ['captcha', 'verify'],
+        'loggedout': ['log in', 'logged out', 'sign up'],
+        'actionblocked': ['action blocked', 'try again later'],
+        'banned': ['banned', 'disabled'],
+    }
+
     # Default retry settings
     DEFAULT_MAX_ATTEMPTS = 3
     DEFAULT_RETRY_DELAY_MINUTES = 5
@@ -542,22 +552,16 @@ class ProgressTracker:
         """
         Classify an error message into an error type.
 
+        Uses ERROR_PATTERNS dict for pattern matching (Strategy pattern).
         Returns one of the NON_RETRYABLE_ERRORS or empty string for retryable errors.
         """
         error_lower = error.lower() if error else ''
 
-        if 'suspended' in error_lower or 'account has been suspended' in error_lower:
-            return 'suspended'
-        elif 'captcha' in error_lower or 'verify' in error_lower:
-            return 'captcha'
-        elif 'log in' in error_lower or 'logged out' in error_lower or 'sign up' in error_lower:
-            return 'loggedout'
-        elif 'action blocked' in error_lower or 'try again later' in error_lower:
-            return 'actionblocked'
-        elif 'banned' in error_lower or 'disabled' in error_lower:
-            return 'banned'
-        else:
-            return ''  # Retryable
+        for error_type, patterns in self.ERROR_PATTERNS.items():
+            if any(pattern in error_lower for pattern in patterns):
+                return error_type
+
+        return ''  # Retryable
 
     def update_job_status(
         self,
