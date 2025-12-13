@@ -20,7 +20,6 @@ from config import Config, setup_environment
 setup_environment()
 
 import time
-import subprocess
 import re
 import json
 import random
@@ -41,7 +40,6 @@ from claude_analyzer import ClaudeUIAnalyzer
 from appium_ui_controller import AppiumUIController
 
 # Use centralized paths
-ADB_PATH = Config.ADB_PATH
 APPIUM_SERVER = Config.DEFAULT_APPIUM_URL
 
 
@@ -111,13 +109,8 @@ class SmartInstagramPoster:
         return self._ui_controller
 
     def adb(self, cmd, timeout=30):
-        """Run ADB shell command"""
-        result = subprocess.run(
-            [ADB_PATH, "-s", self.device, "shell", cmd],
-            capture_output=True, timeout=timeout,
-            encoding='utf-8', errors='replace'
-        )
-        return result.stdout.strip() if result.stdout else ""
+        """Run ADB shell command - delegates to DeviceConnectionManager"""
+        return self._conn.adb_command(cmd, timeout=timeout)
 
     def is_uiautomator2_crash(self, exception):
         """Check if exception indicates UiAutomator2 crashed on device"""
