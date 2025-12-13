@@ -14,6 +14,8 @@ from typing import List, Dict, Tuple, Optional, Any
 from appium import webdriver
 from appium.webdriver.common.appiumby import AppiumBy
 
+from config import Config
+
 
 class AppiumUIController:
     """Controls Android UI through Appium WebDriver."""
@@ -220,11 +222,19 @@ class AppiumUIController:
 
     def scroll_down(self) -> None:
         """Scroll down on the screen."""
-        self.swipe(360, 900, 360, 400, 300)
+        self.swipe(
+            Config.SCREEN_CENTER_X, Config.FEED_BOTTOM_Y,
+            Config.SCREEN_CENTER_X, Config.FEED_TOP_Y,
+            Config.SWIPE_DURATION_FAST
+        )
 
     def scroll_up(self) -> None:
         """Scroll up on the screen."""
-        self.swipe(360, 400, 360, 900, 300)
+        self.swipe(
+            Config.SCREEN_CENTER_X, Config.FEED_TOP_Y,
+            Config.SCREEN_CENTER_X, Config.FEED_BOTTOM_Y,
+            Config.SWIPE_DURATION_FAST
+        )
 
     def go_back(self) -> None:
         """Press the back button."""

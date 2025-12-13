@@ -117,6 +117,22 @@ class Config:
     # Phone boot timeout
     PHONE_BOOT_TIMEOUT: int = 120
 
+    # ==================== SCREEN COORDINATES ====================
+    # For Geelark cloud phones (720x1280 resolution)
+    # Used for swipe/tap operations in UI automation
+
+    SCREEN_CENTER_X: int = 360          # Horizontal center of screen
+    SCREEN_CENTER_Y: int = 640          # Vertical center of screen
+    FEED_TOP_Y: int = 400               # Top position for feed scroll
+    FEED_BOTTOM_Y: int = 900            # Bottom position for feed scroll
+    REELS_TOP_Y: int = 300              # Top position for reels scroll
+    REELS_BOTTOM_Y: int = 1000          # Bottom position for reels scroll
+    NOTIFICATIONS_TOP_Y: int = 800      # Top position for notifications scroll
+    STORY_NEXT_TAP_X: int = 650         # Right side of screen for story navigation
+    SWIPE_DURATION_FAST: int = 300      # Duration in ms for fast swipes
+    SWIPE_DURATION_SLOW: int = 200      # Duration in ms for slower swipes
+    SWIPE_DURATION_MAX: int = 400       # Maximum swipe duration for randomization
+
     # ==================== CLASS METHODS ====================
 
     @classmethod

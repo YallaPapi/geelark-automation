@@ -39,21 +39,21 @@ from claude_analyzer import ClaudeUIAnalyzer
 # UI interactions (extracted for better separation)
 from appium_ui_controller import AppiumUIController
 
-# Use centralized paths
+# Use centralized paths and screen coordinates
 APPIUM_SERVER = Config.DEFAULT_APPIUM_URL
 
-# Screen coordinates for Geelark cloud phones (720x1280 resolution)
-# These are used for swipe/tap operations in the UI automation
-SCREEN_CENTER_X = 360          # Horizontal center of screen
-SCREEN_CENTER_Y = 640          # Vertical center of screen
-FEED_TOP_Y = 400               # Top position for feed scroll
-FEED_BOTTOM_Y = 900            # Bottom position for feed scroll
-REELS_TOP_Y = 300              # Top position for reels scroll
-REELS_BOTTOM_Y = 1000          # Bottom position for reels scroll
-NOTIFICATIONS_TOP_Y = 800      # Top position for notifications scroll
-STORY_NEXT_TAP_X = 650         # Right side of screen for story navigation
-SWIPE_DURATION_FAST = 300      # Duration in ms for fast swipes
-SWIPE_DURATION_SLOW = 200      # Duration in ms for slower swipes
+# Screen coordinates from centralized config
+SCREEN_CENTER_X = Config.SCREEN_CENTER_X
+SCREEN_CENTER_Y = Config.SCREEN_CENTER_Y
+FEED_TOP_Y = Config.FEED_TOP_Y
+FEED_BOTTOM_Y = Config.FEED_BOTTOM_Y
+REELS_TOP_Y = Config.REELS_TOP_Y
+REELS_BOTTOM_Y = Config.REELS_BOTTOM_Y
+NOTIFICATIONS_TOP_Y = Config.NOTIFICATIONS_TOP_Y
+STORY_NEXT_TAP_X = Config.STORY_NEXT_TAP_X
+SWIPE_DURATION_FAST = Config.SWIPE_DURATION_FAST
+SWIPE_DURATION_SLOW = Config.SWIPE_DURATION_SLOW
+SWIPE_DURATION_MAX = Config.SWIPE_DURATION_MAX
 
 
 class SmartInstagramPoster:
@@ -166,7 +166,7 @@ class SmartInstagramPoster:
         print("  - Scrolling feed...")
         scroll_count = random.randint(1, 3)
         for _ in range(scroll_count):
-            self.swipe(SCREEN_CENTER_X, FEED_BOTTOM_Y, SCREEN_CENTER_X, FEED_TOP_Y, random.randint(SWIPE_DURATION_SLOW, 400))
+            self.swipe(SCREEN_CENTER_X, FEED_BOTTOM_Y, SCREEN_CENTER_X, FEED_TOP_Y, random.randint(SWIPE_DURATION_SLOW, SWIPE_DURATION_MAX))
             self.random_delay(1.0, 3.0)
         # Scroll back up sometimes
         if random.random() < 0.3:
@@ -293,7 +293,7 @@ class SmartInstagramPoster:
             if action == 'scroll_feed':
                 print("  - Scrolling feed after post...")
                 for _ in range(random.randint(1, 2)):
-                    self.swipe(SCREEN_CENTER_X, FEED_BOTTOM_Y, SCREEN_CENTER_X, FEED_TOP_Y, random.randint(SWIPE_DURATION_SLOW, 400))
+                    self.swipe(SCREEN_CENTER_X, FEED_BOTTOM_Y, SCREEN_CENTER_X, FEED_TOP_Y, random.randint(SWIPE_DURATION_SLOW, SWIPE_DURATION_MAX))
                     self.random_delay(1.5, 3.0)
 
             elif action == 'check_profile':
