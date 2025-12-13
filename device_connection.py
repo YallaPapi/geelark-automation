@@ -445,8 +445,8 @@ class DeviceConnectionManager:
         try:
             if self.appium_driver:
                 self.appium_driver.quit()
-        except:
-            pass
+        except Exception:
+            pass  # Ignore errors when quitting - driver may already be dead
         self.appium_driver = None
         time.sleep(2)
         return self.connect_appium()
@@ -479,13 +479,13 @@ class DeviceConnectionManager:
             if self.appium_driver:
                 self.appium_driver.quit()
                 print("  Appium driver closed")
-        except:
-            pass
+        except Exception:
+            pass  # Ignore errors - cleanup should not fail
 
         try:
             self.client.disable_adb(self.phone_id)
-        except:
-            pass
+        except Exception:
+            pass  # Ignore errors - ADB may already be disabled
 
         try:
             self.client.stop_phone(self.phone_id)

@@ -42,6 +42,19 @@ from appium_ui_controller import AppiumUIController
 # Use centralized paths
 APPIUM_SERVER = Config.DEFAULT_APPIUM_URL
 
+# Screen coordinates for Geelark cloud phones (720x1280 resolution)
+# These are used for swipe/tap operations in the UI automation
+SCREEN_CENTER_X = 360          # Horizontal center of screen
+SCREEN_CENTER_Y = 640          # Vertical center of screen
+FEED_TOP_Y = 400               # Top position for feed scroll
+FEED_BOTTOM_Y = 900            # Bottom position for feed scroll
+REELS_TOP_Y = 300              # Top position for reels scroll
+REELS_BOTTOM_Y = 1000          # Bottom position for reels scroll
+NOTIFICATIONS_TOP_Y = 800      # Top position for notifications scroll
+STORY_NEXT_TAP_X = 650         # Right side of screen for story navigation
+SWIPE_DURATION_FAST = 300      # Duration in ms for fast swipes
+SWIPE_DURATION_SLOW = 200      # Duration in ms for slower swipes
+
 
 class SmartInstagramPoster:
     def __init__(self, phone_name, system_port=8200, appium_url=None):
@@ -153,11 +166,11 @@ class SmartInstagramPoster:
         print("  - Scrolling feed...")
         scroll_count = random.randint(1, 3)
         for _ in range(scroll_count):
-            self.swipe(360, 900, 360, 400, random.randint(200, 400))
+            self.swipe(SCREEN_CENTER_X, FEED_BOTTOM_Y, SCREEN_CENTER_X, FEED_TOP_Y, random.randint(SWIPE_DURATION_SLOW, 400))
             self.random_delay(1.0, 3.0)
         # Scroll back up sometimes
         if random.random() < 0.3:
-            self.swipe(360, 400, 360, 900, 300)
+            self.swipe(SCREEN_CENTER_X, FEED_TOP_Y, SCREEN_CENTER_X, FEED_BOTTOM_Y, SWIPE_DURATION_FAST)
             self.random_delay(0.5, 1.5)
         return True
 
@@ -177,7 +190,7 @@ class SmartInstagramPoster:
         # Tap through a few more stories sometimes
         if random.random() < 0.5:
             for _ in range(random.randint(1, 3)):
-                self.tap(650, 640)  # Tap right side to skip to next story
+                self.tap(STORY_NEXT_TAP_X, SCREEN_CENTER_Y)  # Tap right side to skip to next story
                 time.sleep(random.uniform(2, 5))
         # Go back
         self.press_key('KEYCODE_BACK')
@@ -202,12 +215,12 @@ class SmartInstagramPoster:
             # Sometimes double-tap to like
             if random.random() < 0.15:
                 print("    Double-tap like!")
-                self.tap(360, 640)
+                self.tap(SCREEN_CENTER_X, SCREEN_CENTER_Y)
                 time.sleep(0.1)
-                self.tap(360, 640)
+                self.tap(SCREEN_CENTER_X, SCREEN_CENTER_Y)
                 self.random_delay(0.5, 1.0)
             # Swipe to next reel
-            self.swipe(360, 1000, 360, 300, 200)
+            self.swipe(SCREEN_CENTER_X, REELS_BOTTOM_Y, SCREEN_CENTER_X, REELS_TOP_Y, SWIPE_DURATION_SLOW)
             self.random_delay(0.5, 1.5)
         # Go back to home
         elements, _ = self.dump_ui()
@@ -229,7 +242,7 @@ class SmartInstagramPoster:
         self.random_delay(2.0, 4.0)
         # Scroll through notifications
         if random.random() < 0.5:
-            self.swipe(360, 800, 360, 400, 300)
+            self.swipe(SCREEN_CENTER_X, NOTIFICATIONS_TOP_Y, SCREEN_CENTER_X, FEED_TOP_Y, SWIPE_DURATION_FAST)
             self.random_delay(1.0, 2.0)
         # Go back
         self.press_key('KEYCODE_BACK')
@@ -280,7 +293,7 @@ class SmartInstagramPoster:
             if action == 'scroll_feed':
                 print("  - Scrolling feed after post...")
                 for _ in range(random.randint(1, 2)):
-                    self.swipe(360, 900, 360, 400, random.randint(200, 400))
+                    self.swipe(SCREEN_CENTER_X, FEED_BOTTOM_Y, SCREEN_CENTER_X, FEED_TOP_Y, random.randint(SWIPE_DURATION_SLOW, 400))
                     self.random_delay(1.5, 3.0)
 
             elif action == 'check_profile':
@@ -561,11 +574,11 @@ class SmartInstagramPoster:
 
     def _action_scroll_down(self, action, elements):
         """Handle 'scroll_down' action - swipe down."""
-        self.adb("input swipe 360 900 360 400 300")
+        self.adb(f"input swipe {SCREEN_CENTER_X} {FEED_BOTTOM_Y} {SCREEN_CENTER_X} {FEED_TOP_Y} {SWIPE_DURATION_FAST}")
 
     def _action_scroll_up(self, action, elements):
         """Handle 'scroll_up' action - swipe up."""
-        self.adb("input swipe 360 400 360 900 300")
+        self.adb(f"input swipe {SCREEN_CENTER_X} {FEED_TOP_Y} {SCREEN_CENTER_X} {FEED_BOTTOM_Y} {SWIPE_DURATION_FAST}")
 
     def _get_action_handlers(self):
         """Return dispatch table mapping action names to handler methods.
@@ -894,8 +907,8 @@ class SmartInstagramPoster:
         print("\nCleaning up...")
         try:
             self.adb("rm -f /sdcard/Download/*.mp4")
-        except:
-            pass
+        except Exception:
+            pass  # Ignore cleanup errors - video deletion is best-effort
         # Delegate connection cleanup to DeviceConnectionManager
         self._conn.disconnect()
 
