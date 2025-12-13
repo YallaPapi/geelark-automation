@@ -1,4 +1,4 @@
-﻿"""
+"""
 Install ClipboardHelper APK on Geelark cloud phones.
 This app enables clipboard access via ADB for typing Unicode text, emojis, and newlines.
 
@@ -10,97 +10,30 @@ Example:
 """
 import sys
 import os
-import time
-import subprocess
-from geelark_client import GeelarkClient
-from config import Config
+import base64
 
-ADB_PATH = Config.ADB_PATH
+from phone_connector import PhoneConnector, adb_shell, adb_install
+
 APK_PATH = os.path.join(os.path.dirname(__file__), "ClipboardHelper.apk")
-
-
-def adb(device, cmd, timeout=30):
-    """Run ADB shell command"""
-    result = subprocess.run(
-        [ADB_PATH, "-s", device, "shell", cmd],
-        capture_output=True, timeout=timeout,
-        encoding='utf-8', errors='replace'
-    )
-    return result.stdout.strip() if result.stdout else ""
-
-
-def adb_install(device, apk_path):
-    """Install APK via ADB"""
-    result = subprocess.run(
-        [ADB_PATH, "-s", device, "install", "-r", apk_path],
-        capture_output=True, timeout=120,
-        encoding='utf-8', errors='replace'
-    )
-    return result.stdout.strip() if result.stdout else ""
 
 
 def setup_phone(phone_name):
     """Setup ClipboardHelper on a single phone"""
-    client = GeelarkClient()
-
     print(f"\n{'='*50}")
     print(f"Setting up ClipboardHelper on: {phone_name}")
     print('='*50)
 
-    # Find phone
-    print("Finding phone...")
-    phone = None
-    for page in range(1, 10):
-        result = client.list_phones(page=page, page_size=100)
-        for p in result["items"]:
-            if p["serialName"] == phone_name:
-                phone = p
-                break
-        if phone:
-            break
-
-    if not phone:
-        print(f"  ERROR: Phone not found: {phone_name}")
+    # Use shared PhoneConnector for find → start → ADB connect
+    connector = PhoneConnector()
+    try:
+        client, phone_id, device, password = connector.setup_for_adb(phone_name)
+    except Exception as e:
+        print(f"  ERROR: {e}")
         return False
-
-    phone_id = phone["id"]
-    print(f"  Found: {phone['serialName']} (Status: {phone['status']})")
-
-    # Start phone if needed
-    if phone["status"] != 0:
-        print("  Starting phone...")
-        client.start_phone(phone_id)
-        for i in range(60):
-            time.sleep(2)
-            status = client.get_phone_status([phone_id])
-            items = status.get("successDetails", [])
-            if items and items[0].get("status") == 0:
-                print(f"    Ready after {(i+1)*2}s")
-                break
-        time.sleep(5)
-
-    # Enable ADB
-    print("  Enabling ADB...")
-    client.enable_adb(phone_id)
-    time.sleep(5)
-
-    # Get ADB info
-    adb_info = client.get_adb_info(phone_id)
-    device = f"{adb_info['ip']}:{adb_info['port']}"
-    password = adb_info['pwd']
-
-    # Connect
-    print(f"  Connecting to {device}...")
-    subprocess.run([ADB_PATH, "connect", device], capture_output=True)
-    time.sleep(1)
-
-    # Login
-    login_result = adb(device, f"glogin {password}")
-    print(f"  Login: {login_result or 'OK'}")
 
     # Check if already installed
     print("  Checking if ClipboardHelper is installed...")
-    packages = adb(device, "pm list packages | grep geelark.clipboard")
+    packages = adb_shell(device, "pm list packages | grep geelark.clipboard")
     if "com.geelark.clipboard" in packages:
         print("  ClipboardHelper already installed!")
     else:
@@ -114,10 +47,9 @@ def setup_phone(phone_name):
 
     # Test clipboard functionality (basic smoke test)
     print("  Testing clipboard...")
-    import base64
     test_text = "ClipboardHelper OK\nSecond line test"
     text_b64 = base64.b64encode(test_text.encode('utf-8')).decode('ascii')
-    result = adb(
+    result = adb_shell(
         device,
         f"am start -n com.geelark.clipboard/.CopyActivity -a com.geelark.clipboard.COPY --es base64 {text_b64}"
     )
