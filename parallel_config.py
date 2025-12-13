@@ -21,6 +21,9 @@ import os
 from dataclasses import dataclass, field
 from typing import List, Optional
 
+# Import centralized config for default values
+from config import Config
+
 
 @dataclass
 class WorkerConfig:
@@ -69,18 +72,19 @@ class ParallelConfig:
         android_sdk_path: Path to Android SDK
         adb_path: Path to ADB executable
     """
-    num_workers: int = 3
+    # Use centralized config for defaults
+    num_workers: int = Config.DEFAULT_NUM_WORKERS
     workers: List[WorkerConfig] = field(default_factory=list)
-    progress_file: str = "parallel_progress.csv"
-    logs_dir: str = "logs"
-    shutdown_timeout: int = 60
-    job_timeout: int = 300  # 5 minutes per job
-    delay_between_jobs: int = 10
-    max_posts_per_account_per_day: int = 1  # CRITICAL: Default 1, can be 1-4
-    max_attempts: int = 3  # Max retry attempts per job
-    retry_delay_minutes: float = 5.0  # Minutes to wait before retry
-    android_sdk_path: str = r"C:\Users\asus\Downloads\android-sdk"
-    adb_path: str = r"C:\Users\asus\Downloads\android-sdk\platform-tools\adb.exe"
+    progress_file: str = Config.PROGRESS_FILE
+    logs_dir: str = Config.LOGS_DIR
+    shutdown_timeout: int = Config.SHUTDOWN_TIMEOUT
+    job_timeout: int = Config.JOB_TIMEOUT
+    delay_between_jobs: int = Config.DELAY_BETWEEN_JOBS
+    max_posts_per_account_per_day: int = Config.MAX_POSTS_PER_ACCOUNT_PER_DAY
+    max_attempts: int = Config.MAX_RETRY_ATTEMPTS
+    retry_delay_minutes: float = Config.RETRY_DELAY_MINUTES
+    android_sdk_path: str = Config.ANDROID_SDK_PATH
+    adb_path: str = Config.ADB_PATH
 
     def __post_init__(self):
         """Generate worker configs if not provided."""
@@ -97,9 +101,9 @@ class ParallelConfig:
             - systemPort: 8200-8209, 8210-8219, 8220-8229, ...
         """
         configs = []
-        base_appium_port = 4723
-        base_system_port = 8200
-        system_port_range = 10  # Each worker gets 10 ports
+        base_appium_port = Config.APPIUM_BASE_PORT
+        base_system_port = Config.SYSTEM_PORT_BASE
+        system_port_range = Config.SYSTEM_PORT_RANGE
 
         for i in range(n):
             worker = WorkerConfig(

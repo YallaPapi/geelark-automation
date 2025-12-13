@@ -750,6 +750,88 @@ class ProgressTracker:
 
         return self._locked_operation(_claim_retry_operation)
 
+    def retry_failed_job(self, job_id: str) -> bool:
+        """
+        Reset a single failed job back to RETRYING status for another attempt.
+
+        This allows jobs that permanently failed (hit max_attempts or non-retryable error)
+        to be retried again. Resets attempts to 0 and clears error_type.
+
+        Args:
+            job_id: The job ID to retry
+
+        Returns:
+            True if job was found and reset to retrying
+        """
+        def _retry_operation(jobs):
+            for job in jobs:
+                if job.get('job_id') == job_id:
+                    if job.get('status') != self.STATUS_FAILED:
+                        logger.warning(f"Job {job_id} is not failed (status: {job.get('status')}), cannot retry")
+                        return jobs, False
+
+                    # Reset job for retry
+                    job['status'] = self.STATUS_RETRYING
+                    job['attempts'] = '0'  # Reset attempts
+                    job['error_type'] = ''  # Clear error type
+                    job['retry_at'] = ''  # Clear retry delay - ready immediately
+                    job['worker_id'] = ''  # Clear worker assignment
+                    job['completed_at'] = ''  # Clear completion time
+                    logger.info(f"Job {job_id} reset to RETRYING status")
+                    return jobs, True
+
+            logger.warning(f"Job {job_id} not found")
+            return jobs, False
+
+        return self._locked_operation(_retry_operation)
+
+    def retry_all_failed(self, include_non_retryable: bool = False) -> int:
+        """
+        Reset ALL failed jobs back to RETRYING status.
+
+        This is a convenience method to bulk-retry jobs that hit max_attempts
+        or had transient failures. Call this at the start of a run to give
+        previously failed jobs another chance.
+
+        Args:
+            include_non_retryable: If True, also retry jobs with non-retryable
+                                   error types (suspended, captcha, loggedout, etc.).
+                                   Default False - only retry jobs with retryable errors.
+
+        Returns:
+            Number of jobs reset to retrying
+        """
+        def _retry_all_operation(jobs):
+            count = 0
+            for job in jobs:
+                if job.get('status') != self.STATUS_FAILED:
+                    continue
+
+                # Check error type
+                error_type = job.get('error_type', '')
+                if not include_non_retryable and error_type in self.NON_RETRYABLE_ERRORS:
+                    logger.debug(f"Skipping job {job.get('job_id')} - non-retryable error: {error_type}")
+                    continue
+
+                # Reset job for retry
+                job['status'] = self.STATUS_RETRYING
+                job['attempts'] = '0'  # Reset attempts
+                job['retry_at'] = ''  # Clear retry delay - ready immediately
+                job['worker_id'] = ''  # Clear worker assignment
+                job['completed_at'] = ''  # Clear completion time
+                # Note: We keep error_type for logging, it will be overwritten on next failure
+                count += 1
+                logger.info(f"Job {job.get('job_id')} reset to RETRYING (was: {error_type or 'retryable error'})")
+
+            if count > 0:
+                logger.info(f"Reset {count} failed jobs to RETRYING status")
+            else:
+                logger.info("No failed jobs found to retry")
+
+            return jobs, count
+
+        return self._locked_operation(_retry_all_operation)
+
     def release_claimed_job(self, job_id: str, worker_id: int) -> bool:
         """
         Release a claimed job back to pending status.

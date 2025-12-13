@@ -182,22 +182,69 @@ The orchestrator will automatically detect and refuse to start if another is run
 
 Always use taskmaster to research the best solution any time I ask you to do something. Do not use web search. Use taskmaster.
 
-## MAIN SCRIPT: posting_scheduler.py
+## MAIN ENTRY POINTS
 
-**ALWAYS use `posting_scheduler.py` for batch posting.**
+### For Parallel Posting (RECOMMENDED):
+```bash
+python parallel_orchestrator.py --workers 5 --run
+```
 
-### NEVER RUN THESE SCRIPTS:
-- `batch_post.py` - **ARCHIVED** - No tracking, causes duplicate posts
-- `batch_post_concurrent.py` - **ARCHIVED** - Same issues
-- `batch_post_ARCHIVED.py` - Old version, DO NOT USE
+### For Single-Threaded Posting:
+```bash
+python posting_scheduler.py --add-folder chunk_01c --run
+```
 
-### Why posting_scheduler.py:
-- Tracks all posted videos in `scheduler_state.json`
-- Loads from `batch_results_*.csv` to prevent duplicates across restarts
-- Auto-retry failed posts (configurable attempts)
-- Per-account daily limits
-- Per-phase timeouts (connect: 90s, instagram_post: bounded by Appium timeouts)
-- Full logging to `geelark_batch.log` with phase info
+---
+
+## Parallel Orchestrator (parallel_orchestrator.py)
+
+**The primary way to run batch posts at scale.**
+
+Architecture:
+```
+parallel_orchestrator.py (main process)
+    ├── Worker 0 ──► Appium:4723 ──► Phone
+    ├── Worker 1 ──► Appium:4725 ──► Phone
+    ├── Worker 2 ──► Appium:4727 ──► Phone
+    └── Worker N ──► Appium:472X ──► Phone
+```
+
+### Key Features:
+- Runs N workers in PARALLEL (separate processes)
+- Each worker has its own Appium server on unique port
+- Workers coordinate via file-locked `parallel_progress.csv`
+- Automatic retry for failed jobs (up to 3 attempts)
+- Per-account daily limits enforced at seeding AND claim time
+- Clean shutdown on Ctrl+C (stops all workers and phones)
+
+### Usage:
+```bash
+# Start with 5 parallel workers
+python parallel_orchestrator.py --workers 5 --run
+
+# Check status
+python parallel_orchestrator.py --status
+
+# Stop all workers and phones
+python parallel_orchestrator.py --stop-all
+
+# Start a new day (archives old progress file)
+python parallel_orchestrator.py --reset-day
+```
+
+### Progress Tracking:
+- **CSV Ledger**: `parallel_progress.csv` - daily job tracking (file-locked)
+- **State File**: `scheduler_state.json` - account history and job source
+- **Worker Logs**: `logs/worker_N.log` - per-worker activity
+
+---
+
+## Legacy Single-Threaded Scheduler (posting_scheduler.py)
+
+**Use this for smaller batches or debugging.**
+
+### NEVER RUN THESE ARCHIVED SCRIPTS:
+- Files in `archived/` folder - Old implementations, DO NOT USE
 
 ### Usage:
 ```bash
@@ -211,25 +258,38 @@ python posting_scheduler.py --status
 python posting_scheduler.py --retry-all
 ```
 
-### Tracking:
-- **JSON state**: `scheduler_state.json` - jobs, accounts, settings
-- **CSV logs**: `batch_results_*.csv` - historical record
-- **Error log**: `geelark_batch.log` - full stack traces with phase info
-- **API log**: `geelark_api.log` - Geelark API responses for debugging
-
 ---
 
 ## Key Files
 
+### Core Parallel Posting System
 | File | Purpose |
 |------|---------|
-| `posting_scheduler.py` | **MAIN SCRIPT** - scheduler with tracking, retry, state persistence |
-| `post_reel_smart.py` | Core posting logic for single phone (Appium timeout: 60s) |
-| `geelark_client.py` | Geelark API wrapper (upload timeout: 60s) |
-| `dashboard.py` | Real-time web dashboard (http://localhost:5000) |
-| `scheduler_state.json` | Persistent state (auto-generated) |
-| `geelark_batch.log` | Execution log with phase info |
-| `geelark_api.log` | API response log (for Geelark support) |
+| `parallel_orchestrator.py` | **MAIN ENTRY POINT** - starts N workers, coordinates shutdown |
+| `parallel_worker.py` | Worker process - claims jobs, runs Appium, posts to phones |
+| `parallel_config.py` | Configuration dataclasses (WorkerConfig, ParallelConfig) |
+| `progress_tracker.py` | CSV-based progress tracking with file locking |
+| `config.py` | **CENTRALIZED CONFIG** - all paths and settings |
+
+### Posting Logic
+| File | Purpose |
+|------|---------|
+| `post_reel_smart.py` | SmartInstagramPoster - Claude-driven UI navigation |
+| `geelark_client.py` | Geelark API wrapper (upload, phone control) |
+| `appium_server_manager.py` | Appium server lifecycle management |
+
+### State Files
+| File | Purpose |
+|------|---------|
+| `parallel_progress.csv` | Daily job ledger (file-locked, NEVER delete) |
+| `scheduler_state.json` | Account history, job source |
+| `accounts.txt` | 82 approved posting accounts |
+
+### Legacy (Use Orchestrator Instead)
+| File | Purpose |
+|------|---------|
+| `posting_scheduler.py` | Single-threaded scheduler |
+| `dashboard.py` | Web dashboard (http://localhost:5000) |
 
 ## Dashboard
 

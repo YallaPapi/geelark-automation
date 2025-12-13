@@ -39,12 +39,13 @@ import subprocess
 import json
 import argparse
 import logging
+import shutil
 from datetime import datetime
 from typing import List, Optional, Dict, Tuple
 
-# Set ANDROID_HOME early
-os.environ['ANDROID_HOME'] = r'C:\Users\asus\Downloads\android-sdk'
-os.environ['ANDROID_SDK_ROOT'] = r'C:\Users\asus\Downloads\android-sdk'
+# Import centralized config and set up environment FIRST
+from config import Config, setup_environment
+setup_environment()
 
 from parallel_config import ParallelConfig, get_config, print_config
 from progress_tracker import ProgressTracker
@@ -408,7 +409,7 @@ def disconnect_all_adb() -> None:
     """Disconnect all stale ADB connections."""
     logger.info("Disconnecting all ADB connections...")
     try:
-        adb_path = r"C:\Users\asus\Downloads\android-sdk\platform-tools\adb.exe"
+        adb_path = Config.ADB_PATH  # Use centralized config
         if os.path.exists(adb_path):
             subprocess.run([adb_path, 'disconnect'], capture_output=True, timeout=10)
             logger.info("  ADB disconnected all")
@@ -827,7 +828,9 @@ def run_parallel_posting(
     state_file: str = "scheduler_state.json",
     force_reseed: bool = False,
     force_kill_ports: bool = False,
-    accounts: List[str] = None
+    accounts: List[str] = None,
+    retry_all_failed: bool = True,
+    retry_include_non_retryable: bool = False
 ) -> Dict:
     """
     Main entry point to run parallel posting.
@@ -881,6 +884,19 @@ def run_parallel_posting(
 
     # Seed progress file
     tracker = ProgressTracker(config.progress_file)
+
+    # CRITICAL: Retry all failed jobs from previous runs
+    # This ensures jobs that failed before get another chance
+    if retry_all_failed and tracker.exists():
+        stats_before = tracker.get_stats()
+        if stats_before['failed'] > 0:
+            logger.info("="*60)
+            logger.info("RETRYING FAILED JOBS FROM PREVIOUS RUNS")
+            logger.info("="*60)
+            count = tracker.retry_all_failed(include_non_retryable=retry_include_non_retryable)
+            if count > 0:
+                logger.info(f"Reset {count} failed jobs to RETRYING status")
+            logger.info("="*60)
 
     if force_reseed and tracker.exists():
         logger.info("Force reseeding - removing existing progress file")
@@ -965,6 +981,10 @@ Examples:
                         help='Comma-separated list of accounts to use (e.g., phone1,phone2)')
     parser.add_argument('--reset-day', action='store_true',
                         help='Archive current progress file and start fresh for new day')
+    parser.add_argument('--retry-all-failed', action='store_true',
+                        help='Reset all failed jobs back to retrying status (runs automatically with --run)')
+    parser.add_argument('--retry-include-non-retryable', action='store_true',
+                        help='When retrying, also include non-retryable errors (logged out, suspended, etc.)')
 
     args = parser.parse_args()
 
@@ -986,6 +1006,24 @@ Examples:
         else:
             logger.error(message)
             sys.exit(1)
+
+    elif args.retry_all_failed:
+        # Standalone retry-all-failed command
+        if not os.path.exists(config.progress_file):
+            logger.error(f"Progress file not found: {config.progress_file}")
+            sys.exit(1)
+
+        tracker = ProgressTracker(config.progress_file)
+        stats_before = tracker.get_stats()
+        logger.info(f"Current stats: {stats_before['failed']} failed, {stats_before.get('retrying', 0)} retrying")
+
+        count = tracker.retry_all_failed(include_non_retryable=args.retry_include_non_retryable)
+        if count > 0:
+            stats_after = tracker.get_stats()
+            logger.info(f"Reset {count} failed jobs to retrying status")
+            logger.info(f"New stats: {stats_after['failed']} failed, {stats_after.get('retrying', 0)} retrying")
+        else:
+            logger.info("No failed jobs found to retry")
 
     elif args.status:
         show_status(config)
@@ -1020,7 +1058,9 @@ Examples:
             state_file=args.state_file,
             force_reseed=args.force_reseed,
             force_kill_ports=args.force_kill_ports,
-            accounts=accounts_list
+            accounts=accounts_list,
+            retry_all_failed=True,  # Always retry failed jobs on start
+            retry_include_non_retryable=args.retry_include_non_retryable
         )
         if results.get('error'):
             sys.exit(1)

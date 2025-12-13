@@ -28,9 +28,9 @@ import traceback
 from datetime import datetime
 from typing import Optional
 
-# Set ANDROID_HOME early
-os.environ['ANDROID_HOME'] = r'C:\Users\asus\Downloads\android-sdk'
-os.environ['ANDROID_SDK_ROOT'] = r'C:\Users\asus\Downloads\android-sdk'
+# Import centralized config and set up environment FIRST
+from config import Config, setup_environment
+setup_environment()
 
 import subprocess
 
@@ -43,8 +43,8 @@ from geelark_client import GeelarkClient
 # Global flag for clean shutdown
 _shutdown_requested = False
 
-# ADB path (same as used in post_reel_smart.py)
-ADB_PATH = r'C:\Users\asus\Downloads\android-sdk\platform-tools\adb.exe'
+# Use centralized ADB path
+ADB_PATH = Config.ADB_PATH
 
 
 # Worker lifecycle states (for state machine approach)

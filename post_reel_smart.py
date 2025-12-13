@@ -15,8 +15,9 @@ if sys.platform == 'win32':
     if hasattr(sys.stderr, 'reconfigure'):
         sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 
-# Set ANDROID_HOME for Appium
-os.environ['ANDROID_HOME'] = r'C:\Users\asus\Downloads\android-sdk'
+# Import centralized config and set up environment FIRST
+from config import Config, setup_environment
+setup_environment()
 
 import time
 import subprocess
@@ -32,8 +33,9 @@ from appium import webdriver
 from appium.options.android import UiAutomator2Options
 from appium.webdriver.common.appiumby import AppiumBy
 
-ADB_PATH = r"C:\Users\asus\Downloads\platform-tools-latest-windows\platform-tools\adb.exe"
-APPIUM_SERVER = "http://127.0.0.1:4723"
+# Use centralized paths
+ADB_PATH = Config.ADB_PATH
+APPIUM_SERVER = Config.DEFAULT_APPIUM_URL
 
 
 class SmartInstagramPoster:
