@@ -478,6 +478,90 @@ class SmartInstagramPoster:
 
         return None
 
+    def analyze_failure_screenshot(self, context="post failed"):
+        """Capture screenshot and analyze with Claude Vision to understand failure.
+
+        Args:
+            context: Description of what was happening when failure occurred
+
+        Returns:
+            tuple: (screenshot_path, analysis_text) or (None, None) if failed
+        """
+        import os
+        import base64
+        from datetime import datetime
+
+        # Take screenshot
+        screenshot_dir = os.path.join(os.path.dirname(__file__), 'error_screenshots')
+        os.makedirs(screenshot_dir, exist_ok=True)
+
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"{self.phone_name}_failure_{timestamp}.png"
+        filepath = os.path.join(screenshot_dir, filename)
+
+        try:
+            if not self.appium_driver:
+                print("    Cannot capture screenshot - no Appium driver")
+                return None, None
+
+            self.appium_driver.save_screenshot(filepath)
+            print(f"    Screenshot saved: {filename}")
+
+            # Read and encode screenshot
+            with open(filepath, 'rb') as f:
+                image_data = base64.standard_b64encode(f.read()).decode('utf-8')
+
+            # Send to Claude Vision for analysis
+            print("    Analyzing screenshot with Claude Vision...")
+
+            response = self.anthropic.messages.create(
+                model="claude-sonnet-4-20250514",
+                max_tokens=500,
+                messages=[
+                    {
+                        "role": "user",
+                        "content": [
+                            {
+                                "type": "image",
+                                "source": {
+                                    "type": "base64",
+                                    "media_type": "image/png",
+                                    "data": image_data
+                                }
+                            },
+                            {
+                                "type": "text",
+                                "text": f"""Analyze this Instagram app screenshot. Context: {context}
+
+What do you see on the screen? Look for:
+1. Any error messages, popups, or warnings
+2. Login/signup screens (account logged out)
+3. Verification or captcha requests
+4. "Action blocked" or rate limit messages
+5. The current screen state (feed, profile, posting flow, etc.)
+6. Any buttons or text that indicate what went wrong
+
+Provide a brief (2-3 sentence) analysis of:
+- What screen is showing
+- Why the post might have failed
+- What action might fix it (if obvious)
+
+Be concise and direct."""
+                            }
+                        ]
+                    }
+                ]
+            )
+
+            analysis = response.content[0].text
+            print(f"    Vision analysis: {analysis[:100]}...")
+
+            return filepath, analysis
+
+        except Exception as e:
+            print(f"    Failed to analyze screenshot: {e}")
+            return filepath if os.path.exists(filepath) else None, None
+
     def _handle_tap_and_type(self, action, elements, caption):
         """Handle tap_and_type action - keyboard management and caption typing.
 
@@ -829,8 +913,16 @@ class SmartInstagramPoster:
             if error_type:
                 print(f"  [ERROR DETECTED] {error_type}: {error_msg}")
                 self.last_error_type = error_type
-                self.last_error_message = error_msg
-                self.last_screenshot_path = self.take_error_screenshot(self.phone_name, error_type)
+                # Use Vision analysis for richer error context
+                print("  [VISION] Capturing error screenshot for analysis...")
+                screenshot_path, analysis = self.analyze_failure_screenshot(
+                    context=f"Account/app error detected: {error_type} - '{error_msg}'"
+                )
+                self.last_screenshot_path = screenshot_path
+                if analysis:
+                    self.last_error_message = f"{error_type}: {error_msg} - Vision analysis: {analysis}"
+                else:
+                    self.last_error_message = f"{error_type}: {error_msg}"
                 return False
 
             # Show what we see (all elements)
@@ -893,6 +985,18 @@ class SmartInstagramPoster:
                 recent_actions, loop_recovery_count, LOOP_THRESHOLD, MAX_LOOP_RECOVERIES
             )
             if should_abort:
+                # Capture and analyze failure screenshot
+                print("  [VISION] Capturing failure screenshot for analysis...")
+                screenshot_path, analysis = self.analyze_failure_screenshot(
+                    context=f"Loop recovery failed after {MAX_LOOP_RECOVERIES} attempts. Last action: {recent_actions[-1] if recent_actions else 'unknown'}"
+                )
+                self.last_screenshot_path = screenshot_path
+                if analysis:
+                    self.last_error_message = f"Loop stuck - Vision analysis: {analysis}"
+                    self.last_error_type = "loop_stuck"
+                else:
+                    self.last_error_message = "Loop recovery failed - could not escape stuck state"
+                    self.last_error_type = "loop_stuck"
                 return False
             if should_clear:
                 recent_actions.clear()
@@ -900,6 +1004,18 @@ class SmartInstagramPoster:
             time.sleep(1)
 
         print(f"\n[FAILED] Max steps ({max_steps}) reached")
+        # Capture and analyze failure screenshot
+        print("  [VISION] Capturing failure screenshot for analysis...")
+        screenshot_path, analysis = self.analyze_failure_screenshot(
+            context=f"Max steps ({max_steps}) reached without completing post. Caption entered: {self.caption_entered}, Share clicked: {self.share_clicked}"
+        )
+        self.last_screenshot_path = screenshot_path
+        if analysis:
+            self.last_error_message = f"Max steps reached - Vision analysis: {analysis}"
+            self.last_error_type = "max_steps"
+        else:
+            self.last_error_message = f"Max steps ({max_steps}) reached without completing post"
+            self.last_error_type = "max_steps"
         return False
 
     def cleanup(self):

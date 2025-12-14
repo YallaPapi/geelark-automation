@@ -79,7 +79,7 @@ class Config:
     # ==================== RETRY SETTINGS ====================
 
     # Maximum retry attempts for failed jobs
-    MAX_RETRY_ATTEMPTS: int = 3
+    MAX_RETRY_ATTEMPTS: int = 5
 
     # Delay between retries in minutes
     RETRY_DELAY_MINUTES: int = 5

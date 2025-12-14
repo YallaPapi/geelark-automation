@@ -175,11 +175,15 @@ def execute_posting_job(
         worker_config: This worker's configuration
         config: Overall parallel config
         logger: Logger instance
-        tracker: ProgressTracker instance for verification
+        tracker: ProgressTracker instance for verification and error classification
         worker_id: Worker ID for verification
 
     Returns:
-        (success: bool, error_message: str)
+        (success: bool, error_message: str, error_category: str, error_type: str)
+        - success: True if post succeeded
+        - error_message: Error description if failed
+        - error_category: 'account', 'infrastructure', or 'unknown'
+        - error_type: Specific error type (e.g., 'suspended', 'adb_timeout')
     """
     # Import here to avoid circular imports and ensure ANDROID_HOME is set
     from post_reel_smart import SmartInstagramPoster
@@ -197,7 +201,7 @@ def execute_posting_job(
         is_valid, error = tracker.verify_job_before_post(job_id, worker_id)
         if not is_valid:
             logger.warning(f"Job {job_id} failed pre-post verification: {error}")
-            return False, f"Pre-post verification failed: {error}"
+            return False, f"Pre-post verification failed: {error}", 'infrastructure', 'verification_failed'
 
     logger.info(f"Starting job {job_id}: posting to {account}")
     logger.info(f"  Video: {video_path}")
@@ -222,17 +226,41 @@ def execute_posting_job(
 
         if success:
             logger.info(f"Job {job_id} completed successfully!")
-            return True, ""
+            return True, "", None, None
         else:
             error = poster.last_error_message or "Post returned False"
             logger.error(f"Job {job_id} failed: {error}")
-            return False, error
+            # Classify the error
+            if tracker:
+                category, error_type = tracker._classify_error(error)
+            else:
+                category, error_type = 'unknown', ''
+            return False, error, category, error_type
+
+    except TimeoutError as e:
+        # Explicit timeout - infrastructure issue
+        error_msg = f"TimeoutError: {str(e)}"
+        logger.error(f"Job {job_id} timeout: {error_msg}")
+        return False, error_msg, 'infrastructure', 'adb_timeout'
+
+    except ConnectionError as e:
+        # Connection issues - infrastructure
+        error_msg = f"ConnectionError: {str(e)}"
+        logger.error(f"Job {job_id} connection error: {error_msg}")
+        return False, error_msg, 'infrastructure', 'connection_dropped'
 
     except Exception as e:
         error_msg = f"{type(e).__name__}: {str(e)}"
         logger.error(f"Job {job_id} exception: {error_msg}")
         logger.debug(traceback.format_exc())
-        return False, error_msg
+
+        # Try to classify the exception
+        if tracker:
+            category, error_type = tracker._classify_error(error_msg)
+        else:
+            category, error_type = 'unknown', ''
+
+        return False, error_msg, category, error_type
 
     finally:
         # Always clean up
@@ -357,7 +385,7 @@ def run_worker(
             logger.info(f"Processing job {job_id}{attempt_info}")
 
             try:
-                success, error = execute_posting_job(
+                success, error, error_category, error_type = execute_posting_job(
                     job, worker_config, config, logger,
                     tracker=tracker, worker_id=worker_id
                 )
@@ -366,18 +394,26 @@ def run_worker(
                     tracker.update_job_status(job_id, 'success', worker_id)
                     stats['jobs_completed'] += 1
                 else:
-                    # Pass retry_delay_minutes for automatic retry handling
+                    # Pass error classification for proper retry handling
                     tracker.update_job_status(
                         job_id, 'failed', worker_id, error=error,
+                        error_category=error_category,
+                        error_type=error_type,
                         retry_delay_minutes=config.retry_delay_minutes
                     )
                     stats['jobs_failed'] += 1
+                    # Log the classification for debugging
+                    logger.info(f"Job {job_id} classified as: {error_category}/{error_type}")
 
             except Exception as e:
                 error_msg = f"{type(e).__name__}: {str(e)}"
                 logger.error(f"Unhandled exception processing job {job_id}: {error_msg}")
+                # Classify the exception
+                cat, etype = tracker._classify_error(error_msg)
                 tracker.update_job_status(
                     job_id, 'failed', worker_id, error=error_msg,
+                    error_category=cat,
+                    error_type=etype,
                     retry_delay_minutes=config.retry_delay_minutes
                 )
                 stats['jobs_failed'] += 1

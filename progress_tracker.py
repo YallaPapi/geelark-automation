@@ -74,11 +74,12 @@ class ProgressTracker:
         - error: Error message if failed
     """
 
-    # CSV columns (extended for retry support)
+    # CSV columns (extended for retry support and error categorization)
     COLUMNS = [
         'job_id', 'account', 'video_path', 'caption', 'status',
         'worker_id', 'claimed_at', 'completed_at', 'error',
-        'attempts', 'max_attempts', 'retry_at', 'error_type'
+        'attempts', 'max_attempts', 'retry_at', 'error_type',
+        'error_category', 'pass_number'
     ]
 
     # Valid status values
@@ -89,18 +90,42 @@ class ProgressTracker:
     STATUS_SKIPPED = 'skipped'
     STATUS_RETRYING = 'retrying'
 
-    # Non-retryable error types - these failures should not be retried
-    NON_RETRYABLE_ERRORS = {'suspended', 'captcha', 'loggedout', 'actionblocked', 'banned'}
-
-    # Error classification patterns (Strategy pattern)
-    # Maps error_type -> list of substrings to match in error message
-    ERROR_PATTERNS = {
-        'suspended': ['suspended', 'account has been suspended'],
-        'captcha': ['captcha', 'verify'],
-        'loggedout': ['log in', 'logged out', 'sign up'],
-        'actionblocked': ['action blocked', 'try again later'],
-        'banned': ['banned', 'disabled'],
+    # Two-level error classification (Strategy pattern)
+    # Category determines retry behavior: 'account' = non-retryable, 'infrastructure' = retryable
+    # Maps category -> error_type -> list of substrings to match in error message
+    ERROR_CATEGORIES = {
+        'account': {  # Non-retryable - permanent account issues
+            'suspended': ['suspended', 'account has been suspended', 'your account is suspended'],
+            'disabled': ['disabled', 'your account has been disabled', 'account disabled'],
+            'verification': ['verify your identity', 'verification required', 'security check',
+                           'confirm it\'s you', 'verify your account'],
+            'logged_out': ['log in', 'logged out', 'sign up', 'session expired', 'login required'],
+            'action_blocked': ['action blocked', 'try again later', 'temporarily blocked'],
+            'banned': ['banned', 'permanently banned', 'violating our terms'],
+        },
+        'infrastructure': {  # Retryable - transient infrastructure issues
+            'adb_timeout': ['adb timeout', 'adb connection', 'connection timed out',
+                           'device offline', 'device not found', 'adb server',
+                           'never appeared', 'device did not appear'],
+            'appium_crash': ['session not created', 'uiautomator', 'instrumentation',
+                            'appium', 'webdriver', 'selenium', 'session died'],
+            'connection_dropped': ['connection dropped', 'socket hang up', 'connection reset',
+                                  'broken pipe', 'connection refused', 'network error'],
+            'claude_stuck': ['post returned false', 'max steps reached', 'navigation failed',
+                           'could not find', 'element not found', 'timeout waiting',
+                           'loop stuck', 'loop recovery failed'],
+            'glogin_expired': ['glogin', 'login first', 'authentication required'],
+            'phone_error': ['phone not started', 'cloud phone', 'failed to start phone'],
+        }
     }
+
+    # Non-retryable categories (for backward compatibility and quick lookup)
+    NON_RETRYABLE_CATEGORIES = {'account'}
+
+    # Legacy NON_RETRYABLE_ERRORS set (for backward compatibility)
+    # All error types under 'account' category are non-retryable
+    NON_RETRYABLE_ERRORS = {'suspended', 'disabled', 'verification', 'logged_out',
+                            'action_blocked', 'banned'}
 
     # Default retry settings
     DEFAULT_MAX_ATTEMPTS = 3
@@ -548,20 +573,34 @@ class ProgressTracker:
 
         return self._locked_operation(_verify_operation)
 
-    def _classify_error(self, error: str) -> str:
+    def _classify_error(self, error: str) -> tuple:
         """
-        Classify an error message into an error type.
+        Classify an error message into a category and error type.
 
-        Uses ERROR_PATTERNS dict for pattern matching (Strategy pattern).
-        Returns one of the NON_RETRYABLE_ERRORS or empty string for retryable errors.
+        Uses ERROR_CATEGORIES dict for two-level pattern matching (Strategy pattern).
+
+        Returns:
+            tuple: (category, error_type)
+                - ('account', 'suspended') for account issues (non-retryable)
+                - ('infrastructure', 'adb_timeout') for infra issues (retryable)
+                - ('unknown', '') for unclassified errors
+
+        Example:
+            >>> tracker._classify_error("Account has been suspended")
+            ('account', 'suspended')
+            >>> tracker._classify_error("ADB connection timed out")
+            ('infrastructure', 'adb_timeout')
+            >>> tracker._classify_error("Some random error")
+            ('unknown', '')
         """
         error_lower = error.lower() if error else ''
 
-        for error_type, patterns in self.ERROR_PATTERNS.items():
-            if any(pattern in error_lower for pattern in patterns):
-                return error_type
+        for category, types in self.ERROR_CATEGORIES.items():
+            for error_type, patterns in types.items():
+                if any(pattern in error_lower for pattern in patterns):
+                    return (category, error_type)
 
-        return ''  # Retryable
+        return ('unknown', '')  # Unclassified - will be treated as retryable by default
 
     def update_job_status(
         self,
@@ -569,6 +608,8 @@ class ProgressTracker:
         status: str,
         worker_id: int,
         error: str = '',
+        error_category: str = None,
+        error_type: str = None,
         retry_delay_minutes: float = None
     ) -> bool:
         """
@@ -578,8 +619,8 @@ class ProgressTracker:
         - On success: marks job as success
         - On failure:
           - Increments attempts counter
-          - If error is non-retryable (suspended, captcha, loggedout, actionblocked, banned):
-            marks as failed immediately
+          - Classifies error into (category, type) - 'account' category is non-retryable
+          - If category is 'account': marks as failed immediately (non-retryable)
           - If attempts < max_attempts: marks as retrying with retry_at timestamp
           - If attempts >= max_attempts: marks as failed (permanent)
 
@@ -588,6 +629,8 @@ class ProgressTracker:
             status: New status (success/failed/skipped)
             worker_id: Worker that processed the job
             error: Error message if failed
+            error_category: Pre-classified error category (optional, auto-detected if not provided)
+            error_type: Pre-classified error type (optional, auto-detected if not provided)
             retry_delay_minutes: Minutes before retry (default: DEFAULT_RETRY_DELAY_MINUTES)
 
         Returns:
@@ -606,6 +649,8 @@ class ProgressTracker:
                     if status == self.STATUS_SUCCESS:
                         # Success - job is done
                         job['status'] = self.STATUS_SUCCESS
+                        job['error_category'] = ''
+                        job['error_type'] = ''
                         logger.info(f"Worker {worker_id} completed job {job_id} successfully")
 
                     elif status == self.STATUS_FAILED:
@@ -616,26 +661,31 @@ class ProgressTracker:
                         max_attempts = int(max_attempts_str)
                         job['attempts'] = str(attempts)
 
-                        # Classify the error
-                        error_type = self._classify_error(error)
-                        job['error_type'] = error_type
+                        # Classify the error (use provided values or auto-detect)
+                        if error_category is not None and error_type is not None:
+                            cat, etype = error_category, error_type
+                        else:
+                            cat, etype = self._classify_error(error)
 
-                        if error_type in self.NON_RETRYABLE_ERRORS:
-                            # Non-retryable error - fail permanently
+                        job['error_category'] = cat
+                        job['error_type'] = etype
+
+                        if cat in self.NON_RETRYABLE_CATEGORIES:
+                            # Non-retryable category (account issues) - fail permanently
                             job['status'] = self.STATUS_FAILED
-                            logger.warning(f"Worker {worker_id} job {job_id} FAILED (non-retryable: {error_type})")
+                            logger.warning(f"Worker {worker_id} job {job_id} FAILED (non-retryable: {cat}/{etype})")
 
                         elif attempts >= max_attempts:
                             # Max attempts reached - fail permanently
                             job['status'] = self.STATUS_FAILED
-                            logger.warning(f"Worker {worker_id} job {job_id} FAILED (max attempts {max_attempts} reached)")
+                            logger.warning(f"Worker {worker_id} job {job_id} FAILED (max attempts {max_attempts} reached, {cat}/{etype})")
 
                         else:
                             # Retryable - set to retrying with delay
                             job['status'] = self.STATUS_RETRYING
                             retry_at = datetime.now() + timedelta(minutes=retry_delay_minutes)
                             job['retry_at'] = retry_at.isoformat()
-                            logger.info(f"Worker {worker_id} job {job_id} will RETRY in {retry_delay_minutes} min (attempt {attempts}/{max_attempts})")
+                            logger.info(f"Worker {worker_id} job {job_id} will RETRY in {retry_delay_minutes} min (attempt {attempts}/{max_attempts}, {cat}/{etype})")
 
                     else:
                         # Other status (skipped, etc.)
@@ -798,8 +848,8 @@ class ProgressTracker:
 
         Args:
             include_non_retryable: If True, also retry jobs with non-retryable
-                                   error types (suspended, captcha, loggedout, etc.).
-                                   Default False - only retry jobs with retryable errors.
+                                   error categories (account issues like suspended, banned, etc.).
+                                   Default False - only retry jobs with 'infrastructure' or 'unknown' category.
 
         Returns:
             Number of jobs reset to retrying
@@ -810,11 +860,20 @@ class ProgressTracker:
                 if job.get('status') != self.STATUS_FAILED:
                     continue
 
-                # Check error type
+                # Check error category (new) and error_type (legacy compatibility)
+                error_category = job.get('error_category', '')
                 error_type = job.get('error_type', '')
-                if not include_non_retryable and error_type in self.NON_RETRYABLE_ERRORS:
-                    logger.debug(f"Skipping job {job.get('job_id')} - non-retryable error: {error_type}")
-                    continue
+
+                # Skip non-retryable unless explicitly requested
+                if not include_non_retryable:
+                    # New category-based check
+                    if error_category in self.NON_RETRYABLE_CATEGORIES:
+                        logger.debug(f"Skipping job {job.get('job_id')} - non-retryable category: {error_category}/{error_type}")
+                        continue
+                    # Legacy error_type check for backward compatibility
+                    if error_type in self.NON_RETRYABLE_ERRORS:
+                        logger.debug(f"Skipping job {job.get('job_id')} - non-retryable error: {error_type}")
+                        continue
 
                 # Reset job for retry
                 job['status'] = self.STATUS_RETRYING
@@ -822,9 +881,10 @@ class ProgressTracker:
                 job['retry_at'] = ''  # Clear retry delay - ready immediately
                 job['worker_id'] = ''  # Clear worker assignment
                 job['completed_at'] = ''  # Clear completion time
-                # Note: We keep error_type for logging, it will be overwritten on next failure
+                # Note: We keep error_category/error_type for logging, will be overwritten on next failure
                 count += 1
-                logger.info(f"Job {job.get('job_id')} reset to RETRYING (was: {error_type or 'retryable error'})")
+                cat_info = f"{error_category}/{error_type}" if error_category else (error_type or 'unknown')
+                logger.info(f"Job {job.get('job_id')} reset to RETRYING (was: {cat_info})")
 
             if count > 0:
                 logger.info(f"Reset {count} failed jobs to RETRYING status")
@@ -910,6 +970,43 @@ class ProgressTracker:
             if status in stats:
                 stats[status] += 1
         return stats
+
+    def get_failure_stats(self) -> Dict[str, Dict[str, int]]:
+        """
+        Get failure statistics broken down by error category and type.
+
+        Returns:
+            Dict with structure:
+            {
+                'by_category': {'account': 5, 'infrastructure': 3, 'unknown': 1},
+                'by_type': {'suspended': 2, 'adb_timeout': 3, ...},
+                'account_failures': 5,  # Total non-retryable
+                'infrastructure_failures': 3,  # Total retryable
+                'unknown_failures': 1
+            }
+        """
+        jobs = self._read_all_jobs()
+        by_category = {}
+        by_type = {}
+
+        for job in jobs:
+            if job.get('status') != self.STATUS_FAILED:
+                continue
+
+            category = job.get('error_category', 'unknown') or 'unknown'
+            error_type = job.get('error_type', '') or 'unclassified'
+
+            by_category[category] = by_category.get(category, 0) + 1
+            if error_type:
+                by_type[error_type] = by_type.get(error_type, 0) + 1
+
+        return {
+            'by_category': by_category,
+            'by_type': by_type,
+            'account_failures': by_category.get('account', 0),
+            'infrastructure_failures': by_category.get('infrastructure', 0),
+            'unknown_failures': by_category.get('unknown', 0)
+        }
 
     def get_worker_stats(self) -> Dict[int, Dict[str, int]]:
         """Get statistics per worker."""

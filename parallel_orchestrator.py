@@ -51,6 +51,7 @@ from parallel_config import ParallelConfig, get_config, print_config
 from progress_tracker import ProgressTracker
 from appium_server_manager import cleanup_all_appium_servers, check_all_appium_servers
 from geelark_client import GeelarkClient
+from retry_manager import RetryPassManager, RetryConfig, PassResult
 
 
 # Setup logging
@@ -830,10 +831,11 @@ def run_parallel_posting(
     force_kill_ports: bool = False,
     accounts: List[str] = None,
     retry_all_failed: bool = True,
-    retry_include_non_retryable: bool = False
+    retry_include_non_retryable: bool = False,
+    retry_config: RetryConfig = None
 ) -> Dict:
     """
-    Main entry point to run parallel posting.
+    Main entry point to run parallel posting with multi-pass retry.
 
     Args:
         num_workers: Number of parallel workers
@@ -841,16 +843,23 @@ def run_parallel_posting(
         force_reseed: Force reseed progress file even if it exists
         force_kill_ports: Force kill processes blocking required ports
         accounts: List of accounts to use (required for distribution)
+        retry_all_failed: If True, retry failed jobs from previous runs
+        retry_include_non_retryable: If True, also retry non-retryable errors
+        retry_config: RetryConfig for multi-pass retry behavior
 
     Returns:
         Dict with results: {success_count, failed_count, ...}
     """
-    global _active_config
+    global _active_config, _shutdown_requested
 
     setup_signal_handlers()
 
     config = get_config(num_workers=num_workers)
     _active_config = config  # Store for signal handler
+
+    # Use default retry config if not provided
+    if retry_config is None:
+        retry_config = RetryConfig()
 
     # CRITICAL: Check for other running orchestrators BEFORE anything else
     # Multiple orchestrators = race conditions = duplicate posts
@@ -917,25 +926,69 @@ def run_parallel_posting(
     stats = tracker.get_stats()
     logger.info(f"Starting with {stats['pending']} pending jobs")
 
-    # Start workers
-    processes = start_all_workers(config)
+    # Initialize retry pass manager
+    retry_mgr = RetryPassManager(tracker, retry_config)
 
-    # Monitor until complete
     try:
-        monitor_workers(processes, config)
+        # Multi-pass retry loop
+        result = PassResult.RETRYABLE_REMAINING
+
+        while result == PassResult.RETRYABLE_REMAINING and not _shutdown_requested:
+            # Start new pass
+            pass_num = retry_mgr.start_new_pass()
+
+            # Start workers for this pass
+            processes = start_all_workers(config)
+
+            # Monitor until pass complete
+            monitor_workers(processes, config)
+
+            # If shutdown requested, break out of retry loop
+            if _shutdown_requested:
+                logger.info("Shutdown requested, stopping retry loop")
+                break
+
+            # End pass and decide what to do next
+            result = retry_mgr.end_pass()
+
+            if result == PassResult.RETRYABLE_REMAINING:
+                logger.info(f"Waiting {retry_config.retry_delay_seconds}s before next pass...")
+                for _ in range(retry_config.retry_delay_seconds):
+                    if _shutdown_requested:
+                        break
+                    time.sleep(1)
+
+        # Log final result
+        if result == PassResult.ALL_COMPLETE:
+            logger.info("All jobs completed successfully!")
+        elif result == PassResult.ONLY_NON_RETRYABLE:
+            logger.info("Stopped: Only non-retryable account failures remain")
+        elif result == PassResult.MAX_PASSES_REACHED:
+            logger.info(f"Stopped: Max passes ({retry_config.max_passes}) reached")
+
     finally:
         # FULL CLEANUP on exit - stop phones, free ports, clear ADB
         full_cleanup(config)
 
     # Final stats
     final_stats = tracker.get_stats()
+    failure_stats = tracker.get_failure_stats()
+
     logger.info("="*60)
     logger.info("FINAL RESULTS")
     logger.info(f"  Success:  {final_stats['success']}")
     logger.info(f"  Failed:   {final_stats['failed']}")
+    logger.info(f"    - Account issues: {failure_stats['account_failures']}")
+    logger.info(f"    - Infrastructure: {failure_stats['infrastructure_failures']}")
+    logger.info(f"    - Unknown: {failure_stats['unknown_failures']}")
     logger.info(f"  Retrying: {final_stats.get('retrying', 0)}")
     logger.info(f"  Pending:  {final_stats['pending']}")
+    logger.info(f"  Total passes: {retry_mgr.current_pass}")
     logger.info("="*60)
+
+    # Add retry summary to results
+    final_stats['retry_summary'] = retry_mgr.get_summary()
+    final_stats['failure_breakdown'] = failure_stats
 
     return final_stats
 
@@ -985,6 +1038,16 @@ Examples:
                         help='Reset all failed jobs back to retrying status (runs automatically with --run)')
     parser.add_argument('--retry-include-non-retryable', action='store_true',
                         help='When retrying, also include non-retryable errors (logged out, suspended, etc.)')
+
+    # Multi-pass retry configuration
+    parser.add_argument('--max-passes', type=int, default=3,
+                        help='Maximum number of retry passes (default: 3)')
+    parser.add_argument('--retry-delay', type=int, default=30,
+                        help='Delay in seconds between retry passes (default: 30)')
+    parser.add_argument('--infra-retry-limit', type=int, default=3,
+                        help='Max retries per job for infrastructure errors (default: 3)')
+    parser.add_argument('--no-retry-unknown', action='store_true',
+                        help='Do NOT retry jobs with unknown/unclassified errors (default: retry them)')
 
     args = parser.parse_args()
 
@@ -1053,6 +1116,19 @@ Examples:
             logger.error("  Then run normally without --force-reseed")
             sys.exit(1)
 
+        # Create RetryConfig from CLI args
+        retry_cfg = RetryConfig(
+            max_passes=args.max_passes,
+            retry_delay_seconds=args.retry_delay,
+            infrastructure_retry_limit=args.infra_retry_limit,
+            unknown_error_is_retryable=not args.no_retry_unknown
+        )
+
+        logger.info(f"Retry config: max_passes={retry_cfg.max_passes}, "
+                   f"retry_delay={retry_cfg.retry_delay_seconds}s, "
+                   f"infra_limit={retry_cfg.infrastructure_retry_limit}, "
+                   f"retry_unknown={retry_cfg.unknown_error_is_retryable}")
+
         results = run_parallel_posting(
             num_workers=args.workers,
             state_file=args.state_file,
@@ -1060,7 +1136,8 @@ Examples:
             force_kill_ports=args.force_kill_ports,
             accounts=accounts_list,
             retry_all_failed=True,  # Always retry failed jobs on start
-            retry_include_non_retryable=args.retry_include_non_retryable
+            retry_include_non_retryable=args.retry_include_non_retryable,
+            retry_config=retry_cfg
         )
         if results.get('error'):
             sys.exit(1)

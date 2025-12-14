@@ -90,8 +90,14 @@ Instagram posting flow:
    - Some have "Create" in bottom nav bar
    - Some have "Create New" in top left corner (only visible from Profile tab)
    - If you don't see Create, tap "Profile" tab first to find "Create New"
-2. Select "Reel" option if a menu appears
-3. Select the video from gallery (look for video thumbnails, usually most recent)
+2. Select "Reel" option if a menu appears (this is the initial type selection)
+3. CRITICAL - Gallery/Video Selection Screen:
+   - When you see "New reel" title and video thumbnails with POST/STORY/REEL tabs at bottom:
+   - PRIORITY: Tap a VIDEO THUMBNAIL in the gallery, NOT the mode selector tabs at bottom
+   - Select the FIRST/TOP-LEFT video thumbnail - it's the most recently uploaded
+   - The POST/STORY/REEL tabs are mode selectors - if already selected, tapping them does nothing
+   - To ensure REEL mode: tap POST, then STORY, then REEL (cycle through all to guarantee selection)
+   - NEVER tap the same mode tab twice in a row - this causes infinite loops
 4. Tap "Next" to proceed to editing
 5. Tap "Next" again to proceed to sharing
 6. When you see the caption field ("Write a caption" or similar), return "type" action with the caption text
