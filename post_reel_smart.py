@@ -419,6 +419,12 @@ class SmartInstagramPoster:
 
         # Error patterns to detect
         error_patterns = {
+            'terminated': [
+                'we disabled your account',
+                'your account has been permanently disabled',
+                'you no longer have access to',
+                'all your information will be permanently deleted',
+            ],
             'suspended': [
                 'account has been suspended',
                 'account has been disabled',

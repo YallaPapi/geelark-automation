@@ -95,6 +95,8 @@ class ProgressTracker:
     # Maps category -> error_type -> list of substrings to match in error message
     ERROR_CATEGORIES = {
         'account': {  # Non-retryable - permanent account issues
+            'terminated': ['we disabled your account', 'permanently disabled',
+                          'no longer have access to', 'permanently deleted'],
             'suspended': ['suspended', 'account has been suspended', 'your account is suspended'],
             'disabled': ['disabled', 'your account has been disabled', 'account disabled'],
             'verification': ['verify your identity', 'verification required', 'security check',
@@ -124,7 +126,7 @@ class ProgressTracker:
 
     # Legacy NON_RETRYABLE_ERRORS set (for backward compatibility)
     # All error types under 'account' category are non-retryable
-    NON_RETRYABLE_ERRORS = {'suspended', 'disabled', 'verification', 'logged_out',
+    NON_RETRYABLE_ERRORS = {'terminated', 'suspended', 'disabled', 'verification', 'logged_out',
                             'action_blocked', 'banned'}
 
     # Default retry settings
