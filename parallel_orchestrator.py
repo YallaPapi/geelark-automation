@@ -44,7 +44,7 @@ from datetime import datetime
 from typing import List, Optional, Dict, Tuple
 
 # Import centralized config and set up environment FIRST
-from config import Config, CampaignConfig, setup_environment
+from config import Config, CampaignConfig, PostingContext, setup_environment
 setup_environment()
 
 from parallel_config import ParallelConfig, get_config, print_config
@@ -503,7 +503,7 @@ def disconnect_all_adb() -> None:
         logger.warning(f"Error disconnecting ADB: {e}")
 
 
-def reset_day(progress_file: str, archive_dir: str = None) -> Tuple[bool, str]:
+def reset_day_ctx(ctx: PostingContext, archive_dir: str = None) -> Tuple[bool, str]:
     """
     Reset for a new day by archiving the current progress file.
 
@@ -516,14 +516,16 @@ def reset_day(progress_file: str, archive_dir: str = None) -> Tuple[bool, str]:
     3. Create fresh progress CSV with headers only
 
     Args:
-        progress_file: Path to progress CSV
+        ctx: PostingContext with progress_file path
         archive_dir: Optional directory for archives (default: same as progress file)
 
     Returns:
         (success: bool, message: str)
     """
-    # Check for running orchestrators first
-    has_conflicts, conflicts = check_for_running_orchestrators()
+    progress_file = ctx.progress_file
+
+    # Check for running orchestrators first (campaign-aware)
+    has_conflicts, conflicts = check_for_running_orchestrators(ctx.campaign_name)
     if has_conflicts:
         return False, f"Cannot reset while orchestrator(s) running: {conflicts}"
 
@@ -551,7 +553,7 @@ def reset_day(progress_file: str, archive_dir: str = None) -> Tuple[bool, str]:
         # Read final stats before archiving
         tracker = ProgressTracker(progress_file)
         stats = tracker.get_stats()
-        logger.info(f"Archiving progress file with stats: {stats}")
+        logger.info(f"Archiving progress file for {ctx.describe()} with stats: {stats}")
 
         # Move (atomic rename where possible)
         shutil.move(progress_file, archive_path)
@@ -569,10 +571,54 @@ def reset_day(progress_file: str, archive_dir: str = None) -> Tuple[bool, str]:
             writer.writeheader()
         logger.info(f"Created fresh progress file: {progress_file}")
 
-        return True, f"Archived to {archive_path}, fresh progress file created"
+        return True, f"Reset complete for {ctx.describe()}. Archived to {archive_path}"
 
     except Exception as e:
         return False, f"Reset failed: {e}"
+
+
+def reset_day(progress_file: str, archive_dir: str = None) -> Tuple[bool, str]:
+    """
+    Legacy wrapper for reset_day_ctx.
+
+    DEPRECATED: Use reset_day_ctx(ctx) instead for campaign-aware resets.
+    """
+    ctx = PostingContext.legacy(progress_file=progress_file)
+    return reset_day_ctx(ctx, archive_dir)
+
+
+def retry_all_failed_ctx(
+    ctx: PostingContext,
+    include_non_retryable: bool = False
+) -> int:
+    """
+    Reset all failed jobs back to retrying status.
+
+    Args:
+        ctx: PostingContext with progress_file path
+        include_non_retryable: Include non-retryable errors (logged out, suspended, etc.)
+
+    Returns:
+        Number of jobs reset to retrying
+    """
+    if not os.path.exists(ctx.progress_file):
+        logger.error(f"Progress file not found: {ctx.progress_file}")
+        return 0
+
+    tracker = ProgressTracker(ctx.progress_file)
+    stats_before = tracker.get_stats()
+
+    logger.info(f"Retrying failed jobs for {ctx.describe()}")
+    logger.info(f"Current: {stats_before['failed']} failed, {stats_before.get('retrying', 0)} retrying")
+
+    count = tracker.retry_all_failed(include_non_retryable=include_non_retryable)
+
+    if count > 0:
+        stats_after = tracker.get_stats()
+        logger.info(f"Reset {count} jobs to retrying")
+        logger.info(f"New: {stats_after['failed']} failed, {stats_after.get('retrying', 0)} retrying")
+
+    return count
 
 
 def validate_progress_file(progress_file: str) -> bool:
@@ -681,53 +727,80 @@ def full_cleanup(
     logger.info("="*60)
 
 
-def seed_progress_file(
-    config: ParallelConfig,
-    state_file: str = "scheduler_state.json",
-    accounts_filter: List[str] = None
+def seed_progress_file_ctx(
+    ctx: PostingContext,
+    parallel_config: ParallelConfig,
+    force_reseed: bool = False,
 ) -> int:
     """
-    Seed the progress file from scheduler state.
+    Seed progress file from campaign or legacy state.
 
     Args:
-        config: Parallel config
-        state_file: Path to scheduler_state.json
-        accounts_filter: Optional list of accounts to include
+        ctx: PostingContext with all paths and settings
+        parallel_config: Worker configuration
+        force_reseed: If True, overwrite existing progress file
 
     Returns:
         Number of jobs seeded
     """
-    logger.info(f"Seeding progress file from {state_file}...")
+    tracker = ProgressTracker(ctx.progress_file)
 
-    if not os.path.exists(state_file):
-        logger.error(f"State file not found: {state_file}")
-        return 0
-
-    tracker = ProgressTracker(config.progress_file)
-
-    # Check if progress file already exists with pending jobs
-    if tracker.exists():
+    # Check existing file
+    if tracker.exists() and not force_reseed:
         stats = tracker.get_stats()
         if stats['pending'] > 0 or stats['claimed'] > 0:
             logger.warning(f"Progress file already has {stats['pending']} pending, {stats['claimed']} claimed jobs")
             logger.warning("Use --force-reseed to overwrite")
             return 0
 
+    logger.info(f"Seeding progress file for {ctx.describe()}...")
+
     try:
-        # redistribute=False preserves original job order and account assignments
-        # Account-level locking in claim_next_job handles conflict prevention
-        # Pass max_posts_per_account_per_day from config for daily limit enforcement
-        count = tracker.seed_from_scheduler_state(
-            state_file,
-            accounts_filter,
-            redistribute=False,
-            max_posts_per_account_per_day=config.max_posts_per_account_per_day
-        )
-        logger.info(f"Seeded {count} jobs (max {config.max_posts_per_account_per_day} posts/account/day)")
+        if ctx.is_campaign_mode():
+            # Campaign mode: seed from captions CSV
+            count = tracker.seed_from_campaign(
+                ctx.campaign_config,
+                max_posts_per_account_per_day=ctx.max_posts_per_account_per_day
+            )
+        else:
+            # Legacy mode: seed from scheduler_state.json
+            if not ctx.state_file or not os.path.exists(ctx.state_file):
+                logger.error(f"State file not found: {ctx.state_file}")
+                return 0
+
+            accounts = ctx.get_accounts()
+            count = tracker.seed_from_scheduler_state(
+                ctx.state_file,
+                accounts,
+                redistribute=False,
+                max_posts_per_account_per_day=ctx.max_posts_per_account_per_day
+            )
+
+        logger.info(f"Seeded {count} jobs (max {ctx.max_posts_per_account_per_day} posts/account/day)")
         return count
     except Exception as e:
         logger.error(f"Error seeding: {e}")
+        import traceback
+        traceback.print_exc()
         return 0
+
+
+def seed_progress_file(
+    config: ParallelConfig,
+    state_file: str = "scheduler_state.json",
+    accounts_filter: List[str] = None
+) -> int:
+    """
+    Legacy wrapper for seed_progress_file_ctx.
+
+    DEPRECATED: Use seed_progress_file_ctx(ctx, parallel_config) instead.
+    """
+    ctx = PostingContext.legacy(
+        progress_file=config.progress_file,
+        state_file=state_file,
+        max_posts_per_account_per_day=config.max_posts_per_account_per_day
+    )
+    return seed_progress_file_ctx(ctx, config, force_reseed=False)
 
 
 def start_worker_process(worker_id: int, config: ParallelConfig) -> subprocess.Popen:
@@ -872,17 +945,23 @@ def monitor_workers(processes: List[subprocess.Popen], config: ParallelConfig) -
         stop_all_workers(processes, timeout=config.shutdown_timeout)
 
 
-def show_status(config: ParallelConfig) -> None:
-    """Show current status of progress and Appium servers."""
+def show_status_ctx(ctx: PostingContext, parallel_config: ParallelConfig) -> None:
+    """
+    Show current status of progress and resources.
+
+    Args:
+        ctx: PostingContext for file paths
+        parallel_config: Worker configuration
+    """
     print("\n" + "="*60)
-    print("PARALLEL POSTING STATUS")
+    print(f"PARALLEL POSTING STATUS - {ctx.describe()}")
     print("="*60)
 
     # Progress stats
-    tracker = ProgressTracker(config.progress_file)
+    tracker = ProgressTracker(ctx.progress_file)
     if tracker.exists():
         stats = tracker.get_stats()
-        print(f"\nProgress ({config.progress_file}):")
+        print(f"\nProgress ({ctx.progress_file}):")
         print(f"  Total jobs:  {stats['total']}")
         print(f"  Pending:     {stats['pending']}")
         print(f"  In-progress: {stats['claimed']}")
@@ -901,12 +980,22 @@ def show_status(config: ParallelConfig) -> None:
             for wid, ws in sorted(worker_stats.items()):
                 print(f"    Worker {wid}: {ws['success']} success, {ws['failed']} failed")
     else:
-        print(f"\nProgress file not found: {config.progress_file}")
+        print(f"\nProgress file not found: {ctx.progress_file}")
         print("  Run with --seed-only or --run to create it")
+
+    # If campaign mode, show campaign-specific info
+    if ctx.is_campaign_mode():
+        print(f"\nCampaign Info:")
+        print(f"  Name: {ctx.campaign_name}")
+        print(f"  Videos: {ctx.videos_dir}")
+        try:
+            print(f"  Accounts: {len(ctx.get_accounts())}")
+        except Exception:
+            print(f"  Accounts: (error reading)")
 
     # Appium server status
     print("\nAppium Servers:")
-    appium_status = check_all_appium_servers(config)
+    appium_status = check_all_appium_servers(parallel_config)
     for wid, status in sorted(appium_status.items()):
         state = "RUNNING" if status['healthy'] else "NOT RUNNING"
         print(f"  Worker {wid}: port {status['port']} - {state}")
@@ -917,75 +1006,106 @@ def show_status(config: ParallelConfig) -> None:
         client = GeelarkClient()
         result = client.list_phones(page_size=100)
         running = [p for p in result.get('items', []) if p.get('status') == 1]
-        if running:
-            for phone in running:
-                print(f"  RUNNING: {phone.get('serialName', 'unknown')}")
+
+        # If campaign mode, highlight which phones are in the campaign
+        if ctx.is_campaign_mode():
+            try:
+                campaign_accounts = set(ctx.get_accounts())
+            except Exception:
+                campaign_accounts = set()
+
+            if running:
+                campaign_phones = [p for p in running if p.get('serialName', '') in campaign_accounts]
+                other_phones = [p for p in running if p.get('serialName', '') not in campaign_accounts]
+
+                if campaign_phones:
+                    print(f"  Campaign phones ({len(campaign_phones)}):")
+                    for phone in campaign_phones:
+                        print(f"    RUNNING: {phone.get('serialName', 'unknown')}")
+
+                if other_phones:
+                    print(f"  Other phones ({len(other_phones)}):")
+                    for phone in other_phones:
+                        print(f"    RUNNING: {phone.get('serialName', 'unknown')}")
+
+                if not campaign_phones and not other_phones:
+                    print("  No phones currently running")
+            else:
+                print("  No phones currently running")
         else:
-            print("  No phones currently running")
+            if running:
+                for phone in running:
+                    print(f"  RUNNING: {phone.get('serialName', 'unknown')}")
+            else:
+                print("  No phones currently running")
     except Exception as e:
         print(f"  Error checking phones: {e}")
 
     print("="*60 + "\n")
 
 
-def run_parallel_posting(
+def show_status(config: ParallelConfig) -> None:
+    """
+    Legacy wrapper for show_status_ctx.
+
+    DEPRECATED: Use show_status_ctx(ctx, parallel_config) instead.
+    """
+    ctx = PostingContext.legacy(progress_file=config.progress_file)
+    show_status_ctx(ctx, config)
+
+
+def run_parallel_posting_ctx(
+    ctx: PostingContext,
     num_workers: int = 3,
-    state_file: str = "scheduler_state.json",
     force_reseed: bool = False,
-    force_kill_ports: bool = False,
-    accounts: List[str] = None,
     retry_all_failed: bool = True,
     retry_include_non_retryable: bool = False,
     retry_config: RetryConfig = None,
-    campaign_config: 'CampaignConfig' = None
 ) -> Dict:
     """
-    Main entry point to run parallel posting with multi-pass retry.
+    Main entry point for parallel posting with PostingContext.
 
     Args:
+        ctx: PostingContext (campaign or legacy)
         num_workers: Number of parallel workers
-        state_file: Path to scheduler state file
-        force_reseed: Force reseed progress file even if it exists
-        force_kill_ports: Force kill processes blocking required ports
-        accounts: List of accounts to use (required for distribution)
-        retry_all_failed: If True, retry failed jobs from previous runs
-        retry_include_non_retryable: If True, also retry non-retryable errors
-        retry_config: RetryConfig for multi-pass retry behavior
-        campaign_config: Optional CampaignConfig for campaign-based seeding
+        force_reseed: Force reseed progress file
+        retry_all_failed: Retry failed jobs from previous runs
+        retry_include_non_retryable: Include non-retryable in retry
+        retry_config: Multi-pass retry configuration
 
     Returns:
-        Dict with results: {success_count, failed_count, ...}
+        Dict with results
     """
     global _active_config, _shutdown_requested, _active_campaign_accounts
 
     setup_signal_handlers()
 
-    config = get_config(num_workers=num_workers)
+    parallel_config = get_config(num_workers=num_workers)
+    parallel_config.progress_file = ctx.progress_file
 
-    # Override progress file and set campaign accounts if campaign is specified
-    campaign_accounts = None
-    if campaign_config:
-        config.progress_file = campaign_config.progress_file
-        campaign_accounts = campaign_config.get_accounts()
-        _active_campaign_accounts = campaign_accounts  # Store globally for emergency cleanup
-        logger.info(f"Using campaign '{campaign_config.name}' with {len(campaign_accounts)} accounts")
-        logger.info(f"  Progress file: {config.progress_file}")
+    # Store for emergency cleanup
+    campaign_accounts = ctx.get_accounts() if ctx.is_campaign_mode() else None
+    _active_campaign_accounts = campaign_accounts
 
-    _active_config = config  # Store for signal handler
+    logger.info(f"Starting posting for {ctx.describe()}")
+    logger.info(f"  Progress file: {ctx.progress_file}")
+    try:
+        logger.info(f"  Accounts: {len(ctx.get_accounts())}")
+    except Exception:
+        pass
+
+    _active_config = parallel_config  # Store for signal handler
 
     # Use default retry config if not provided
     if retry_config is None:
         retry_config = RetryConfig()
 
     # CRITICAL: Check for other running orchestrators BEFORE anything else
-    # Multiple orchestrators for the SAME campaign = race conditions = duplicate posts
-    # Different campaigns CAN run concurrently (they have separate progress files)
-    campaign_name_for_check = campaign_config.name if campaign_config else None
-    logger.info(f"Checking for conflicting orchestrators (campaign: {campaign_name_for_check or 'none'})...")
-    has_conflicts, conflicts = check_for_running_orchestrators(campaign_name_for_check)
+    logger.info(f"Checking for conflicting orchestrators (campaign: {ctx.campaign_name or 'none'})...")
+    has_conflicts, conflicts = check_for_running_orchestrators(ctx.campaign_name)
     if has_conflicts:
         logger.error("="*60)
-        logger.error("CONFLICT: Another orchestrator is running for this campaign!")
+        logger.error("CONFLICT: Another orchestrator is running!")
         logger.error("="*60)
         for conflict in conflicts:
             logger.error(f"  - {conflict}")
@@ -996,26 +1116,25 @@ def run_parallel_posting(
         logger.error("  - Accounts exceeding daily post limits")
         logger.error("")
         logger.error("Please stop the other orchestrator first, or use --stop-all")
-        if campaign_config:
-            logger.error(f"NOTE: Different campaigns can run concurrently.")
+        if ctx.is_campaign_mode():
+            logger.error("NOTE: Different campaigns can run concurrently.")
         logger.error("="*60)
         return {'error': 'orchestrator_conflict', 'conflicts': conflicts}
     logger.info("No conflicting orchestrators found")
 
-    print_config(config)
+    print_config(parallel_config)
 
     # Ensure logs directory exists
-    config.ensure_logs_dir()
+    parallel_config.ensure_logs_dir()
 
     # CLEANUP at startup - stop phones, kill ports, clear stale ADB
     # If campaign specified, only stop campaign phones (not VA phones)
-    full_cleanup(config, campaign_accounts=campaign_accounts)
+    full_cleanup(parallel_config, campaign_accounts=campaign_accounts)
 
     # Seed progress file
-    tracker = ProgressTracker(config.progress_file)
+    tracker = ProgressTracker(ctx.progress_file)
 
     # CRITICAL: Retry all failed jobs from previous runs
-    # This ensures jobs that failed before get another chance
     if retry_all_failed and tracker.exists():
         stats_before = tracker.get_stats()
         if stats_before['failed'] > 0:
@@ -1029,33 +1148,22 @@ def run_parallel_posting(
 
     if force_reseed and tracker.exists():
         logger.info("Force reseeding - removing existing progress file")
-        os.remove(config.progress_file)
-        if os.path.exists(config.progress_file + '.lock'):
-            os.remove(config.progress_file + '.lock')
+        os.remove(ctx.progress_file)
+        if os.path.exists(ctx.progress_file + '.lock'):
+            os.remove(ctx.progress_file + '.lock')
 
     if not tracker.exists() or force_reseed:
-        if campaign_config:
-            # Seed from campaign
-            count = tracker.seed_from_campaign(
-                campaign_config,
-                max_posts_per_account_per_day=config.max_posts_per_account_per_day
-            )
-            if count == 0:
-                logger.error(f"No jobs to process. Check campaign folder: {campaign_config.base_dir}")
-                return {'error': 'no_jobs'}
-        else:
-            # Legacy: seed from scheduler_state.json
-            if not accounts:
-                logger.error("No accounts specified. Use --accounts phone1,phone2 to specify accounts")
-                return {'error': 'no_accounts'}
-            count = seed_progress_file(config, state_file, accounts)
-            if count == 0:
-                logger.error("No jobs to process. Check scheduler_state.json")
-                return {'error': 'no_jobs'}
+        count = seed_progress_file_ctx(ctx, parallel_config, force_reseed)
+        if count == 0:
+            if ctx.is_campaign_mode():
+                logger.error(f"No jobs to process. Check campaign folder: {ctx.campaign_config.base_dir}")
+            else:
+                logger.error("No jobs to process. Check scheduler_state.json and accounts.txt")
+            return {'error': 'no_jobs'}
 
     # Show initial stats
     stats = tracker.get_stats()
-    logger.info(f"Starting with {stats['pending']} pending jobs")
+    logger.info(f"Starting with {stats['pending']} pending jobs for {ctx.describe()}")
 
     # Initialize retry pass manager
     retry_mgr = RetryPassManager(tracker, retry_config)
@@ -1069,10 +1177,10 @@ def run_parallel_posting(
             pass_num = retry_mgr.start_new_pass()
 
             # Start workers for this pass
-            processes = start_all_workers(config)
+            processes = start_all_workers(parallel_config)
 
             # Monitor until pass complete
-            monitor_workers(processes, config)
+            monitor_workers(processes, parallel_config)
 
             # If shutdown requested, break out of retry loop
             if _shutdown_requested:
@@ -1099,7 +1207,7 @@ def run_parallel_posting(
 
     finally:
         # CLEANUP on exit - stop campaign phones, free ports, clear ADB
-        full_cleanup(config, campaign_accounts=campaign_accounts)
+        full_cleanup(parallel_config, campaign_accounts=campaign_accounts)
         _active_campaign_accounts = None  # Clear global
 
     # Final stats
@@ -1107,7 +1215,7 @@ def run_parallel_posting(
     failure_stats = tracker.get_failure_stats()
 
     logger.info("="*60)
-    logger.info("FINAL RESULTS")
+    logger.info(f"FINAL RESULTS - {ctx.describe()}")
     logger.info(f"  Success:  {final_stats['success']}")
     logger.info(f"  Failed:   {final_stats['failed']}")
     logger.info(f"    - Account issues: {failure_stats['account_failures']}")
@@ -1125,8 +1233,109 @@ def run_parallel_posting(
     return final_stats
 
 
+def run_parallel_posting(
+    num_workers: int = 3,
+    state_file: str = "scheduler_state.json",
+    force_reseed: bool = False,
+    force_kill_ports: bool = False,
+    accounts: List[str] = None,
+    retry_all_failed: bool = True,
+    retry_include_non_retryable: bool = False,
+    retry_config: RetryConfig = None,
+    campaign_config: 'CampaignConfig' = None
+) -> Dict:
+    """
+    Legacy wrapper for run_parallel_posting_ctx.
+
+    DEPRECATED: Use run_parallel_posting_ctx(ctx, ...) instead for cleaner code.
+    """
+    # Build context based on parameters
+    if campaign_config:
+        ctx = PostingContext.from_campaign(campaign_config)
+    else:
+        ctx = PostingContext.legacy(
+            progress_file=Config.PROGRESS_FILE,
+            state_file=state_file,
+        )
+
+    return run_parallel_posting_ctx(
+        ctx=ctx,
+        num_workers=num_workers,
+        force_reseed=force_reseed,
+        retry_all_failed=retry_all_failed,
+        retry_include_non_retryable=retry_include_non_retryable,
+        retry_config=retry_config,
+    )
+
+
+def load_campaign_or_exit(campaign_arg: str) -> CampaignConfig:
+    """
+    Load campaign config or exit with error.
+
+    Args:
+        campaign_arg: Campaign name or path
+
+    Returns:
+        CampaignConfig instance
+    """
+    # Try as name in campaigns/ directory
+    campaign_path = os.path.join(Config.PROJECT_ROOT, Config.CAMPAIGNS_DIR, campaign_arg)
+
+    if not os.path.isdir(campaign_path):
+        # Try as direct path
+        campaign_path = campaign_arg
+
+    try:
+        return CampaignConfig.from_folder(campaign_path)
+    except FileNotFoundError:
+        logger.error(f"Campaign folder not found: {campaign_path}")
+        logger.error("Available campaigns:")
+        for c in CampaignConfig.list_campaigns():
+            logger.error(f"  - {c.name}")
+        sys.exit(1)
+    except ValueError as e:
+        logger.error(f"Invalid campaign '{campaign_arg}': {e}")
+        sys.exit(1)
+
+
+def list_campaigns_command():
+    """Handle --list-campaigns command."""
+    campaigns = CampaignConfig.list_campaigns()
+
+    if not campaigns:
+        print("\nNo campaigns found in campaigns/ directory")
+        print("Create a campaign folder with:")
+        print("  - accounts.txt (one account per line)")
+        print("  - captions.csv (filename,post_caption columns)")
+        print("  - videos/ subfolder with .mp4 files")
+        return
+
+    print("\n" + "="*60)
+    print("AVAILABLE CAMPAIGNS")
+    print("="*60)
+
+    for c in campaigns:
+        status = "ENABLED" if c.enabled else "DISABLED"
+        try:
+            accounts = c.get_accounts()
+            account_count = len(accounts)
+        except Exception:
+            account_count = "(error)"
+
+        print(f"\n  {c.name} [{status}]")
+        print(f"    Accounts:     {account_count}")
+        print(f"    Videos:       {c.videos_dir}")
+        print(f"    Captions:     {c.captions_file}")
+        print(f"    Progress:     {c.progress_file}")
+        print(f"    Daily limit:  {c.max_posts_per_account_per_day} posts/account")
+
+    print("\n" + "="*60)
+    print("Usage: python parallel_orchestrator.py --campaign <name> --run")
+    print("="*60 + "\n")
+
+
 def main():
-    """CLI entry point."""
+    """CLI entry point with clean context-based dispatch."""
     parser = argparse.ArgumentParser(
         description='Parallel Posting Orchestrator',
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -1135,8 +1344,14 @@ Examples:
   # Run with 3 workers
   python parallel_orchestrator.py --workers 3 --run
 
+  # Run a specific campaign
+  python parallel_orchestrator.py --campaign viral --workers 5 --run
+
   # Check current status
   python parallel_orchestrator.py --status
+
+  # Check campaign status
+  python parallel_orchestrator.py --campaign viral --status
 
   # Stop everything
   python parallel_orchestrator.py --stop-all
@@ -1189,58 +1404,61 @@ Examples:
 
     args = parser.parse_args()
 
-    # Parse accounts list if provided
-    accounts_list = None
-    if args.accounts:
-        accounts_list = [a.strip() for a in args.accounts.split(',') if a.strip()]
+    parallel_config = get_config(num_workers=args.workers)
 
-    config = get_config(num_workers=args.workers)
-
-    # Handle --list-campaigns
+    # ============================================================
+    # STEP 1: Handle --list-campaigns (no context needed)
+    # ============================================================
     if args.list_campaigns:
-        campaigns = CampaignConfig.list_campaigns()
-        if campaigns:
-            print("\nAvailable campaigns:")
-            print("=" * 60)
-            for c in campaigns:
-                accounts = c.get_accounts()
-                print(f"  {c.name}:")
-                print(f"    Accounts: {len(accounts)}")
-                print(f"    Videos dir: {c.videos_dir}")
-                print(f"    Progress: {c.progress_file}")
-                print()
-        else:
-            print("\nNo campaigns found in campaigns/ directory")
-            print("Create a campaign folder with: accounts.txt, captions.csv, and a videos subfolder")
+        list_campaigns_command()
         sys.exit(0)
 
-    # Load campaign config if --campaign specified
-    campaign_config = None
+    # ============================================================
+    # STEP 2: Build PostingContext (single source of truth)
+    # ============================================================
+    ctx: PostingContext
+
     if args.campaign:
-        campaign_path = os.path.join(Config.PROJECT_ROOT, Config.CAMPAIGNS_DIR, args.campaign)
-        if not os.path.isdir(campaign_path):
-            # Try as direct path
-            campaign_path = args.campaign
-        try:
-            campaign_config = CampaignConfig.from_folder(campaign_path)
-            logger.info(f"Loaded campaign: {campaign_config.name}")
-            logger.info(f"  Accounts: {len(campaign_config.get_accounts())}")
-            logger.info(f"  Videos: {campaign_config.videos_dir}")
-            logger.info(f"  Progress: {campaign_config.progress_file}")
+        # Campaign mode
+        campaign_config = load_campaign_or_exit(args.campaign)
 
-            # Override config values from campaign
-            config.progress_file = campaign_config.progress_file
-            accounts_list = campaign_config.get_accounts()
-
-        except (FileNotFoundError, ValueError) as e:
-            logger.error(f"Failed to load campaign '{args.campaign}': {e}")
+        # Check if campaign is enabled
+        if not campaign_config.enabled:
+            logger.error(f"Campaign '{campaign_config.name}' is disabled")
+            logger.error("Enable it by setting 'enabled: true' in campaign.json")
             sys.exit(1)
+
+        ctx = PostingContext.from_campaign(campaign_config)
+        logger.info(f"Loaded {ctx.describe()}")
+        logger.info(f"  Progress: {ctx.progress_file}")
+        try:
+            logger.info(f"  Accounts: {len(ctx.get_accounts())}")
+        except Exception:
+            pass
+    else:
+        # Legacy mode
+        ctx = PostingContext.legacy(
+            progress_file=Config.PROGRESS_FILE,
+            accounts_file=Config.ACCOUNTS_FILE,
+            state_file=args.state_file,
+        )
+        logger.info(f"Running in {ctx.describe()}")
+
+    # Warn about ignored flags
+    if args.campaign and args.state_file != 'scheduler_state.json':
+        logger.warning("--state-file ignored when --campaign is specified")
+    if args.campaign and args.accounts:
+        logger.warning("--accounts ignored when --campaign is specified (using campaign accounts)")
+
+    # ============================================================
+    # STEP 3: Dispatch to operation (all use ctx)
+    # ============================================================
 
     if args.reset_day:
         logger.info("="*60)
-        logger.info("DAILY RESET - Archiving progress file for new day")
+        logger.info(f"DAILY RESET - Archiving progress file for {ctx.describe()}")
         logger.info("="*60)
-        success, message = reset_day(config.progress_file)
+        success, message = reset_day_ctx(ctx)
         if success:
             logger.info(message)
             logger.info("Ready for new day. Run with --run to start posting.")
@@ -1249,58 +1467,34 @@ Examples:
             sys.exit(1)
 
     elif args.retry_all_failed:
-        # Standalone retry-all-failed command
-        if not os.path.exists(config.progress_file):
-            logger.error(f"Progress file not found: {config.progress_file}")
-            sys.exit(1)
-
-        tracker = ProgressTracker(config.progress_file)
-        stats_before = tracker.get_stats()
-        logger.info(f"Current stats: {stats_before['failed']} failed, {stats_before.get('retrying', 0)} retrying")
-
-        count = tracker.retry_all_failed(include_non_retryable=args.retry_include_non_retryable)
-        if count > 0:
-            stats_after = tracker.get_stats()
-            logger.info(f"Reset {count} failed jobs to retrying status")
-            logger.info(f"New stats: {stats_after['failed']} failed, {stats_after.get('retrying', 0)} retrying")
-        else:
-            logger.info("No failed jobs found to retry")
+        count = retry_all_failed_ctx(ctx, args.retry_include_non_retryable)
+        if count == 0:
+            logger.info("No failed jobs to retry")
 
     elif args.status:
-        show_status(config)
+        show_status_ctx(ctx, parallel_config)
 
     elif args.stop_all:
-        if campaign_config:
-            campaign_accounts = campaign_config.get_accounts()
-            logger.info(f"Stopping campaign '{campaign_config.name}' phones ({len(campaign_accounts)} accounts)...")
-            full_cleanup(config, campaign_accounts=campaign_accounts)
+        if ctx.is_campaign_mode():
+            campaign_accounts = ctx.get_accounts()
+            logger.info(f"Stopping {ctx.describe()} phones ({len(campaign_accounts)} accounts)...")
+            full_cleanup(parallel_config, campaign_accounts=campaign_accounts)
         else:
             logger.info("Stopping ALL phones (no campaign specified)...")
-            full_cleanup(config)
+            full_cleanup(parallel_config)
         logger.info("Done")
 
     elif args.seed_only:
-        if campaign_config:
-            # Seed from campaign
-            tracker = ProgressTracker(config.progress_file)
-            count = tracker.seed_from_campaign(
-                campaign_config,
-                max_posts_per_account_per_day=config.max_posts_per_account_per_day
-            )
-        else:
-            # Seed from scheduler_state.json (legacy)
-            count = seed_progress_file(config, args.state_file, accounts_list)
-
+        count = seed_progress_file_ctx(ctx, parallel_config, args.force_reseed)
         if count > 0:
-            logger.info(f"Progress file ready with {count} jobs")
+            logger.info(f"Progress file ready with {count} jobs for {ctx.describe()}")
         else:
             logger.error("Failed to seed progress file (no jobs created)")
             sys.exit(1)
 
     elif args.run:
         # SAFETY CHECK: --force-reseed requires --reset-day to prevent accidental mid-day reseeds
-        # that could result in duplicate posts or exceeded daily limits
-        if args.force_reseed and os.path.exists(config.progress_file):
+        if args.force_reseed and os.path.exists(ctx.progress_file):
             logger.error("SAFETY: --force-reseed is not allowed when progress file exists!")
             logger.error("  The progress file is the daily ledger and tracks posting limits.")
             logger.error("  Reseeding mid-day can cause duplicate posts and exceed daily limits.")
@@ -1322,16 +1516,13 @@ Examples:
                    f"infra_limit={retry_cfg.infrastructure_retry_limit}, "
                    f"retry_unknown={retry_cfg.unknown_error_is_retryable}")
 
-        results = run_parallel_posting(
+        results = run_parallel_posting_ctx(
+            ctx=ctx,
             num_workers=args.workers,
-            state_file=args.state_file,
             force_reseed=args.force_reseed,
-            force_kill_ports=args.force_kill_ports,
-            accounts=accounts_list,
             retry_all_failed=True,  # Always retry failed jobs on start
             retry_include_non_retryable=args.retry_include_non_retryable,
             retry_config=retry_cfg,
-            campaign_config=campaign_config
         )
         if results.get('error'):
             sys.exit(1)

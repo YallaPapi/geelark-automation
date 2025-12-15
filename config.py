@@ -337,6 +337,136 @@ class CampaignConfig:
         return f"Campaign({self.name}, accounts={self.accounts_file}, videos={self.videos_dir})"
 
 
+@dataclass
+class PostingContext:
+    """
+    Unified context for all posting operations.
+
+    This is the single source of truth for file paths and settings,
+    whether running a campaign or in legacy mode.
+
+    Usage:
+        # Campaign mode
+        campaign = CampaignConfig.from_folder("campaigns/viral")
+        ctx = PostingContext.from_campaign(campaign)
+
+        # Legacy mode
+        ctx = PostingContext.legacy()
+
+        # Use in functions
+        tracker = ProgressTracker(ctx.progress_file)
+        accounts = ctx.get_accounts()
+    """
+
+    # Required paths
+    progress_file: str
+    accounts_file: str
+
+    # Optional paths (campaign mode)
+    state_file: Optional[str] = None
+    videos_dir: Optional[str] = None
+    captions_file: Optional[str] = None
+
+    # Settings
+    max_posts_per_account_per_day: int = 1
+
+    # Source info
+    campaign_name: Optional[str] = None  # None = legacy mode
+    campaign_config: Optional['CampaignConfig'] = None
+
+    @classmethod
+    def from_campaign(cls, campaign: 'CampaignConfig') -> 'PostingContext':
+        """
+        Create context from a CampaignConfig.
+
+        Args:
+            campaign: CampaignConfig loaded from a campaign folder
+
+        Returns:
+            PostingContext with all campaign paths and settings
+        """
+        return cls(
+            progress_file=campaign.progress_file,
+            accounts_file=campaign.accounts_file,
+            state_file=campaign.state_file,
+            videos_dir=campaign.videos_dir,
+            captions_file=campaign.captions_file,
+            max_posts_per_account_per_day=campaign.max_posts_per_account_per_day,
+            campaign_name=campaign.name,
+            campaign_config=campaign,
+        )
+
+    @classmethod
+    def legacy(
+        cls,
+        progress_file: str = None,
+        accounts_file: str = None,
+        state_file: str = None,
+        max_posts_per_account_per_day: int = None,
+    ) -> 'PostingContext':
+        """
+        Create context for legacy (non-campaign) mode.
+
+        Uses default Config values if not specified.
+
+        Args:
+            progress_file: Progress CSV path (default: Config.PROGRESS_FILE)
+            accounts_file: Accounts file path (default: Config.ACCOUNTS_FILE)
+            state_file: State JSON path (default: Config.STATE_FILE)
+            max_posts_per_account_per_day: Daily limit (default: Config.MAX_POSTS_PER_ACCOUNT_PER_DAY)
+
+        Returns:
+            PostingContext for legacy mode
+        """
+        return cls(
+            progress_file=progress_file or Config.PROGRESS_FILE,
+            accounts_file=accounts_file or Config.ACCOUNTS_FILE,
+            state_file=state_file or Config.STATE_FILE,
+            max_posts_per_account_per_day=max_posts_per_account_per_day or Config.MAX_POSTS_PER_ACCOUNT_PER_DAY,
+            campaign_name=None,
+            campaign_config=None,
+        )
+
+    def get_accounts(self) -> List[str]:
+        """
+        Load accounts from the appropriate source.
+
+        Returns:
+            List of account names
+
+        Raises:
+            ValueError: If no accounts found
+        """
+        if self.campaign_config:
+            accounts = self.campaign_config.get_accounts()
+        else:
+            with open(self.accounts_file, 'r', encoding='utf-8') as f:
+                accounts = [line.strip() for line in f if line.strip()]
+
+        if not accounts:
+            raise ValueError(f"No accounts found in {self.accounts_file}")
+
+        return accounts
+
+    def is_campaign_mode(self) -> bool:
+        """Check if running in campaign mode."""
+        return self.campaign_name is not None
+
+    def describe(self) -> str:
+        """
+        Human-readable description of this context.
+
+        Returns:
+            Description string for logging
+        """
+        if self.campaign_name:
+            return f"campaign '{self.campaign_name}'"
+        return "legacy mode (root files)"
+
+    def __str__(self) -> str:
+        return f"PostingContext({self.describe()}, progress={self.progress_file})"
+
+
 def setup_environment() -> None:
     """
     Set up environment variables for Android SDK and ADB.

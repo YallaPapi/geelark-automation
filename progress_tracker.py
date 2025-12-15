@@ -682,12 +682,13 @@ class ProgressTracker:
             if accounts_at_limit:
                 logger.debug(f"Accounts at daily limit ({max_posts_per_account_per_day}): {accounts_at_limit}")
 
-            # Find a pending job that:
+            # Find a pending or retrying job that:
             # 1. HAS an account assigned
             # 2. Account is NOT currently in use
             # 3. Account has NOT hit daily limit (defense in depth)
+            claimable_statuses = {self.STATUS_PENDING, self.STATUS_RETRYING}
             for job in jobs:
-                if job.get('status') == self.STATUS_PENDING:
+                if job.get('status') in claimable_statuses:
                     account = job.get('account', '')
 
                     # Skip jobs without an assigned account (waiting for one to be freed)

@@ -337,9 +337,10 @@ def run_worker(
     try:
         # Main job processing loop
         while not _shutdown_requested:
-            # Check if there are any remaining jobs
+            # Check if there are any remaining jobs (pending, claimed, or retrying)
             progress_stats = tracker.get_stats()
-            if progress_stats['pending'] == 0 and progress_stats['claimed'] == 0:
+            retrying_count = progress_stats.get('retrying', 0)
+            if progress_stats['pending'] == 0 and progress_stats['claimed'] == 0 and retrying_count == 0:
                 logger.info("No more jobs to process, exiting")
                 stats['exit_reason'] = "all_jobs_complete"
                 break
