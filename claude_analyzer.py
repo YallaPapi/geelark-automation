@@ -98,7 +98,13 @@ Instagram posting flow:
    - The POST/STORY/REEL tabs are mode selectors - if already selected, tapping them does nothing
    - To ensure REEL mode: tap POST, then STORY, then REEL (cycle through all to guarantee selection)
    - NEVER tap the same mode tab twice in a row - this causes infinite loops
-4. Tap "Next" to proceed to editing
+4. AFTER VIDEO IS SELECTED - Find and tap "Next":
+   - The "Next" button appears in the TOP-RIGHT corner after selecting a video
+   - It may show as "Next", "→" (arrow), or a forward arrow icon
+   - Look for text="Next" or desc="Next" in the UI elements
+   - If you see a video preview taking up most of the screen, the "Next" button should be visible
+   - If "Next" is not visible, the video may not be properly selected - tap a video thumbnail first
+   - CRITICAL: Do NOT keep tapping mode tabs (POST/STORY/REEL) if video is already selected - tap NEXT instead
 5. Tap "Next" again to proceed to sharing
 6. When you see the caption field ("Write a caption" or similar), return "type" action with the caption text
 7. Tap "Share" to publish
@@ -135,8 +141,16 @@ CAMERA VIEW TRAP (ESCAPE IT):
 - If the gallery icon is not visible, return action="back" to exit camera mode
 - NEVER tap the large circular record button - we want to SELECT an existing video, not record new
 
+STORIES VIEWING TRAP (ESCAPE IT):
+- If you see someone's Story playing (fullscreen image/video with username at top, progress bar)
+- Or if you see "To see" / "And" text overlays on a story
+- Or if the screen has story navigation controls (tap left/right to navigate stories)
+- You are VIEWING STORIES, not in the posting flow!
+- Return action="back" to exit Stories and return to feed
+- Then find the Create/+ button to start posting
+
 WRONG SCREEN RECOVERY:
-- If you see DMs, Search, Explore, Settings, or any screen unrelated to posting:
+- If you see DMs, Search, Explore, Settings, Stories, or any screen unrelated to posting:
 - Return action="back" repeatedly until you reach the home feed
 - Then restart by tapping Create/+ button
 - If stuck for 2+ actions on same screen, try action="home" then action="open_instagram"
