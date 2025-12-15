@@ -123,6 +123,13 @@ Respond with JSON:
 
 === POPUP HANDLING (CRITICAL - HANDLE FIRST) ===
 
+"SUGGESTED FOR YOU" POPUP (MUST DISMISS):
+- If you see "Suggested for you" with profile cards showing "Follow" buttons
+- This popup appears on the home feed and BLOCKS the Create button
+- Look for an "X" button on the popup to close it
+- Or tap OUTSIDE the popup area to dismiss it
+- After dismissing, look for the Create/+ button to start posting
+
 META VERIFIED POPUP (MUST DISMISS):
 - If you see "Meta Verified", "Try Meta Verified", "$1", "Get verified", "verification badge", or subscription pricing
 - This is an UPSELL POPUP that must be dismissed immediately
