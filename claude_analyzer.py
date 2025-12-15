@@ -115,6 +115,34 @@ Respond with JSON:
     "share_clicked": true/false
 }}
 
+=== POPUP HANDLING (CRITICAL - HANDLE FIRST) ===
+
+META VERIFIED POPUP (MUST DISMISS):
+- If you see "Meta Verified", "Try Meta Verified", "$1", "Get verified", "verification badge", or subscription pricing
+- This is an UPSELL POPUP that must be dismissed immediately
+- Look for: "Not now", "Maybe later", "X" close button, or tap OUTSIDE the popup
+- Return action="back" or tap the dismiss/close button to close it
+- NEVER tap "Subscribe", "Get started", or any purchase button
+- After dismissing, continue with the posting flow
+
+CAMERA VIEW TRAP (ESCAPE IT):
+- If you see a full-screen camera viewfinder with a large circular RECORD button at bottom
+- And NO video thumbnail selected, NO "Next" button visible
+- You are in CAMERA MODE and need to access the GALLERY instead
+- LOOK FOR THE GALLERY ICON: There is almost always a small square thumbnail in the BOTTOM-LEFT corner
+- This small square shows the most recent photo/video from the gallery - TAP IT to open the gallery
+- The gallery icon is your PRIMARY escape route - look for it first!
+- If the gallery icon is not visible, return action="back" to exit camera mode
+- NEVER tap the large circular record button - we want to SELECT an existing video, not record new
+
+WRONG SCREEN RECOVERY:
+- If you see DMs, Search, Explore, Settings, or any screen unrelated to posting:
+- Return action="back" repeatedly until you reach the home feed
+- Then restart by tapping Create/+ button
+- If stuck for 2+ actions on same screen, try action="home" then action="open_instagram"
+
+=== STANDARD RULES ===
+
 CRITICAL RULES - NEVER GIVE UP:
 - NEVER return "error". There is no error action. Always try to recover.
 - If you see Play Store, Settings, or any non-Instagram app: return "home" to go back to home screen

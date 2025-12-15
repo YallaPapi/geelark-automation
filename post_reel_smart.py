@@ -401,6 +401,22 @@ class SmartInstagramPoster:
             for e in elements
         ])
 
+        # FIRST: Check for dismissible popups that should NOT be treated as errors
+        # Meta Verified popup - has "meta verified" and subscription language
+        # This is NOT an error - it's just an upsell popup that can be dismissed
+        meta_verified_indicators = [
+            'meta verified',
+            'try meta verified',
+            'get verified',
+            'verification badge',
+            'subscribe for',
+            '$1',  # Common pricing shown
+        ]
+        if any(indicator in all_text for indicator in meta_verified_indicators):
+            # This is Meta Verified popup - NOT an error, return None
+            # The AI will dismiss this popup
+            return (None, None)
+
         # Error patterns to detect
         error_patterns = {
             'suspended': [
@@ -410,10 +426,19 @@ class SmartInstagramPoster:
                 'we suspended your account',
                 'account is disabled',
             ],
+            'id_verification': [
+                'confirm your identity',
+                'upload a photo of your id',
+                'verify your identity',
+                'upload id',
+                'government-issued id',
+                'photo of your id',
+                'we need to verify',
+                'identity verification',
+            ],
             'captcha': [
                 'confirm it\'s you',
                 'we detected unusual activity',
-                'verify your identity',
                 'security check',
                 'enter the code',
                 'we noticed suspicious',
@@ -429,7 +454,6 @@ class SmartInstagramPoster:
             'logged_out': [
                 'log in to instagram',
                 'create new account',
-                'sign up',
                 'don\'t have an account',
             ],
             'app_update': [
@@ -443,6 +467,9 @@ class SmartInstagramPoster:
                 'slow down',
             ],
         }
+
+        # NOTE: 'sign up' removed from logged_out - it triggers false positives
+        # on Meta Verified popup which shows "Sign up" for subscription
 
         for error_type, patterns in error_patterns.items():
             for pattern in patterns:
