@@ -65,21 +65,46 @@ logger = logging.getLogger(__name__)
 _worker_processes: List[subprocess.Popen] = []
 _shutdown_requested = False
 _active_config: Optional[ParallelConfig] = None
+_active_campaign_accounts: Optional[List[str]] = None  # For campaign-specific cleanup
 
 
-def check_for_running_orchestrators() -> Tuple[bool, List[str]]:
+def check_for_running_orchestrators(campaign_name: str = None) -> Tuple[bool, List[str]]:
     """
     Check if other orchestrator processes are running.
 
     CRITICAL: This must be called BEFORE starting any workers.
-    Multiple orchestrators running simultaneously causes race conditions
-    and can result in duplicate posts or accounts getting >1 post per day.
+    Multiple orchestrators running simultaneously for the SAME campaign
+    causes race conditions and can result in duplicate posts.
+
+    Different campaigns CAN run concurrently since they use separate
+    progress files and account lists.
+
+    Args:
+        campaign_name: If specified, only conflict with orchestrators running
+                      the same campaign. If None, conflict with any non-campaign
+                      orchestrator.
 
     Returns:
         (has_conflicts: bool, list of conflicting process descriptions)
     """
+    import re
     current_pid = os.getpid()
     conflicts = []
+
+    def extract_campaign_from_cmdline(cmdline: str) -> Optional[str]:
+        """Extract campaign name from command line if present."""
+        # Match --campaign NAME or -c NAME
+        match = re.search(r'(?:--campaign|-c)\s+(\S+)', cmdline)
+        return match.group(1) if match else None
+
+    def is_conflict(other_campaign: Optional[str]) -> bool:
+        """Check if the other orchestrator conflicts with us."""
+        if campaign_name is None:
+            # We're non-campaign, conflict with other non-campaign
+            return other_campaign is None
+        else:
+            # We're a campaign, only conflict with same campaign
+            return other_campaign == campaign_name
 
     if sys.platform == 'win32':
         try:
@@ -105,7 +130,10 @@ def check_for_running_orchestrators() -> Tuple[bool, List[str]]:
                             break
 
                     if pid and pid != current_pid:
-                        conflicts.append(f"PID {pid}: parallel_orchestrator.py --run")
+                        other_campaign = extract_campaign_from_cmdline(line)
+                        if is_conflict(other_campaign):
+                            campaign_info = f" (campaign: {other_campaign})" if other_campaign else " (no campaign)"
+                            conflicts.append(f"PID {pid}: parallel_orchestrator.py --run{campaign_info}")
 
         except Exception as e:
             logger.warning(f"Could not check for running orchestrators: {e}")
@@ -123,7 +151,10 @@ def check_for_running_orchestrators() -> Tuple[bool, List[str]]:
                     if len(parts) >= 2:
                         pid = int(parts[1])
                         if pid != current_pid:
-                            conflicts.append(f"PID {pid}: parallel_orchestrator.py --run")
+                            other_campaign = extract_campaign_from_cmdline(line)
+                            if is_conflict(other_campaign):
+                                campaign_info = f" (campaign: {other_campaign})" if other_campaign else " (no campaign)"
+                                conflicts.append(f"PID {pid}: parallel_orchestrator.py --run{campaign_info}")
 
         except Exception as e:
             logger.warning(f"Could not check for running orchestrators: {e}")
@@ -374,7 +405,12 @@ def setup_signal_handlers():
 
 
 def stop_all_phones() -> int:
-    """Stop all running Geelark phones."""
+    """
+    Stop all running Geelark phones.
+
+    WARNING: This stops ALL phones including VA phones!
+    Use stop_campaign_phones() for campaign-specific cleanup.
+    """
     logger.info("Stopping all running phones...")
     try:
         client = GeelarkClient()
@@ -392,6 +428,55 @@ def stop_all_phones() -> int:
         return stopped
     except Exception as e:
         logger.error(f"Error stopping phones: {e}")
+        return 0
+
+
+def stop_campaign_phones(campaign_accounts: List[str]) -> int:
+    """
+    Stop only phones that match the campaign's account list.
+
+    This is the SAFE way to stop phones - it only stops phones
+    whose serialName matches an account in the campaign, leaving
+    VA phones and other campaigns untouched.
+
+    Args:
+        campaign_accounts: List of account names for this campaign
+
+    Returns:
+        Number of phones stopped
+    """
+    if not campaign_accounts:
+        logger.warning("No campaign accounts provided, not stopping any phones")
+        return 0
+
+    campaign_accounts_set = set(campaign_accounts)
+    logger.info(f"Stopping phones for {len(campaign_accounts_set)} campaign accounts...")
+
+    try:
+        client = GeelarkClient()
+        stopped = 0
+        skipped = 0
+
+        for page in range(1, 20):
+            result = client.list_phones(page=page, page_size=100)
+            for phone in result.get('items', []):
+                phone_name = phone.get('serialName', '')
+                if phone.get('status') == 1:  # Running
+                    if phone_name in campaign_accounts_set:
+                        client.stop_phone(phone['id'])
+                        logger.info(f"  Stopped: {phone_name}")
+                        stopped += 1
+                    else:
+                        skipped += 1
+            if len(result.get('items', [])) < 100:
+                break
+
+        if skipped > 0:
+            logger.info(f"  Skipped {skipped} running phone(s) not in this campaign")
+        logger.info(f"Stopped {stopped} campaign phone(s)")
+        return stopped
+    except Exception as e:
+        logger.error(f"Error stopping campaign phones: {e}")
         return 0
 
 
@@ -528,9 +613,13 @@ def validate_progress_file(progress_file: str) -> bool:
         return False
 
 
-def full_cleanup(config: ParallelConfig, release_claims: bool = True) -> None:
+def full_cleanup(
+    config: ParallelConfig,
+    release_claims: bool = True,
+    campaign_accounts: List[str] = None
+) -> None:
     """
-    Complete cleanup of ALL resources.
+    Complete cleanup of resources.
 
     Call this:
     - At startup before any workers
@@ -538,18 +627,30 @@ def full_cleanup(config: ParallelConfig, release_claims: bool = True) -> None:
     - On --stop-all command
 
     Cleans up:
-    1. ALL running phones (they cost money!)
+    1. Running phones (campaign-specific if accounts provided, otherwise ALL)
     2. ALL processes on Appium ports
     3. ALL stale ADB connections
     4. Empty/corrupt progress files
     5. Release stale claimed jobs back to pending
+
+    Args:
+        config: Parallel configuration
+        release_claims: Whether to release stale claimed jobs
+        campaign_accounts: If provided, only stop phones matching these accounts.
+                          If None, stops ALL phones (use with caution!)
     """
     logger.info("="*60)
-    logger.info("FULL CLEANUP - Freeing all resources")
+    if campaign_accounts:
+        logger.info(f"CAMPAIGN CLEANUP - Freeing resources for {len(campaign_accounts)} accounts")
+    else:
+        logger.info("FULL CLEANUP - Freeing ALL resources (including non-campaign phones)")
     logger.info("="*60)
 
-    # 1. Stop ALL phones first (they cost money!)
-    phones_stopped = stop_all_phones()
+    # 1. Stop phones (campaign-specific or ALL)
+    if campaign_accounts:
+        phones_stopped = stop_campaign_phones(campaign_accounts)
+    else:
+        phones_stopped = stop_all_phones()
 
     # 2. Kill ALL Appium port processes
     logger.info("Killing all processes on Appium ports...")
@@ -711,7 +812,7 @@ def stop_all_workers(processes: List[subprocess.Popen], timeout: int = 30) -> No
 
 def force_kill_all(config: ParallelConfig = None):
     """Force kill all workers and cleanup all resources."""
-    global _worker_processes
+    global _worker_processes, _active_campaign_accounts
 
     # Kill all worker processes
     for proc in _worker_processes:
@@ -723,10 +824,13 @@ def force_kill_all(config: ParallelConfig = None):
 
     # Full cleanup if we have config
     if config:
-        full_cleanup(config)
+        full_cleanup(config, campaign_accounts=_active_campaign_accounts)
     else:
-        # Fallback: just stop phones and kill common ports
-        stop_all_phones()
+        # Fallback: just stop campaign phones (or all if no campaign) and kill common ports
+        if _active_campaign_accounts:
+            stop_campaign_phones(_active_campaign_accounts)
+        else:
+            stop_all_phones()
         for port in [4723, 4725, 4727, 4729, 4731]:
             kill_process_on_port(port)
 
@@ -852,16 +956,20 @@ def run_parallel_posting(
     Returns:
         Dict with results: {success_count, failed_count, ...}
     """
-    global _active_config, _shutdown_requested
+    global _active_config, _shutdown_requested, _active_campaign_accounts
 
     setup_signal_handlers()
 
     config = get_config(num_workers=num_workers)
 
-    # Override progress file if campaign is specified
+    # Override progress file and set campaign accounts if campaign is specified
+    campaign_accounts = None
     if campaign_config:
         config.progress_file = campaign_config.progress_file
-        logger.info(f"Using campaign progress file: {config.progress_file}")
+        campaign_accounts = campaign_config.get_accounts()
+        _active_campaign_accounts = campaign_accounts  # Store globally for emergency cleanup
+        logger.info(f"Using campaign '{campaign_config.name}' with {len(campaign_accounts)} accounts")
+        logger.info(f"  Progress file: {config.progress_file}")
 
     _active_config = config  # Store for signal handler
 
@@ -870,22 +978,26 @@ def run_parallel_posting(
         retry_config = RetryConfig()
 
     # CRITICAL: Check for other running orchestrators BEFORE anything else
-    # Multiple orchestrators = race conditions = duplicate posts
-    logger.info("Checking for other running orchestrators...")
-    has_conflicts, conflicts = check_for_running_orchestrators()
+    # Multiple orchestrators for the SAME campaign = race conditions = duplicate posts
+    # Different campaigns CAN run concurrently (they have separate progress files)
+    campaign_name_for_check = campaign_config.name if campaign_config else None
+    logger.info(f"Checking for conflicting orchestrators (campaign: {campaign_name_for_check or 'none'})...")
+    has_conflicts, conflicts = check_for_running_orchestrators(campaign_name_for_check)
     if has_conflicts:
         logger.error("="*60)
-        logger.error("CONFLICT: Other orchestrator processes are running!")
+        logger.error("CONFLICT: Another orchestrator is running for this campaign!")
         logger.error("="*60)
         for conflict in conflicts:
             logger.error(f"  - {conflict}")
         logger.error("")
-        logger.error("Running multiple orchestrators simultaneously causes:")
+        logger.error("Running multiple orchestrators for the SAME campaign causes:")
         logger.error("  - Race conditions in job claiming")
         logger.error("  - Duplicate posts to accounts")
         logger.error("  - Accounts exceeding daily post limits")
         logger.error("")
-        logger.error("Please stop the other orchestrator(s) first, or use --stop-all")
+        logger.error("Please stop the other orchestrator first, or use --stop-all")
+        if campaign_config:
+            logger.error(f"NOTE: Different campaigns can run concurrently.")
         logger.error("="*60)
         return {'error': 'orchestrator_conflict', 'conflicts': conflicts}
     logger.info("No conflicting orchestrators found")
@@ -895,9 +1007,9 @@ def run_parallel_posting(
     # Ensure logs directory exists
     config.ensure_logs_dir()
 
-    # FULL CLEANUP at startup - stop ALL phones, kill ALL ports, clear stale ADB
-    # This ensures we start from a clean state every time
-    full_cleanup(config)
+    # CLEANUP at startup - stop phones, kill ports, clear stale ADB
+    # If campaign specified, only stop campaign phones (not VA phones)
+    full_cleanup(config, campaign_accounts=campaign_accounts)
 
     # Seed progress file
     tracker = ProgressTracker(config.progress_file)
@@ -986,8 +1098,9 @@ def run_parallel_posting(
             logger.info(f"Stopped: Max passes ({retry_config.max_passes}) reached")
 
     finally:
-        # FULL CLEANUP on exit - stop phones, free ports, clear ADB
-        full_cleanup(config)
+        # CLEANUP on exit - stop campaign phones, free ports, clear ADB
+        full_cleanup(config, campaign_accounts=campaign_accounts)
+        _active_campaign_accounts = None  # Clear global
 
     # Final stats
     final_stats = tracker.get_stats()
@@ -1157,8 +1270,13 @@ Examples:
         show_status(config)
 
     elif args.stop_all:
-        logger.info("Stopping everything...")
-        full_cleanup(config)
+        if campaign_config:
+            campaign_accounts = campaign_config.get_accounts()
+            logger.info(f"Stopping campaign '{campaign_config.name}' phones ({len(campaign_accounts)} accounts)...")
+            full_cleanup(config, campaign_accounts=campaign_accounts)
+        else:
+            logger.info("Stopping ALL phones (no campaign specified)...")
+            full_cleanup(config)
         logger.info("Done")
 
     elif args.seed_only:

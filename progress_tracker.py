@@ -488,17 +488,42 @@ class ProgressTracker:
         # Read captions CSV
         caption_column = campaign_config.caption_column
         filename_column = campaign_config.filename_column
+        is_shortcode_format = (filename_column == "shortcode")
 
         video_to_caption = {}
+        shortcode_to_caption = {}  # For shortcode-based matching
+
         with open(campaign_config.captions_file, 'r', encoding='utf-8') as f:
             reader = csv_module.DictReader(f)
             for row in reader:
-                filename = row.get(filename_column, '').strip()
-                caption = row.get(caption_column, '').strip()
-                if filename and caption:
-                    video_to_caption[filename] = caption
+                # Handle different column name cases (CSV headers can vary)
+                identifier = None
+                for col in [filename_column, filename_column.lower(), filename_column.title()]:
+                    if col in row:
+                        identifier = row[col].strip()
+                        break
+                if not identifier:
+                    # Try common variations
+                    identifier = row.get('filename', row.get('Filename', row.get('shortcode', ''))).strip()
+
+                caption = None
+                for col in [caption_column, caption_column.lower(), caption_column.title()]:
+                    if col in row:
+                        caption = row[col].strip()
+                        break
+                if not caption:
+                    caption = row.get('caption', row.get('Caption', row.get('text', row.get('Text', '')))).strip()
+
+                if identifier and caption:
+                    video_to_caption[identifier] = caption
+                    if is_shortcode_format:
+                        # Store shortcode for prefix matching
+                        # Shortcodes like "DM6m1Econ4x" match files like "DM6m1Econ4x-2.mp4"
+                        shortcode_to_caption[identifier] = caption
 
         logger.info(f"Loaded {len(video_to_caption)} captions from CSV")
+        if is_shortcode_format:
+            logger.info(f"  Using shortcode matching (files like 'SHORTCODE-N.mp4')")
 
         # Find all video files in videos directory
         video_files = []
@@ -533,6 +558,15 @@ class ProgressTracker:
                 # Try without extension
                 video_base = os_module.path.splitext(video_filename)[0]
                 caption = video_to_caption.get(video_base, '')
+
+            # For shortcode format, try prefix matching
+            # Files like "DM6m1Econ4x-2.mp4" should match shortcode "DM6m1Econ4x"
+            if not caption and is_shortcode_format and shortcode_to_caption:
+                video_base = os_module.path.splitext(video_filename)[0]
+                for shortcode, sc_caption in shortcode_to_caption.items():
+                    if video_base.startswith(shortcode):
+                        caption = sc_caption
+                        break
 
             if not caption:
                 continue  # Skip videos without captions
@@ -575,7 +609,8 @@ class ProgressTracker:
                 'max_attempts': str(self.DEFAULT_MAX_ATTEMPTS),
                 'retry_at': '',
                 'error_type': '',
-                'error_category': ''
+                'error_category': '',
+                'pass_number': ''
             })
 
         # Write jobs
