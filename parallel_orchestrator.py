@@ -44,7 +44,7 @@ from datetime import datetime
 from typing import List, Optional, Dict, Tuple
 
 # Import centralized config and set up environment FIRST
-from config import Config, setup_environment
+from config import Config, CampaignConfig, setup_environment
 setup_environment()
 
 from parallel_config import ParallelConfig, get_config, print_config
@@ -832,7 +832,8 @@ def run_parallel_posting(
     accounts: List[str] = None,
     retry_all_failed: bool = True,
     retry_include_non_retryable: bool = False,
-    retry_config: RetryConfig = None
+    retry_config: RetryConfig = None,
+    campaign_config: 'CampaignConfig' = None
 ) -> Dict:
     """
     Main entry point to run parallel posting with multi-pass retry.
@@ -846,6 +847,7 @@ def run_parallel_posting(
         retry_all_failed: If True, retry failed jobs from previous runs
         retry_include_non_retryable: If True, also retry non-retryable errors
         retry_config: RetryConfig for multi-pass retry behavior
+        campaign_config: Optional CampaignConfig for campaign-based seeding
 
     Returns:
         Dict with results: {success_count, failed_count, ...}
@@ -855,6 +857,12 @@ def run_parallel_posting(
     setup_signal_handlers()
 
     config = get_config(num_workers=num_workers)
+
+    # Override progress file if campaign is specified
+    if campaign_config:
+        config.progress_file = campaign_config.progress_file
+        logger.info(f"Using campaign progress file: {config.progress_file}")
+
     _active_config = config  # Store for signal handler
 
     # Use default retry config if not provided
@@ -914,13 +922,24 @@ def run_parallel_posting(
             os.remove(config.progress_file + '.lock')
 
     if not tracker.exists() or force_reseed:
-        if not accounts:
-            logger.error("No accounts specified. Use --accounts phone1,phone2 to specify accounts")
-            return {'error': 'no_accounts'}
-        count = seed_progress_file(config, state_file, accounts)
-        if count == 0:
-            logger.error("No jobs to process. Check scheduler_state.json")
-            return {'error': 'no_jobs'}
+        if campaign_config:
+            # Seed from campaign
+            count = tracker.seed_from_campaign(
+                campaign_config,
+                max_posts_per_account_per_day=config.max_posts_per_account_per_day
+            )
+            if count == 0:
+                logger.error(f"No jobs to process. Check campaign folder: {campaign_config.base_dir}")
+                return {'error': 'no_jobs'}
+        else:
+            # Legacy: seed from scheduler_state.json
+            if not accounts:
+                logger.error("No accounts specified. Use --accounts phone1,phone2 to specify accounts")
+                return {'error': 'no_accounts'}
+            count = seed_progress_file(config, state_file, accounts)
+            if count == 0:
+                logger.error("No jobs to process. Check scheduler_state.json")
+                return {'error': 'no_jobs'}
 
     # Show initial stats
     stats = tracker.get_stats()
@@ -1049,6 +1068,12 @@ Examples:
     parser.add_argument('--no-retry-unknown', action='store_true',
                         help='Do NOT retry jobs with unknown/unclassified errors (default: retry them)')
 
+    # Campaign support
+    parser.add_argument('--campaign', '-c', type=str, default=None,
+                        help='Campaign name to run (e.g., "viral", "podcast"). Uses campaigns/<name>/ folder.')
+    parser.add_argument('--list-campaigns', action='store_true',
+                        help='List all available campaigns')
+
     args = parser.parse_args()
 
     # Parse accounts list if provided
@@ -1057,6 +1082,46 @@ Examples:
         accounts_list = [a.strip() for a in args.accounts.split(',') if a.strip()]
 
     config = get_config(num_workers=args.workers)
+
+    # Handle --list-campaigns
+    if args.list_campaigns:
+        campaigns = CampaignConfig.list_campaigns()
+        if campaigns:
+            print("\nAvailable campaigns:")
+            print("=" * 60)
+            for c in campaigns:
+                accounts = c.get_accounts()
+                print(f"  {c.name}:")
+                print(f"    Accounts: {len(accounts)}")
+                print(f"    Videos dir: {c.videos_dir}")
+                print(f"    Progress: {c.progress_file}")
+                print()
+        else:
+            print("\nNo campaigns found in campaigns/ directory")
+            print("Create a campaign folder with: accounts.txt, captions.csv, and a videos subfolder")
+        sys.exit(0)
+
+    # Load campaign config if --campaign specified
+    campaign_config = None
+    if args.campaign:
+        campaign_path = os.path.join(Config.PROJECT_ROOT, Config.CAMPAIGNS_DIR, args.campaign)
+        if not os.path.isdir(campaign_path):
+            # Try as direct path
+            campaign_path = args.campaign
+        try:
+            campaign_config = CampaignConfig.from_folder(campaign_path)
+            logger.info(f"Loaded campaign: {campaign_config.name}")
+            logger.info(f"  Accounts: {len(campaign_config.get_accounts())}")
+            logger.info(f"  Videos: {campaign_config.videos_dir}")
+            logger.info(f"  Progress: {campaign_config.progress_file}")
+
+            # Override config values from campaign
+            config.progress_file = campaign_config.progress_file
+            accounts_list = campaign_config.get_accounts()
+
+        except (FileNotFoundError, ValueError) as e:
+            logger.error(f"Failed to load campaign '{args.campaign}': {e}")
+            sys.exit(1)
 
     if args.reset_day:
         logger.info("="*60)
@@ -1097,11 +1162,21 @@ Examples:
         logger.info("Done")
 
     elif args.seed_only:
-        count = seed_progress_file(config, args.state_file, accounts_list)
+        if campaign_config:
+            # Seed from campaign
+            tracker = ProgressTracker(config.progress_file)
+            count = tracker.seed_from_campaign(
+                campaign_config,
+                max_posts_per_account_per_day=config.max_posts_per_account_per_day
+            )
+        else:
+            # Seed from scheduler_state.json (legacy)
+            count = seed_progress_file(config, args.state_file, accounts_list)
+
         if count > 0:
             logger.info(f"Progress file ready with {count} jobs")
         else:
-            logger.error("Failed to seed progress file")
+            logger.error("Failed to seed progress file (no jobs created)")
             sys.exit(1)
 
     elif args.run:
@@ -1137,7 +1212,8 @@ Examples:
             accounts=accounts_list,
             retry_all_failed=True,  # Always retry failed jobs on start
             retry_include_non_retryable=args.retry_include_non_retryable,
-            retry_config=retry_cfg
+            retry_config=retry_cfg,
+            campaign_config=campaign_config
         )
         if results.get('error'):
             sys.exit(1)

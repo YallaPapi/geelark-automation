@@ -440,6 +440,154 @@ class ProgressTracker:
         logger.info(f"Seeded {len(progress_jobs)} jobs")
         return len(progress_jobs)
 
+    def seed_from_campaign(
+        self,
+        campaign_config,  # CampaignConfig - avoid circular import
+        max_posts_per_account_per_day: int = 1
+    ) -> int:
+        """
+        Seed progress file from a campaign configuration.
+
+        Reads the campaign's captions CSV and creates jobs by:
+        1. Finding video files in the videos directory
+        2. Matching videos to captions via filename
+        3. Distributing jobs across campaign accounts with daily limits
+
+        Args:
+            campaign_config: CampaignConfig instance with paths to CSV, videos, accounts
+            max_posts_per_account_per_day: Max posts per account per day (default 1)
+
+        Returns:
+            Number of jobs seeded
+        """
+        import csv as csv_module
+        import os as os_module
+        import random
+
+        # Load accounts
+        accounts = campaign_config.get_accounts()
+        if not accounts:
+            logger.error(f"No accounts found in {campaign_config.accounts_file}")
+            return 0
+
+        # Load assigned counts to enforce daily limits
+        assigned_count_by_account = self._load_assigned_counts()
+
+        # Filter to available accounts (under daily limit)
+        available_accounts = [
+            acc for acc in accounts
+            if assigned_count_by_account.get(acc, 0) < max_posts_per_account_per_day
+        ]
+
+        if not available_accounts:
+            logger.info(f"All {len(accounts)} accounts at daily limit of {max_posts_per_account_per_day}")
+            return 0
+
+        logger.info(f"Available accounts: {len(available_accounts)} of {len(accounts)}")
+
+        # Read captions CSV
+        caption_column = campaign_config.caption_column
+        filename_column = campaign_config.filename_column
+
+        video_to_caption = {}
+        with open(campaign_config.captions_file, 'r', encoding='utf-8') as f:
+            reader = csv_module.DictReader(f)
+            for row in reader:
+                filename = row.get(filename_column, '').strip()
+                caption = row.get(caption_column, '').strip()
+                if filename and caption:
+                    video_to_caption[filename] = caption
+
+        logger.info(f"Loaded {len(video_to_caption)} captions from CSV")
+
+        # Find all video files in videos directory
+        video_files = []
+        for root, dirs, files in os_module.walk(campaign_config.videos_dir):
+            for f in files:
+                if f.endswith('.mp4'):
+                    video_files.append(os_module.path.join(root, f))
+
+        logger.info(f"Found {len(video_files)} video files in {campaign_config.videos_dir}")
+
+        # Get existing job IDs to avoid duplicates
+        existing_job_ids = set()
+        if os_module.path.exists(self.progress_file):
+            existing_jobs = self._read_all_jobs()
+            for job in existing_jobs:
+                existing_job_ids.add(job.get('job_id', ''))
+
+        # Create jobs - one video per available account
+        # Shuffle videos for random distribution
+        random.shuffle(video_files)
+
+        new_jobs = []
+        seeding_assigned_counts = dict(assigned_count_by_account)
+        account_index = 0
+
+        for video_path in video_files:
+            video_filename = os_module.path.basename(video_path)
+
+            # Find caption for this video
+            caption = video_to_caption.get(video_filename, '')
+            if not caption:
+                # Try without extension
+                video_base = os_module.path.splitext(video_filename)[0]
+                caption = video_to_caption.get(video_base, '')
+
+            if not caption:
+                continue  # Skip videos without captions
+
+            # Create job ID from filename
+            job_id = f"{video_filename}_{campaign_config.name}"
+
+            # Skip if job already exists
+            if job_id in existing_job_ids:
+                continue
+
+            # Find next available account
+            assigned_account = ''
+            attempts = 0
+            while attempts < len(available_accounts):
+                acc = available_accounts[account_index % len(available_accounts)]
+                account_index += 1
+                attempts += 1
+
+                if seeding_assigned_counts.get(acc, 0) < max_posts_per_account_per_day:
+                    assigned_account = acc
+                    seeding_assigned_counts[acc] = seeding_assigned_counts.get(acc, 0) + 1
+                    break
+
+            if not assigned_account:
+                logger.info(f"No more accounts available, stopping at {len(new_jobs)} jobs")
+                break
+
+            new_jobs.append({
+                'job_id': job_id,
+                'account': assigned_account,
+                'video_path': video_path,
+                'caption': caption,
+                'status': self.STATUS_PENDING,
+                'worker_id': '',
+                'claimed_at': '',
+                'completed_at': '',
+                'error': '',
+                'attempts': '0',
+                'max_attempts': str(self.DEFAULT_MAX_ATTEMPTS),
+                'retry_at': '',
+                'error_type': '',
+                'error_category': ''
+            })
+
+        # Write jobs
+        if new_jobs:
+            existing_jobs = self._read_all_jobs() if os_module.path.exists(self.progress_file) else []
+            all_jobs = existing_jobs + new_jobs
+            self._write_all_jobs(all_jobs)
+
+        accounts_used = len(set(j['account'] for j in new_jobs))
+        logger.info(f"Seeded {len(new_jobs)} jobs across {accounts_used} accounts")
+        return len(new_jobs)
+
     def _within_daily_limit(self, account: str, success_counts: Dict[str, int], max_per_day: int) -> bool:
         """
         Check if an account is within its daily posting limit.

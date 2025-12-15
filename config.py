@@ -15,9 +15,10 @@ Usage:
 """
 
 import os
+import json
 from pathlib import Path
-from dataclasses import dataclass
-from typing import Optional
+from dataclasses import dataclass, field
+from typing import Optional, List, Dict, Any
 
 
 @dataclass(frozen=True)
@@ -103,6 +104,19 @@ class Config:
     # Accounts file
     ACCOUNTS_FILE: str = "accounts.txt"
 
+    # ==================== CAMPAIGNS ====================
+
+    # Directory containing campaign folders
+    CAMPAIGNS_DIR: str = "campaigns"
+
+    # Campaign config file name (within each campaign folder)
+    CAMPAIGN_CONFIG_FILE: str = "campaign.json"
+
+    # Default campaign file names
+    CAMPAIGN_ACCOUNTS_FILE: str = "accounts.txt"
+    CAMPAIGN_PROGRESS_FILE: str = "progress.csv"
+    CAMPAIGN_STATE_FILE: str = "scheduler_state.json"
+
     # ==================== TIMEOUTS ====================
 
     # ADB command timeout
@@ -152,6 +166,175 @@ class Config:
         """Get the Appium URL for a specific worker."""
         port = cls.get_worker_appium_port(worker_id)
         return f"http://127.0.0.1:{port}"
+
+
+@dataclass
+class CampaignConfig:
+    """
+    Configuration for a single posting campaign.
+
+    Each campaign has its own folder with accounts, videos, captions, and progress.
+    This allows running multiple campaigns (podcast, viral, etc.) independently.
+
+    Usage:
+        # Load from campaign folder
+        campaign = CampaignConfig.from_folder("campaigns/viral")
+
+        # Access paths
+        accounts = campaign.accounts_file
+        progress = campaign.progress_file
+    """
+
+    name: str                              # Campaign name (e.g., "viral", "podcast")
+    base_dir: str                          # Campaign folder path
+    accounts_file: str                     # Path to accounts.txt
+    progress_file: str                     # Path to progress.csv
+    state_file: str                        # Path to scheduler_state.json
+    videos_dir: str                        # Path to videos folder
+    captions_file: str                     # Path to captions CSV
+    max_posts_per_account_per_day: int = 1 # Daily limit per account
+    enabled: bool = True                   # Whether campaign is active
+
+    # CSV format configuration
+    caption_column: str = "post_caption"   # Column name for caption text
+    filename_column: str = "filename"      # Column name for video filename
+
+    @classmethod
+    def from_folder(cls, campaign_path: str) -> 'CampaignConfig':
+        """
+        Load campaign configuration from a folder.
+
+        Expected folder structure:
+            campaign_path/
+            ├── campaign.json (optional - for settings override)
+            ├── accounts.txt
+            ├── captions.csv
+            ├── progress.csv (created automatically)
+            └── videos/ (or any subfolder with .mp4 files)
+
+        Args:
+            campaign_path: Path to campaign folder (relative or absolute)
+
+        Returns:
+            CampaignConfig instance
+
+        Raises:
+            FileNotFoundError: If campaign folder doesn't exist
+            ValueError: If required files are missing
+        """
+        base_dir = os.path.abspath(campaign_path)
+
+        if not os.path.isdir(base_dir):
+            raise FileNotFoundError(f"Campaign folder not found: {base_dir}")
+
+        # Get campaign name from folder
+        name = os.path.basename(base_dir)
+
+        # Default paths
+        accounts_file = os.path.join(base_dir, Config.CAMPAIGN_ACCOUNTS_FILE)
+        progress_file = os.path.join(base_dir, Config.CAMPAIGN_PROGRESS_FILE)
+        state_file = os.path.join(base_dir, Config.CAMPAIGN_STATE_FILE)
+
+        # Find captions file (look for .csv files)
+        captions_file = None
+        for f in os.listdir(base_dir):
+            if f.endswith('.csv') and f != Config.CAMPAIGN_PROGRESS_FILE:
+                captions_file = os.path.join(base_dir, f)
+                break
+
+        # Find videos directory (first subfolder with .mp4 files)
+        videos_dir = None
+        for item in os.listdir(base_dir):
+            item_path = os.path.join(base_dir, item)
+            if os.path.isdir(item_path):
+                # Check if it has mp4 files
+                for root, dirs, files in os.walk(item_path):
+                    if any(f.endswith('.mp4') for f in files):
+                        videos_dir = item_path
+                        break
+                if videos_dir:
+                    break
+
+        # Load optional campaign.json for settings override
+        config_file = os.path.join(base_dir, Config.CAMPAIGN_CONFIG_FILE)
+        settings = {}
+        if os.path.exists(config_file):
+            with open(config_file, 'r', encoding='utf-8') as f:
+                settings = json.load(f)
+
+        # Validate required files
+        if not os.path.exists(accounts_file):
+            raise ValueError(f"Campaign missing accounts.txt: {accounts_file}")
+        if captions_file is None or not os.path.exists(captions_file):
+            raise ValueError(f"Campaign missing captions CSV in: {base_dir}")
+        if videos_dir is None:
+            raise ValueError(f"Campaign missing videos folder in: {base_dir}")
+
+        # Detect CSV format by reading header
+        caption_column = "post_caption"
+        filename_column = "filename"
+        with open(captions_file, 'r', encoding='utf-8') as f:
+            header = f.readline().strip().lower()
+            # Handle podcast format: "Text,Image/Video link 1 (shortcode)"
+            if "text" in header and "shortcode" in header:
+                caption_column = "Text"
+                filename_column = "shortcode"  # Special handling needed
+            # Handle viral format: "filename,onscreen_text,post_caption"
+            elif "post_caption" in header:
+                caption_column = "post_caption"
+                filename_column = "filename"
+
+        return cls(
+            name=settings.get('name', name),
+            base_dir=base_dir,
+            accounts_file=accounts_file,
+            progress_file=progress_file,
+            state_file=state_file,
+            videos_dir=videos_dir,
+            captions_file=captions_file,
+            max_posts_per_account_per_day=settings.get('max_posts_per_account_per_day', 1),
+            enabled=settings.get('enabled', True),
+            caption_column=caption_column,
+            filename_column=filename_column,
+        )
+
+    @classmethod
+    def list_campaigns(cls, campaigns_dir: str = None) -> List['CampaignConfig']:
+        """
+        List all available campaigns.
+
+        Args:
+            campaigns_dir: Path to campaigns directory (default: Config.CAMPAIGNS_DIR)
+
+        Returns:
+            List of CampaignConfig for each valid campaign folder
+        """
+        if campaigns_dir is None:
+            campaigns_dir = os.path.join(Config.PROJECT_ROOT, Config.CAMPAIGNS_DIR)
+
+        campaigns = []
+        if not os.path.isdir(campaigns_dir):
+            return campaigns
+
+        for item in os.listdir(campaigns_dir):
+            item_path = os.path.join(campaigns_dir, item)
+            if os.path.isdir(item_path):
+                try:
+                    campaign = cls.from_folder(item_path)
+                    campaigns.append(campaign)
+                except (FileNotFoundError, ValueError):
+                    # Skip invalid campaign folders
+                    pass
+
+        return campaigns
+
+    def get_accounts(self) -> List[str]:
+        """Load and return list of accounts for this campaign."""
+        with open(self.accounts_file, 'r', encoding='utf-8') as f:
+            return [line.strip() for line in f if line.strip()]
+
+    def __str__(self) -> str:
+        return f"Campaign({self.name}, accounts={self.accounts_file}, videos={self.videos_dir})"
 
 
 def setup_environment() -> None:
