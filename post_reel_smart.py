@@ -467,11 +467,6 @@ class SmartInstagramPoster:
                 'update required',
                 'new version available',
             ],
-            'rate_limited': [
-                'please wait a few minutes',
-                'too many requests',
-                'slow down',
-            ],
         }
 
         # NOTE: 'sign up' removed from logged_out - it triggers false positives
@@ -570,7 +565,7 @@ What do you see on the screen? Look for:
 1. Any error messages, popups, or warnings
 2. Login/signup screens (account logged out)
 3. Verification or captcha requests
-4. "Action blocked" or rate limit messages
+4. "Action blocked" messages
 5. The current screen state (feed, profile, posting flow, etc.)
 6. Any buttons or text that indicate what went wrong
 
