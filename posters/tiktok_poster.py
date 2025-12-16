@@ -1,8 +1,11 @@
 """TikTok poster implementation - implements BasePoster interface for TikTok video posting."""
+import os
 import time
 import json
 import re
-from typing import Optional, Dict, List
+import base64
+from datetime import datetime
+from typing import Optional, Dict, List, Tuple
 
 import anthropic
 
@@ -92,63 +95,107 @@ class TikTokPoster(BasePoster):
     # Claude system prompt for TikTok UI navigation
     TIKTOK_NAVIGATION_PROMPT = """You are controlling an Android phone to post a video to TikTok.
 
-Current state:
-- Video uploaded to phone: {video_uploaded}
-- Caption entered: {caption_entered}
+=== CURRENT STATE ===
+- Video file uploaded to phone storage: {video_uploaded}
+- Video selected from gallery: {video_selected}
+- Caption/description entered: {caption_entered}
 - Post button clicked: {post_clicked}
 - Caption to post: "{caption}"
 
+=== UI ELEMENTS ===
 {ui_description}
 
-Based on the UI elements, decide the next action to take.
+=== TIKTOK POSTING FLOW (follow in order) ===
 
-TikTok posting flow:
-1. Find and tap the Create (+) button in the bottom center navigation bar
-2. Tap "Upload" to access gallery (NOT the red record button)
-3. Select video from gallery - tap the video thumbnail
-4. Tap "Next" to proceed to editing
-5. Skip editing (tap "Next" again or skip any effects/sounds)
-6. Find the caption/description field and enter the caption
-7. Tap "Post" button (usually red, bottom right)
-8. Wait for "Posted" or "Uploading" confirmation
+STEP 1: TAP CREATE BUTTON
+- Look for "+" button in bottom navigation bar (usually center)
+- May have text "Create", or just the + icon
+- Common element patterns: class='...ImageView', desc='Create' or desc='Add'
+- ACTION: tap the Create/+ element
 
-TIKTOK UI PATTERNS:
-- Bottom nav: Home | Friends | + (Create) | Inbox | Profile
-- Create button is the large + in center of bottom nav
-- Upload option appears after tapping + (may say "Upload" or show gallery icon)
-- Video gallery shows thumbnails with duration overlay
-- Post button is usually red with "Post" text
-- Caption field may say "Describe your video" or "Add a description"
+STEP 2: TAP UPLOAD (NOT RECORD)
+- After tapping +, you see camera/record view with options
+- Look for "Upload" text/button (usually bottom-left or bottom area)
+- DO NOT tap the red record button in center
+- Common patterns: text='Upload', desc='Upload from gallery'
+- ACTION: tap Upload element → set video_selected=false (not selected yet)
 
-ERROR DETECTION - Return immediately if you see:
-1. "Account banned/suspended" messages
-2. "Community guidelines violation" warnings
-3. "Login required" or login screen
-4. "Network error" messages
-5. "Too many posts" rate limit warnings
+STEP 3: SELECT VIDEO FROM GALLERY
+- Gallery shows video thumbnails with duration overlays
+- Select the FIRST video (most recently uploaded) - it should be the video we just uploaded
+- Look for: clickable thumbnail, duration text like "0:15"
+- ACTION: tap the video thumbnail → set video_selected=true
 
-POPUP HANDLING:
-- "Add music" popup: Tap "Skip" or outside the popup
-- "Effects" suggestions: Tap "Skip" or "Next"
-- "Who can view" settings: Keep as is, tap away
-- Permission requests: Tap "Allow"
+STEP 4: TAP NEXT (after video selection)
+- After selecting video, look for "Next" button (usually top-right or bottom)
+- May need to tap "Next" multiple times (editing screens)
+- Common patterns: text='Next', desc='Next'
+- ACTION: tap Next
 
-Respond with JSON:
+STEP 5: SKIP EDITING/EFFECTS
+- May see: "Sounds", "Effects", "Text", "Stickers", "Filters" screens
+- Look for "Next" or "Skip" to proceed
+- If stuck, tap "Next" or "Skip" buttons
+- ACTION: tap Next/Skip to proceed
+
+STEP 6: ENTER CAPTION
+- Look for caption/description input field
+- Common patterns: text='Describe your video', text='Add a description', desc='Caption'
+- The field may be empty or have placeholder text
+- ACTION: tap_and_type on caption field with the caption text → set caption_entered=true
+
+STEP 7: TAP POST BUTTON
+- Look for "Post" button (usually red, bottom-right area)
+- Common patterns: text='Post', class contains 'Button'
+- ACTION: tap Post button → set post_clicked=true
+
+STEP 8: CONFIRM SUCCESS
+- After tapping Post, wait for confirmation
+- Look for: "Uploading...", "Posted", "Your video is being uploaded", progress indicators
+- If you see the main feed again, post succeeded
+- ACTION: return action="done" when you see upload confirmation or return to feed
+
+=== ERROR DETECTION ===
+If you see ANY of these, the post cannot succeed - return done immediately:
+- "Account banned" / "Account suspended" / "Account disabled"
+- "Community guidelines violation" / "Content removed"
+- "Log in to TikTok" / login/signup screens
+- "No network connection" / "Connection failed"
+- "You're posting too fast" / rate limit messages
+
+=== POPUP HANDLING ===
+- "Add sound" / "Add music": Tap "Skip" or "No thanks" or tap outside
+- "Who can watch": Leave default, tap away or "Done"
+- Permission requests (camera, microphone, storage): Tap "Allow"
+- "Discard draft?": Tap "Discard" to retry
+- Promotional overlays: Look for X or "Not now" to dismiss
+
+=== RESPONSE FORMAT ===
+Output ONLY valid JSON with these fields:
 {{
-    "action": "tap" | "tap_and_type" | "back" | "scroll_down" | "scroll_up" | "home" | "open_tiktok" | "done",
-    "element_index": <index of element to tap>,
-    "text": "<text to type if action is tap_and_type>",
-    "reason": "<brief explanation>",
-    "video_selected": true/false,
-    "caption_entered": true/false,
-    "post_clicked": true/false
+    "action": "<one of: tap, tap_and_type, scroll_down, scroll_up, back, home, open_tiktok, done>",
+    "element_index": <integer index of UI element to interact with, required for tap/tap_and_type>,
+    "text": "<text to type, required only for tap_and_type action>",
+    "reason": "<brief explanation of why this action>",
+    "video_selected": <true if video was just selected from gallery OR was already selected>,
+    "caption_entered": <true if caption was just typed OR was already typed>,
+    "post_clicked": <true if Post button was just clicked OR was already clicked>
 }}
 
-CRITICAL RULES:
-- NEVER return "error". Always try to recover.
-- If stuck, press "back" and try again
-- If on wrong screen, use "home" then "open_tiktok"
-- Return "done" only when post is confirmed uploading/posted
+=== CRITICAL RULES ===
+1. ALWAYS output valid JSON only - no explanations outside JSON
+2. NEVER set state flags to true unless the action just happened OR state shows already done
+3. If caption_entered=true in state, do NOT re-enter caption
+4. If post_clicked=true in state, look for confirmation then return done
+5. If stuck on same screen 3+ times, try: back → scroll → or open_tiktok
+6. Return action="done" ONLY when you see upload progress/confirmation OR return to main feed after posting
+7. Preserve state: if video_selected was true, keep returning video_selected=true
+
+=== COMMON MISTAKES TO AVOID ===
+- Don't tap Record button (red circle) - tap Upload instead
+- Don't skip video selection - must tap a video thumbnail
+- Don't return done before seeing upload confirmation
+- Don't re-enter caption if already entered
 
 Only output JSON."""
 
@@ -175,6 +222,7 @@ Only output JSON."""
 
         # Posting state
         self._video_uploaded = False
+        self._video_selected = False  # Video selected in gallery
         self._caption_entered = False
         self._post_clicked = False
 
@@ -297,10 +345,12 @@ Only output JSON."""
 
         # Reset state
         self._video_uploaded = False
+        self._video_selected = False
         self._caption_entered = False
         self._post_clicked = False
         self._last_error_type = None
         self._last_error_message = None
+        self._last_screenshot_path = None
 
         try:
             # Initialize Claude
@@ -318,7 +368,8 @@ Only output JSON."""
 
             # Claude-driven navigation loop
             for step in range(max_steps):
-                print(f"\n--- TikTok Step {step + 1} ---")
+                # Log step state
+                self._log_step_state(step)
 
                 # Dump UI
                 elements = self._dump_ui()
@@ -327,6 +378,9 @@ Only output JSON."""
                     time.sleep(2)
                     continue
 
+                # Save periodic UI dump for debugging
+                self._debug_save_ui_dump(step, elements)
+
                 # Check for errors
                 error_result = self._detect_error_state(elements)
                 if error_result:
@@ -334,6 +388,11 @@ Only output JSON."""
                     print(f"  [ERROR] {error_type}: {error_msg}")
                     self._last_error_type = error_type
                     self._last_error_message = error_msg
+
+                    # Capture screenshot for error analysis
+                    screenshot_path, analysis = self._analyze_failure_screenshot(f"error_{error_type}")
+                    if analysis:
+                        print(f"  [VISION] {analysis}")
 
                     duration = time.time() - self._start_time if self._start_time else 0
                     is_account = error_type in self.ACCOUNT_ERROR_TYPES
@@ -346,7 +405,8 @@ Only output JSON."""
                         retryable=not is_account,
                         platform=self.platform,
                         account=self._phone_name,
-                        duration_seconds=duration
+                        duration_seconds=duration,
+                        screenshot_path=self._last_screenshot_path
                     )
 
                 # Get Claude's action recommendation
@@ -361,6 +421,8 @@ Only output JSON."""
                 print(f"  Action: {action['action']} - {action.get('reason', '')}")
 
                 # Update state from Claude's response
+                if action.get('video_selected'):
+                    self._video_selected = True
                 if action.get('caption_entered'):
                     self._caption_entered = True
                 if action.get('post_clicked'):
@@ -383,7 +445,12 @@ Only output JSON."""
                 # Small delay between steps
                 time.sleep(1)
 
-            # Max steps reached
+            # Max steps reached - capture screenshot for debugging
+            print(f"  [WARNING] Max steps ({max_steps}) reached without completing post")
+            screenshot_path, analysis = self._analyze_failure_screenshot("max_steps_timeout")
+            if analysis:
+                print(f"  [VISION] {analysis}")
+
             duration = time.time() - self._start_time if self._start_time else 0
             return PostResult(
                 success=False,
@@ -393,10 +460,20 @@ Only output JSON."""
                 retryable=True,
                 platform=self.platform,
                 account=self._phone_name,
-                duration_seconds=duration
+                duration_seconds=duration,
+                screenshot_path=self._last_screenshot_path
             )
 
         except Exception as e:
+            # Capture screenshot for exception debugging
+            print(f"  [EXCEPTION] {type(e).__name__}: {str(e)}")
+            try:
+                screenshot_path, analysis = self._analyze_failure_screenshot(f"exception_{type(e).__name__}")
+                if analysis:
+                    print(f"  [VISION] {analysis}")
+            except Exception:
+                pass  # Don't let screenshot failure mask the original exception
+
             duration = time.time() - self._start_time if self._start_time else 0
             error_type, category, retryable = self._classify_error(str(e))
 
@@ -408,7 +485,8 @@ Only output JSON."""
                 retryable=retryable,
                 platform=self.platform,
                 account=self._phone_name,
-                duration_seconds=duration
+                duration_seconds=duration,
+                screenshot_path=self._last_screenshot_path
             )
 
     def _dump_ui(self) -> List[Dict]:
@@ -420,11 +498,69 @@ Only output JSON."""
             print(f"  [TikTokPoster] dump_ui error: {e}")
             return []
 
+    def _debug_save_ui_dump(self, step: int, elements: List[Dict]) -> Optional[str]:
+        """Save UI dump to file for debugging (every 5 steps).
+
+        Args:
+            step: Current navigation step number.
+            elements: List of UI element dicts.
+
+        Returns:
+            Path to saved dump file or None.
+        """
+        # Only save every 5 steps to reduce I/O
+        if step % 5 != 0:
+            return None
+
+        try:
+            # Create debug dumps directory
+            dump_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'debug_dumps')
+            os.makedirs(dump_dir, exist_ok=True)
+
+            # Generate filename
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"tiktok_{self._phone_name}_step{step}_{timestamp}.json"
+            filepath = os.path.join(dump_dir, filename)
+
+            # Build debug data
+            debug_data = {
+                "timestamp": timestamp,
+                "account": self._phone_name,
+                "step": step,
+                "state": {
+                    "video_uploaded": self._video_uploaded,
+                    "video_selected": self._video_selected,
+                    "caption_entered": self._caption_entered,
+                    "post_clicked": self._post_clicked
+                },
+                "element_count": len(elements),
+                "elements": elements[:50]  # Limit to first 50 elements
+            }
+
+            with open(filepath, 'w', encoding='utf-8') as f:
+                json.dump(debug_data, f, indent=2, ensure_ascii=False)
+
+            print(f"  [DEBUG] UI dump saved: {filename}")
+            return filepath
+
+        except Exception as e:
+            print(f"  [DEBUG] Failed to save UI dump: {e}")
+            return None
+
+    def _log_step_state(self, step: int):
+        """Log current state at beginning of step."""
+        print(f"\n{'='*60}")
+        print(f"[TikTok Step {step + 1}]")
+        print(f"  State: video_uploaded={self._video_uploaded}, video_selected={self._video_selected}, caption_entered={self._caption_entered}, post_clicked={self._post_clicked}")
+        print(f"{'='*60}")
+
     def _format_elements_for_claude(self, elements: List[Dict]) -> str:
         """Format UI elements for Claude prompt."""
         lines = ["UI Elements:"]
         for i, elem in enumerate(elements):
             parts = [f"[{i}]"]
+            if elem.get('class'):
+                parts.append(f"class='{elem['class']}'")
             if elem.get('text'):
                 parts.append(f"text='{elem['text']}'")
             if elem.get('desc'):
@@ -444,6 +580,7 @@ Only output JSON."""
 
         prompt = self.TIKTOK_NAVIGATION_PROMPT.format(
             video_uploaded=self._video_uploaded,
+            video_selected=self._video_selected,
             caption_entered=self._caption_entered,
             post_clicked=self._post_clicked,
             caption=caption[:100],  # Truncate for prompt
@@ -596,3 +733,108 @@ Only output JSON."""
                 self._conn = None
                 self._ui_controller = None
                 self._connected = False
+
+    def _capture_failure_screenshot(self, reason: str) -> Optional[str]:
+        """Capture screenshot on failure for debugging.
+
+        Args:
+            reason: Description of why screenshot is being taken (e.g., 'max_steps', 'error_detected').
+
+        Returns:
+            Path to saved screenshot or None if capture failed.
+        """
+        # Create screenshots directory
+        screenshot_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'error_screenshots')
+        os.makedirs(screenshot_dir, exist_ok=True)
+
+        # Generate filename with platform, account, reason, and timestamp
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        safe_reason = reason.replace(' ', '_').replace(':', '')[:30]
+        filename = f"tiktok_{self._phone_name}_{safe_reason}_{timestamp}.png"
+        filepath = os.path.join(screenshot_dir, filename)
+
+        try:
+            if self._ui_controller and self._ui_controller._driver:
+                self._ui_controller._driver.save_screenshot(filepath)
+                print(f"  [TikTokPoster] Screenshot saved: {filename}")
+                self._last_screenshot_path = filepath
+                return filepath
+            else:
+                print("  [TikTokPoster] Cannot capture screenshot - no Appium driver")
+        except Exception as e:
+            print(f"  [TikTokPoster] Failed to save screenshot: {e}")
+
+        return None
+
+    def _analyze_failure_screenshot(self, context: str = "post failed") -> Tuple[Optional[str], Optional[str]]:
+        """Capture screenshot and analyze with Claude Vision to understand failure.
+
+        Args:
+            context: Description of what was happening when failure occurred.
+
+        Returns:
+            Tuple of (screenshot_path, analysis_text) or (None, None) if failed.
+        """
+        # Capture screenshot first
+        filepath = self._capture_failure_screenshot(context)
+        if not filepath:
+            return None, None
+
+        try:
+            # Read and encode screenshot
+            with open(filepath, 'rb') as f:
+                image_data = base64.standard_b64encode(f.read()).decode('utf-8')
+
+            # Ensure Claude client is initialized
+            self._ensure_claude()
+
+            # Send to Claude Vision for analysis
+            print("  [TikTokPoster] Analyzing screenshot with Claude Vision...")
+
+            response = self._claude.messages.create(
+                model="claude-sonnet-4-20250514",
+                max_tokens=500,
+                messages=[
+                    {
+                        "role": "user",
+                        "content": [
+                            {
+                                "type": "image",
+                                "source": {
+                                    "type": "base64",
+                                    "media_type": "image/png",
+                                    "data": image_data
+                                }
+                            },
+                            {
+                                "type": "text",
+                                "text": f"""Analyze this TikTok app screenshot. Context: {context}
+
+What do you see on the screen? Look for:
+1. Any error messages, popups, or warnings
+2. Login/signup screens (account logged out)
+3. Verification or captcha requests
+4. "Account suspended" or "banned" messages
+5. The current screen state (feed, profile, posting flow, etc.)
+6. Any buttons or text that indicate what went wrong
+
+Provide a brief (2-3 sentence) analysis of:
+- What screen is showing
+- Why the post might have failed
+- What action might fix it (if obvious)
+
+Be concise and direct."""
+                            }
+                        ]
+                    }
+                ]
+            )
+
+            analysis = response.content[0].text
+            print(f"  [TikTokPoster] Vision analysis: {analysis[:100]}...")
+
+            return filepath, analysis
+
+        except Exception as e:
+            print(f"  [TikTokPoster] Failed to analyze screenshot: {e}")
+            return filepath if filepath and os.path.exists(filepath) else None, None
