@@ -107,18 +107,42 @@ class TikTokPoster(BasePoster):
 
 === TIKTOK POSTING FLOW (follow in order) ===
 
-STEP 1: TAP CREATE BUTTON
+STEP 1: TAP CREATE BUTTON (from home feed)
 - Look for "+" button in bottom navigation bar (usually center)
 - May have text "Create", or just the + icon
 - Common element patterns: class='...ImageView', desc='Create' or desc='Add'
 - ACTION: tap the Create/+ element
+- NOTE: If you see "Templates", "New video", "Drafts" - you're already past this step, go to STEP 1B
 
-STEP 2: TAP UPLOAD (NOT RECORD)
-- After tapping +, you see camera/record view with options
-- Look for "Upload" text/button (usually bottom-left or bottom area)
-- DO NOT tap the red record button in center
-- Common patterns: text='Upload', desc='Upload from gallery'
+STEP 1B: TAP "NEW VIDEO" OR RECOGNIZE VIDEO PREVIEW (from template screen)
+- If you see a template screen with: "Templates", "New video", "Drafts", "Photo editor", "AutoCut", "Captions"
+- FIRST check if you ALSO see "Select" and "Next" buttons - if yes, you're on VIDEO PREVIEW screen (skip to STEP 2B)
+- If no Select/Next, this is the creation menu - tap text="New video" to go to camera view
+- DO NOT tap "CREATE" button at bottom (that's for templates)
+- ACTION: tap "New video" OR if Select/Next visible, go to STEP 2B
+
+STEP 2B: VIDEO PREVIEW SCREEN (has Select + Next buttons)
+- If you see "Select" and "Next" buttons at bottom, you're previewing a video
+- This means a video is already selected from the gallery
+- DO NOT tap "New video" again - that will restart the flow
+- ACTION: tap "Next" button to proceed to editing → set video_selected=true
+
+STEP 2: TAP UPLOAD (from camera view)
+- After tapping "New video", you see camera/record view with:
+  - Red record button in center (DO NOT tap this)
+  - "Upload" option (usually bottom-right area)
+  - May show "Effects", "Flip", "Timer", "Flash" buttons
+- Look for "Upload" text/button
+- Common patterns: text='Upload', desc='Upload', or gallery icon
 - ACTION: tap Upload element → set video_selected=false (not selected yet)
+- NOTE: If there's no "Upload" visible, try scrolling the bottom bar or look for a gallery thumbnail
+
+STEP 2C: GALLERY SCREEN (media picker)
+- If you see: "Recents", "All | Videos | Photos" tabs, grid of thumbnails, "Next" button
+- This is the media gallery where you select videos/photos to post
+- The uploaded video should be the FIRST thumbnail (top-left with duration like "0:09")
+- Look for clickable elements in the thumbnail grid area (center=[~100, ~200] range for first row)
+- ACTION: tap the first video thumbnail (top-left) → then tap "Next" button
 
 STEP 3: SELECT VIDEO FROM GALLERY
 - Gallery shows video thumbnails with duration overlays
@@ -192,10 +216,14 @@ Output ONLY valid JSON with these fields:
 7. Preserve state: if video_selected was true, keep returning video_selected=true
 
 === COMMON MISTAKES TO AVOID ===
+- Don't tap "CREATE" button on template screen - tap "New video" instead
 - Don't tap Record button (red circle) - tap Upload instead
 - Don't skip video selection - must tap a video thumbnail
 - Don't return done before seeing upload confirmation
 - Don't re-enter caption if already entered
+- If you see "Templates", "Photo editor", "AutoCut" - you're on template screen, tap "New video"
+- If you see "Select" AND "Next" buttons - you're on video preview, tap "Next" (NOT "New video")
+- If you see "Recents", thumbnail grid, "Next" - you're on gallery, tap first video then "Next"
 
 Only output JSON."""
 
@@ -320,7 +348,7 @@ Only output JSON."""
 
         return None
 
-    def post(self, video_path: str, caption: str, humanize: bool = False, max_steps: int = 30) -> PostResult:
+    def post(self, video_path: str, caption: str, humanize: bool = False, max_steps: int = 25) -> PostResult:
         """Post video to TikTok using Claude-driven UI navigation.
 
         Args:
@@ -411,10 +439,10 @@ Only output JSON."""
 
                 # Get Claude's action recommendation
                 print(f"  Analyzing UI... ({len(elements)} elements)")
-                # Debug: Print first 10 elements
+                # Debug: Print first 10 elements (sanitize for Windows console)
                 for i, e in enumerate(elements[:10]):
-                    txt = e.get('text', '')[:30] if e.get('text') else ''
-                    desc = e.get('desc', '')[:30] if e.get('desc') else ''
+                    txt = (e.get('text', '')[:30] if e.get('text') else '').encode('ascii', 'replace').decode('ascii')
+                    desc = (e.get('desc', '')[:30] if e.get('desc') else '').encode('ascii', 'replace').decode('ascii')
                     ctr = e.get('center', '')
                     print(f"    [{i}] text='{txt}' desc='{desc}' center={ctr}")
                 action = self._analyze_ui(elements, caption)
