@@ -168,10 +168,10 @@ def execute_posting_job(
     worker_id: int = None
 ) -> tuple:
     """
-    Execute a single posting job.
+    Execute a single posting job using platform-specific poster.
 
     Args:
-        job: Job dict from progress tracker
+        job: Job dict from progress tracker (includes 'platform' field)
         worker_config: This worker's configuration
         config: Overall parallel config
         logger: Logger instance
@@ -185,13 +185,14 @@ def execute_posting_job(
         - error_category: 'account', 'infrastructure', or 'unknown'
         - error_type: Specific error type (e.g., 'suspended', 'adb_timeout')
     """
-    # Import here to avoid circular imports and ensure ANDROID_HOME is set
-    from post_reel_smart import SmartInstagramPoster
+    # Import poster factory (supports instagram, tiktok, etc.)
+    from posters import get_poster
 
     account = job['account']
     video_path = job['video_path']
     caption = job['caption']
     job_id = job['job_id']
+    platform = job.get('platform', 'instagram')  # Default for backwards compat
 
     # Kill any orphaned Appium sessions before starting (prevents session limit issues)
     kill_appium_sessions(worker_config.appium_url, logger)
@@ -203,14 +204,15 @@ def execute_posting_job(
             logger.warning(f"Job {job_id} failed pre-post verification: {error}")
             return False, f"Pre-post verification failed: {error}", 'infrastructure', 'verification_failed'
 
-    logger.info(f"Starting job {job_id}: posting to {account}")
+    logger.info(f"Starting job {job_id}: posting to {account} ({platform})")
     logger.info(f"  Video: {video_path}")
     logger.info(f"  Caption: {caption[:50]}...")
 
     poster = None
     try:
-        # Create poster with this worker's Appium URL and systemPort
-        poster = SmartInstagramPoster(
+        # Use factory to get platform-specific poster
+        poster = get_poster(
+            platform=platform,
             phone_name=account,
             system_port=worker_config.system_port,
             appium_url=worker_config.appium_url
@@ -218,24 +220,19 @@ def execute_posting_job(
 
         # Connect to device
         logger.info(f"Connecting to device via {worker_config.appium_url}...")
-        poster.connect()
+        if not poster.connect():
+            return False, "Connection failed", 'infrastructure', 'connection_failed'
 
         # Post the video
         logger.info("Posting video...")
-        success = poster.post(video_path, caption, humanize=True)
+        result = poster.post(video_path, caption, humanize=True)
 
-        if success:
+        if result.success:
             logger.info(f"Job {job_id} completed successfully!")
             return True, "", None, None
         else:
-            error = poster.last_error_message or "Post returned False"
-            logger.error(f"Job {job_id} failed: {error}")
-            # Classify the error
-            if tracker:
-                category, error_type = tracker._classify_error(error)
-            else:
-                category, error_type = 'unknown', ''
-            return False, error, category, error_type
+            logger.error(f"Job {job_id} failed: {result.error}")
+            return False, result.error, result.error_category, result.error_type
 
     except TimeoutError as e:
         # Explicit timeout - infrastructure issue

@@ -79,7 +79,7 @@ class ProgressTracker:
         'job_id', 'account', 'video_path', 'caption', 'status',
         'worker_id', 'claimed_at', 'completed_at', 'error',
         'attempts', 'max_attempts', 'retry_at', 'error_type',
-        'error_category', 'pass_number'
+        'error_category', 'pass_number', 'platform'
     ]
 
     # Valid status values
@@ -398,7 +398,10 @@ class ProgressTracker:
                 'attempts': '0',
                 'max_attempts': str(self.DEFAULT_MAX_ATTEMPTS),
                 'retry_at': '',
-                'error_type': ''
+                'error_type': '',
+                'error_category': '',
+                'pass_number': '',
+                'platform': 'instagram'  # Default for legacy scheduler_state.json
             })
 
         # Combine existing jobs with new jobs
@@ -612,7 +615,8 @@ class ProgressTracker:
                 'retry_at': '',
                 'error_type': '',
                 'error_category': '',
-                'pass_number': ''
+                'pass_number': '',
+                'platform': getattr(campaign_config, 'platform', 'instagram')
             })
 
         # Write jobs

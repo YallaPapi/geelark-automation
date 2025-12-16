@@ -194,6 +194,7 @@ class CampaignConfig:
     captions_file: str                     # Path to captions CSV
     max_posts_per_account_per_day: int = 1 # Daily limit per account
     enabled: bool = True                   # Whether campaign is active
+    platform: str = "instagram"            # Platform: 'instagram', 'tiktok'
 
     # CSV format configuration
     caption_column: str = "post_caption"   # Column name for caption text
@@ -294,6 +295,7 @@ class CampaignConfig:
             captions_file=captions_file,
             max_posts_per_account_per_day=settings.get('max_posts_per_account_per_day', 1),
             enabled=settings.get('enabled', True),
+            platform=settings.get('platform', 'instagram'),  # Default to Instagram
             caption_column=caption_column,
             filename_column=filename_column,
         )
