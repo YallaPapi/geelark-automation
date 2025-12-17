@@ -220,6 +220,12 @@ class DeviceConnectionManager:
         for enable_retry in range(max_retries):
             print(f"Enabling ADB... (attempt {enable_retry + 1}/{max_retries})")
             try:
+                # Close ADB first before opening (per Geelark dev recommendation)
+                try:
+                    self.client.disable_adb(self.phone_id)
+                    time.sleep(1)
+                except Exception:
+                    pass  # Ignore disable errors
                 self.client.enable_adb(self.phone_id)
             except Exception as e:
                 print(f"  enable_adb() API error: {e}")
