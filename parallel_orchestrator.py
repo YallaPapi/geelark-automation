@@ -28,6 +28,51 @@ Architecture:
         └── Worker 2 (subprocess) ──► Appium:4727 ──► Device
 
     All workers read/write to: parallel_progress.csv (file-locked)
+
+Regression Test Cases (Manual):
+================================
+
+1. Campaign Status Check
+   Command: python parallel_orchestrator.py --campaign viral --status
+   Expected: Shows stats from campaigns/viral/progress.csv
+   Assert: Campaign-specific progress file is used
+
+2. Campaign Reset Day
+   Command: python parallel_orchestrator.py --campaign viral --reset-day
+   Expected: Archives viral progress file, creates fresh one
+   Assert: campaigns/viral/progress_YYYYMMDD_archive.csv created
+
+3. Parallel Workers No Stuck Claims
+   Command: python parallel_orchestrator.py --campaign viral --workers 3 --run
+   Wait: 60 seconds then Ctrl+C
+   Expected: All "claimed" jobs released, no orphans
+   Assert: grep "claimed" campaigns/viral/progress.csv returns empty
+
+4. Orchestrator Conflict Detection
+   Terminal 1: python parallel_orchestrator.py --campaign viral --run
+   Terminal 2: python parallel_orchestrator.py --campaign viral --run
+   Expected: Terminal 2 shows "CONFLICT DETECTED" and refuses to start
+
+5. Different Campaigns Can Run Concurrently
+   Terminal 1: python parallel_orchestrator.py --campaign viral --run
+   Terminal 2: python parallel_orchestrator.py --campaign podcast --run
+   Expected: Both start successfully, different progress files
+
+6. Worker Crash Releases Job
+   Start: python parallel_orchestrator.py --campaign viral --workers 1 --run
+   While running: taskkill /F /PID <worker_pid>
+   Expected: Orchestrator detects crash, logs "Released orphaned job"
+
+7. Clean Shutdown Stops Appium
+   Start: python parallel_orchestrator.py --campaign viral --run
+   After workers start: Ctrl+C
+   Expected: All Appium ports (4723, 4725) freed
+   Assert: netstat -ano | findstr "4723" returns nothing
+
+8. Campaign-Scoped Phone Cleanup
+   Command: python parallel_orchestrator.py --campaign viral --stop-all
+   Expected: Only viral phones stopped, others untouched
+   Assert: Log shows "Skipped N running phone(s) not in this campaign"
 """
 
 import os
@@ -40,6 +85,7 @@ import json
 import argparse
 import logging
 import shutil
+import atexit
 from datetime import datetime
 from typing import List, Optional, Dict, Tuple
 
@@ -54,10 +100,10 @@ from geelark_client import GeelarkClient
 from retry_manager import RetryPassManager, RetryConfig, PassResult
 
 
-# Setup logging
+# Setup logging with PID for debugging multi-process issues
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s [ORCHESTRATOR] %(levelname)s %(message)s'
+    format=f'%(asctime)s [ORCHESTRATOR:{os.getpid()}] %(levelname)s %(message)s'
 )
 logger = logging.getLogger(__name__)
 
@@ -66,6 +112,50 @@ _worker_processes: List[subprocess.Popen] = []
 _shutdown_requested = False
 _active_config: Optional[ParallelConfig] = None
 _active_campaign_accounts: Optional[List[str]] = None  # For campaign-specific cleanup
+_atexit_registered = False
+
+
+def _atexit_cleanup():
+    """
+    Emergency cleanup registered with atexit.
+
+    This ensures resources are freed even if the orchestrator exits unexpectedly.
+    It's a last-resort cleanup - normal shutdown goes through full_cleanup().
+    """
+    global _active_config, _active_campaign_accounts, _worker_processes
+
+    # Only run if we have active config (meaning we started running)
+    if _active_config is None:
+        return
+
+    logger.warning("ATEXIT: Emergency cleanup triggered")
+
+    # Kill any remaining worker processes
+    for proc in _worker_processes:
+        if proc and proc.poll() is None:
+            try:
+                proc.kill()
+                logger.warning(f"ATEXIT: Killed worker PID {proc.pid}")
+            except:
+                pass
+
+    # Kill Appium ports
+    for port in [4723, 4725, 4727, 4729, 4731]:
+        try:
+            kill_process_on_port(port)
+        except:
+            pass
+
+    # Stop campaign phones (or all if no campaign)
+    try:
+        if _active_campaign_accounts:
+            stop_campaign_phones(_active_campaign_accounts)
+        else:
+            stop_all_phones()
+    except:
+        pass
+
+    logger.warning("ATEXIT: Emergency cleanup complete")
 
 
 def check_for_running_orchestrators(campaign_name: str = None) -> Tuple[bool, List[str]]:
@@ -78,6 +168,26 @@ def check_for_running_orchestrators(campaign_name: str = None) -> Tuple[bool, Li
 
     Different campaigns CAN run concurrently since they use separate
     progress files and account lists.
+
+    Conflict Matrix:
+        Us (campaign_name)    Other (detected)    Result
+        ---------------------  -----------------   -------
+        None (legacy)          None (legacy)       CONFLICT
+        None (legacy)          "viral"             OK
+        "viral"                None (legacy)       OK
+        "viral"                "viral"             CONFLICT
+        "viral"                "podcast"           OK
+        "podcast"              "viral"             OK
+
+    Test Cases:
+        1. Legacy vs legacy: check_for_running_orchestrators(None) with another
+           'python parallel_orchestrator.py --run' → CONFLICT
+        2. Campaign vs different campaign: check_for_running_orchestrators("viral")
+           with 'python parallel_orchestrator.py --campaign podcast --run' → OK
+        3. Campaign vs same campaign: check_for_running_orchestrators("viral")
+           with 'python parallel_orchestrator.py --campaign viral --run' → CONFLICT
+        4. Campaign vs legacy: check_for_running_orchestrators("viral")
+           with 'python parallel_orchestrator.py --run' → OK
 
     Args:
         campaign_name: If specified, only conflict with orchestrators running
@@ -803,8 +913,22 @@ def seed_progress_file(
     return seed_progress_file_ctx(ctx, config, force_reseed=False)
 
 
-def start_worker_process(worker_id: int, config: ParallelConfig) -> subprocess.Popen:
-    """Start a single worker subprocess."""
+def start_worker_process(
+    worker_id: int,
+    config: ParallelConfig,
+    campaign_name: str = None
+) -> subprocess.Popen:
+    """
+    Start a single worker subprocess with stdout/stderr capture.
+
+    Args:
+        worker_id: Worker ID
+        config: Parallel configuration
+        campaign_name: Campaign name for logging context (optional)
+
+    Returns:
+        Popen process handle
+    """
     cmd = [
         sys.executable,
         'parallel_worker.py',
@@ -814,36 +938,93 @@ def start_worker_process(worker_id: int, config: ParallelConfig) -> subprocess.P
         '--delay', str(config.delay_between_jobs)
     ]
 
+    # Pass campaign name to worker for logging context
+    if campaign_name:
+        cmd.extend(['--campaign-name', campaign_name])
+
     logger.info(f"Starting worker {worker_id}...")
+    logger.info(f"  Command: {' '.join(cmd)}")
 
     # Get environment with Android SDK
     env = os.environ.copy()
     env.update(config.get_env_vars())
 
+    # Create log file for worker stdout/stderr
+    log_dir = config.logs_dir if hasattr(config, 'logs_dir') else 'logs'
+    os.makedirs(log_dir, exist_ok=True)
+    log_file_path = os.path.join(log_dir, f'worker_{worker_id}.log')
+
+    # Open log file for writing (append mode for this session)
+    log_file = open(log_file_path, 'a', encoding='utf-8')
+    log_file.write(f"\n{'='*60}\n")
+    log_file.write(f"Worker {worker_id} started at {datetime.now().isoformat()}\n")
+    log_file.write(f"Command: {' '.join(cmd)}\n")
+    log_file.write(f"{'='*60}\n\n")
+    log_file.flush()
+
     if sys.platform == 'win32':
         proc = subprocess.Popen(
             cmd,
             env=env,
+            stdout=log_file,
+            stderr=subprocess.STDOUT,  # Merge stderr into stdout
             creationflags=subprocess.CREATE_NEW_PROCESS_GROUP
         )
     else:
         proc = subprocess.Popen(
             cmd,
             env=env,
+            stdout=log_file,
+            stderr=subprocess.STDOUT,  # Merge stderr into stdout
             start_new_session=True
         )
 
+    # Store log file handle on process for cleanup
+    proc._log_file = log_file
+
     logger.info(f"Worker {worker_id} started with PID {proc.pid}")
+    logger.info(f"  Log file: {log_file_path}")
+
+    # Validate worker started successfully (check after brief delay)
+    time.sleep(0.5)
+    if proc.poll() is not None:
+        exit_code = proc.returncode
+        logger.error(f"Worker {worker_id} exited immediately with code {exit_code}")
+        logger.error(f"  Check log file: {log_file_path}")
+        # Read last few lines of log for context
+        try:
+            log_file.flush()
+            with open(log_file_path, 'r', encoding='utf-8') as f:
+                lines = f.readlines()
+                if lines:
+                    logger.error(f"  Last log lines:")
+                    for line in lines[-10:]:
+                        logger.error(f"    {line.rstrip()}")
+        except Exception:
+            pass
+
     return proc
 
 
-def start_all_workers(config: ParallelConfig) -> List[subprocess.Popen]:
-    """Start all worker processes."""
+def start_all_workers(
+    config: ParallelConfig,
+    campaign_name: str = None
+) -> List[subprocess.Popen]:
+    """
+    Start all worker processes.
+
+    Args:
+        config: Parallel configuration
+        campaign_name: Campaign name for worker logging context
+
+    Returns:
+        List of Popen process handles
+    """
     global _worker_processes
 
     processes = []
     for worker in config.workers:
-        proc = start_worker_process(worker.worker_id, config)
+        proc = start_worker_process(worker.worker_id, config, campaign_name)
         processes.append(proc)
         time.sleep(60)  # Stagger starts - 60s between workers for Geelark ADB setup to complete
 
@@ -852,7 +1033,7 @@ def start_all_workers(config: ParallelConfig) -> List[subprocess.Popen]:
 
 
 def stop_all_workers(processes: List[subprocess.Popen], timeout: int = 30) -> None:
-    """Stop all worker processes gracefully."""
+    """Stop all worker processes gracefully and close log files."""
     logger.info(f"Stopping {len(processes)} worker(s)...")
 
     # Send termination signal
@@ -880,7 +1061,30 @@ def stop_all_workers(processes: List[subprocess.Popen], timeout: int = 30) -> No
             logger.warning(f"Force killing worker PID {proc.pid}")
             proc.kill()
 
-    logger.info("All workers stopped")
+    # Close log files and collect exit codes
+    exit_codes = {}
+    for i, proc in enumerate(processes):
+        exit_codes[i] = proc.returncode
+        if hasattr(proc, '_log_file') and proc._log_file:
+            try:
+                proc._log_file.write(f"\n{'='*60}\n")
+                proc._log_file.write(f"Worker stopped at {datetime.now().isoformat()}\n")
+                proc._log_file.write(f"Exit code: {proc.returncode}\n")
+                proc._log_file.write(f"{'='*60}\n")
+                proc._log_file.close()
+            except Exception:
+                pass
+
+    # Detailed shutdown summary
+    normal_exits = sum(1 for code in exit_codes.values() if code == 0)
+    error_exits = sum(1 for code in exit_codes.values() if code != 0)
+    logger.info("="*60)
+    logger.info(f"WORKERS STOPPED: {len(processes)} total, {normal_exits} normal, {error_exits} errors")
+    if error_exits > 0:
+        for wid, code in exit_codes.items():
+            if code != 0:
+                logger.warning(f"  Worker {wid} exit code: {code}")
+    logger.info("="*60)
 
 
 def force_kill_all(config: ParallelConfig = None):
@@ -909,7 +1113,14 @@ def force_kill_all(config: ParallelConfig = None):
 
 
 def monitor_workers(processes: List[subprocess.Popen], config: ParallelConfig) -> None:
-    """Monitor worker processes until all complete or shutdown requested."""
+    """
+    Monitor worker processes until all complete or shutdown requested.
+
+    Key behaviors:
+    - Detects when workers exit unexpectedly
+    - Releases claimed jobs from dead workers immediately (not waiting for stale timeout)
+    - Logs worker exit codes for debugging
+    """
     global _shutdown_requested
 
     tracker = ProgressTracker(config.progress_file)
@@ -919,7 +1130,43 @@ def monitor_workers(processes: List[subprocess.Popen], config: ParallelConfig) -
     last_status_time = 0
     status_interval = 30  # Print status every 30 seconds
 
+    # Track which workers have already been logged as exited
+    workers_logged_exit = set()
+
+    # Map worker_id to process for tracking
+    worker_procs = {i: p for i, p in enumerate(processes)}
+
     while not _shutdown_requested:
+        # Check for newly exited workers and handle their orphaned jobs
+        for worker_id, proc in worker_procs.items():
+            if worker_id not in workers_logged_exit and proc.poll() is not None:
+                exit_code = proc.returncode
+                workers_logged_exit.add(worker_id)
+
+                if exit_code == 0:
+                    logger.info(f"Worker {worker_id} exited normally (code 0)")
+                else:
+                    logger.error(f"Worker {worker_id} CRASHED with exit code {exit_code}")
+
+                    # Check log file for last error
+                    log_dir = config.logs_dir if hasattr(config, 'logs_dir') else 'logs'
+                    log_file = os.path.join(log_dir, f'worker_{worker_id}.log')
+                    if os.path.exists(log_file):
+                        try:
+                            with open(log_file, 'r', encoding='utf-8') as f:
+                                lines = f.readlines()
+                                error_lines = [l for l in lines[-20:] if 'ERROR' in l or 'Exception' in l or 'Traceback' in l]
+                                if error_lines:
+                                    logger.error(f"  Recent errors from worker {worker_id}:")
+                                    for line in error_lines[-5:]:
+                                        logger.error(f"    {line.rstrip()}")
+                        except Exception:
+                            pass
+
+                # Release any jobs claimed by this worker
+                # This is faster than waiting for stale claim timeout
+                _release_worker_claimed_jobs(tracker, worker_id, logger)
+
         # Check if all workers have exited
         all_done = all(proc.poll() is not None for proc in processes)
         if all_done:
@@ -943,6 +1190,39 @@ def monitor_workers(processes: List[subprocess.Popen], config: ParallelConfig) -
     # If shutdown requested, stop workers
     if _shutdown_requested:
         stop_all_workers(processes, timeout=config.shutdown_timeout)
+
+
+def _release_worker_claimed_jobs(tracker: ProgressTracker, worker_id: int, logger: logging.Logger) -> int:
+    """
+    Release all jobs claimed by a specific worker.
+
+    Called when a worker exits unexpectedly to immediately free its jobs
+    rather than waiting for stale claim timeout.
+
+    Args:
+        tracker: ProgressTracker instance
+        worker_id: Worker ID whose jobs to release
+        logger: Logger instance
+
+    Returns:
+        Number of jobs released
+    """
+    def _release_operation(jobs):
+        released = 0
+        for job in jobs:
+            if (job.get('status') == 'claimed' and
+                job.get('worker_id') == str(worker_id)):
+                job['status'] = 'pending'
+                job['worker_id'] = ''
+                job['claimed_at'] = ''
+                logger.warning(f"Released orphaned job {job['job_id']} from dead worker {worker_id}")
+                released += 1
+        return jobs, released
+
+    released = tracker._locked_operation(_release_operation)
+    if released > 0:
+        logger.info(f"Released {released} orphaned job(s) from worker {worker_id}")
+    return released
 
 
 def show_status_ctx(ctx: PostingContext, parallel_config: ParallelConfig) -> None:
@@ -1076,9 +1356,22 @@ def run_parallel_posting_ctx(
     Returns:
         Dict with results
     """
-    global _active_config, _shutdown_requested, _active_campaign_accounts
+    global _active_config, _shutdown_requested, _active_campaign_accounts, _atexit_registered
 
     setup_signal_handlers()
+
+    # Register atexit cleanup handler (only once)
+    if not _atexit_registered:
+        atexit.register(_atexit_cleanup)
+        _atexit_registered = True
+
+    # EXPLICIT LIFECYCLE LOG - Makes silent exits impossible
+    logger.info("=" * 60)
+    logger.info("ORCHESTRATOR STARTED")
+    logger.info(f"  Context: {ctx.describe()}")
+    logger.info(f"  Workers: {num_workers}")
+    logger.info(f"  PID: {os.getpid()}")
+    logger.info("=" * 60)
 
     parallel_config = get_config(num_workers=num_workers)
     parallel_config.progress_file = ctx.progress_file
@@ -1119,6 +1412,9 @@ def run_parallel_posting_ctx(
         if ctx.is_campaign_mode():
             logger.error("NOTE: Different campaigns can run concurrently.")
         logger.error("="*60)
+        logger.info("=" * 60)
+        logger.info("ORCHESTRATOR FINISHED (conflict detected, did not run)")
+        logger.info("=" * 60)
         return {'error': 'orchestrator_conflict', 'conflicts': conflicts}
     logger.info("No conflicting orchestrators found")
 
@@ -1159,6 +1455,9 @@ def run_parallel_posting_ctx(
                 logger.error(f"No jobs to process. Check campaign folder: {ctx.campaign_config.base_dir}")
             else:
                 logger.error("No jobs to process. Check scheduler_state.json and accounts.txt")
+            logger.info("=" * 60)
+            logger.info("ORCHESTRATOR FINISHED (no jobs to process)")
+            logger.info("=" * 60)
             return {'error': 'no_jobs'}
 
     # Show initial stats
@@ -1177,7 +1476,7 @@ def run_parallel_posting_ctx(
             pass_num = retry_mgr.start_new_pass()
 
             # Start workers for this pass
-            processes = start_all_workers(parallel_config)
+            processes = start_all_workers(parallel_config, ctx.campaign_name)
 
             # Monitor until pass complete
             monitor_workers(processes, parallel_config)
@@ -1229,6 +1528,11 @@ def run_parallel_posting_ctx(
     # Add retry summary to results
     final_stats['retry_summary'] = retry_mgr.get_summary()
     final_stats['failure_breakdown'] = failure_stats
+
+    logger.info("=" * 60)
+    logger.info("ORCHESTRATOR FINISHED (completed normally)")
+    logger.info(f"  PID: {os.getpid()}")
+    logger.info("=" * 60)
 
     return final_stats
 
@@ -1480,7 +1784,12 @@ Examples:
             logger.info(f"Stopping {ctx.describe()} phones ({len(campaign_accounts)} accounts)...")
             full_cleanup(parallel_config, campaign_accounts=campaign_accounts)
         else:
-            logger.info("Stopping ALL phones (no campaign specified)...")
+            # WARNING: Non-campaign mode stops ALL phones including VA phones!
+            logger.warning("="*60)
+            logger.warning("WARNING: No campaign specified - stopping ALL Geelark phones!")
+            logger.warning("This includes VA phones and phones from other campaigns.")
+            logger.warning("Use --campaign <name> to stop only specific campaign phones.")
+            logger.warning("="*60)
             full_cleanup(parallel_config)
         logger.info("Done")
 

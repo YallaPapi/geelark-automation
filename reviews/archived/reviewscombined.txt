@@ -1,0 +1,262 @@
+The core issues are likely in how the orchestrator now constructs `PostingContext`, calls `runparallelposting`, and coordinates workers/phones after the campaign refactor and TikTok changes.[1]
+
+Below are tailored Codebase Digest–style prompts you can run against this repo XML to debug the current problem and harden the system.
+
+***
+
+## Orchestrator exits / workers not really running
+
+**Prompt 1 – Trace orchestrator lifecycle and exit conditions**
+
+> You are analyzing a Python parallel orchestrator that manages multiple worker subprocesses for Appium-based posting.  
+>  
+> Goal: Find all code paths in `parallelorchestrator.py` that can cause the main process to exit early or skip actually running workers, especially in campaign mode. Focus on the `PostingContext` refactor and the `runparallelposting` entrypoint.  
+>  
+> Tasks:  
+> - Enumerate all branches in `main()` after argument parsing that lead to `sys.exit()` or an immediate return when `--run` is passed (with or without `--campaign`).  
+> - Show how `PostingContext` is constructed in campaign vs legacy mode, and how that context is passed into `runparallelposting`.  
+> - Map out, step by step, what happens when executing:  
+>   - `python parallel_orchestrator.py --campaign podcast --workers 5 --retry-all-failed --run`  
+>   - `python parallel_orchestrator.py --campaign podcast --workers 1 --run`  
+> - Identify any conditions where `runparallelposting` is never reached, is called with the wrong parameters, or returns prematurely without propagating errors.  
+> - Check the new `retrycfg` / `RetryConfig` usage and confirm `results.runparallelposting(...)` error propagation is consistent.  
+>  
+> Output:  
+> - A short control-flow diagram (text) from `main()` to `runparallelposting` for campaign mode.  
+> - A list of specific lines/blocks that can cause early exit while still leaving workers/Appium started, if any.  
+> - Concrete suggestions for logging and guardrails (e.g., mandatory “orchestrator STARTED/FINISHED” log lines, CLI argument validations) to make silent exits impossible.
+
+***
+
+## Workers claiming jobs but not processing / race conditions
+
+**Prompt 2 – Analyze worker lifecycle and job-claiming race conditions**
+
+> You are analyzing a multi-worker posting system that uses a CSV-based `ProgressTracker` with file locking, plus a `parallelworker.py` worker process. The problem: jobs are marked as “claimed” but no real work happens, and no phones run.  
+>  
+> Focus files:  
+> - `parallelworker.py`  
+> - `progresstracker.py`  
+> - Any shared helper used by both (e.g., `ParallelConfig`, `WorkerConfig`).  
+>  
+> Tasks:  
+> - Trace the complete worker lifecycle in `parallelworker.py`: from process start, through ADB/Appium setup, to claiming a job from `ProgressTracker` and marking it `claimed`, then to marking it `completed` or `failed`.  
+> - Identify exactly where in the code the status transitions `pending -> claimed -> completed/failed` are performed.  
+> - Determine if there is any path where:  
+>   - The job gets marked as `claimed` before the phone/Appium session is actually ready, and  
+>   - A failure in ADB/Appium setup or in `SmartInstagramPoster`/TikTok poster causes the worker to crash or bail out **without** resetting the job status from `claimed` back to a retryable state.  
+> - Check if there is any sleep/retry logic between claim and actual post; call out any race conditions or “claim too early” patterns.  
+>  
+> Output:  
+> - A bullet list of all places where `ProgressTracker` status is changed.  
+> - Any paths where jobs can be stuck indefinitely in `claimed`.  
+> - Proposed changes to defer claiming until after Appium is ready, or to add a “claim with lease timeout” / “auto-unclaim on worker crash” strategy.
+
+***
+
+## Worker crashes that are invisible to orchestrator
+
+**Prompt 3 – Make worker subprocess failures visible**
+
+> You are reviewing how `parallelorchestrator.py` spawns and supervises `parallelworker.py` subprocesses. The current bug: workers appear to start, progress CSV shows jobs “claimed”, but no real work happens, and the orchestrator exits silently while Appium servers remain.  
+>  
+> Tasks:  
+> - Locate the function responsible for starting worker processes (e.g., `startworkerprocess` in `parallelorchestrator.py`).  
+> - Show:  
+>   - How the `cmd` array for `subprocess.Popen` is built (arguments, environment, working directory).  
+>   - Whether `stdout`/`stderr` from workers are captured, logged, or fully discarded.  
+>   - Whether the orchestrator periodically polls worker process `returncode` or only waits on high-level results.  
+> - Identify any missing error checks where worker processes can crash immediately (bad CLI args, import failure, TikTok-only code) without the orchestrator noticing.  
+>  
+> Output:  
+> - A description of the existing worker supervision model.  
+> - Specific code locations where you would:  
+>   - Add logging of worker command line and PID.  
+>   - Capture/redirect worker stderr into a per-worker log file.  
+>   - Detect and log when a worker exits with non-zero status while jobs remain “claimed”.  
+> - One concrete design for a minimal “worker heartbeat” or “last-seen timestamp” mechanism using the existing CSV (or an auxiliary file) to distinguish “claimed but alive” vs “claimed by dead worker”.
+
+***
+
+## Signal handling and graceful shutdown
+
+**Prompt 4 – Audit signal handling and shutdown semantics**
+
+> The system has `shutdownrequested` flags and signal handlers in `parallelworker.py`. `parallelorchestrator.py` performs cleanup including stopping phones and Appium. The symptoms: the orchestrator exits while Appium servers keep running and jobs stay “claimed”.  
+>  
+> Tasks:  
+> - List all signal handlers and shutdown paths in:  
+>   - `parallelworker.py` (e.g., `setupsignalhandlers`, `shutdownrequested` checks).  
+>   - `parallelorchestrator.py` (any signal handling or try/finally around the main run loop).  
+> - Identify where cleanup of Appium servers and Geelark phones is triggered (`fullcleanup`, `stopallphones`, `AppiumServerManager.stop_all` etc.).  
+> - Determine whether workers receive shutdown signals before the orchestrator tears down shared infrastructure, and whether they can be left mid-job.  
+> - Check if there are code paths where:  
+>   - The orchestrator exits due to an error and skips `fullcleanup`, or  
+>   - `fullcleanup` runs, but does not kill Appium processes started by workers.  
+>  
+> Output:  
+> - A table of “signal → handler → side effects” for orchestrator and workers.  
+> - Concrete recommendations to ensure:  
+>   - Orchestrator will not exit until all worker processes have either finished, been signaled, and confirmed terminated.  
+>   - Appium servers and Geelark phones are stopped **only** after workers are down, and only for this orchestrator session.  
+>   - Shutdown always logs a clear summary (e.g., “Stopped N workers, M Appium servers, K phones”).
+
+***
+
+## `check_for_running_orchestrators` and multi-campaign conflicts
+
+**Prompt 5 – Fix orchestrator conflict detection for campaigns**
+
+> The function `checkforrunningorchestrators` in `parallelorchestrator.py` currently treats *any* `parallel_orchestrator.py --run` process as a conflict, blocking concurrent campaigns even if they use different progress files and accounts. The new design adds a `campaignname` parameter.  
+>  
+> Tasks:  
+> - Locate `checkforrunningorchestrators` and confirm its current implementation and call sites, including how it’s used with `PostingContext`.  
+> - Verify that the campaign-aware version:  
+>   - Treats orchestrators with the **same** campaign as conflicts.  
+>   - Allows multiple concurrent orchestrators when:  
+>     - They have different `campaignname`, or  
+>     - They are in legacy mode and use different progress files/accounts.  
+> - Check if there are any callers still using the old (no-arg) version or still parsing `ps` output in a campaign-agnostic way.  
+>  
+> Output:  
+> - A before/after description of the conflict-detection logic.  
+> - A set of unit-level test cases (input: list of fake process command lines, current campaign context; output: conflict yes/no) to ensure you never regress this again.  
+> - A suggested log message format when a conflict is detected, including campaign name and PID/command of the existing orchestrator.
+
+***
+
+## Appium server lifecycle and orphan processes
+
+**Prompt 6 – Ensure Appium server lifecycle is tied to worker lifecycle**
+
+> The system uses `AppiumServerManager` to handle Appium servers per worker. Observed bug: Appium servers on ports 4723, 4725, 4727, 4729, 4731 remain running after the orchestrator exits, but no phones are running.  
+>  
+> Tasks:  
+> - In `parallelworker.py`, trace every use of `AppiumServerManager`: creation, starting the server, retrieving ports, and shutdown.  
+> - In `appiumservermanager.py`, document:  
+>   - How servers are started (command line, subprocess, PID tracking).  
+>   - How they are stopped (kill by PID, kill by port, or both).  
+> - Identify any missing `try/finally` or `with`-style blocks where a worker can crash or `sys.exit()` before shutting down its Appium server.  
+> - Check if the orchestrator ever attempts global Appium cleanup and whether it knows **which** ports belong to which worker/campaign.  
+>  
+> Output:  
+> - A list of all exit paths in `parallelworker.py` and whether each guarantees stopping the Appium server.  
+> - Recommended refactor to:  
+>   - Wrap the entire worker main loop in a `try/finally` that always calls `AppiumServerManager.stop()` or equivalent.  
+>   - Optionally add a “server lease file” per worker with PID and port, so external cleanup tools can kill orphans safely.
+
+***
+
+## CSV schema issues and `ProgressTracker` robustness
+
+**Prompt 7 – Harden `ProgressTracker` and schema alignment**
+
+> The CSV progress file is central to job state. There is a known bug: `seedfromcampaign` does not populate the `passnumber` column even though `COLUMNS` defines it. This can subtly break downstream logic.  
+>  
+> Tasks:  
+> - List the full schema (`COLUMNS`) in `progresstracker.py` and show where each column is written/updated.  
+> - Examine `seedfromcampaign` and ensure the dict used to append `newjobs` matches every column, including `passnumber`.  
+> - Search for all reads/writes of `passnumber` to see how it is used in retry logic or statistics.  
+> - Check file-locking mechanisms around the CSV: are there any code paths where reads/writes are performed without acquiring the lock (especially new TikTok paths)?  
+>  
+> Output:  
+> - A corrected `seedfromcampaign` job dict that fully matches `COLUMNS`.  
+> - A checklist of invariants for the CSV (e.g., non-null `status`, numeric `attempts`, valid `passnumber`).  
+> - Suggestions for a lightweight “progress file validator” script that can be run before/after campaigns to catch schema drift and corrupt rows.
+
+***
+
+## TikTok integration regressions
+
+**Prompt 8 – Isolate TikTok-specific regressions**
+
+> The system worked before TikTok support was added (around commit `aebf876`). The regression likely came from shared infrastructure changes made to support TikTok.  
+>  
+> Tasks:  
+> - Identify TikTok-related modules (e.g., TikTok poster class, new device control paths) and where they are wired into the worker pipeline (e.g., platform selection logic, `SmartInstagramPoster` vs TikTok poster).  
+> - Find any new imports or branches in `parallelworker.py`, `parallelorchestrator.py`, or `deviceconnection` that are TikTok-specific and could fail on environments that only expect Instagram.  
+> - Look for changes since the “pre-TikTok” state where shared components were modified rather than added in parallel (e.g., unified UI controller, shared ADB helpers, posting state machine).  
+>  
+> Output:  
+> - A list of TikTok-related changes that affect:  
+>   - Process startup (imports, environment requirements).  
+>   - Device/Appium initialization.  
+>   - Job posting loop and error handling.  
+> - Concrete recommendations to:  
+>   - Fail gracefully when TikTok-specific preconditions are not met (e.g., missing package, capabilities).  
+>   - Keep platform-specific failures from killing the whole worker/orchestrator.  
+>   - Optionally add a `platform` field to campaigns and use it to decide which poster to instantiate.
+
+***
+
+## Logging and observability improvements
+
+**Prompt 9 – Add campaign-aware, worker-aware logging**
+
+> Logging currently lacks clear campaign context and worker identity, making debugging hard. There is also a missing `--campaign-name` argument when spawning workers.  
+>  
+> Tasks:  
+> - Enumerate all logger initializations and `logging.basicConfig` calls in `parallelorchestrator.py` and `parallelworker.py`.  
+> - Confirm whether the worker command line includes campaign or context (it should add `--campaign-name` for logging and metrics).  
+> - Design a logging format that always includes:  
+>   - Campaign name or “legacy”.  
+>   - Worker ID.  
+>   - PID.  
+> - Propose minimal changes to:  
+>   - Add a `--campaign-name` CLI arg to `parallelworker.py`.  
+>   - Pass `ctx.campaignname` from the orchestrator when spawning workers.  
+>   - Reconfigure loggers so that errors clearly identify which campaign/worker they belong to.  
+>  
+> Output:  
+> - A code snippet showing the updated worker spawn command with `--campaign-name`.  
+> - A recommended logging format string.  
+> - A short list of high-value log statements to add (e.g., when a worker claims a job, starts Appium, posts successfully, marks job failed, or exits).
+
+***
+
+## Phone ownership and cleanup (stop-all vs per-campaign)
+
+**Prompt 10 – Make phone cleanup campaign-scoped and session-scoped**
+
+> `stopallphones` currently iterates over **all** Geelark phones and stops any with status 1, which is unsafe when multiple campaigns or VAs are running. The new design should only stop phones started by this orchestrator, and optionally support a `--stop-campaign-phones` flag.  
+>  
+> Tasks:  
+> - Examine `stopallphones`, `fullcleanup`, and any Geelark client usage (`GeelarkClient`) in `parallelorchestrator.py`.  
+> - Identify where phones are started for a campaign and how they are associated (if at all) with worker IDs or campaigns.  
+> - Design a mechanism to track “phones started by this orchestrator session” (e.g., an in-memory `set` plus a persisted session file).  
+>  
+> Output:  
+> - A proposal for:  
+>   - `start_session_phone(phone_name)` that records phone ownership.  
+>   - `stopsessionphones()` that only stops phones in the recorded set.  
+>   - A new `--stop-campaign-phones` CLI mode that uses `ctx.campaignname` in logs and only touches campaign phones.  
+> - A set of invariants ensuring that `--stop-all` is clearly documented as dangerous and logs all phones it stops.
+
+***
+
+## General robustness and tests
+
+**Prompt 11 – Design regression tests for campaign orchestration**
+
+> The campaign system has multiple moving parts: `PostingContext`, campaign-specific progress files, TikTok integration, and new conflict detection. To prevent future regressions like “orchestrator exits silently; jobs stuck as claimed,” you need automated checks.  
+>  
+> Tasks:  
+> - Using the existing Task IDs and test snippets in the XML (e.g., Task 60/61 test strategies), extract all current manual/CLI tests related to campaign mode.  
+> - Propose a minimal automated test suite (can be `pytest` or simple Python scripts) that validates:  
+>   - `--campaign X --status`, `--reset-day`, `--retry-all-failed`, `--seed-only`, and `--run` all operate on the campaign’s progress file and accounts.  
+>   - Multiple worker processes can run in parallel without leaving jobs stuck in `claimed`.  
+>   - Stopping the orchestrator yields no orphaned Appium servers and leaves no jobs forever `claimed`.  
+>  
+> Output:  
+> - A list of 5–8 concrete test cases with: command to run, expected observable behavior, and files/processes to assert on.  
+> - Suggestions for a small “orchestrator harness” that can:  
+>   - Spawn the orchestrator with a test campaign.  
+>   - Wait for N seconds.  
+>   - Inspect progress CSV, worker PIDs, and Appium ports.  
+>   - Terminate everything and assert invariants.
+
+***
+
+Running these prompts against your XML/codebase-digest should give you focused diffs and concrete patches for the orchestrator exit, orphaned Appium servers, and jobs stuck in `claimed`, plus harden logging, conflict detection, and campaign isolation.
+
+[1](https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/59369057/03dc1144-1f37-4317-a217-22baba58324c/repomix-output-YallaPapi-geelark-automation.xml)

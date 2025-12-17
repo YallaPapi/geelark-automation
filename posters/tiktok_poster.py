@@ -616,7 +616,7 @@ Only output JSON."""
         )
 
         response = self._claude.messages.create(
-            model="claude-sonnet-4-20250514",
+            model="claude-haiku-4-5",
             max_tokens=500,
             messages=[{"role": "user", "content": prompt}]
         )
@@ -820,7 +820,7 @@ Only output JSON."""
             print("  [TikTokPoster] Analyzing screenshot with Claude Vision...")
 
             response = self._claude.messages.create(
-                model="claude-sonnet-4-20250514",
+                model="claude-haiku-4-5",
                 max_tokens=500,
                 messages=[
                     {

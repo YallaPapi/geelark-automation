@@ -1,0 +1,172 @@
+Here are focused, Codebase-Digest-style prompts you can run (one by one) to get TikTok in while restoring the old, working Instagram behavior.
+
+***
+
+## Prompt 1 – Identify IG-breaking changes between c260362 and HEAD
+
+> You are analyzing a Python automation repo that posts Instagram Reels and TikToks via Appium. Instagram reels worked at commit `c260362`, but at `HEAD` Instagram now fails with “Max steps reached” and gets stuck on the home feed (never tapping the `+` button).  
+>  
+> Goal: From the diffs between `c260362` and `HEAD`, extract all changes that can plausibly break **Instagram** navigation and posting, especially around AI-driven UI navigation.  
+>  
+> Files to analyze (diff: `c260362` vs `HEAD`):  
+> - `claude_analyzer.py`  
+> - `post_reel_smart.py`  
+> - `parallel_worker.py`  
+> - `device_connection.py`  
+> - `posters/instagram_poster.py` (if present)  
+> - Any shared utilities used by both Instagram and TikTok navigation.  
+>  
+> Tasks:  
+> 1. For each file, list concrete changes that could affect **Instagram-only** behavior, such as:  
+>    - Modifications to the Claude prompt / instructions for Instagram navigation.  
+>    - Changes in how UI elements are dumped or passed to the analyzer.  
+>    - Changes in how actions (`tap`, `swipe`, `tapAndType`, etc.) are interpreted and executed.  
+>    - New abstractions or shared logic that unify TikTok/Instagram but alter the previous IG assumptions (button texts, layout, flows).  
+> 2. For each such change, briefly explain *how* it could cause:  
+>    - The AI to never select the `+` button.  
+>    - The poster to loop until `max_steps` is hit without reaching the posting screen.  
+>  
+> Output:  
+> - A bullet list grouped by file:  
+>   - `File: claude_analyzer.py` → bullets of suspicious changes + why.  
+>   - `File: post_reel_smart.py` → bullets, etc.  
+> - Only include changes that plausibly impact Instagram; ignore pure TikTok additions that leave IG paths untouched.
+
+***
+
+## Prompt 2 – Restore Instagram prompt and navigation while keeping TikTok
+
+> You are refactoring the navigation logic to restore the **previously working** Instagram behavior from commit `c260362`, without discarding TikTok support added later.  
+>  
+> Inputs:  
+> - The diff of `claude_analyzer.py` and `post_reel_smart.py` between `c260362` and `HEAD`.  
+>  
+> Goal: Make Instagram navigation and posting behave exactly as at `c260362`, while leaving TikTok functionality intact and clearly separated.  
+>  
+> Tasks:  
+> 1. In `claude_analyzer.py`:  
+>    - Extract the Instagram-specific prompt / instructions that existed at `c260362` (for recognizing the `+` button, home feed, reels UI, etc.).  
+>    - Compare with the current prompt.  
+>    - Propose a refactor that:  
+>      - Restores the **IG prompt text and action schema** from `c260362` for Instagram runs.  
+>      - Introduces a separate TikTok prompt if needed, instead of a single merged one that weakens Instagram behavior.  
+> 2. In `post_reel_smart.py` (or equivalent IG poster):  
+>    - Ensure the IG poster still:  
+>      - Dumps UI elements in the same structure as at `c260362`.  
+>      - Calls the analyzer with the same schema.  
+>      - Interprets returned actions in the same way (tap indices, swipe directions, completion detection).  
+>    - If TikTok-related abstractions changed the IG loop or stop conditions, propose code that restores the `c260362` IG flow while keeping TikTok logic in a **separate code path or subclass**.  
+>  
+> Output:  
+> - A concrete patch (or pseudocode diff) to:  
+>   - Reintroduce an `IG_UI_PROMPT` that matches `c260362`.  
+>   - Add a `TIKTOK_UI_PROMPT` if needed.  
+>   - Dispatch between them based on platform/campaign, without altering the IG path that used to work.  
+> - Explicit notes on what must be identical to `c260362` for Instagram (prompt text, element schema, action names).
+
+***
+
+## Prompt 3 – Verify worker → poster selection is correct for Instagram
+
+> You are reviewing `parallel_worker.py` and any poster-selection logic to ensure Instagram jobs are still routed through the correct, working Instagram poster.  
+>  
+> Inputs:  
+> - Diff of `parallel_worker.py` between `c260362` and `HEAD`.  
+> - Any new poster modules (`posters/instagram_poster.py`, TikTok poster, etc.).  
+>  
+> Goal: Confirm that **Instagram** jobs still use the same effective poster behavior as at `c260362`, and are not accidentally going through a TikTok-style path or a broken abstraction.  
+>  
+> Tasks:  
+> 1. Identify how the worker decides which poster to instantiate (platform, campaign name, or other flags).  
+> 2. Compare the poster used for Instagram at `c260362` to the one used at `HEAD`:  
+>    - Class name and module.  
+>    - Constructor parameters (device connection, AI client, config).  
+>    - Any new wrapper/base class that might modify behavior.  
+> 3. Check whether Instagram jobs now pass through any new shared “generic poster” logic that alters navigation, max steps, or completion detection.  
+>  
+> Output:  
+> - A short description of the current poster selection logic.  
+> - A recommendation (or patch) that:  
+>   - Ensures Instagram jobs use the **c260362-equivalent** SmartInstagramPoster path.  
+>   - Keeps TikTok jobs on their own posters.  
+>   - Avoids having IG jobs accidentally use TikTok navigation logic or shared logic that changed behavior.
+
+***
+
+## Prompt 4 – Ensure device / UI dump behavior matches old Instagram assumptions
+
+> You are comparing `device_connection.py` (and any UI-dump/screenshot helpers) between `c260362` and `HEAD`.  
+>  
+> Goal: Make sure that the Instagram navigation code still receives UI dumps and screenshots in a format that matches what the old, working logic expects.  
+>  
+> Tasks:  
+> 1. Identify changes between `c260362` and `HEAD` in:  
+>    - How UI elements are retrieved (methods, filters, attributes kept or dropped).  
+>    - How screenshots are captured (resolution, rotation, timing).  
+>    - Any new helper functions introduced to support TikTok that are now also used by Instagram.  
+> 2. For each change, analyze whether it could:  
+>    - Hide or rename the `+` button from the IG analyzer’s view.  
+>    - Change coordinates/centers in a way that breaks tap execution.  
+>    - Reduce waits/timeouts so the UI isn’t fully loaded before inspection.  
+>  
+> Output:  
+> - A bullet list of changes in UI dumping / screenshot behavior that may break IG navigation.  
+> - A proposed patch or set of rules like:  
+>   - “For Instagram, use the old `get_ui_tree()` behavior from `c260362` unchanged.”  
+>   - “TikTok may use the new behavior, but it must be gated by a `platform == 'tiktok'` condition.”
+
+***
+
+## Prompt 5 – Isolate and, if needed, partially revert only the IG navigation while keeping TikTok
+
+> You are designing a **minimal** code change that restores Instagram posting to the known-good state of `c260362`, while preserving TikTok support added later.  
+>  
+> Inputs:  
+> - Results of Prompts 1–4 (list of IG-breaking changes and their locations).  
+>  
+> Goal: Propose the smallest possible set of code edits that:  
+> - Makes Instagram posting behave as at `c260362`.  
+> - Leaves TikTok code present and compilable.  
+> - Keeps shared utilities platform-agnostic, but does not force Instagram to adopt TikTok-style assumptions.  
+>  
+> Tasks:  
+> 1. Identify the **core IG navigation cluster** (functions/methods) that should be reverted to `c260362` behavior:  
+>    - In the analyzer prompt and action interpretation.  
+>    - In the IG poster class.  
+>    - In device/UI dump helpers, if needed.  
+> 2. For each such function, decide whether to:  
+>    - Fully restore the `c260362` version.  
+>    - Introduce a versioned/conditional path (e.g., `if platform == 'instagram': use_old_ig_path()`).  
+> 3. Ensure TikTok code continues to compile and run by:  
+>    - Keeping TikTok-specific prompts and posters in their own modules.  
+>    - Using explicit platform checks to select IG vs TikTok behavior.  
+>  
+> Output:  
+> - A high-level patch plan:  
+>   - “In file X, function Y: restore `c260362` implementation.”  
+>   - “In file Z: wrap new generic logic in `if platform == 'tiktok'`.”  
+> - If possible, a concrete diff or pseudocode showing how to:  
+>   - Restore IG-specific logic.  
+>   - Keep TikTok paths separate and intact.
+
+***
+
+## Prompt 6 – Add a quick “IG navigation debug mode”
+
+> You are adding a debug mode that helps inspect the Instagram navigation loop without actually posting.  
+>  
+> Goal: Introduce a mode (e.g., CLI flag or environment variable) where the IG poster runs its navigation loop but only logs the actions it *would* take, instead of tapping/swiping for real. This will help validate that the AI sees and chooses the `+` button.  
+>  
+> Tasks:  
+> 1. In the IG poster class:  
+>    - Add a `debug_actions_only: bool` flag (default False).  
+>    - When `True`, still run the full loop (UI dump → analyze → action selection) but:  
+>      - Log each chosen action and target element text/bounds.  
+>      - Skip the actual tap/swipe/type calls.  
+> 2. In the worker or a small CLI wrapper:  
+>    - Add a way to turn on this flag for a single job or test run.  
+>  
+> Output:  
+> - A patch or pseudocode for adding `debug_actions_only` and its logging.  
+> - Example log lines that show: step number, chosen action, element text/description, and why this lets you verify that the bot can find the `+` button again.
+

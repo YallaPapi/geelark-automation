@@ -80,10 +80,10 @@ class Config:
     # ==================== RETRY SETTINGS ====================
 
     # Maximum retry attempts for failed jobs
-    MAX_RETRY_ATTEMPTS: int = 5
+    MAX_RETRY_ATTEMPTS: int = 10
 
-    # Delay between retries in minutes
-    RETRY_DELAY_MINUTES: int = 5
+    # Delay between retries in minutes (0.25 = 15 seconds)
+    RETRY_DELAY_MINUTES: float = 0.25
 
     # Non-retryable error types
     NON_RETRYABLE_ERRORS: frozenset = frozenset({
@@ -116,6 +116,14 @@ class Config:
     CAMPAIGN_ACCOUNTS_FILE: str = "accounts.txt"
     CAMPAIGN_PROGRESS_FILE: str = "progress.csv"
     CAMPAIGN_STATE_FILE: str = "scheduler_state.json"
+
+    # ==================== AI MODEL ====================
+
+    # AI model for UI analysis (supports Claude and OpenAI models)
+    # Claude models: claude-sonnet-4-20250514, claude-haiku, etc.
+    # OpenAI models: gpt-5-mini (~$0.012/post), gpt-4o-mini, etc.
+    # Note: gpt-5-nano doesn't return content (reasoning-only model)
+    AI_MODEL: str = os.environ.get("AI_MODEL", "gpt-5-mini")  # 11x cheaper than Claude
 
     # ==================== TIMEOUTS ====================
 
