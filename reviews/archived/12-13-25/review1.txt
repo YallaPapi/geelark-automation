@@ -1,0 +1,554 @@
+There are 2 parts to this review, first part is short and it is only for the retry logic. Second part is for the project as a whole. Please implement these changes using taskmaster systematically and then test again with 5 workers. 
+
+Retry logic review part:
+
+There is already an automatic retry system in the older `PostingScheduler`, but the new parallel orchestrator/worker path does **not** yet have an equivalent built-in retry loop.
+
+## What exists today
+
+### PostingScheduler (single-run, non-parallel path)
+
+`posting_scheduler.py` implements a robust auto-retry mechanism around `PostJob` objects:
+
+- Each job has `attempts`, `max_attempts` (default 3), `status` (`PENDING`, `INPROGRESS`, `RETRYING`, `FAILED`, `SUCCESS`), `last_attempt`, `error_type`, etc.[1]
+- On failure in `execute_job`, it decides:
+  - If `error_type` is in `["suspended", "captcha", "loggedout", "actionblocked"]`, it is treated as non-retryable and marked `FAILED` immediately.[1]
+  - Else, if `attempts < max_attempts`, the job is put into `RETRYING` with `retry_delay_minutes` (default 0.25 = 15s), and will be picked up later.[1]
+  - Else, it is marked permanently `FAILED`.[1]
+- `get_retry_jobs()` returns jobs with `status == RETRYING`, and the main loop waits until the next `retry_at` time (`last_attempt + retry_delay_minutes`) before re-running them.[1]
+- There are convenience methods:
+  - `retry_failed_job(job_id)` and `retry_all_failed()` to reset failed jobs back to `RETRYING` from the dashboard.[1]
+- Account-level state (`AccountState`) tracks:
+  - `consecutive_failures`, `cooldown_until`, and applies cooldown (up to 60 minutes) after repeated infra failures (`is_infra_error=True`).[1]
+  - This ensures “good” accounts keep getting retried, while problematic ones back off.
+
+So: in the **scheduler-only** mode, jobs that fail for retryable reasons will be automatically retried up to `max_attempts`, and you can also bulk “retry all failed” from the dashboard to cycle through remaining failures again.[1]
+
+### Parallel orchestrator / worker path
+
+The newer parallel path is:
+
+- `parallel_orchestrator.py` seeds jobs into `parallel_progress.csv` and then spawns N `parallel_worker.py` processes.[1]
+- `progress_tracker.py` manages job claiming and status transitions in the CSV, but:
+  - It does **not** have the same `PostStatus.RETRYING` concept or `max_attempts` field per job.
+  - It tracks `status` (pending/claimed/success/failed), worker IDs, timestamps, etc., but there is no built-in “retry queue” or retry delay.[1]
+
+In `parallel_worker.py`:
+
+- Jobs are processed once per claim:
+  - On success, status is set to success in `parallel_progress.csv`.
+  - On failure, status is set to failed; there is no automatic re-claim logic, no `max_attempts`, and no transition to a retrying state.[1]
+- There is **no equivalent** of `PostingScheduler`’s `max_retries`, `retry_delay_minutes`, or `get_retry_jobs()` in the parallel worker loop.[1]
+
+So for the **parallel system you care about**:
+
+- A job that fails once will remain failed in `parallel_progress.csv` and will not be automatically retried by the current code.
+- The only way to cycle failures again today would be via an external script or manual massaging of the CSV (e.g., resetting failed rows back to pending), which is not implemented in this repo.
+
+## What this means for your “cycle until posted” requirement
+
+- In the old scheduler flow, there is a clear auto-retry up to `max_attempts`, and tools to bulk-reset failed jobs for another pass.[1]
+- In the new parallel orchestrator/worker architecture, **automatic retries are not in place yet**, so:
+  - You will get roughly “1 attempt per job per run”.
+  - Failures are permanent until you add retry logic or manually reset their status in the progress CSV.
+
+To get the “keep cycling failed-but-active accounts until they succeed” behavior in the parallel system, you will need to:
+
+- Add `attempts`, `max_attempts`, and `status` values analogous to `PostingScheduler.PostJob` into `parallel_progress.csv`.
+- Extend `ProgressTracker` with `RETRYING` and `get_retry_jobs` logic and a retry delay knob.
+- Teach `parallel_worker` to:
+  - Increment attempts.
+  - Move failed-but-retryable jobs into `RETRYING`.
+  - Periodically re-claim `RETRYING` jobs once their delay has elapsed.
+- Reuse the `AccountState.record_post(success, is_infra_error)` pattern to add cooldown per account in the parallel context.
+
+Those patterns already exist and are well-tested in `posting_scheduler.py`; they just haven’t been ported into the parallel orchestrator path yet.[1]
+
+[1](https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/59369057/cd8fe9d2-93bb-496c-953f-6bfd157b2d29/repomix-output-https_-github.com-YallaPapi-geelark-automation.xml)
+
+***
+
+Full review:
+
+The project already has most of the pieces you need (per-account limits, a daily ledger, per-worker Appium configs, staggered startup), but there are several broken or partial invariants that explain duplicates, collisions, and ADB instability.[1]
+
+## Architecture summary
+
+- **Core scheduler / single-phone path (older but “known good”)**  
+  - `postingscheduler.py` is the main non-parallel scheduler: maintains `schedulerstate.json` as the canonical state (accounts, jobs, per-account history) and logs to `batchresults.csv` plus logs.[1]
+  - It enforces per-account limits, retries, and logging, but is architected around a single posting loop rather than parallel workers.[1]
+
+- **Parallel orchestrator path (the system you care about)**  
+  - `parallel_config.py` (`ParallelConfig`, `WorkerConfig`) defines per-worker Appium port and systemPort slices, plus global settings like `max_posts_per_account_per_day`, timeouts, and `parallel_progress.csv` as the shared ledger.[1]
+  - `parallel_orchestrator.py` is the main entry point:  
+    - Checks for other orchestrators via `check_for_running_orchestrators` (process name scan) and refuses to run if another is active.[1]
+    - `full_cleanup(config)` stops all phones, kills processes on Appium ports, disconnects ADB, validates/repairs the progress file, and optionally releases stale claims.[1]
+    - `seed_progress_file(config, statefile, accounts_filter)` seeds `parallel_progress.csv` from `schedulerstate.json` via `ProgressTracker.seed_from_scheduler_state`, respecting `config.max_posts_per_account_per_day`.[1]
+    - `start_all_workers(config)` launches `parallel_worker.py` as separate processes with per-worker environment and staggers them by `time.sleep(60)` between starts.[1]
+    - `monitor_workers` polls workers and prints status, driven entirely off `ProgressTracker.get_stats()`.[1]
+
+- **Progress tracking / daily ledger**  
+  - `parallel_progress_tracker.py` or `progress_tracker.py` (the exact filename in the XML is `ProgressTracker` class) manages `parallel_progress.csv` with:  
+    - Columns `job_id, account, video_path, caption, status, worker_id, claimed_at, completed_at, error` (names inferred from comments; actual constants are in `ProgressTracker.COLUMNS`).[1]
+    - Cross-platform file locking using `portalocker` when available, with a Windows `msvcrt` fallback and a `.lock` sidecar file.[1]
+    - Methods:
+      - `read_all_jobs`, `write_all_jobs` with atomic temp-file rename.[1]
+      - `load_success_counts()` which computes `success_count_today(account)` from the current CSV, used for seeding and claim-time enforcement.[1]
+      - `seed_from_scheduler_state(statefile, account_list, redistribute, max_posts_per_account_per_day)` which reads `schedulerstate.json` and writes initial jobs, enforcing per-account daily caps at seeding time and ensuring only one job per account per seeding pass.[1]
+      - `update_job_status(job_id, status, worker_id, error)` and claim helpers (not fully visible in snippet) to transition status from `pending → claimed → success/failed/skipped`.[1]
+      - `release_stale_claims(max_age_seconds)` to turn `claimed` jobs back to `pending` after crashes.[1]
+  - The orchestrator uses `reset_day(progressfile)` (seen in the instructions) to archive `parallel_progress.csv` to `parallel_progress_YYYYMMDD.csv` and create a fresh daily ledger.[1]
+
+- **Parallel worker / per-phone posting**  
+  - `parallel_worker.py` is a worker process that:  
+    - Accepts `--worker-id`, `--num-workers`, `--progress-file`, `--delay` from the orchestrator.[1]
+    - Uses `ParallelConfig` to pick its own Appium port and systemPort range (via `WorkerConfig`), and logs to a per-worker logfile.[1]
+    - Uses `ProgressTracker` to claim jobs and update status, and `SmartInstagramPoster` / `postreel_smart.py` for the actual IG post via Appium.[1]
+    - Handles graceful shutdown via signals and reports per-worker stats via `get_worker_stats()` in the tracker.[1]
+
+- **ADB/Appium helpers**  
+  - `postreel_smart.py` (the “THE WORKING ONE”) encapsulates the UI automation: starting Instagram, navigating UI via periodic UI dumps and actions, with ADB path configurable via `ADB_PATH = r"C:\...adb.exe"`.[1]
+  - Geelark API wrapper `geelark_client.py` (mentioned) manages phone start/stop, ADB enable/tunnels, etc., but the parallel code mostly treats it as a black box and relies on higher-level functions like `start_phone`, `stop_phone`, and ADB commands executed through `adb` and Appium.[1]
+
+## Violations and root causes
+
+### 1. Per-account daily cap not fully enforced
+
+**Where it is enforced now**
+
+- `ParallelConfig.max_posts_per_account_per_day` exists and defaults to 1.[1]
+- `ProgressTracker.seed_from_scheduler_state(..., max_posts_per_account_per_day=config.max_posts_per_account_per_day)` calculates per-account success counts from the existing `parallel_progress.csv` and only seeds new jobs for accounts with `success_count < max_posts_per_account_per_day`.[1]
+- The seeding implementation explicitly states it:
+  - Builds `success_count_by_account` from `load_success_counts()`.
+  - Avoids assigning more than `max_posts_per_account_per_day` jobs per account in this seeding pass (so no intra-batch reuse during seeding).[1]
+
+**Violations**
+
+1. **No explicit cap at claim-time**  
+   - There is no evidence in the snippets that `ProgressTracker.claim_next_job` (or equivalent) re-checks `success_count_today(account)` at claim time. The comments say “defense in depth – enforced at seeding and claim time,” but the claim-time check is not clearly implemented in the visible code.[1]
+   - If the progress file is modified mid-day (e.g., manually deleted, reset incorrectly, or multiple orchestrators run), the seeding-time invariants are no longer sufficient.
+
+2. **Reusing accounts within the same batch when reseeding**  
+   - Seeding ensures one job per account per *seeding pass*, but if the user runs `--force-reseed` or `--seed-only` + `--run` repeatedly during the same day without a reset, the per-account one-job-per-batch invariant can be broken (because the code only looks at *success* counts, not “already assigned pending jobs today”).[1]
+   - There is no explicit “per-day per-account assignment ledger” beyond successes; pending/failed jobs from earlier runs are not considered when deciding whether to assign another job for the same account in the same day.
+
+3. **Progress file deletion / recreation during the day**  
+   - `validate_progress_file(progressfile)` deletes an empty or “corrupt” `parallel_progress.csv` as a “fix,” then treats “file missing” as valid.[1]
+   - `full_cleanup(config)` calls `validate_progress_file(config.progressfile)` unconditionally and may thus remove the daily ledger mid-day if it is temporarily empty or appears corrupt (for example, if the user killed the process at a bad moment).[1]
+   - User instructions explicitly say “NEVER DELETE THE PROGRESS FILE MANUALLY,” but the code *programmatically* deletes the file in these cases and then allows reseeding with `--force-reseed`, effectively wiping daily history.[1]
+
+**Root cause:** daily limit enforcement relies heavily on the presence of an intact `parallel_progress.csv` and successes-only counts; when the file is deleted/reseeded mid-day or multiple orchestrators are run, the system loses awareness of prior posts and can assign multiple jobs to the same account in one day or even in one batch.
+
+***
+
+### 2. Daily ledger as single source of truth is compromised
+
+**What should be true**
+
+- `parallel_progress.csv` must be the canonical, append-only daily ledger; `schedulerstate.json` is long-term state but not the day’s posting record.[1]
+
+**What the code actually does**
+
+1. **Multiple writers with whole-file rewrite**  
+   - `ProgressTracker` uses `locked_operation` with a separate `.lock` file and portalocker/msvcrt to serialize access.[1]
+   - Each update (`update_job_status`, `claim_next_job`, `release_stale_claims`, seeding) reads **all jobs** into memory and rewrites the entire CSV via `write_all_jobs()` with a temp file rename.[1]
+   - While locking should prevent concurrent corruption, the pattern is high-risk under heavy multi-process write load; any failure between read and write can leave the file empty or partially written, triggering `validate_progress_file` to classify it as corrupt and delete it.[1]
+
+2. **Returning “claimed” jobs to pending in `full_cleanup`**  
+   - `full_cleanup(config, release_claims=True)` calls `ProgressTracker.release_stale_claims(max_age_seconds=0)`, which immediately sets all `claimed` jobs back to `pending` regardless of whether they were in progress only briefly.[1]
+   - This is appropriate for crash recovery but dangerous if `full_cleanup` is run mid-batch deliberately: jobs that were actually in progress or already successfully posted (but not yet marked `success` because the worker crashed after posting) can be re-executed.  
+
+3. **Day reset mechanism vs ad-hoc manual resets**  
+   - `--reset-day` archives the progress file and creates a fresh ledger – this is correct.[1]
+   - But `--force-reseed` on the orchestrator, combined with `validate_progress_file` deleting “empty/corrupt” files, provides an accidental “hidden reset” that bypasses the explicit day boundary and can duplicate posts within the same day.[1]
+
+**Root cause:** the progress tracker is designed as the single source of truth, but its robustness is undermined by aggressive file “repair” behaviors and a whole-file rewrite pattern that makes corruption more likely when processes are killed.
+
+***
+
+### 3. ADB/Appium lifecycle lacks a strict readiness gate and robust recovery
+
+**Where phones and Appium are controlled**
+
+- Per-worker Appium configuration is clean: `ParallelConfig.generate_worker_configs` assigns each `WorkerConfig` a unique Appium port (4723, 4725, …) and a distinct `systemPort` slice (8200–8209, 8210–8219, etc.).[1]
+- Orchestrator `start_all_workers` simply spawns `parallel_worker.py` with the right environment; each worker then starts its own Appium server and Phone/ADB connection using Geelark API and ADB commands (implementation is in the worker and `postreel_smart.py`, not fully visible in the snippet).[1]
+
+**Violations**
+
+1. **No explicit “ADB ready” gate before Appium session creation**  
+   - In the provided snippets, there is no dedicated helper like `wait_for_adb(device_id, timeout)` that polls `adb devices` until the device is present before starting/invoking Appium.[1]
+   - Geelark phones can show `status == RUNNING` while ADB is not yet reachable; the current code appears to rely on that status and an implicit delay (60s between worker starts) rather than a device-level readiness check.[1]
+
+2. **Missing detection of ADB disappearance mid-run**  
+   - The comments mention “device not in list of connected devices / glogin returning empty list,” but there is no visible logic in the worker to:
+     - Periodically verify that the device is still in `adb devices`, and  
+     - On failure, stop the Appium server and phone, then restart both and resume processing on that worker only.[1]
+   - Error handling for ADB flakiness is mainly in `postreel_smart.py` as retries around `am instrument`, but not as a full state machine that restarts phones.[1]
+
+3. **Implicit assumption that staggered worker start is enough**  
+   - `start_all_workers` uses `time.sleep(60)` between workers to prevent hammering Geelark; this helps but is not a correctness guarantee.[1]
+   - There is no feedback loop: if ADB readiness takes longer on a given phone, the worker may still fail with “device not found” rather than waiting gracefully.
+
+**Root cause:** the worker/Appium lifecycle is missing explicit ADB readiness checks and recovery branches; intermittent ADB/tunnel issues turn into failures or stuck states rather than being handled as a restart-and-continue state machine.
+
+***
+
+### 4. Worker ↔ phone ↔ Appium binding is only partially enforced
+
+**Where binding is defined**
+
+- `ParallelConfig` ensures unique Appium port and non-overlapping systemPort ranges per worker; no two workers use the same Appium URL or systemPort if they share the same config. This satisfies the Appium side of the invariant.[1]
+
+**Violations**
+
+1. **No explicit phone assignment per worker**  
+   - In the repo, there is no clear mapping `worker_id → phone_id` defined in configuration (e.g., a `worker_phone_map`), nor a central phone allocator that marks phones as reserved per worker.[1]
+   - `parallel_orchestrator.py` and `parallel_worker.py` accept an `--accounts` list but do not appear to accept or enforce a corresponding `--phones` mapping; workers can end up selecting “any available phone” from Geelark when starting, increasing the risk of two workers using the same device if the underlying phone pool is small.[1]
+
+2. **No guard against multiple workers targeting the same phone**  
+   - There is no cross-process lock or reservation file per phone (e.g., `phone_<id>.lock`).  
+   - The only global coordination is around progress/jobs, not around phones; the Geelark API might prevent double-starting the same phone, but the local code does not ensure “one worker ↔ one phone” logically.[1]
+
+3. **Port allocation is safe only if everyone uses `ParallelConfig`**  
+   - If any other legacy script (e.g., `batchpost.py`, `batchpost_concurrent.py`, or direct `postreel_smart.py` invocations) is run concurrently, it may start its own Appium server on overlapping ports or reuse the same phone, violating the one-worker-per-phone invariant. The code does not detect or prevent this.[1]
+
+**Root cause:** ports are isolated by configuration, but phone allocation is not; workers implicitly “grab phones” rather than being bound to a pre-assigned phone identity, making phone-level collisions possible.
+
+***
+
+## Proposed fix plan
+
+### 1. Strengthen per-account caps and daily ledger behavior
+
+#### 1.1 ProgressTracker: enforce caps at claim-time
+
+**File:** `parallel_progress_tracker.py` (or `progress_tracker.py`)  
+**Functions to change / add:**
+
+- Add a helper:
+  ```python
+  def get_daily_success_counts(self) -> Dict[str, int]:
+      return self.load_success_counts()
+  ```
+  This is mostly a semantic wrapper, but clarifies intent.[1]
+
+- Modify `claim_next_job` (or equivalent) to enforce account success caps defensively:
+
+  ```python
+  def claim_next_job(self, worker_id: int, max_posts_per_account_per_day: int) -> Optional[Dict[str, Any]]:
+      def op(jobs):
+          success_by_account = self.load_success_counts()
+          # Build current in-memory assigned counts, including jobs already claimed but not yet success
+          assigned_by_account = {}
+          for j in jobs:
+              acc = j.get("account")
+              if not acc:
+                  continue
+              if j.get("status") in (self.STATUSSUCCESS, self.STATUSCLAIMED):
+                  assigned_by_account[acc] = assigned_by_account.get(acc, 0) + 1
+
+          now = datetime.utcnow().isoformat()
+          for job in jobs:
+              if job.get("status") != self.STATUSPENDING:
+                  continue
+              acc = job.get("account")
+              total_for_acc = success_by_account.get(acc, 0) + assigned_by_account.get(acc, 0)
+              if total_for_acc >= max_posts_per_account_per_day:
+                  continue  # skip this job; account hit limit
+              # claim this job
+              job["status"] = self.STATUSCLAIMED
+              job["worker_id"] = str(worker_id)
+              job["claimed_at"] = now
+              return jobs, job  # return updated jobs and the claimed job
+
+          return jobs, None
+
+      return self.locked_operation(op)
+  ```
+
+- Ensure every worker call to `claim_next_job` passes `config.max_posts_per_account_per_day` so that both seeding and claim-time enforce the cap.[1]
+
+This ensures that even if the ledger was seeded incorrectly or partially, workers will never claim jobs that would cause an account to exceed `N` total posts (including claimed-but-not-yet-success jobs) in that day.
+
+#### 1.2 Prevent same-account reuse within a batch
+
+**File:** `parallel_progress_tracker.py`  
+
+Add a per-day “assigned” notion that uses both `STATUSSUCCESS` and `STATUSCLAIMED` in the counts (as above). The key rule: **for any given day’s ledger file, only allow one job per account to ever be in `claimed` or `success` status** when `max_posts_per_account_per_day=1`.
+
+Implementation notes:
+
+- In `seed_from_scheduler_state`, when building `success_count_by_account`, also include already pending jobs for the day:
+
+  ```python
+  existing_jobs = self.read_all_jobs() if os.path.exists(self.progress_file) else []
+  assigned_accounts_today = set()
+  for job in existing_jobs:
+      if job.get("status") in (self.STATUSPENDING, self.STATUSCLAIMED, self.STATUSSUCCESS):
+          assigned_accounts_today.add(job.get("account"))
+  ```
+
+  Then, when deciding to add new jobs, skip any account already in `assigned_accounts_today` for today, regardless of success count.[1]
+
+- This ensures that within one daily ledger, each account can appear in “scheduled/claimed/success” at most `max_posts_per_account_per_day` times, and reseeding cannot “reuse” the account.
+
+#### 1.3 Make ledger deletion explicit and safe
+
+**File:** `parallel_orchestrator.py`
+
+- Tighten `validate_progress_file(progressfile)` so that it **never silently deletes** a non-empty file. Only delete when:
+  - The file exists but read as zero rows *and* zero bytes (true empty), or
+  - The user explicitly requested a reset (`--reset-day`) and you are archiving it first.[1]
+
+- Remove the behavior of deleting “corrupt” files on read errors. Instead:
+  - Log a loud error and abort the orchestrator run.
+  - Require the operator to manually archive and reset via `--reset-day`.  
+
+Example change:
+
+```python
+def validate_progress_file(progress_file: str) -> bool:
+    if not os.path.exists(progress_file):
+        return True
+    try:
+        with open(progress_file, "r", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            rows = list(reader)
+        if len(rows) == 0:
+            logger.error("Progress file exists but is empty; refusing to auto-delete. Run with --reset-day after manual inspection.")
+            return False
+        return True
+    except Exception as e:
+        logger.error("Progress file appears corrupt; refusing to auto-delete. Run with --reset-day after manual inspection. %s", e)
+        return False
+```
+
+- In `full_cleanup(config)`, **remove** the call to `validate_progress_file` or only call it when you are about to start a **new day** (e.g., under `--reset-day` flow). For mid-day cleanup, do not touch the ledger.[1]
+
+#### 1.4 Make `--force-reseed` strictly an offline operation
+
+**File:** `parallel_orchestrator.py`
+
+- Change behavior so `--force-reseed`:
+  - Only works when there are **no active workers** and the orchestrator is not in `--run` mode.
+  - Requires explicit `--reset-day` or a special `--force-reset-progress` flag with confirmation to archive the old progress file.  
+
+This ensures you cannot accidentally wipe intra-day history while the day is still active.
+
+***
+
+### 2. Robust ADB/Appium lifecycle with explicit state machine
+
+#### 2.1 Add explicit ADB readiness gate
+
+**File:** `parallel_worker.py` or a new helper `adb_utils.py`
+
+**New helper:**
+
+```python
+def wait_for_adb(device_id: str, adb_path: str, timeout: int = 90) -> bool:
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        try:
+            out = subprocess.check_output([adb_path, "devices"], encoding="utf-8")
+            for line in out.splitlines():
+                if device_id in line and "device" in line:
+                    return True
+        except Exception:
+            pass
+        time.sleep(2)
+    return False
+```
+
+- Use this after starting the phone / enabling ADB but **before** starting Appium or creating a session.
+
+**Integration:**
+
+- In the worker’s startup flow:
+
+  ```python
+  phone_id = ... # from assigned phone mapping
+  start_geelark_phone(phone_id)
+  if not wait_for_adb(phone_id, adb_path=config.adb_path, timeout=90):
+      logger.error("ADB failed to become ready for phone %s", phone_id)
+      # clean up and retry / mark worker as unhealthy
+      return
+  start_appium_server(worker_config.appium_port, ...)
+  wait_for_appium_ready(...)
+  ```
+
+#### 2.2 Detect ADB/device loss mid-run and recover
+
+**File:** `parallel_worker.py`
+
+- Add periodic checks during job execution:
+
+  ```python
+  def ensure_device_alive(device_id: str, adb_path: str) -> bool:
+      try:
+          out = subprocess.check_output([adb_path, "devices"], encoding="utf-8")
+          for line in out.splitlines():
+              if device_id in line and "device" in line:
+                  return True
+      except Exception:
+          pass
+      return False
+  ```
+
+- Wrap the main job loop:
+
+  ```python
+  while not shutdown_requested:
+      if not ensure_device_alive(phone_id, config.adb_path):
+          logger.warning("Device %s lost; restarting phone+Appium", phone_id)
+          stop_appium_server(worker_config.appium_port)
+          stop_geelark_phone(phone_id)
+          start_geelark_phone(phone_id)
+          if not wait_for_adb(phone_id, config.adb_path, timeout=90):
+              # optionally backoff and retry, or mark worker as degraded
+              continue
+          start_appium_server(...)
+      job = tracker.claim_next_job(worker_id, config.max_posts_per_account_per_day)
+      ...
+  ```
+
+This ensures mid-run ADB loss leads to a controlled restart on that worker only, rather than cascading errors.
+
+#### 2.3 Minimal state machine
+
+You can conceptualize each worker’s phone lifecycle as:
+
+- `PHONE_STARTING`  
+  - Action: Geelark `start_phone`.  
+  - Transition to `ADB_PENDING`.
+
+- `ADB_PENDING`  
+  - Action: `wait_for_adb(device_id, timeout)`.  
+  - On success → `ADB_READY`, on timeout → `ERROR_RECOVERY`.
+
+- `ADB_READY`  
+  - Action: start Appium server on worker-specific port; `wait_for_appium_ready`.  
+  - On success → `APPIUM_READY`, on failure → `ERROR_RECOVERY`.
+
+- `APPIUM_READY`  
+  - Action: run job loop (`JOB_RUNNING`); `claim_next_job`, run `postreel_smart`.  
+  - If `ensure_device_alive` fails → `ERROR_RECOVERY`.
+
+- `JOB_RUNNING`  
+  - On job completion → back to `APPIUM_READY` to claim next job.  
+  - On IG/app crash with recoverable error → retry logic; on repeated failures → mark job failed and continue.
+
+- `ERROR_RECOVERY`  
+  - Action: stop Appium, stop phone if running, backoff, then go to `PHONE_STARTING`.  
+  - If repeated failures beyond threshold → worker exits with error.
+
+Implement this as an explicit enum or just structured `while` with a `state` variable so behavior is predictable.
+
+***
+
+### 3. Enforce strict worker ↔ phone ↔ Appium bindings
+
+#### 3.1 Add explicit phone assignment in config
+
+**File:** `parallel_config.py`
+
+- Extend `WorkerConfig` with a `phone_id: Optional[str]` field:
+
+  ```python
+  @dataclass
+  class WorkerConfig:
+      worker_id: int
+      appium_port: int
+      system_port_start: int
+      system_port_end: int
+      log_file: str
+      appium_log_file: str
+      phone_id: Optional[str] = None
+  ```
+
+- Add a new configuration file or CLI argument for `--phones phone1,phone2,phone3`; in `get_config(num_workers, phones=None)`:
+
+  ```python
+  def get_config(num_workers: int, phones: Optional[List[str]] = None) -> ParallelConfig:
+      cfg = ParallelConfig(num_workers=num_workers)
+      if phones:
+          if len(phones) != num_workers:
+              raise ValueError("Number of phones must match number of workers")
+          for w, phone in zip(cfg.workers, phones):
+              w.phone_id = phone
+      return cfg
+  ```
+
+#### 3.2 Use phone_id in workers and prevent sharing
+
+**File:** `parallel_orchestrator.py`
+
+- Parse `--phones` CLI argument and pass it to `get_config`.  
+- Before starting workers, validate that all `phone_id` values are unique and match actual Geelark phones (via a simple `list_phones` check). If not, abort.
+
+**File:** `parallel_worker.py`
+
+- On startup, read the `phone_id` from env or as an argument and require it to be present:
+
+  ```python
+  parser.add_argument("--phone-id", required=True)
+  ...
+  phone_id = args.phone_id
+  ```
+
+- Use that phone exclusively in the worker’s lifecycle (start/stop, ADB checks, Appium session creation).  
+- Do **not** scan for “any available phone”; always use the bound one.
+
+This enforces “one worker → one phone → one Appium instance + systemPort slice” at the code level, not by hope.
+
+***
+
+### 4. File-level change checklist
+
+**`parallel_config.py`**
+
+- Add `phone_id` to `WorkerConfig`.  
+- Extend `get_config` to accept phones and assign them.  
+- No change needed for port allocations, which already avoid collisions.[1]
+
+**`parallel_orchestrator.py`**
+
+- Arguments:
+  - Add `--phones` CLI option (comma-separated IDs) and feed into `get_config`.[1]
+- Orchestration:
+  - Validate unique `phone_id` and Geelark existence before `start_all_workers`.  
+  - In `start_worker_process`, pass `--phone-id` for each worker.  
+  - Keep `time.sleep(60)` stagger but now rely on readiness gates inside workers as well.[1]
+- Cleanup:
+  - Harden `validate_progress_file` to avoid deleting or altering the ledger mid-day.  
+  - Restrict `--force-reseed` and call to `validate_progress_file` to “new day” flows only.  
+  - Keep `full_cleanup` for phones/ports/ADB, but do not touch `parallel_progress.csv` unless in reset mode.[1]
+
+**`parallel_progress_tracker.py` / `progress_tracker.py`**
+
+- Implement `get_daily_success_counts()` and integrate success + claimed job counting for both seeding and claim-time.  
+- Modify `seed_from_scheduler_state` to consider existing pending/claimed jobs per account for the current day, preventing per-batch reuse.[1]
+- Modify `claim_next_job` to enforce `max_posts_per_account_per_day` using combined success+claimed counts.  
+- Ensure all operations use `locked_operation` and atomic writes, but stop auto-deleting “corrupt” files in helper functions.[1]
+
+**`parallel_worker.py`**
+
+- Accept `--phone-id` and use it exclusively to start/stop the Geelark phone.  
+- Add `wait_for_adb`, `ensure_device_alive`, and a simple state machine around phone/Appium lifecycle.  
+- On ADB loss, perform per-worker recovery (stop Appium, stop phone, restart both, then continue).  
+- Ensure claims use `tracker.claim_next_job(worker_id, config.max_posts_per_account_per_day)`.
+
+**`postreel_smart.py` / ADB helpers**
+
+- Ensure `ADB_PATH` is correctly set (there is already a comment about editing `ADB_PATH`).[1]
+- Where possible, funnel calls through the new `wait_for_adb`/`ensure_device_alive` helpers instead of assuming the device is always present.
+
+***
+
+These changes will:
+
+- Make `parallel_progress.csv` a robust, non-ephemeral daily ledger that truly limits posts per account to `N` per day and prevents intra-batch reuse.  
+- Make worker behavior deterministic and self-healing with respect to ADB flakiness and tunnel instability.  
+- Enforce strict one-to-one mappings between workers, phones, and Appium instances, removing phone/port collisions as a class of bugs.
+
+[1](https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/59369057/38d0fbf2-bfb6-4062-b0d4-7270976f8cdf/repomix-output-https_-github.com-YallaPapi-geelark-automation-1.xml)

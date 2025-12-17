@@ -86,28 +86,34 @@ Current state:
 Based on the UI elements, decide the next action to take.
 
 Instagram posting flow:
-1. Find and tap Create/+ button. IMPORTANT: On different Instagram versions:
-   - Some have "Create" in bottom nav bar
-   - Some have "Create New" in top left corner (only visible from Profile tab)
-   - If you don't see Create, tap "Profile" tab first to find "Create New"
-2. Select "Reel" option if a menu appears (this is the initial type selection)
-3. CRITICAL - Gallery/Video Selection Screen:
-   - When you see "New reel" title and video thumbnails with POST/STORY/REEL tabs at bottom:
-   - PRIORITY: Tap a VIDEO THUMBNAIL in the gallery, NOT the mode selector tabs at bottom
-   - Select the FIRST/TOP-LEFT video thumbnail - it's the most recently uploaded
-   - The POST/STORY/REEL tabs are mode selectors - if already selected, tapping them does nothing
-   - To ensure REEL mode: tap POST, then STORY, then REEL (cycle through all to guarantee selection)
-   - NEVER tap the same mode tab twice in a row - this causes infinite loops
+1. FIRST: Tap the + button (Create button) in the bottom nav bar
+   - Look for "+" or "Create" or element with desc containing "create"
+   - The + button is usually in the CENTER of the bottom navigation bar
+   - If you see the home feed, the + button should be visible at the bottom
+
+2. WHEN CREATE MENU APPEARS: Tap "Reel" IMMEDIATELY
+   - You will see a popup/menu with options: Reel, Edits, Post, Story, etc.
+   - Tap "Reel" directly - DO NOT tap Story, Post, or anything else
+   - If tapping "Reel" does nothing (screen doesn't change), it means Reel is already selected - proceed to step 3
+
+3. VIDEO SELECTION SCREEN ("New reel" title visible):
+   - You should see video thumbnails in a gallery grid
+   - Tap the FIRST video thumbnail (top-left, most recently uploaded)
+   - IGNORE the POST/STORY/REEL tabs at the bottom - DO NOT tap them
+   - If REEL tab is already highlighted, tapping it does nothing - just select a video instead
+
 4. AFTER VIDEO IS SELECTED - Find and tap "Next":
    - The "Next" button appears in the TOP-RIGHT corner after selecting a video
    - It may show as "Next", "→" (arrow), or a forward arrow icon
    - Look for text="Next" or desc="Next" in the UI elements
-   - If you see a video preview taking up most of the screen, the "Next" button should be visible
    - If "Next" is not visible, the video may not be properly selected - tap a video thumbnail first
-   - CRITICAL: Do NOT keep tapping mode tabs (POST/STORY/REEL) if video is already selected - tap NEXT instead
+
 5. Tap "Next" again to proceed to sharing
-6. When you see the caption field ("Write a caption" or similar), return "type" action with the caption text
+
+6. When you see the caption field ("Write a caption" or similar), return "tap_and_type" action with the caption text
+
 7. Tap "Share" to publish
+
 8. Done when you see confirmation, "Sharing to Reels", or back on feed
 
 Respond with JSON:
@@ -123,66 +129,89 @@ Respond with JSON:
 
 === POPUP HANDLING (CRITICAL - HANDLE FIRST) ===
 
-"SUGGESTED FOR YOU" POPUP (MUST DISMISS):
-- If you see "Suggested for you" with profile cards showing "Follow" buttons
-- This popup appears on the home feed and BLOCKS the Create button
-- Look for an "X" button on the popup to close it
-- Or tap OUTSIDE the popup area to dismiss it
-- After dismissing, look for the Create/+ button to start posting
+UNIVERSAL POPUP DISMISSAL:
+- For ANY popup/dialog/overlay that appears: TAP OUTSIDE THE POPUP to dismiss it
+- Most popups can be dismissed by tapping in a gray/dark area outside the popup content
+- Tap coordinates around (100, 200) or (500, 200) - areas typically outside popup content
+- If tapping outside doesn't work, look for "X", "Not now", "Got it", "OK" buttons
+- Return action="back" as last resort to dismiss popups
 
-META VERIFIED POPUP (MUST DISMISS):
-- If you see "Meta Verified", "Try Meta Verified", "$1", "Get verified", "verification badge", or subscription pricing
-- This is an UPSELL POPUP that must be dismissed immediately
-- Look for: "Not now", "Maybe later", "X" close button, or tap OUTSIDE the popup
-- Return action="back" or tap the dismiss/close button to close it
-- NEVER tap "Subscribe", "Get started", or any purchase button
-- After dismissing, continue with the posting flow
+"SUGGESTED FOR YOU" POPUP:
+- If you see "Suggested for you" with profile cards showing "Follow" buttons
+- TAP OUTSIDE the popup (on the darkened background) to dismiss
+- Or tap the "X" button if visible
+
+META VERIFIED POPUP:
+- If you see "Meta Verified", "Try Meta Verified", "$1", "Get verified", or subscription pricing
+- TAP OUTSIDE the popup to dismiss
+- Or tap "Not now", "Maybe later", "X" if visible
+- NEVER tap "Subscribe" or purchase buttons
+
+"SWIPE TO ACCESS REELS" / TUTORIAL POPUPS:
+- If you see tutorial text like "Swipe to easily access Reels and messages"
+- Tap "Got it" button to dismiss
+- Or TAP OUTSIDE the popup
+
+"ARE YOU INTERESTED IN THIS AD?" POPUP:
+- If you see ad feedback popup with "Not interested" / "Interested" options
+- TAP OUTSIDE the popup to dismiss (on the darkened area)
+- Or tap the X button if visible
+
+"INTERACTING WITH FACEBOOK CONTENT" POPUP:
+- If you see warning about Facebook content interaction
+- Tap "OK" to dismiss and continue
 
 CAMERA VIEW TRAP (ESCAPE IT):
-- If you see a full-screen camera viewfinder with a large circular RECORD button at bottom
-- And NO video thumbnail selected, NO "Next" button visible
-- You are in CAMERA MODE and need to access the GALLERY instead
-- LOOK FOR THE GALLERY ICON: There is almost always a small square thumbnail in the BOTTOM-LEFT corner
-- This small square shows the most recent photo/video from the gallery - TAP IT to open the gallery
-- The gallery icon is your PRIMARY escape route - look for it first!
-- If the gallery icon is not visible, return action="back" to exit camera mode
-- NEVER tap the large circular record button - we want to SELECT an existing video, not record new
+- If you see full-screen camera with large circular RECORD button
+- LOOK FOR GALLERY ICON: Small square thumbnail in BOTTOM-LEFT corner
+- TAP the gallery icon to open gallery and select your video
+- If no gallery icon visible, return action="back"
+- NEVER tap the record button
 
 STORIES VIEWING TRAP (ESCAPE IT):
-- If you see someone's Story playing (fullscreen image/video with username at top, progress bar)
-- Or if you see "To see" / "And" text overlays on a story
-- Or if the screen has story navigation controls (tap left/right to navigate stories)
-- You are VIEWING STORIES, not in the posting flow!
-- Return action="back" to exit Stories and return to feed
-- Then find the Create/+ button to start posting
+- If you see someone's Story (fullscreen with username at top, progress bar)
+- Return action="back" to exit Stories
+- Then find the Create/+ button
+
+WRONG APP / FACEBOOK LOGIN SCREEN:
+- If you see Facebook login, Facebook app, or "Continue as [name]" with Facebook icon:
+- This is NOT Instagram - return action="home" to go to home screen
+- Then return action="open_instagram" to reopen Instagram app
+- NEVER try to log in via Facebook - just escape and reopen Instagram
 
 WRONG SCREEN RECOVERY:
-- If you see DMs, Search, Explore, Settings, Stories, or any screen unrelated to posting:
-- Return action="back" repeatedly until you reach the home feed
-- Then restart by tapping Create/+ button
-- If stuck for 2+ actions on same screen, try action="home" then action="open_instagram"
+- If on DMs, Search, Explore, Settings, or any unrelated screen:
+- Return action="back" to get back to home feed
+- Then tap Create/+ button
 
 === STANDARD RULES ===
+
+CRITICAL - HOME FEED BEHAVIOR:
+- If you see the Instagram HOME FEED (posts, stories at top, bottom nav with Home/Reels/Create/Search/Profile):
+- DO NOT scroll the feed! DO NOT interact with posts/stories!
+- IMMEDIATELY tap the + button (Create button) in the bottom nav bar
+- The + button is your FIRST action from the home feed - always tap it first
+
+CRITICAL - CREATE MENU BEHAVIOR:
+- When the Create menu appears with Reel/Edits/Post/Story options:
+- Tap "Reel" IMMEDIATELY and ONLY "Reel"
+- NEVER tap Story, Post, or Edits
+- If tapping Reel does nothing (already selected), proceed to select a video
 
 CRITICAL RULES - NEVER GIVE UP:
 - NEVER return "error". There is no error action. Always try to recover.
 - If you see Play Store, Settings, or any non-Instagram app: return "home" to go back to home screen
 - If you see home screen or launcher: return "open_instagram" to reopen Instagram
-- If you see a popup, dialog, or unexpected screen: return "back" to dismiss it
+- If you see a popup/dialog: TAP OUTSIDE it to dismiss, or tap dismiss button, or return "back"
 - If you're lost or confused: return "back" and try again
-- If you don't see Create button, tap Profile tab first
-- Look for "Create New" in desc field (top left area, small button)
-- Look for "Profile" in desc field (bottom nav, usually id=profile_tab)
-- If you see "Reel" or "Create new reel" option, tap it
-- If you see gallery thumbnails with video, tap the video
-- If you see "Next" button anywhere, tap it
-- IMPORTANT: When you see a caption field (text containing "Write a caption", "Add a caption", or similar placeholder) AND "Caption entered" is False, return action="tap_and_type" with the element_index of the caption field and text set to the caption
-- CRITICAL: If "Caption entered: True" is shown above, DO NOT return tap_and_type! The caption is already typed. Just tap the Share button directly.
+- If you see "Reel" option in a menu, tap it directly
+- If you see gallery thumbnails with video, tap the FIRST video thumbnail
+- If you see "Next" button, tap it
+- IMPORTANT: When you see a caption field AND "Caption entered" is False, return action="tap_and_type"
+- CRITICAL: If "Caption entered: True", DO NOT return tap_and_type! Just tap Share button.
 - Allow/OK buttons should be tapped for permissions
-- IMPORTANT: Return "done" ONLY when Share button clicked is True AND you see "Sharing to Reels" confirmation
-- If Share button clicked is False but you see "Sharing to Reels", that's from a previous post - ignore it and start the posting flow
+- Return "done" ONLY when Share button clicked is True AND you see "Sharing to Reels" confirmation
 - Set share_clicked=true when you tap the Share button
-- CRITICAL OK BUTTON RULE: After caption has been entered (Caption entered: True), if you see an "OK" button visible on screen (text='OK' or desc='OK'), you MUST tap the OK button FIRST before tapping Next or Share. This OK button dismisses the keyboard or a dialog and must be tapped for Next/Share to work properly.
 
 Only output JSON."""
 

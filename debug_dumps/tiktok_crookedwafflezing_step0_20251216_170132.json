@@ -1,0 +1,564 @@
+{
+  "timestamp": "20251216_170132",
+  "account": "crookedwafflezing",
+  "step": 0,
+  "state": {
+    "video_uploaded": true,
+    "video_selected": false,
+    "caption_entered": false,
+    "post_clicked": false
+  },
+  "element_count": 71,
+  "elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "gk8",
+      "bounds": "[0,0][720,1362]",
+      "center": [
+        360,
+        681
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "kg6",
+      "bounds": "[348,0][372,48]",
+      "center": [
+        360,
+        24
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "jd4",
+      "bounds": "[0,668][720,1282]",
+      "center": [
+        360,
+        975
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "dtx",
+      "bounds": "[615,668][720,791]",
+      "center": [
+        667,
+        729
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[615,668][720,791]",
+      "center": [
+        667,
+        729
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "ghn",
+      "bounds": "[615,681][720,791]",
+      "center": [
+        667,
+        736
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "b2_",
+      "bounds": "[621,681][720,777]",
+      "center": [
+        670,
+        729
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "cbsnews profile",
+      "id": "xo5",
+      "bounds": "[634,692][707,765]",
+      "center": [
+        670,
+        728
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Follow cbsnews",
+      "id": "h4h",
+      "bounds": "[621,736][720,791]",
+      "center": [
+        670,
+        763
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "dtx",
+      "bounds": "[616,791][720,889]",
+      "center": [
+        668,
+        840
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Like video. 131.7K likes",
+      "id": "evz",
+      "bounds": "[616,791][720,889]",
+      "center": [
+        668,
+        840
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "evq",
+      "bounds": "[616,791][720,864]",
+      "center": [
+        668,
+        827
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Like",
+      "id": "evm",
+      "bounds": "[635,791][708,864]",
+      "center": [
+        671,
+        827
+      ],
+      "clickable": false
+    },
+    {
+      "text": "131.7K",
+      "desc": "",
+      "id": "evr",
+      "bounds": "[616,864][720,878]",
+      "center": [
+        668,
+        871
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "dtx",
+      "bounds": "[616,889][720,987]",
+      "center": [
+        668,
+        938
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Read or add comments. 404 comments",
+      "id": "dnk",
+      "bounds": "[616,889][720,987]",
+      "center": [
+        668,
+        938
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "dj0",
+      "bounds": "[616,889][720,962]",
+      "center": [
+        668,
+        925
+      ],
+      "clickable": true
+    },
+    {
+      "text": "404",
+      "desc": "",
+      "id": "dj4",
+      "bounds": "[616,962][720,976]",
+      "center": [
+        668,
+        969
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "dtx",
+      "bounds": "[616,987][720,1085]",
+      "center": [
+        668,
+        1036
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Add or remove this video from Favorites.",
+      "id": "ggf",
+      "bounds": "[616,987][720,1085]",
+      "center": [
+        668,
+        1036
+      ],
+      "clickable": true
+    },
+    {
+      "text": "7,596",
+      "desc": "",
+      "id": "gfu",
+      "bounds": "[616,1060][720,1074]",
+      "center": [
+        668,
+        1067
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "dtx",
+      "bounds": "[0,1129][720,1282]",
+      "center": [
+        360,
+        1205
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Sound: original sound - cbsnews by cbsnews",
+      "id": "mrc",
+      "bounds": "[616,1182][720,1282]",
+      "center": [
+        668,
+        1232
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "mro",
+      "bounds": "[616,1198][720,1263]",
+      "center": [
+        668,
+        1230
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "mpp",
+      "bounds": "[616,1198][720,1263]",
+      "center": [
+        668,
+        1230
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "dtx",
+      "bounds": "[616,1085][720,1183]",
+      "center": [
+        668,
+        1134
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "sbt",
+      "bounds": "[616,1085][720,1183]",
+      "center": [
+        668,
+        1134
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Share video. 1,986 shares",
+      "id": "evz",
+      "bounds": "[616,1085][720,1183]",
+      "center": [
+        668,
+        1134
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "s9a",
+      "bounds": "[616,1085][720,1147]",
+      "center": [
+        668,
+        1116
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "s9q",
+      "bounds": "[646,1095][698,1147]",
+      "center": [
+        672,
+        1121
+      ],
+      "clickable": true
+    },
+    {
+      "text": "1,986",
+      "desc": "",
+      "id": "s9d",
+      "bounds": "[623,1147][720,1181]",
+      "center": [
+        671,
+        1164
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "dtx",
+      "bounds": "[20,1102][589,1149]",
+      "center": [
+        304,
+        1125
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "feed_multi_tag_layout",
+      "bounds": "[20,1102][330,1149]",
+      "center": [
+        175,
+        1125
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "anf",
+      "bounds": "[20,1102][330,1149]",
+      "center": [
+        175,
+        1125
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Read article by cbsnews",
+      "desc": "",
+      "id": "anj",
+      "bounds": "[70,1112][317,1138]",
+      "center": [
+        193,
+        1125
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "dtx",
+      "bounds": "[20,1160][589,1196]",
+      "center": [
+        304,
+        1178
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "r40",
+      "bounds": "[20,1160][161,1196]",
+      "center": [
+        90,
+        1178
+      ],
+      "clickable": true
+    },
+    {
+      "text": "cbsnews",
+      "desc": "",
+      "id": "title",
+      "bounds": "[20,1160][161,1196]",
+      "center": [
+        90,
+        1178
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "dtx",
+      "bounds": "[20,1207][589,1269]",
+      "center": [
+        304,
+        1238
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "esc",
+      "bounds": "[20,1207][589,1269]",
+      "center": [
+        304,
+        1238
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Students huddled together in a Brown University library building before police arrived to esco…more",
+      "desc": "",
+      "id": "desc",
+      "bounds": "[20,1207][589,1269]",
+      "center": [
+        304,
+        1238
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "y6x",
+      "bounds": "[566,1129][720,1282]",
+      "center": [
+        643,
+        1205
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Video",
+      "id": "long_press_layout",
+      "bounds": "[0,0][720,1282]",
+      "center": [
+        360,
+        641
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "r1s",
+      "bounds": "[0,39][720,134]",
+      "center": [
+        360,
+        86
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "ia3",
+      "bounds": "[0,41][91,132]",
+      "center": [
+        45,
+        86
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[106,39][186,134]",
+      "center": [
+        146,
+        86
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "STEM",
+      "id": "",
+      "bounds": "[106,39][186,134]",
+      "center": [
+        146,
+        86
+      ],
+      "clickable": false
+    },
+    {
+      "text": "STEM",
+      "desc": "",
+      "id": "text1",
+      "bounds": "[106,39][186,134]",
+      "center": [
+        146,
+        86
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[186,39][289,134]",
+      "center": [
+        237,
+        86
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Explore",
+      "id": "",
+      "bounds": "[186,39][289,134]",
+      "center": [
+        237,
+        86
+      ],
+      "clickable": false
+    }
+  ]
+}

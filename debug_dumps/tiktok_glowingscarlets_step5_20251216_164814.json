@@ -1,0 +1,443 @@
+{
+  "timestamp": "20251216_164814",
+  "account": "glowingscarlets",
+  "step": 5,
+  "state": {
+    "video_uploaded": true,
+    "video_selected": true,
+    "caption_entered": false,
+    "post_clicked": false
+  },
+  "element_count": 39,
+  "elements": [
+    {
+      "text": "",
+      "desc": "Back",
+      "id": "b6t",
+      "bounds": "[10,48][81,120]",
+      "center": [
+        45,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Add description...",
+      "desc": "",
+      "id": "fpj",
+      "bounds": "[26,134][485,377]",
+      "center": [
+        255,
+        255
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Preview video",
+      "id": "iwp",
+      "bounds": "[511,134][694,377]",
+      "center": [
+        602,
+        255
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Preview",
+      "desc": "",
+      "id": "e_x",
+      "bounds": "[527,147][609,175]",
+      "center": [
+        568,
+        161
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "d1j",
+      "bounds": "[511,323][694,377]",
+      "center": [
+        602,
+        350
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Edit cover",
+      "desc": "",
+      "id": "d1k",
+      "bounds": "[521,323][684,367]",
+      "center": [
+        602,
+        345
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Hashtags",
+      "desc": "",
+      "id": "auj",
+      "bounds": "[26,403][171,449]",
+      "center": [
+        98,
+        426
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Mention",
+      "desc": "",
+      "id": "aui",
+      "bounds": "[187,403][320,449]",
+      "center": [
+        253,
+        426
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "cv3",
+      "bounds": "[0,490][720,575]",
+      "center": [
+        360,
+        532
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Location",
+      "desc": "",
+      "id": "uz2",
+      "bounds": "[72,516][171,547]",
+      "center": [
+        121,
+        531
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "More info",
+      "id": "j6x",
+      "bounds": "[171,516][204,549]",
+      "center": [
+        187,
+        532
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "t9",
+      "bounds": "[668,520][694,546]",
+      "center": [
+        681,
+        533
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "sn3",
+      "bounds": "[72,575][328,621]",
+      "center": [
+        200,
+        598
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Denver Colorado Stake",
+      "desc": "",
+      "id": "ujf",
+      "bounds": "[83,585][317,611]",
+      "center": [
+        200,
+        598
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "sn3",
+      "bounds": "[341,575][580,621]",
+      "center": [
+        460,
+        598
+      ],
+      "clickable": true
+    },
+    {
+      "text": "New York City Center",
+      "desc": "",
+      "id": "ujf",
+      "bounds": "[352,585][569,611]",
+      "center": [
+        460,
+        598
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "sn3",
+      "bounds": "[593,575][720,621]",
+      "center": [
+        656,
+        598
+      ],
+      "clickable": true
+    },
+    {
+      "text": "La La Land",
+      "desc": "",
+      "id": "ujf",
+      "bounds": "[604,585][714,611]",
+      "center": [
+        659,
+        598
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,640][720,727]",
+      "center": [
+        360,
+        683
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Add link",
+      "id": "cv3",
+      "bounds": "[0,640][720,727]",
+      "center": [
+        360,
+        683
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Add",
+      "id": "ike",
+      "bounds": "[26,666][59,699]",
+      "center": [
+        42,
+        682
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Add link ",
+      "desc": "",
+      "id": "uz2",
+      "bounds": "[72,668][177,699]",
+      "center": [
+        124,
+        683
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Everyone can view this post",
+      "id": "cv3",
+      "bounds": "[0,727][720,814]",
+      "center": [
+        360,
+        770
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Public",
+      "id": "ike",
+      "bounds": "[26,753][59,786]",
+      "center": [
+        42,
+        769
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Everyone can view this post",
+      "desc": "",
+      "id": "uz2",
+      "bounds": "[72,755][388,786]",
+      "center": [
+        230,
+        770
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "More options, Privacy and more settings have been moved here.",
+      "id": "cv3",
+      "bounds": "[0,814][720,935]",
+      "center": [
+        360,
+        874
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More",
+      "id": "ike",
+      "bounds": "[26,840][59,873]",
+      "center": [
+        42,
+        856
+      ],
+      "clickable": false
+    },
+    {
+      "text": "More options",
+      "desc": "",
+      "id": "uz2",
+      "bounds": "[72,842][224,873]",
+      "center": [
+        148,
+        857
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Privacy and more settings have been moved here.",
+      "desc": "",
+      "id": "tsm",
+      "bounds": "[72,883][564,909]",
+      "center": [
+        318,
+        896
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Share",
+      "id": "s9n",
+      "bounds": "[26,964][59,997]",
+      "center": [
+        42,
+        980
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Share to",
+      "desc": "",
+      "id": "sas",
+      "bounds": "[72,965][168,996]",
+      "center": [
+        120,
+        980
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "sms",
+      "id": "",
+      "bounds": "[556,951][615,1010]",
+      "center": [
+        585,
+        980
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "facebook",
+      "id": "",
+      "bounds": "[635,951][694,1010]",
+      "center": [
+        664,
+        980
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Save draft",
+      "id": "f6a",
+      "bounds": "[20,1252][353,1324]",
+      "center": [
+        186,
+        1288
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Drafts",
+      "id": "f6v",
+      "bounds": "[128,1271][161,1304]",
+      "center": [
+        144,
+        1287
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Drafts",
+      "desc": "",
+      "id": "f83",
+      "bounds": "[168,1271][245,1304]",
+      "center": [
+        206,
+        1287
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Post",
+      "id": "pvl",
+      "bounds": "[366,1252][700,1324]",
+      "center": [
+        533,
+        1288
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Post",
+      "id": "pvz",
+      "bounds": "[485,1271][518,1304]",
+      "center": [
+        501,
+        1287
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Post",
+      "desc": "",
+      "id": "pwo",
+      "bounds": "[525,1271][581,1304]",
+      "center": [
+        553,
+        1287
+      ],
+      "clickable": false
+    }
+  ]
+}

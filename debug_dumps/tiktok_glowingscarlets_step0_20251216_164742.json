@@ -1,0 +1,564 @@
+{
+  "timestamp": "20251216_164742",
+  "account": "glowingscarlets",
+  "step": 0,
+  "state": {
+    "video_uploaded": true,
+    "video_selected": false,
+    "caption_entered": false,
+    "post_clicked": false
+  },
+  "element_count": 68,
+  "elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "gk8",
+      "bounds": "[0,0][720,1344]",
+      "center": [
+        360,
+        672
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Video",
+      "id": "long_press_layout",
+      "bounds": "[0,0][720,1344]",
+      "center": [
+        360,
+        672
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "kg6",
+      "bounds": "[348,0][372,48]",
+      "center": [
+        360,
+        24
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "jd4",
+      "bounds": "[0,650][720,1265]",
+      "center": [
+        360,
+        957
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "dtx",
+      "bounds": "[615,650][720,773]",
+      "center": [
+        667,
+        711
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[615,650][720,773]",
+      "center": [
+        667,
+        711
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "ghn",
+      "bounds": "[615,663][720,773]",
+      "center": [
+        667,
+        718
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "b2_",
+      "bounds": "[621,663][720,759]",
+      "center": [
+        670,
+        711
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Kendall Jones profile",
+      "id": "xo5",
+      "bounds": "[634,674][707,747]",
+      "center": [
+        670,
+        710
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Follow Kendall Jones",
+      "id": "h4h",
+      "bounds": "[621,718][720,773]",
+      "center": [
+        670,
+        745
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "dtx",
+      "bounds": "[616,773][720,871]",
+      "center": [
+        668,
+        822
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Like video. 571 likes",
+      "id": "evz",
+      "bounds": "[616,773][720,871]",
+      "center": [
+        668,
+        822
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "evq",
+      "bounds": "[616,773][720,846]",
+      "center": [
+        668,
+        809
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Like",
+      "id": "evm",
+      "bounds": "[635,773][708,846]",
+      "center": [
+        671,
+        809
+      ],
+      "clickable": false
+    },
+    {
+      "text": "571",
+      "desc": "",
+      "id": "evr",
+      "bounds": "[616,846][720,860]",
+      "center": [
+        668,
+        853
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "dtx",
+      "bounds": "[616,871][720,969]",
+      "center": [
+        668,
+        920
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Read or add comments. 9 comments",
+      "id": "dnk",
+      "bounds": "[616,871][720,969]",
+      "center": [
+        668,
+        920
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "dj0",
+      "bounds": "[616,871][720,944]",
+      "center": [
+        668,
+        907
+      ],
+      "clickable": true
+    },
+    {
+      "text": "9",
+      "desc": "",
+      "id": "dj4",
+      "bounds": "[616,944][720,958]",
+      "center": [
+        668,
+        951
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "dtx",
+      "bounds": "[616,969][720,1067]",
+      "center": [
+        668,
+        1018
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Add or remove this video from Favorites.",
+      "id": "ggf",
+      "bounds": "[616,969][720,1067]",
+      "center": [
+        668,
+        1018
+      ],
+      "clickable": true
+    },
+    {
+      "text": "22",
+      "desc": "",
+      "id": "gfu",
+      "bounds": "[616,1042][720,1056]",
+      "center": [
+        668,
+        1049
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "dtx",
+      "bounds": "[0,1111][720,1265]",
+      "center": [
+        360,
+        1188
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Sound: original sound - pachotheviz by pachotheviz",
+      "id": "mrc",
+      "bounds": "[616,1164][720,1265]",
+      "center": [
+        668,
+        1214
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "mro",
+      "bounds": "[616,1180][720,1245]",
+      "center": [
+        668,
+        1212
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "mpp",
+      "bounds": "[616,1180][720,1245]",
+      "center": [
+        668,
+        1212
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "dtx",
+      "bounds": "[616,1067][720,1165]",
+      "center": [
+        668,
+        1116
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "sbt",
+      "bounds": "[616,1067][720,1165]",
+      "center": [
+        668,
+        1116
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Share video. 15 shares",
+      "id": "evz",
+      "bounds": "[616,1067][720,1165]",
+      "center": [
+        668,
+        1116
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "s9a",
+      "bounds": "[616,1067][720,1129]",
+      "center": [
+        668,
+        1098
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "s9q",
+      "bounds": "[646,1077][698,1129]",
+      "center": [
+        672,
+        1103
+      ],
+      "clickable": true
+    },
+    {
+      "text": "15",
+      "desc": "",
+      "id": "s9d",
+      "bounds": "[623,1129][720,1163]",
+      "center": [
+        671,
+        1146
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "dtx",
+      "bounds": "[20,1142][589,1178]",
+      "center": [
+        304,
+        1160
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "r40",
+      "bounds": "[20,1142][202,1178]",
+      "center": [
+        111,
+        1160
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Kendall Jones",
+      "desc": "",
+      "id": "title",
+      "bounds": "[20,1142][202,1178]",
+      "center": [
+        111,
+        1160
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "dtx",
+      "bounds": "[20,1189][589,1251]",
+      "center": [
+        304,
+        1220
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "esc",
+      "bounds": "[20,1189][589,1251]",
+      "center": [
+        304,
+        1220
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Winnie the house elf \n…more",
+      "desc": "",
+      "id": "desc",
+      "bounds": "[20,1189][589,1251]",
+      "center": [
+        304,
+        1220
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "y6x",
+      "bounds": "[566,1111][720,1265]",
+      "center": [
+        643,
+        1188
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "r1s",
+      "bounds": "[0,39][720,134]",
+      "center": [
+        360,
+        86
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "ia3",
+      "bounds": "[0,41][91,132]",
+      "center": [
+        45,
+        86
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[117,39][197,134]",
+      "center": [
+        157,
+        86
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "STEM",
+      "id": "",
+      "bounds": "[117,39][197,134]",
+      "center": [
+        157,
+        86
+      ],
+      "clickable": false
+    },
+    {
+      "text": "STEM",
+      "desc": "",
+      "id": "text1",
+      "bounds": "[117,39][197,134]",
+      "center": [
+        157,
+        86
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[197,39][300,134]",
+      "center": [
+        248,
+        86
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Explore",
+      "id": "",
+      "bounds": "[197,39][300,134]",
+      "center": [
+        248,
+        86
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Explore",
+      "desc": "",
+      "id": "text1",
+      "bounds": "[197,39][300,134]",
+      "center": [
+        248,
+        86
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[300,39][425,134]",
+      "center": [
+        362,
+        86
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Following",
+      "id": "",
+      "bounds": "[300,39][425,133]",
+      "center": [
+        362,
+        86
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Following",
+      "desc": "",
+      "id": "text1",
+      "bounds": "[300,39][425,133]",
+      "center": [
+        362,
+        86
+      ],
+      "clickable": false
+    }
+  ]
+}
