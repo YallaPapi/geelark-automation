@@ -1,6 +1,0 @@
-{
-    "name": "tiktok",
-    "platform": "tiktok",
-    "enabled": true,
-    "max_posts_per_account_per_day": 1
-}

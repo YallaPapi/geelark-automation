@@ -1,0 +1,390 @@
+You’re already very close to fixing this; the remaining work is mainly about making the index‑safety and navigation guarantees rock‑solid and getting a fresh pair of eyes to wire it cleanly. Here’s a reviewer prompt you can paste straight into Cursor/Claude/etc. and point at this repo + the two attached files.
+Prompt for code reviewer
+
+You are reviewing the geelark-automation repository for a regression introduced while adding TikTok support and switching to gpt-5-mini for UI navigation. The core bug: the AI UI agent still sometimes returns invalid elementIndex values (out of range for the current uielements), which leads to navigation failures, “max steps reached” errors, and stuck jobs. This worked on a previous commit (pre‑TikTok integration) and is now flaky.
+
+You have:
+
+    Full repo contents (see attached XML digest: repomix-output-YallaPapi-geelark-automation-1.xml).
+
+​
+
+Recent run logs (worker/orchestrator + flow analysis JSONL): logs.txt.
+
+​
+
+Reference prompts and patterns from kamilstanuch/codebase-digest to borrow prompt structure and safety techniques.
+
+    ​
+
+Constraints and context
+
+    UI index bug:
+
+        The system uses ClaudeUIAnalyzer in claudeanalyzer.py to choose actions based on a list of UI elements. The elements are passed in as uielements and formatted into a textual list like 0 descHome, 1 descSearch, etc.
+
+​
+
+The prompt now already contains an “ELEMENT INDEX RULES” section, including lines like:
+
+    “There are exactly N elements, numbered 0 through maxIndex. ONLY these indices exist. If you return elementIndex maxIndex+1 or higher, it will crash. ONLY use 0 to maxIndex.”
+
+    ​
+
+There is Python‑side validation and retry logic inside ClaudeUIAnalyzer.analyze(...) that is supposed to:
+
+    Parse the JSON response.
+
+    Check if elementIndex is an integer between 0 and len(elements)-1.
+
+    On invalid index, retry a few times with the same prompt.
+
+    On the final attempt, clamp the index into range instead of crashing.
+
+    ​
+
+Despite this, recent flowanalysis*.jsonl logs still show many steps where:
+
+    idx > maxIdx (e.g., idx 33 max 24, idx 52 max 41, idx 15 max 14, idx 31 max 27).
+
+    ​
+
+    Some runs show a mix of valid and invalid indices in the same navigation sequence.
+
+Isolated tests run directly against ClaudeUIAnalyzer with synthetic elements show correct behavior (e.g., gpt-5-mini consistently returning 4 for “Create New” when there are 26 elements).
+
+​
+
+Replays using the same recorded uielements from problematic flowanalysis*.jsonl entries also show that the current ClaudeUIAnalyzer returns valid indices (e.g., 24 instead of the older invalid 33), suggesting that:
+
+    Older workers were using older code, and/or
+
+    The flow logs are capturing the raw model response before clamping / validation, or
+
+    The clamping / retry logic is not actually being applied to the action that gets executed/logged.
+
+        ​
+
+Navigation / max‑steps failures:
+
+    There are multiple jobs that fail with “Max steps 15 reached without completing post” in campaigns/podcast/progress.csv and corresponding flowanalysis*.jsonl.
+
+​
+
+These sequences often show:
+
+    Repeated invalid indices (off‑by‑one or much higher than maxIdx).
+
+    The agent bouncing between screens or re‑selecting thumbnails instead of progressing to caption/share screens.
+
+    ​
+
+For a recent gpt-5-mini run, a subset of accounts (e.g., podcutstories, warlordregent, archipelagoone) show these “max steps” failures, while others succeed with the same code.
+
+    ​
+
+Model / infra context:
+
+    The actual runtime model for UI analysis is controlled by Config.AI_MODEL in config.py, currently defaulting to gpt-5-mini.
+
+​
+
+Local tests often used gpt-4o-mini which behaved better in terms of index discipline, but production runs are using gpt-5-mini for cost/perf reasons.
+
+​
+
+The flow analysis files live under flowanalysis/ with filenames like flowanalysis{account}{timestamp}.jsonl. Each line captures step, uielements, action.elementIndex, action.reason, etc.
+
+    ​
+
+Progress / retry system:
+
+    progresstracker.py owns the CSV schema, including columns status, error, errortype, errorcategory, attempts, maxattempts, retryat, passnumber, platform.
+
+​
+
+Infrastructure / transient failures (connectionfailed, InvalidSessionIdException, UI dump failed) are categorized as errorcategory = infrastructure and should be auto‑retried up to maxattempts with a delay retrydelayminutes.
+
+​
+
+There is existing logic:
+
+    mark_failed(errorCategory, errorType, retryDelayMinutes) marks jobs as retrying for retryable categories.
+
+​
+
+claim_retry_job and get_retry_jobs are used by workers to pick up ready retry jobs.
+
+    ​
+
+Logs show many retrying infrastructure jobs, but the user still sees “max steps 15 reached” and navigation failures that feel like they’re not being recovered from robustly.
+
+    ​
+
+TikTok integration:
+
+    TikTok support was added via a TikTok poster (posters/tiktokposter.py) and some shared infrastructure changes (platform‑aware poster factory, shared posting state, etc.).
+
+​
+
+The original regression appeared “around” that work; it may not be TikTok‑specific, but some shared logic (UI controller, analyzer, worker wiring) was modified.
+
+​
+
+There is explicit mention in the digest that TikTok’s poster currently lacks some of the robustness Instagram has: no loop detection, no “done” confirmation, and no explicit state update for videoSelected.
+
+    ​
+
+Legacy vs campaign modes:
+
+    The system supports both a legacy root parallelprogress.csv and campaign‑scoped progress files like campaigns/podcast/C-automation.csv with campaign‑aware orchestration.
+
+​
+
+CampaignConfig, PostingContext, and CampaignOrchestrator (or equivalent refactor) unify path resolution and campaign‑specific behavior.
+
+        ​
+
+Your tasks
+
+Your goal is to fully fix the index / navigation reliability issues and harden infra auto‑retry, without regressing Instagram‑only flows, and while keeping TikTok support intact.
+
+Please do the following, in order:
+1. Map out the exact UI decision pipeline
+
+    Identify and document all code paths from:
+
+        Screenshot / UI dump → uielements extraction → ClaudeUIAnalyzer.analyze(...) → returned action → execution in SmartInstagramPoster (or TikTok poster) → logging into flowanalysis*.jsonl.
+
+    ​
+
+For both Instagram and TikTok:
+
+    Show where ClaudeUIAnalyzer is instantiated and called.
+
+    Show any differences in how uielements are constructed / filtered / formatted.
+
+    ​
+
+Confirm exactly where the JSON returned by the model gets:
+
+    Parsed.
+
+    Validated (elementIndex range, action type).
+
+    Potentially modified (clamped / fallback).
+
+    Logged (what goes into flowanalysis*.jsonl vs what is actually executed).
+
+        ​
+
+Deliverable: a short comment block (or docs/ui_navigation_flow.md) that diagrams this path and points to exact functions + line numbers.
+2. Fix index validation so that no out‑of‑range index can ever be executed
+
+    In claudeanalyzer.py:
+
+        Ensure analyze(...) has the following behavior:
+
+            Takes uielements and knows maxIdx = len(uielements) - 1.
+
+            After parsing the model response, before returning, it validates:
+
+                elementIndex is an int.
+
+                0 <= elementIndex <= maxIdx.
+
+            On invalid index:
+
+                Log: INVALID_INDEX: idx=..., valid=[0, maxIdx], attempt=....
+
+                Retry up to retries times with the same prompt (you can optionally strengthen the hint in later attempts).
+
+                On final attempt:
+
+                    Either:
+
+                        Option A (strict): treat as fatal model failure: return actionType="error" and let caller handle; or
+
+                        Option B (pragmatic): clamp to max(0, min(idx, maxIdx)), and set an explicit flag in the returned dict like {"elementIndex": clamped, "indexClamped": true}.
+
+    In the caller (likely SmartInstagramPoster.analyze_ui or equivalent):
+
+        Never use the raw model index from before validation.
+
+        Execute only the post‑validation / possibly‑clamped elementIndex.
+
+        Ensure what gets written to flowanalysis*.jsonl is the validated action (post‑clamp), so logs match actual behavior. If you want to preserve both, log originalElementIndex alongside elementIndex.
+
+    ​
+
+Strengthen the prompt:
+
+    Borrow from codebase-digest style prompts (e.g., explicit “CRITICAL RULES” sections, numbered steps, and self‑checks).
+
+        ​
+
+        Add a self‑check requirement: before answering, the model must internally confirm:
+
+            elementIndex is one of the shown indices in the UI list.
+
+            If no valid action is possible, it should return a specific fallback action (e.g., "action": "noop" or "action": "error") rather than inventing a new index.
+
+    Add a small unit test suite for ClaudeUIAnalyzer:
+
+        Synthetic scenarios with N elements (e.g., 3, 15, 27) where the only valid target is at known index; assert the returned elementIndex is always in range and usually the expected one.
+
+        Replay a few problematic historical uielements snapshots from flowanalysis*.jsonl (you can hardcode them as fixtures) and assert:
+
+            No out‑of‑range elementIndex is ever returned.
+
+            indexClamped is correctly set if clamping is used.
+
+Deliverable: updated claudeanalyzer.py, caller code, and tests that prove: “no out‑of‑range index can be executed” is an invariant.
+3. Reduce navigation “max steps” failures
+
+    Analyze a handful of recent “max steps 15 reached” flows from the logs (warlordregent, podcutstories, archipelagoone in flowanalysis*.jsonl).
+
+​
+
+    For each:
+
+        Identify which steps are clearly “off” (e.g., repeatedly selecting thumbnails, never progressing to caption/share).
+
+        Check if those steps correspond to invalid or clamped indices.
+
+Improve the navigation loop in SmartInstagramPoster (and TikTok poster) by:
+
+    Introducing a simple state machine for the posting flow, e.g.:
+
+        INIT → HOME → CREATE → GALLERY → CAPTION → SHARE → DONE.
+
+    For each state, constrain allowed actions:
+
+        On gallery screen, only allow tapping thumbnails / “Next”.
+
+        On caption screen, only allow tap‑and‑type on the caption field, then tap “Share”.
+
+    If the model returns an action that doesn’t make sense for the current state:
+
+        Either override it with a safe fallback, or count it as a “bad step” and retry with a more constrained prompt for that state.
+
+Add loop detection / recovery (Instagram already has a version of this; TikTok reportedly lacks it):
+
+    ​
+
+        Track (state, elementIndex, screenSignature) tuples across steps.
+
+        If the same combination repeats more than N times, consider the agent “stuck”:
+
+            Take a recovery action (e.g., go back, reopen gallery, restart flow).
+
+            Or fail early with a clear error (loopstuck) instead of burning all 15 steps.
+
+    Add tests or at least reproducible scripts to simulate a typical “home → create → select video → caption → share” path using recorded UIs, confirming that:
+
+        On a “happy path” the model reliably completes in well under 15 steps.
+
+        Invalid / nonsense actions are rejected by the state machine.
+
+Deliverable: clearer, stateful navigation logic that significantly reduces “max steps” failures and makes them explainable when they do happen.
+4. Harden auto‑retry for infrastructure failures
+
+    In parallelworker.py and progresstracker.py:
+
+        Confirm classification for:
+
+            Connection failed, InvalidSessionIdException, UI dump failed, and similar errors → errorcategory="infrastructure" and thus retryable.
+
+            ​
+
+        Ensure:
+
+            maxAttempts and retryDelayMinutes are respected.
+
+            Workers keep running long enough to pick up retrying jobs once retryAt passes.
+
+    Add explicit logging hooks:
+
+        When a job is marked retrying, log:
+        "[RETRY SCHEDULED] job={id} cat={errorCategory}/{errorType} attempt={attempts}/{maxAttempts} retryAt={retryAt}"
+
+        When a retry job is claimed:
+        "[RETRY CLAIMED] job={id} by worker={id} attempt={attempts}".
+
+    For non‑retryable categories (account issues like loggedout, suspended, captcha):
+
+        Confirm they are never auto‑retried.
+
+        Keep them clearly visible in --status output so humans can intervene.
+
+    Optionally:
+
+        Add a small CLI helper (parallelorchestrator.py --retry-infra) that calls ProgressTracker.retry_all_failed(includenonretryable=False) to bulk‑reset infrastructure failures for a given campaign.
+
+Deliverable: code and logs that make retry behavior transparent and reliable (infra issues get retried automatically; permanent account issues do not).
+5. Make TikTok integration safe and non‑regressive
+
+    Locate TikTok‑specific components:
+
+        posters/tiktokposter.py, any TikTok‑specific device control paths, and where TikTok vs Instagram posters are selected (platform‑aware poster factory or similar).
+
+        ​
+
+    Ensure that TikTok paths:
+
+        Either reuse the hardened ClaudeUIAnalyzer/state machine patterns from Instagram, or
+
+        Are cleanly separated so TikTok failures cannot corrupt shared state (progress CSV, orchestrator, etc.).
+
+    Add a platform dimension (if not already present) at the campaign level:
+
+        Campaign JSON / config should specify platform: "instagram" or "tiktok".
+
+        Worker selection of poster class must branch purely on this, and never default to TikTok behavior when platform is missing.
+
+    Verify:
+
+        For existing Instagram campaigns (like podcast), TikTok code paths are never invoked.
+
+        The index / navigation fixes improve both platforms if TikTok uses the shared analyzer.
+
+Deliverable: clean, platform‑aware wiring and assurance that TikTok support no longer affects Instagram stability.
+6. Developer‑experience improvements
+
+Given this system is actively tuned with LLMs:
+
+    Add a tests/ui_analyzer_replay/ folder:
+
+        Small JSON fixtures extracted from flowanalysis*.jsonl (problematic and successful cases).
+
+        A script + tests to replay them against the current ClaudeUIAnalyzer and assert invariants (no out‑of‑range, state progression, etc.).
+
+    Add a short docs/debugging-ui-agent.md that explains:
+
+        How to replay a failing flowanalysis file.
+
+        How to switch models for A/B testing (gpt-5-mini vs gpt-4o-mini).
+
+        How to interpret “max steps”, loopstuck, and index validation logs.
+
+Acceptance criteria
+
+You are done when:
+
+    No executed action can ever reference a UI element index outside [0, len(uielements)-1].
+
+    Flow logs reflect the validated actions actually executed (original raw indices, if logged, are clearly labeled).
+
+    “Max steps 15 reached” still may happen, but:
+
+        Is much rarer.
+
+        When it happens, flow logs show sensible, state‑aware behavior rather than random tapping.
+
+    Infrastructure failures are clearly auto‑retried, with transparent logging.
+
+    Instagram campaigns like podcast run stably with gpt-5-mini, and TikTok support does not introduce regressions.
+
+Please implement the changes directly in this repo, add focused tests around ClaudeUIAnalyzer and the retry logic, and annotate key functions with brief docstrings so future LLM‑guided refactors have a clear contract to follow.
+
+If anything in the logs or digest seems ambiguous, prefer adding small, explicit logs or invariants rather than “best effort” behavior.

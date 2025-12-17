@@ -1,57 +1,32 @@
 """
-UI Analyzer - AI-based UI analysis for Instagram automation.
+Claude UI Analyzer - AI-based UI analysis for Instagram automation.
 
-This module encapsulates all AI interactions for analyzing
+This module encapsulates all Claude AI interactions for analyzing
 UI elements and deciding next actions in the posting flow.
 
-Supports both Claude (Anthropic) and GPT (OpenAI) models.
+Extracted from SmartInstagramPoster to improve separation of concerns.
 """
 import json
-import os
 import time
 from typing import List, Dict, Any, Optional
 
 import anthropic
-from openai import OpenAI
 
 
 class ClaudeUIAnalyzer:
-    """Analyzes UI elements using AI to decide next actions."""
+    """Analyzes UI elements using Claude AI to decide next actions."""
 
-    # Provider constants
-    PROVIDER_CLAUDE = "claude"
-    PROVIDER_OPENAI = "openai"
-
-    def __init__(
-        self,
-        model: str = "claude-sonnet-4-20250514",
-        max_tokens: int = 500,
-        provider: str = None
-    ):
+    def __init__(self, model: str = "claude-sonnet-4-20250514", max_tokens: int = 500):
         """
         Initialize the analyzer.
 
         Args:
-            model: Model to use for analysis.
+            model: Claude model to use for analysis.
             max_tokens: Maximum tokens for response.
-            provider: "claude" or "openai". Auto-detected from model name if not specified.
         """
-        # Auto-detect provider from model name
-        if provider is None:
-            if model.startswith("gpt-") or model.startswith("o1") or model.startswith("o3"):
-                provider = self.PROVIDER_OPENAI
-            else:
-                provider = self.PROVIDER_CLAUDE
-
-        self.provider = provider
+        self.client = anthropic.Anthropic()
         self.model = model
         self.max_tokens = max_tokens
-
-        # Initialize the appropriate client
-        if self.provider == self.PROVIDER_OPENAI:
-            self.client = OpenAI()
-        else:
-            self.client = anthropic.Anthropic()
 
     def format_ui_elements(self, elements: List[Dict]) -> str:
         """Format UI elements into a text description for Claude.
@@ -73,9 +48,7 @@ class ClaudeUIAnalyzer:
                 parts.append(f"id={elem['id']}")
             if elem.get('clickable'):
                 parts.append("CLICKABLE")
-            # Simplified format - removed bounds/center to avoid confusing the model with extra numbers
-            # Old format: f"{i}. {elem.get('bounds', '')} center={elem.get('center', '')} | {' | '.join(parts)}"
-            ui_description += f"[{i}] {' | '.join(parts)}\n"
+            ui_description += f"{i}. {elem.get('bounds', '')} center={elem.get('center', '')} | {' | '.join(parts)}\n"
         return ui_description
 
     def build_prompt(
@@ -99,16 +72,8 @@ class ClaudeUIAnalyzer:
             Complete prompt string for Claude.
         """
         ui_description = self.format_ui_elements(elements)
-        max_index = len(elements) - 1
 
         prompt = f"""You are controlling an Android phone to post a Reel to Instagram.
-
-=== ELEMENT INDEX RULES (READ THIS FIRST) ===
-Below you will see a list of UI elements like "[0] desc=Home", "[1] desc=Search", etc.
-The number in [brackets] is the element_index you must use in your JSON response.
-There are exactly {len(elements)} elements, numbered [0] through [{max_index}].
-ONLY these indices exist. If you return element_index={max_index + 1} or higher, it will crash.
-If you return a negative number, it will crash. ONLY use 0 to {max_index}.
 
 Current state:
 - Video uploaded to phone: {video_uploaded}
@@ -148,17 +113,13 @@ Instagram posting flow:
 Respond with JSON:
 {{
     "action": "tap" | "tap_and_type" | "back" | "scroll_down" | "scroll_up" | "home" | "open_instagram" | "done",
-    "element_index": <integer from 0 to {max_index} ONLY>,
+    "element_index": <index of element to tap>,
     "text": "<text to type if action is tap_and_type>",
     "reason": "<brief explanation>",
     "video_selected": true/false,
     "caption_entered": true/false,
     "share_clicked": true/false
 }}
-
-CRITICAL: element_index must be an integer between 0 and {max_index}. There are only {len(elements)} elements.
-Look at the [N] numbers in the UI elements list - those are your ONLY valid choices.
-Example: To tap "[4] desc=Create New", set element_index to 4.
 
 === POPUP HANDLING (CRITICAL - HANDLE FIRST) ===
 
@@ -288,41 +249,20 @@ Only output JSON."""
 
         for attempt in range(retries):
             try:
-                # Call appropriate API based on provider
-                if self.provider == self.PROVIDER_OPENAI:
-                    # GPT-5 models use max_completion_tokens, older models use max_tokens
-                    if self.model.startswith("gpt-5") or self.model.startswith("o1") or self.model.startswith("o3"):
-                        response = self.client.chat.completions.create(
-                            model=self.model,
-                            max_completion_tokens=self.max_tokens,
-                            messages=[{"role": "user", "content": prompt}]
-                        )
-                    else:
-                        response = self.client.chat.completions.create(
-                            model=self.model,
-                            max_tokens=self.max_tokens,
-                            messages=[{"role": "user", "content": prompt}]
-                        )
-                    # Check for empty response
-                    if not response.choices:
-                        if attempt < retries - 1:
-                            time.sleep(1)
-                            continue
-                        raise ValueError("OpenAI returned empty response")
-                    text = response.choices[0].message.content.strip() if response.choices[0].message.content else ""
-                else:
-                    response = self.client.messages.create(
-                        model=self.model,
-                        max_tokens=self.max_tokens,
-                        messages=[{"role": "user", "content": prompt}]
-                    )
-                    # Check for empty response
-                    if not response.content:
-                        if attempt < retries - 1:
-                            time.sleep(1)
-                            continue
-                        raise ValueError("Claude returned empty response")
-                    text = response.content[0].text.strip()
+                response = self.client.messages.create(
+                    model=self.model,
+                    max_tokens=self.max_tokens,
+                    messages=[{"role": "user", "content": prompt}]
+                )
+
+                # Check for empty response
+                if not response.content:
+                    if attempt < retries - 1:
+                        time.sleep(1)
+                        continue
+                    raise ValueError("Claude returned empty response")
+
+                text = response.content[0].text.strip()
 
                 # Check for empty text
                 if not text:
@@ -332,21 +272,7 @@ Only output JSON."""
                     raise ValueError("Claude returned empty text")
 
                 try:
-                    result = self.parse_response(text)
-                    # Validate element_index is within bounds
-                    if "element_index" in result and result["element_index"] is not None:
-                        idx = result["element_index"]
-                        max_idx = len(elements) - 1
-                        if not isinstance(idx, int) or idx < 0 or idx > max_idx:
-                            print(f"  [INVALID INDEX] Model returned element_index={idx}, but valid range is 0-{max_idx}")
-                            if attempt < retries - 1:
-                                time.sleep(1)
-                                continue
-                            # On final attempt, clamp to valid range instead of crashing
-                            if isinstance(idx, int):
-                                result["element_index"] = max(0, min(idx, max_idx))
-                                print(f"  [INDEX CLAMPED] Clamped to {result['element_index']}")
-                    return result
+                    return self.parse_response(text)
                 except ValueError as e:
                     print(f"  [JSON PARSE ERROR] attempt {attempt+1}: {e}")
                     print(f"  Raw response (full): {text}")

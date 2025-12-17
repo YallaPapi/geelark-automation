@@ -80,10 +80,10 @@ class Config:
     # ==================== RETRY SETTINGS ====================
 
     # Maximum retry attempts for failed jobs
-    MAX_RETRY_ATTEMPTS: int = 10
+    MAX_RETRY_ATTEMPTS: int = 5
 
-    # Delay between retries in minutes (0.25 = 15 seconds)
-    RETRY_DELAY_MINUTES: float = 0.25
+    # Delay between retries in minutes
+    RETRY_DELAY_MINUTES: int = 5
 
     # Non-retryable error types
     NON_RETRYABLE_ERRORS: frozenset = frozenset({
@@ -116,14 +116,6 @@ class Config:
     CAMPAIGN_ACCOUNTS_FILE: str = "accounts.txt"
     CAMPAIGN_PROGRESS_FILE: str = "progress.csv"
     CAMPAIGN_STATE_FILE: str = "scheduler_state.json"
-
-    # ==================== AI MODEL ====================
-
-    # AI model for UI analysis (supports Claude and OpenAI models)
-    # Claude models: claude-sonnet-4-20250514, claude-haiku, etc.
-    # OpenAI models: gpt-5-mini (~$0.012/post), gpt-4o-mini, etc.
-    # Note: gpt-5-nano doesn't return content (reasoning-only model)
-    AI_MODEL: str = os.environ.get("AI_MODEL", "gpt-5-mini")  # 11x cheaper than Claude
 
     # ==================== TIMEOUTS ====================
 
@@ -202,7 +194,6 @@ class CampaignConfig:
     captions_file: str                     # Path to captions CSV
     max_posts_per_account_per_day: int = 1 # Daily limit per account
     enabled: bool = True                   # Whether campaign is active
-    platform: str = "instagram"            # Platform: 'instagram', 'tiktok'
 
     # CSV format configuration
     caption_column: str = "post_caption"   # Column name for caption text
@@ -303,7 +294,6 @@ class CampaignConfig:
             captions_file=captions_file,
             max_posts_per_account_per_day=settings.get('max_posts_per_account_per_day', 1),
             enabled=settings.get('enabled', True),
-            platform=settings.get('platform', 'instagram'),  # Default to Instagram
             caption_column=caption_column,
             filename_column=filename_column,
         )

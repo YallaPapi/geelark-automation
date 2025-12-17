@@ -79,7 +79,7 @@ class ProgressTracker:
         'job_id', 'account', 'video_path', 'caption', 'status',
         'worker_id', 'claimed_at', 'completed_at', 'error',
         'attempts', 'max_attempts', 'retry_at', 'error_type',
-        'error_category', 'pass_number', 'platform'
+        'error_category', 'pass_number'
     ]
 
     # Valid status values
@@ -130,8 +130,8 @@ class ProgressTracker:
                             'action_blocked', 'banned'}
 
     # Default retry settings
-    DEFAULT_MAX_ATTEMPTS = 10
-    DEFAULT_RETRY_DELAY_MINUTES = 0.25  # 15 seconds
+    DEFAULT_MAX_ATTEMPTS = 3
+    DEFAULT_RETRY_DELAY_MINUTES = 5
 
     def __init__(self, progress_file: str, lock_timeout: float = 30.0):
         """
@@ -398,10 +398,7 @@ class ProgressTracker:
                 'attempts': '0',
                 'max_attempts': str(self.DEFAULT_MAX_ATTEMPTS),
                 'retry_at': '',
-                'error_type': '',
-                'error_category': '',
-                'pass_number': '',
-                'platform': 'instagram'  # Default for legacy scheduler_state.json
+                'error_type': ''
             })
 
         # Combine existing jobs with new jobs
@@ -615,8 +612,7 @@ class ProgressTracker:
                 'retry_at': '',
                 'error_type': '',
                 'error_category': '',
-                'pass_number': '',
-                'platform': getattr(campaign_config, 'platform', 'instagram')
+                'pass_number': ''
             })
 
         # Write jobs
@@ -1220,85 +1216,6 @@ class ProgressTracker:
         """Check if all jobs are complete (no pending, claimed, or retrying)."""
         stats = self.get_stats()
         return stats['pending'] == 0 and stats['claimed'] == 0 and stats['retrying'] == 0
-
-    def validate_schema(self) -> Dict[str, Any]:
-        """
-        Validate the progress file schema and data integrity.
-
-        Checks:
-        - All required columns present
-        - Status values are valid
-        - Numeric fields are numeric
-        - No empty job_id or account on active jobs
-
-        Returns:
-            Dict with validation results:
-            {
-                'valid': bool,
-                'errors': [list of error messages],
-                'warnings': [list of warnings],
-                'row_count': int,
-                'corrupt_rows': [list of row indices]
-            }
-        """
-        result = {
-            'valid': True,
-            'errors': [],
-            'warnings': [],
-            'row_count': 0,
-            'corrupt_rows': []
-        }
-
-        if not os.path.exists(self.progress_file):
-            result['errors'].append(f"Progress file not found: {self.progress_file}")
-            result['valid'] = False
-            return result
-
-        jobs = self._read_all_jobs()
-        result['row_count'] = len(jobs)
-
-        valid_statuses = {
-            self.STATUS_PENDING, self.STATUS_CLAIMED, self.STATUS_SUCCESS,
-            self.STATUS_FAILED, self.STATUS_SKIPPED, self.STATUS_RETRYING
-        }
-
-        for i, job in enumerate(jobs):
-            row_errors = []
-
-            # Check required columns exist
-            for col in self.COLUMNS:
-                if col not in job:
-                    row_errors.append(f"Missing column: {col}")
-
-            # Check job_id not empty
-            if not job.get('job_id', '').strip():
-                row_errors.append("Empty job_id")
-
-            # Check status is valid
-            status = job.get('status', '')
-            if status and status not in valid_statuses:
-                row_errors.append(f"Invalid status: {status}")
-
-            # Check numeric fields
-            for field in ['attempts', 'max_attempts']:
-                value = job.get(field, '')
-                if value and not value.isdigit():
-                    row_errors.append(f"Non-numeric {field}: {value}")
-
-            # Check active jobs have accounts
-            if status in {self.STATUS_PENDING, self.STATUS_CLAIMED, self.STATUS_RETRYING}:
-                if not job.get('account', '').strip():
-                    result['warnings'].append(f"Row {i}: Active job without account")
-
-            if row_errors:
-                result['corrupt_rows'].append(i)
-                for err in row_errors:
-                    result['errors'].append(f"Row {i}: {err}")
-
-        if result['errors']:
-            result['valid'] = False
-
-        return result
 
 
 if __name__ == "__main__":

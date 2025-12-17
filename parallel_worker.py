@@ -88,17 +88,8 @@ def setup_signal_handlers():
     signal.signal(signal.SIGINT, handle_signal)
 
 
-def setup_worker_logging(worker_config: WorkerConfig, campaign_name: str = None) -> logging.Logger:
-    """
-    Set up logging for this worker with campaign context.
-
-    Args:
-        worker_config: Worker configuration
-        campaign_name: Optional campaign name for logging context
-
-    Returns:
-        Logger instance
-    """
+def setup_worker_logging(worker_config: WorkerConfig) -> logging.Logger:
+    """Set up logging for this worker."""
     # Create logs directory
     os.makedirs(os.path.dirname(worker_config.log_file) or '.', exist_ok=True)
 
@@ -106,21 +97,17 @@ def setup_worker_logging(worker_config: WorkerConfig, campaign_name: str = None)
     logger = logging.getLogger(f"worker_{worker_config.worker_id}")
     logger.setLevel(logging.INFO)
 
-    # Build log prefix with campaign context
-    campaign_prefix = f"{campaign_name}:" if campaign_name else ""
-    log_prefix = f"{campaign_prefix}W{worker_config.worker_id}"
-
     # File handler
     fh = logging.FileHandler(worker_config.log_file, encoding='utf-8')
     fh.setFormatter(logging.Formatter(
-        f'%(asctime)s [{log_prefix}] %(levelname)s %(message)s'
+        f'%(asctime)s [W{worker_config.worker_id}] %(levelname)s %(message)s'
     ))
     logger.addHandler(fh)
 
     # Console handler
     ch = logging.StreamHandler()
     ch.setFormatter(logging.Formatter(
-        f'%(asctime)s [{log_prefix}] %(levelname)s %(message)s'
+        f'%(asctime)s [Worker {worker_config.worker_id}] %(levelname)s %(message)s'
     ))
     logger.addHandler(ch)
 
@@ -181,10 +168,10 @@ def execute_posting_job(
     worker_id: int = None
 ) -> tuple:
     """
-    Execute a single posting job using platform-specific poster.
+    Execute a single posting job.
 
     Args:
-        job: Job dict from progress tracker (includes 'platform' field)
+        job: Job dict from progress tracker
         worker_config: This worker's configuration
         config: Overall parallel config
         logger: Logger instance
@@ -198,14 +185,13 @@ def execute_posting_job(
         - error_category: 'account', 'infrastructure', or 'unknown'
         - error_type: Specific error type (e.g., 'suspended', 'adb_timeout')
     """
-    # Import poster factory (supports instagram, tiktok, etc.)
-    from posters import get_poster
+    # Import here to avoid circular imports and ensure ANDROID_HOME is set
+    from post_reel_smart import SmartInstagramPoster
 
     account = job['account']
     video_path = job['video_path']
     caption = job['caption']
     job_id = job['job_id']
-    platform = job.get('platform', 'instagram')  # Default for backwards compat
 
     # Kill any orphaned Appium sessions before starting (prevents session limit issues)
     kill_appium_sessions(worker_config.appium_url, logger)
@@ -217,40 +203,39 @@ def execute_posting_job(
             logger.warning(f"Job {job_id} failed pre-post verification: {error}")
             return False, f"Pre-post verification failed: {error}", 'infrastructure', 'verification_failed'
 
-    logger.info(f"Starting job {job_id}: posting to {account} ({platform})")
+    logger.info(f"Starting job {job_id}: posting to {account}")
     logger.info(f"  Video: {video_path}")
     logger.info(f"  Caption: {caption[:50]}...")
 
     poster = None
     try:
-        # Use factory to get platform-specific poster
-        try:
-            poster = get_poster(
-                platform=platform,
-                phone_name=account,
-                system_port=worker_config.system_port,
-                appium_url=worker_config.appium_url
-            )
-        except ValueError as e:
-            # Platform not supported - fail gracefully
-            logger.error(f"Platform error for job {job_id}: {e}")
-            return False, str(e), 'infrastructure', 'platform_not_supported'
+        # Create poster with this worker's Appium URL and systemPort
+        poster = SmartInstagramPoster(
+            phone_name=account,
+            system_port=worker_config.system_port,
+            appium_url=worker_config.appium_url
+        )
 
         # Connect to device
         logger.info(f"Connecting to device via {worker_config.appium_url}...")
-        if not poster.connect():
-            return False, "Connection failed", 'infrastructure', 'connection_failed'
+        poster.connect()
 
         # Post the video
         logger.info("Posting video...")
-        result = poster.post(video_path, caption, humanize=True)
+        success = poster.post(video_path, caption, humanize=True)
 
-        if result.success:
+        if success:
             logger.info(f"Job {job_id} completed successfully!")
             return True, "", None, None
         else:
-            logger.error(f"Job {job_id} failed: {result.error}")
-            return False, result.error, result.error_category, result.error_type
+            error = poster.last_error_message or "Post returned False"
+            logger.error(f"Job {job_id} failed: {error}")
+            # Classify the error
+            if tracker:
+                category, error_type = tracker._classify_error(error)
+            else:
+                category, error_type = 'unknown', ''
+            return False, error, category, error_type
 
     except TimeoutError as e:
         # Explicit timeout - infrastructure issue
@@ -293,8 +278,7 @@ def run_worker(
     worker_id: int,
     config: ParallelConfig,
     progress_file: str = None,
-    delay_between_jobs: int = None,
-    campaign_name: str = None
+    delay_between_jobs: int = None
 ) -> dict:
     """
     Main worker loop.
@@ -304,7 +288,6 @@ def run_worker(
         config: Parallel configuration
         progress_file: Override progress file path
         delay_between_jobs: Override delay between jobs
-        campaign_name: Campaign name for logging context
 
     Returns:
         Dict with worker stats: {jobs_completed, jobs_failed, ...}
@@ -312,16 +295,13 @@ def run_worker(
     global _shutdown_requested
 
     worker_config = config.get_worker(worker_id)
-    logger = setup_worker_logging(worker_config, campaign_name)
+    logger = setup_worker_logging(worker_config)
 
     progress_file = progress_file or config.progress_file
     delay = delay_between_jobs if delay_between_jobs is not None else config.delay_between_jobs
 
     logger.info("="*60)
     logger.info(f"WORKER {worker_id} STARTING")
-    if campaign_name:
-        logger.info(f"  Campaign: {campaign_name}")
-    logger.info(f"  PID: {os.getpid()}")
     logger.info(f"  Appium port: {worker_config.appium_port}")
     logger.info(f"  Appium URL: {worker_config.appium_url}")
     logger.info(f"  systemPort: {worker_config.system_port}")
@@ -337,9 +317,6 @@ def run_worker(
         'end_time': None,
         'exit_reason': None
     }
-
-    # Track current job for cleanup on unexpected exit
-    current_job_id = None
 
     # Initialize progress tracker
     tracker = ProgressTracker(progress_file)
@@ -405,7 +382,6 @@ def run_worker(
 
             # Execute the job
             job_id = job['job_id']
-            current_job_id = job_id  # Track for cleanup on unexpected exit
             attempt_info = f" (retry attempt {job.get('attempts', '?')})" if is_retry else ""
             logger.info(f"Processing job {job_id}{attempt_info}")
 
@@ -430,19 +406,6 @@ def run_worker(
                     # Log the classification for debugging
                     logger.info(f"Job {job_id} classified as: {error_category}/{error_type}")
 
-                    # Force Appium restart on infrastructure failures
-                    if error_category == 'infrastructure':
-                        logger.warning(f"Infrastructure failure detected, restarting Appium server...")
-                        try:
-                            appium_manager._kill_existing_on_port()
-                            time.sleep(2)
-                            appium_manager.start(timeout=60)
-                            logger.info(f"Appium restarted successfully after infrastructure failure")
-                        except Exception as restart_err:
-                            logger.error(f"Failed to restart Appium: {restart_err}")
-
-                current_job_id = None  # Clear after job completion
-
             except Exception as e:
                 error_msg = f"{type(e).__name__}: {str(e)}"
                 logger.error(f"Unhandled exception processing job {job_id}: {error_msg}")
@@ -455,18 +418,6 @@ def run_worker(
                     retry_delay_minutes=config.retry_delay_minutes
                 )
                 stats['jobs_failed'] += 1
-                current_job_id = None  # Clear after job failure handling
-
-                # Force Appium restart on infrastructure failures
-                if cat == 'infrastructure':
-                    logger.warning(f"Infrastructure exception, restarting Appium server...")
-                    try:
-                        appium_manager._kill_existing_on_port()
-                        time.sleep(2)
-                        appium_manager.start(timeout=60)
-                        logger.info(f"Appium restarted successfully")
-                    except Exception as restart_err:
-                        logger.error(f"Failed to restart Appium: {restart_err}")
 
             # Delay before next job
             if not _shutdown_requested and delay > 0:
@@ -480,15 +431,6 @@ def run_worker(
     finally:
         # Clean shutdown
         logger.info("Cleaning up...")
-
-        # Release any job that was claimed but not completed
-        # This prevents jobs from being stuck as "claimed" when worker crashes
-        if current_job_id:
-            logger.warning(f"Releasing orphaned job {current_job_id} (worker exiting mid-job)")
-            try:
-                tracker.release_claimed_job(current_job_id, worker_id)
-            except Exception as e:
-                logger.error(f"Failed to release job {current_job_id}: {e}")
 
         # Stop Appium server
         try:
@@ -515,8 +457,6 @@ def main():
     parser.add_argument('--num-workers', type=int, default=3, help='Total number of workers')
     parser.add_argument('--progress-file', default='parallel_progress.csv', help='Progress CSV file')
     parser.add_argument('--delay', type=int, default=10, help='Delay between jobs in seconds')
-    parser.add_argument('--campaign-name', type=str, default=None,
-                        help='Campaign name for logging context (passed by orchestrator)')
 
     args = parser.parse_args()
 
@@ -531,8 +471,7 @@ def main():
         worker_id=args.worker_id,
         config=config,
         progress_file=args.progress_file,
-        delay_between_jobs=args.delay,
-        campaign_name=args.campaign_name
+        delay_between_jobs=args.delay
     )
 
     # Exit with appropriate code

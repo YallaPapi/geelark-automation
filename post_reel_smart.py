@@ -67,8 +67,7 @@ class SmartInstagramPoster:
         # Expose client for compatibility
         self.client = self._conn.client
         # AI analyzer for UI analysis (extracted for better separation)
-        # Model can be set via AI_MODEL env var or Config.AI_MODEL
-        self._analyzer = ClaudeUIAnalyzer(model=Config.AI_MODEL)
+        self._analyzer = ClaudeUIAnalyzer()
         self.anthropic = self._analyzer.client  # For backwards compatibility
         self.phone_name = phone_name
         # UI controller (created lazily when Appium is connected)
@@ -544,7 +543,7 @@ class SmartInstagramPoster:
             print("    Analyzing screenshot with Claude Vision...")
 
             response = self.anthropic.messages.create(
-                model="claude-haiku-4-5",
+                model="claude-sonnet-4-20250514",
                 max_tokens=500,
                 messages=[
                     {
@@ -896,7 +895,7 @@ Be concise and direct."""
         self.video_uploaded = True
         return True
 
-    def post(self, video_path, caption, max_steps=15, humanize=False):
+    def post(self, video_path, caption, max_steps=30, humanize=False):
         """Main posting flow with smart navigation
 
         Args:
@@ -925,11 +924,6 @@ Be concise and direct."""
         LOOP_THRESHOLD = 5  # If 5 consecutive same actions, we're stuck
         loop_recovery_count = 0  # How many times we've tried to recover
         MAX_LOOP_RECOVERIES = 2  # Give up after this many recovery attempts
-
-        # Flow analysis logging
-        flow_log_dir = os.path.join(os.path.dirname(__file__), 'flow_analysis')
-        os.makedirs(flow_log_dir, exist_ok=True)
-        flow_log_file = os.path.join(flow_log_dir, f"{self.phone_name}_{time.strftime('%Y%m%d_%H%M%S')}.jsonl")
 
         # Vision-action loop
         for step in range(max_steps):
@@ -981,28 +975,6 @@ Be concise and direct."""
 
             print(f"  Action: {action['action']} - {action.get('reason', '')}")
 
-            # Log step for flow analysis
-            try:
-                step_data = {
-                    'step': step + 1,
-                    'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
-                    'account': self.phone_name,
-                    'state': {
-                        'video_uploaded': self.video_uploaded,
-                        'caption_entered': self.caption_entered,
-                        'share_clicked': self.share_clicked
-                    },
-                    'ui_elements': [
-                        {'text': e.get('text', ''), 'desc': e.get('desc', ''), 'bounds': e.get('bounds', '')}
-                        for e in elements if e.get('text') or e.get('desc')
-                    ],
-                    'action': action
-                }
-                with open(flow_log_file, 'a', encoding='utf-8') as f:
-                    f.write(json.dumps(step_data) + '\n')
-            except Exception as log_err:
-                print(f"  [LOG ERROR] {log_err}")
-
             # Update state (only video_selected and share_clicked from Claude's analysis)
             # caption_entered is ONLY set after we actually type the caption
             if action.get('video_selected'):
@@ -1016,12 +988,6 @@ Be concise and direct."""
             # Special case: 'done' - returns from function
             if action_name == 'done':
                 print("\n[SUCCESS] Share initiated!")
-                # Log success outcome
-                try:
-                    with open(flow_log_file, 'a', encoding='utf-8') as f:
-                        f.write(json.dumps({'outcome': 'SUCCESS', 'step': step + 1, 'account': self.phone_name}) + '\n')
-                except:
-                    pass
                 # Wait for upload to actually complete (poll UI for confirmation)
                 if self.wait_for_upload_complete(timeout=60):
                     print("[SUCCESS] Upload confirmed complete!")
@@ -1059,12 +1025,6 @@ Be concise and direct."""
                 else:
                     self.last_error_message = "Loop recovery failed - could not escape stuck state"
                     self.last_error_type = "loop_stuck"
-                # Log failure outcome
-                try:
-                    with open(flow_log_file, 'a', encoding='utf-8') as f:
-                        f.write(json.dumps({'outcome': 'FAILED', 'reason': 'loop_stuck', 'step': step + 1, 'account': self.phone_name}) + '\n')
-                except:
-                    pass
                 return False
             if should_clear:
                 recent_actions.clear()
@@ -1072,12 +1032,6 @@ Be concise and direct."""
             time.sleep(1)
 
         print(f"\n[FAILED] Max steps ({max_steps}) reached")
-        # Log failure outcome
-        try:
-            with open(flow_log_file, 'a', encoding='utf-8') as f:
-                f.write(json.dumps({'outcome': 'FAILED', 'reason': 'max_steps', 'step': max_steps, 'account': self.phone_name}) + '\n')
-        except:
-            pass
         # Capture and analyze failure screenshot
         print("  [VISION] Capturing failure screenshot for analysis...")
         screenshot_path, analysis = self.analyze_failure_screenshot(
