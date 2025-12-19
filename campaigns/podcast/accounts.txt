@@ -4,7 +4,6 @@ podreelsector
 podpunchdaily
 podpeakstudio
 podcutstories
-podclipcrafters
 mindsetmiccuts
 micwisdomdaily
 micnotesarchive
@@ -23,7 +22,6 @@ stone_mason_live
 sovereignclaw
 silverscribewindow
 seegloryvault
-primejuggernaut
 orbmasterstrike
 kingmakerpulse
 itsunpluggedlife
@@ -33,11 +31,9 @@ empirestrongofmind
 crimsonlegionshort
 bentzenithruler
 tjmexicosfinest
-sammycakes4me
 rustywatermeal
 RoughConcreteShifter
 reddyplayerwonton
-pinkmanmcpink
 lucysplainyoself
 LoomedTwillHook
 LockedVaultDuster

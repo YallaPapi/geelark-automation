@@ -4,51 +4,149 @@ Claude UI Analyzer - AI-based UI analysis for Instagram automation.
 This module encapsulates all Claude AI interactions for analyzing
 UI elements and deciding next actions in the posting flow.
 
-Extracted from SmartInstagramPoster to improve separation of concerns.
+Optimized for cost efficiency with:
+- Haiku 4.5 model
+- UI element summarization (reduces prompt size by 70-80%)
+- Response caching for repeated UI states
+- Token usage logging and cost estimation
 """
 import json
 import time
+import hashlib
 from typing import List, Dict, Any, Optional
+from datetime import datetime
 
 import anthropic
+
+# Import config for model settings
+try:
+    from config import Config
+    CLAUDE_MODEL = Config.CLAUDE_MODEL
+    CLAUDE_MAX_TOKENS = Config.CLAUDE_MAX_TOKENS
+    CLAUDE_INPUT_PRICE = Config.CLAUDE_INPUT_PRICE
+    CLAUDE_OUTPUT_PRICE = Config.CLAUDE_OUTPUT_PRICE
+except ImportError:
+    # Fallback defaults
+    CLAUDE_MODEL = "claude-haiku-4-5-20251001"
+    CLAUDE_MAX_TOKENS = 300
+    CLAUDE_INPUT_PRICE = 1.0
+    CLAUDE_OUTPUT_PRICE = 5.0
 
 
 class ClaudeUIAnalyzer:
     """Analyzes UI elements using Claude AI to decide next actions."""
 
-    def __init__(self, model: str = "claude-sonnet-4-20250514", max_tokens: int = 500):
+    # Track total API usage for this session (class-level)
+    total_input_tokens = 0
+    total_output_tokens = 0
+    total_calls = 0
+    total_cache_hits = 0
+
+    # Response cache (class-level for cross-instance sharing)
+    _cache: Dict[str, Dict] = {}
+
+    def __init__(self, model: str = None, max_tokens: int = None):
         """
         Initialize the analyzer.
 
         Args:
-            model: Claude model to use for analysis.
-            max_tokens: Maximum tokens for response.
+            model: Claude model to use (default: from config).
+            max_tokens: Maximum tokens for response (default: from config).
         """
-        self.client = anthropic.Anthropic()
-        self.model = model
-        self.max_tokens = max_tokens
+        # 10 second timeout to prevent hanging
+        self.client = anthropic.Anthropic(timeout=10.0)
+        self.model = model or CLAUDE_MODEL
+        self.max_tokens = max_tokens or CLAUDE_MAX_TOKENS
+        self.log_file = "api_calls.log"
 
-    def format_ui_elements(self, elements: List[Dict]) -> str:
-        """Format UI elements into a text description for Claude.
+    def summarize_elements(self, elements: List[Dict]) -> List[Dict]:
+        """Summarize UI elements to reduce prompt size.
+
+        Filters to key elements only and truncates text.
 
         Args:
-            elements: List of UI element dicts with text, desc, id, bounds, center, clickable.
+            elements: Full list of UI elements.
+
+        Returns:
+            Summarized list with only essential info.
+        """
+        # Filter to clickable/editable or elements with key text
+        key_elements = []
+        for el in elements:
+            text = el.get('text', '').lower()
+            desc = el.get('desc', '').lower()
+
+            # Include if clickable, editable, or has important text
+            is_important = (
+                el.get('clickable') or
+                el.get('editable') or
+                any(kw in text or kw in desc for kw in [
+                    'create', 'next', 'share', 'post', 'reel', 'caption',
+                    'profile', 'home', 'ok', 'done', 'gallery', 'video',
+                    'write', 'add', 'new', 'story', 'back', 'close'
+                ])
+            )
+            if is_important:
+                key_elements.append(el)
+
+        # Limit to top 25 elements
+        key_elements = key_elements[:25]
+
+        # Summarize each element
+        summarized = []
+        for i, el in enumerate(key_elements):
+            summ = {
+                'i': i,  # Shortened key
+                't': el.get('text', '')[:50],  # Truncate text
+                'd': el.get('desc', '')[:50],  # Truncate desc
+                'b': el.get('bounds'),
+                'c': el.get('center'),
+                'click': el.get('clickable', False)
+            }
+            # Remove empty values to save tokens
+            summarized.append({k: v for k, v in summ.items() if v})
+
+        return summarized
+
+    def get_cache_key(self, elements: List[Dict], caption: str, state: tuple) -> str:
+        """Generate cache key from UI state.
+
+        Args:
+            elements: UI elements (will be hashed).
+            caption: Caption text.
+            state: Tuple of (video_uploaded, caption_entered, share_clicked).
+
+        Returns:
+            Cache key string.
+        """
+        # Hash the elements to create a compact key
+        el_str = json.dumps(elements, sort_keys=True)
+        el_hash = hashlib.md5(el_str.encode()).hexdigest()[:12]
+        state_str = f"{state[0]}_{state[1]}_{state[2]}"
+        return f"{el_hash}_{state_str}"
+
+    def format_ui_elements(self, elements: List[Dict]) -> str:
+        """Format UI elements into a compact text description for Claude.
+
+        Args:
+            elements: List of UI element dicts.
 
         Returns:
             Formatted string description of UI elements.
         """
-        ui_description = "Current UI elements:\n"
-        for i, elem in enumerate(elements):
+        # Use summarized elements for smaller prompt
+        summarized = self.summarize_elements(elements)
+
+        ui_description = "UI elements:\n"
+        for elem in summarized:
             parts = []
-            if elem.get('text'):
-                parts.append(f"text=\"{elem['text']}\"")
-            if elem.get('desc'):
-                parts.append(f"desc=\"{elem['desc']}\"")
-            if elem.get('id'):
-                parts.append(f"id={elem['id']}")
-            if elem.get('clickable'):
-                parts.append("CLICKABLE")
-            ui_description += f"{i}. {elem.get('bounds', '')} center={elem.get('center', '')} | {' | '.join(parts)}\n"
+            if elem.get('t'):
+                parts.append(f"'{elem['t']}'")
+            if elem.get('d'):
+                parts.append(f"desc='{elem['d']}'")
+            if elem.get('click'):
+                parts.append("CLICK")
+            ui_description += f"{elem.get('i', '?')}. {elem.get('b', '')} {' | '.join(parts)}\n"
         return ui_description
 
     def build_prompt(
@@ -59,7 +157,7 @@ class ClaudeUIAnalyzer:
         caption_entered: bool = False,
         share_clicked: bool = False
     ) -> str:
-        """Build the analysis prompt for Claude.
+        """Build a compact analysis prompt for Claude.
 
         Args:
             elements: UI elements to analyze.
@@ -73,118 +171,26 @@ class ClaudeUIAnalyzer:
         """
         ui_description = self.format_ui_elements(elements)
 
-        prompt = f"""You are controlling an Android phone to post a Reel to Instagram.
-
-Current state:
-- Video uploaded to phone: {video_uploaded}
-- Caption entered: {caption_entered}
-- Share button clicked: {share_clicked}
-- Caption to post: "{caption}"
+        # Compact prompt - reduced from ~2000 tokens to ~800
+        prompt = f"""Post Reel to Instagram. State: video={video_uploaded}, caption_entered={caption_entered}, share_clicked={share_clicked}
+Caption: "{caption[:100]}"
 
 {ui_description}
 
-Based on the UI elements, decide the next action to take.
+Flow: Create/+ -> Reel -> Select video thumbnail -> Next -> Next -> Type caption -> Share -> Done
 
-Instagram posting flow:
-1. Find and tap Create/+ button. IMPORTANT: On different Instagram versions:
-   - Some have "Create" in bottom nav bar
-   - Some have "Create New" in top left corner (only visible from Profile tab)
-   - If you don't see Create, tap "Profile" tab first to find "Create New"
-2. Select "Reel" option if a menu appears (this is the initial type selection)
-3. CRITICAL - Gallery/Video Selection Screen:
-   - When you see "New reel" title and video thumbnails with POST/STORY/REEL tabs at bottom:
-   - PRIORITY: Tap a VIDEO THUMBNAIL in the gallery, NOT the mode selector tabs at bottom
-   - Select the FIRST/TOP-LEFT video thumbnail - it's the most recently uploaded
-   - The POST/STORY/REEL tabs are mode selectors - if already selected, tapping them does nothing
-   - To ensure REEL mode: tap POST, then STORY, then REEL (cycle through all to guarantee selection)
-   - NEVER tap the same mode tab twice in a row - this causes infinite loops
-4. AFTER VIDEO IS SELECTED - Find and tap "Next":
-   - The "Next" button appears in the TOP-RIGHT corner after selecting a video
-   - It may show as "Next", "→" (arrow), or a forward arrow icon
-   - Look for text="Next" or desc="Next" in the UI elements
-   - If you see a video preview taking up most of the screen, the "Next" button should be visible
-   - If "Next" is not visible, the video may not be properly selected - tap a video thumbnail first
-   - CRITICAL: Do NOT keep tapping mode tabs (POST/STORY/REEL) if video is already selected - tap NEXT instead
-5. Tap "Next" again to proceed to sharing
-6. When you see the caption field ("Write a caption" or similar), return "type" action with the caption text
-7. Tap "Share" to publish
-8. Done when you see confirmation, "Sharing to Reels", or back on feed
+Rules:
+- Tap Create/+ or Profile first to find it
+- On gallery: tap VIDEO THUMBNAIL (top-left), not mode tabs
+- See "Next"? Tap it
+- Caption field visible & caption_entered=False? Use tap_and_type
+- See "Share" & caption_entered=True? Tap Share
+- "Sharing to Reels" + share_clicked=True? Return done
+- Popup/dialog? Tap back or X to dismiss
+- Stuck? Try back, home, open_instagram
 
-Respond with JSON:
-{{
-    "action": "tap" | "tap_and_type" | "back" | "scroll_down" | "scroll_up" | "home" | "open_instagram" | "done",
-    "element_index": <index of element to tap>,
-    "text": "<text to type if action is tap_and_type>",
-    "reason": "<brief explanation>",
-    "video_selected": true/false,
-    "caption_entered": true/false,
-    "share_clicked": true/false
-}}
-
-=== POPUP HANDLING (CRITICAL - HANDLE FIRST) ===
-
-"SUGGESTED FOR YOU" POPUP (MUST DISMISS):
-- If you see "Suggested for you" with profile cards showing "Follow" buttons
-- This popup appears on the home feed and BLOCKS the Create button
-- Look for an "X" button on the popup to close it
-- Or tap OUTSIDE the popup area to dismiss it
-- After dismissing, look for the Create/+ button to start posting
-
-META VERIFIED POPUP (MUST DISMISS):
-- If you see "Meta Verified", "Try Meta Verified", "$1", "Get verified", "verification badge", or subscription pricing
-- This is an UPSELL POPUP that must be dismissed immediately
-- Look for: "Not now", "Maybe later", "X" close button, or tap OUTSIDE the popup
-- Return action="back" or tap the dismiss/close button to close it
-- NEVER tap "Subscribe", "Get started", or any purchase button
-- After dismissing, continue with the posting flow
-
-CAMERA VIEW TRAP (ESCAPE IT):
-- If you see a full-screen camera viewfinder with a large circular RECORD button at bottom
-- And NO video thumbnail selected, NO "Next" button visible
-- You are in CAMERA MODE and need to access the GALLERY instead
-- LOOK FOR THE GALLERY ICON: There is almost always a small square thumbnail in the BOTTOM-LEFT corner
-- This small square shows the most recent photo/video from the gallery - TAP IT to open the gallery
-- The gallery icon is your PRIMARY escape route - look for it first!
-- If the gallery icon is not visible, return action="back" to exit camera mode
-- NEVER tap the large circular record button - we want to SELECT an existing video, not record new
-
-STORIES VIEWING TRAP (ESCAPE IT):
-- If you see someone's Story playing (fullscreen image/video with username at top, progress bar)
-- Or if you see "To see" / "And" text overlays on a story
-- Or if the screen has story navigation controls (tap left/right to navigate stories)
-- You are VIEWING STORIES, not in the posting flow!
-- Return action="back" to exit Stories and return to feed
-- Then find the Create/+ button to start posting
-
-WRONG SCREEN RECOVERY:
-- If you see DMs, Search, Explore, Settings, Stories, or any screen unrelated to posting:
-- Return action="back" repeatedly until you reach the home feed
-- Then restart by tapping Create/+ button
-- If stuck for 2+ actions on same screen, try action="home" then action="open_instagram"
-
-=== STANDARD RULES ===
-
-CRITICAL RULES - NEVER GIVE UP:
-- NEVER return "error". There is no error action. Always try to recover.
-- If you see Play Store, Settings, or any non-Instagram app: return "home" to go back to home screen
-- If you see home screen or launcher: return "open_instagram" to reopen Instagram
-- If you see a popup, dialog, or unexpected screen: return "back" to dismiss it
-- If you're lost or confused: return "back" and try again
-- If you don't see Create button, tap Profile tab first
-- Look for "Create New" in desc field (top left area, small button)
-- Look for "Profile" in desc field (bottom nav, usually id=profile_tab)
-- If you see "Reel" or "Create new reel" option, tap it
-- If you see gallery thumbnails with video, tap the video
-- If you see "Next" button anywhere, tap it
-- IMPORTANT: When you see a caption field (text containing "Write a caption", "Add a caption", or similar placeholder) AND "Caption entered" is False, return action="tap_and_type" with the element_index of the caption field and text set to the caption
-- CRITICAL: If "Caption entered: True" is shown above, DO NOT return tap_and_type! The caption is already typed. Just tap the Share button directly.
-- Allow/OK buttons should be tapped for permissions
-- IMPORTANT: Return "done" ONLY when Share button clicked is True AND you see "Sharing to Reels" confirmation
-- If Share button clicked is False but you see "Sharing to Reels", that's from a previous post - ignore it and start the posting flow
-- Set share_clicked=true when you tap the Share button
-- CRITICAL OK BUTTON RULE: After caption has been entered (Caption entered: True), if you see an "OK" button visible on screen (text='OK' or desc='OK'), you MUST tap the OK button FIRST before tapping Next or Share. This OK button dismisses the keyboard or a dialog and must be tapped for Next/Share to work properly.
-
-Only output JSON."""
+Respond JSON only:
+{{"action":"tap"|"tap_and_type"|"back"|"scroll_down"|"home"|"open_instagram"|"done","element_index":<int>,"text":"<if tap_and_type>","reason":"<brief>","video_selected":bool,"caption_entered":bool,"share_clicked":bool}}"""
 
         return prompt
 
@@ -202,13 +208,46 @@ Only output JSON."""
         """
         text = response_text.strip()
 
-        # Handle markdown code blocks
-        if text.startswith("```"):
-            text = text.split("```")[1]
-            if text.startswith("json"):
-                text = text[4:]
-            text = text.strip()
+        # Method 1: Try to extract JSON from markdown code block
+        if "```json" in text:
+            try:
+                json_start = text.index("```json") + 7
+                json_end = text.index("```", json_start)
+                text = text[json_start:json_end].strip()
+                return json.loads(text)
+            except (ValueError, json.JSONDecodeError):
+                pass
 
+        # Method 2: Try generic code block
+        if "```" in text:
+            try:
+                parts = text.split("```")
+                for part in parts[1::2]:
+                    part = part.strip()
+                    if part.startswith("json"):
+                        part = part[4:].strip()
+                    if part.startswith("{"):
+                        return json.loads(part)
+            except (ValueError, json.JSONDecodeError):
+                pass
+
+        # Method 3: Find raw JSON object
+        brace_start = text.find("{")
+        if brace_start != -1:
+            depth = 0
+            for i, c in enumerate(text[brace_start:], brace_start):
+                if c == "{":
+                    depth += 1
+                elif c == "}":
+                    depth -= 1
+                    if depth == 0:
+                        try:
+                            return json.loads(text[brace_start:i+1])
+                        except json.JSONDecodeError:
+                            pass
+                        break
+
+        # Method 4: Direct parse
         try:
             return json.loads(text)
         except json.JSONDecodeError as e:
@@ -221,9 +260,11 @@ Only output JSON."""
         video_uploaded: bool = False,
         caption_entered: bool = False,
         share_clicked: bool = False,
-        retries: int = 3
+        retries: int = 2  # Reduced from 3
     ) -> Dict[str, Any]:
         """Analyze UI elements and return the next action.
+
+        Uses caching to avoid redundant API calls for repeated UI states.
 
         Args:
             elements: UI elements to analyze.
@@ -239,6 +280,15 @@ Only output JSON."""
         Raises:
             ValueError: If analysis fails after all retries.
         """
+        # Check cache first
+        state = (video_uploaded, caption_entered, share_clicked)
+        cache_key = self.get_cache_key(elements, caption, state)
+
+        if cache_key in ClaudeUIAnalyzer._cache:
+            ClaudeUIAnalyzer.total_cache_hits += 1
+            print(f"  [CACHE HIT] Reusing cached response")
+            return ClaudeUIAnalyzer._cache[cache_key]
+
         prompt = self.build_prompt(
             elements=elements,
             caption=caption,
@@ -252,8 +302,23 @@ Only output JSON."""
                 response = self.client.messages.create(
                     model=self.model,
                     max_tokens=self.max_tokens,
+                    temperature=0.0,  # Deterministic for consistency
                     messages=[{"role": "user", "content": prompt}]
                 )
+
+                # Track token usage
+                input_tokens = response.usage.input_tokens
+                output_tokens = response.usage.output_tokens
+                ClaudeUIAnalyzer.total_input_tokens += input_tokens
+                ClaudeUIAnalyzer.total_output_tokens += output_tokens
+                ClaudeUIAnalyzer.total_calls += 1
+
+                # Calculate cost
+                cost = (input_tokens / 1e6 * CLAUDE_INPUT_PRICE) + (output_tokens / 1e6 * CLAUDE_OUTPUT_PRICE)
+
+                # Log API call
+                with open(self.log_file, "a") as f:
+                    f.write(f"{datetime.now().isoformat()}|{self.model}|{input_tokens}|{output_tokens}|${cost:.4f}|calls={ClaudeUIAnalyzer.total_calls}|cache_hits={ClaudeUIAnalyzer.total_cache_hits}\n")
 
                 # Check for empty response
                 if not response.content:
@@ -264,7 +329,6 @@ Only output JSON."""
 
                 text = response.content[0].text.strip()
 
-                # Check for empty text
                 if not text:
                     if attempt < retries - 1:
                         time.sleep(1)
@@ -272,10 +336,21 @@ Only output JSON."""
                     raise ValueError("Claude returned empty text")
 
                 try:
-                    return self.parse_response(text)
+                    result = self.parse_response(text)
+
+                    # Cache successful response
+                    ClaudeUIAnalyzer._cache[cache_key] = result
+
+                    # Limit cache size
+                    if len(ClaudeUIAnalyzer._cache) > 100:
+                        # Remove oldest entries
+                        keys = list(ClaudeUIAnalyzer._cache.keys())
+                        for k in keys[:50]:
+                            del ClaudeUIAnalyzer._cache[k]
+
+                    return result
                 except ValueError as e:
                     print(f"  [JSON PARSE ERROR] attempt {attempt+1}: {e}")
-                    print(f"  Raw response (full): {text}")
                     if attempt < retries - 1:
                         time.sleep(1)
                         continue
@@ -289,6 +364,33 @@ Only output JSON."""
 
         raise ValueError(f"Failed to get valid response from Claude after {retries} attempts")
 
+    @classmethod
+    def get_session_stats(cls) -> Dict[str, Any]:
+        """Get session statistics for API usage."""
+        total_cost = (cls.total_input_tokens / 1e6 * CLAUDE_INPUT_PRICE) + \
+                     (cls.total_output_tokens / 1e6 * CLAUDE_OUTPUT_PRICE)
+        return {
+            'total_calls': cls.total_calls,
+            'total_cache_hits': cls.total_cache_hits,
+            'total_input_tokens': cls.total_input_tokens,
+            'total_output_tokens': cls.total_output_tokens,
+            'estimated_cost': f"${total_cost:.4f}",
+            'cache_hit_rate': f"{(cls.total_cache_hits / max(1, cls.total_calls + cls.total_cache_hits)) * 100:.1f}%"
+        }
+
+    @classmethod
+    def clear_cache(cls):
+        """Clear the response cache."""
+        cls._cache.clear()
+
+    @classmethod
+    def reset_stats(cls):
+        """Reset session statistics."""
+        cls.total_input_tokens = 0
+        cls.total_output_tokens = 0
+        cls.total_calls = 0
+        cls.total_cache_hits = 0
+
 
 # Convenience function for backwards compatibility
 def analyze_ui_for_instagram(
@@ -298,12 +400,7 @@ def analyze_ui_for_instagram(
     caption_entered: bool = False,
     share_clicked: bool = False
 ) -> Dict[str, Any]:
-    """Analyze UI elements for Instagram posting flow.
-
-    This is a convenience function that creates a ClaudeUIAnalyzer
-    and performs analysis. For repeated calls, prefer creating
-    a ClaudeUIAnalyzer instance directly.
-    """
+    """Analyze UI elements for Instagram posting flow."""
     analyzer = ClaudeUIAnalyzer()
     return analyzer.analyze(
         elements=elements,

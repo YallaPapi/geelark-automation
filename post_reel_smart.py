@@ -895,15 +895,47 @@ Be concise and direct."""
         self.video_uploaded = True
         return True
 
+    def restart_posting_flow(self) -> bool:
+        """Restart the posting flow from scratch.
+
+        Close and reopen Instagram, reset state flags.
+        Used when max steps reached to give one more chance.
+
+        Returns:
+            True if restart successful, False otherwise
+        """
+        print("  [RESTART] Restarting posting flow from scratch...")
+        try:
+            # Close Instagram
+            self.adb("am force-stop com.instagram.android")
+            time.sleep(2)
+
+            # Reopen Instagram
+            self.adb("monkey -p com.instagram.android 1")
+            time.sleep(4)
+
+            # Reset state flags (video is still on phone, just need to repost)
+            self.caption_entered = False
+            self.share_clicked = False
+            # Note: video_uploaded stays True since video is still on the phone
+
+            print("  [RESTART] Instagram reopened, state reset")
+            return True
+        except Exception as e:
+            print(f"  [RESTART] Failed to restart: {e}")
+            return False
+
     def post(self, video_path, caption, max_steps=30, humanize=False):
         """Main posting flow with smart navigation
 
         Args:
             video_path: Path to video file
             caption: Caption text for the post
-            max_steps: Maximum navigation steps
+            max_steps: Maximum navigation steps (default 30)
             humanize: If True, perform random human-like actions before/after posting
         """
+        # Track if we've already tried a restart
+        flow_restarted = False
 
         # Upload video first
         self.upload_video(video_path)
@@ -926,7 +958,23 @@ Be concise and direct."""
         MAX_LOOP_RECOVERIES = 2  # Give up after this many recovery attempts
 
         # Vision-action loop
-        for step in range(max_steps):
+        step = 0
+        while True:
+            # Check if max steps reached
+            if step >= max_steps:
+                # Try flow restart before giving up
+                if not flow_restarted:
+                    print(f"\n[MAX STEPS] Reached {max_steps} steps - attempting flow restart...")
+                    if self.restart_posting_flow():
+                        flow_restarted = True
+                        step = 0  # Reset step counter
+                        recent_actions.clear()  # Clear action history
+                        loop_recovery_count = 0  # Reset recovery count
+                        print(f"  [RESTART] Flow restarted successfully, resuming from step 1")
+                        continue  # Start over from step 0
+                # If already restarted or restart failed, exit loop and fail
+                break
+
             print(f"\n--- Step {step + 1} ---")
 
             # Dump UI
@@ -941,16 +989,8 @@ Be concise and direct."""
             if error_type:
                 print(f"  [ERROR DETECTED] {error_type}: {error_msg}")
                 self.last_error_type = error_type
-                # Use Vision analysis for richer error context
-                print("  [VISION] Capturing error screenshot for analysis...")
-                screenshot_path, analysis = self.analyze_failure_screenshot(
-                    context=f"Account/app error detected: {error_type} - '{error_msg}'"
-                )
-                self.last_screenshot_path = screenshot_path
-                if analysis:
-                    self.last_error_message = f"{error_type}: {error_msg} - Vision analysis: {analysis}"
-                else:
-                    self.last_error_message = f"{error_type}: {error_msg}"
+                # Skip expensive vision analysis - just use the error message
+                self.last_error_message = f"{error_type}: {error_msg}"
                 return False
 
             # Show what we see (all elements)
@@ -997,15 +1037,50 @@ Be concise and direct."""
                     self.humanize_after_post()
                 return True
 
-            # Special case: 'tap_and_type' - needs caption and has continue logic
-            if action_name == 'tap_and_type':
-                if self._handle_tap_and_type(action, elements, caption):
-                    continue  # Helper handled it and wants to skip to next step
+            # Execute action with inline error recovery
+            try:
+                # Special case: 'tap_and_type' - needs caption and has continue logic
+                if action_name == 'tap_and_type':
+                    if self._handle_tap_and_type(action, elements, caption):
+                        continue  # Helper handled it and wants to skip to next step
 
-            # Dispatch table for standard actions
-            action_handlers = self._get_action_handlers()
-            if action_name in action_handlers:
-                action_handlers[action_name](action, elements)
+                # Dispatch table for standard actions
+                action_handlers = self._get_action_handlers()
+                if action_name in action_handlers:
+                    action_handlers[action_name](action, elements)
+
+            except Exception as action_error:
+                error_str = str(action_error).lower()
+                print(f"  [ACTION ERROR] {type(action_error).__name__}: {action_error}")
+
+                # Check if UiAutomator2 crashed
+                if self.is_uiautomator2_crash(action_error):
+                    print("  [RECOVERY] UiAutomator2 crashed during action - reconnecting...")
+                    if self.reconnect_appium():
+                        print("  [RECOVERY] Appium reconnected, retrying action next step")
+                        continue  # Retry by going to next loop iteration
+                    else:
+                        print("  [RECOVERY FAILED] Could not reconnect Appium")
+                        self.last_error_message = f"UiAutomator2 crash: {action_error}"
+                        self.last_error_type = "infrastructure"
+                        return False
+
+                # Check if ADB issue
+                elif "adb" in error_str or "device" in error_str or "connection" in error_str:
+                    print("  [RECOVERY] ADB connection issue - attempting reconnect...")
+                    if self._conn and self._conn.reconnect_adb():
+                        print("  [RECOVERY] ADB reconnected, retrying action next step")
+                        continue  # Retry by going to next loop iteration
+                    else:
+                        print("  [RECOVERY FAILED] Could not reconnect ADB")
+                        self.last_error_message = f"ADB error: {action_error}"
+                        self.last_error_type = "infrastructure"
+                        return False
+
+                # Unknown error - log and continue (don't fail entire post)
+                else:
+                    print(f"  [WARNING] Action failed but continuing: {action_error}")
+                    # Continue to next step - Claude will see updated UI and decide next action
 
             # Track action and check for stuck loops
             self._track_action_for_loop_detection(action, elements, recent_actions, LOOP_THRESHOLD)
@@ -1013,37 +1088,20 @@ Be concise and direct."""
                 recent_actions, loop_recovery_count, LOOP_THRESHOLD, MAX_LOOP_RECOVERIES
             )
             if should_abort:
-                # Capture and analyze failure screenshot
-                print("  [VISION] Capturing failure screenshot for analysis...")
-                screenshot_path, analysis = self.analyze_failure_screenshot(
-                    context=f"Loop recovery failed after {MAX_LOOP_RECOVERIES} attempts. Last action: {recent_actions[-1] if recent_actions else 'unknown'}"
-                )
-                self.last_screenshot_path = screenshot_path
-                if analysis:
-                    self.last_error_message = f"Loop stuck - Vision analysis: {analysis}"
-                    self.last_error_type = "loop_stuck"
-                else:
-                    self.last_error_message = "Loop recovery failed - could not escape stuck state"
-                    self.last_error_type = "loop_stuck"
+                # Skip expensive vision analysis
+                self.last_error_message = "Loop recovery failed - could not escape stuck state"
+                self.last_error_type = "loop_stuck"
                 return False
             if should_clear:
                 recent_actions.clear()
 
             time.sleep(1)
+            step += 1
 
         print(f"\n[FAILED] Max steps ({max_steps}) reached")
-        # Capture and analyze failure screenshot
-        print("  [VISION] Capturing failure screenshot for analysis...")
-        screenshot_path, analysis = self.analyze_failure_screenshot(
-            context=f"Max steps ({max_steps}) reached without completing post. Caption entered: {self.caption_entered}, Share clicked: {self.share_clicked}"
-        )
-        self.last_screenshot_path = screenshot_path
-        if analysis:
-            self.last_error_message = f"Max steps reached - Vision analysis: {analysis}"
-            self.last_error_type = "max_steps"
-        else:
-            self.last_error_message = f"Max steps ({max_steps}) reached without completing post"
-            self.last_error_type = "max_steps"
+        # Skip expensive vision analysis
+        self.last_error_message = f"Max steps ({max_steps}) reached without completing post"
+        self.last_error_type = "max_steps"
         return False
 
     def cleanup(self):
