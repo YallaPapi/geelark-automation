@@ -117,22 +117,6 @@ class Config:
     CAMPAIGN_PROGRESS_FILE: str = "progress.csv"
     CAMPAIGN_STATE_FILE: str = "scheduler_state.json"
 
-    # ==================== AI MODEL ====================
-
-    # Model for UI analysis - using GPT-5 mini for cost efficiency
-    AI_MODEL: str = "gpt-5-mini"
-
-    # Pricing per million tokens (for cost estimation)
-    AI_INPUT_PRICE: float = 0.25   # $/million input tokens
-    AI_OUTPUT_PRICE: float = 2.0   # $/million output tokens
-
-    # Max tokens for response (GPT-5 mini uses reasoning tokens, so need extra buffer)
-    # Reasoning typically uses 50-200 tokens, output is ~100 tokens for JSON
-    AI_MAX_TOKENS: int = 1000
-
-    # Max steps per post (cap API calls)
-    MAX_STEPS_PER_POST: int = 20
-
     # ==================== TIMEOUTS ====================
 
     # ADB command timeout
