@@ -16,21 +16,21 @@ import hashlib
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 
-import anthropic
+import openai
 
 # Import config for model settings
 try:
     from config import Config
-    CLAUDE_MODEL = Config.CLAUDE_MODEL
-    CLAUDE_MAX_TOKENS = Config.CLAUDE_MAX_TOKENS
-    CLAUDE_INPUT_PRICE = Config.CLAUDE_INPUT_PRICE
-    CLAUDE_OUTPUT_PRICE = Config.CLAUDE_OUTPUT_PRICE
+    AI_MODEL = Config.AI_MODEL
+    AI_MAX_TOKENS = Config.AI_MAX_TOKENS
+    AI_INPUT_PRICE = Config.AI_INPUT_PRICE
+    AI_OUTPUT_PRICE = Config.AI_OUTPUT_PRICE
 except ImportError:
     # Fallback defaults
-    CLAUDE_MODEL = "claude-haiku-4-5-20251001"
-    CLAUDE_MAX_TOKENS = 300
-    CLAUDE_INPUT_PRICE = 1.0
-    CLAUDE_OUTPUT_PRICE = 5.0
+    AI_MODEL = "gpt-5-mini"
+    AI_MAX_TOKENS = 300
+    AI_INPUT_PRICE = 0.25
+    AI_OUTPUT_PRICE = 2.0
 
 
 class ClaudeUIAnalyzer:
@@ -50,13 +50,13 @@ class ClaudeUIAnalyzer:
         Initialize the analyzer.
 
         Args:
-            model: Claude model to use (default: from config).
+            model: Model to use (default: from config).
             max_tokens: Maximum tokens for response (default: from config).
         """
         # 10 second timeout to prevent hanging
-        self.client = anthropic.Anthropic(timeout=10.0)
-        self.model = model or CLAUDE_MODEL
-        self.max_tokens = max_tokens or CLAUDE_MAX_TOKENS
+        self.client = openai.OpenAI(timeout=10.0)
+        self.model = model or AI_MODEL
+        self.max_tokens = max_tokens or AI_MAX_TOKENS
         self.log_file = "api_calls.log"
 
     def summarize_elements(self, elements: List[Dict]) -> List[Dict]:
@@ -299,7 +299,7 @@ Respond JSON only:
 
         for attempt in range(retries):
             try:
-                response = self.client.messages.create(
+                response = self.client.chat.completions.create(
                     model=self.model,
                     max_tokens=self.max_tokens,
                     temperature=0.0,  # Deterministic for consistency
@@ -307,33 +307,33 @@ Respond JSON only:
                 )
 
                 # Track token usage
-                input_tokens = response.usage.input_tokens
-                output_tokens = response.usage.output_tokens
+                input_tokens = response.usage.prompt_tokens
+                output_tokens = response.usage.completion_tokens
                 ClaudeUIAnalyzer.total_input_tokens += input_tokens
                 ClaudeUIAnalyzer.total_output_tokens += output_tokens
                 ClaudeUIAnalyzer.total_calls += 1
 
                 # Calculate cost
-                cost = (input_tokens / 1e6 * CLAUDE_INPUT_PRICE) + (output_tokens / 1e6 * CLAUDE_OUTPUT_PRICE)
+                cost = (input_tokens / 1e6 * AI_INPUT_PRICE) + (output_tokens / 1e6 * AI_OUTPUT_PRICE)
 
                 # Log API call
                 with open(self.log_file, "a") as f:
                     f.write(f"{datetime.now().isoformat()}|{self.model}|{input_tokens}|{output_tokens}|${cost:.4f}|calls={ClaudeUIAnalyzer.total_calls}|cache_hits={ClaudeUIAnalyzer.total_cache_hits}\n")
 
                 # Check for empty response
-                if not response.content:
+                if not response.choices:
                     if attempt < retries - 1:
                         time.sleep(1)
                         continue
-                    raise ValueError("Claude returned empty response")
+                    raise ValueError("GPT returned empty response")
 
-                text = response.content[0].text.strip()
+                text = response.choices[0].message.content.strip()
 
                 if not text:
                     if attempt < retries - 1:
                         time.sleep(1)
                         continue
-                    raise ValueError("Claude returned empty text")
+                    raise ValueError("GPT returned empty text")
 
                 try:
                     result = self.parse_response(text)
@@ -362,13 +362,13 @@ Respond JSON only:
                     continue
                 raise
 
-        raise ValueError(f"Failed to get valid response from Claude after {retries} attempts")
+        raise ValueError(f"Failed to get valid response from GPT after {retries} attempts")
 
     @classmethod
     def get_session_stats(cls) -> Dict[str, Any]:
         """Get session statistics for API usage."""
-        total_cost = (cls.total_input_tokens / 1e6 * CLAUDE_INPUT_PRICE) + \
-                     (cls.total_output_tokens / 1e6 * CLAUDE_OUTPUT_PRICE)
+        total_cost = (cls.total_input_tokens / 1e6 * AI_INPUT_PRICE) + \
+                     (cls.total_output_tokens / 1e6 * AI_OUTPUT_PRICE)
         return {
             'total_calls': cls.total_calls,
             'total_cache_hits': cls.total_cache_hits,

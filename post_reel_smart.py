@@ -24,7 +24,7 @@ import re
 import json
 import random
 import xml.etree.ElementTree as ET
-import anthropic
+import openai
 from geelark_client import GeelarkClient
 
 # Appium imports
@@ -68,7 +68,7 @@ class SmartInstagramPoster:
         self.client = self._conn.client
         # AI analyzer for UI analysis (extracted for better separation)
         self._analyzer = ClaudeUIAnalyzer()
-        self.anthropic = self._analyzer.client  # For backwards compatibility
+        self.openai_client = self._analyzer.client  # For backwards compatibility
         self.phone_name = phone_name
         # UI controller (created lazily when Appium is connected)
         self._ui_controller = None
@@ -539,22 +539,20 @@ class SmartInstagramPoster:
             with open(filepath, 'rb') as f:
                 image_data = base64.standard_b64encode(f.read()).decode('utf-8')
 
-            # Send to Claude Vision for analysis
-            print("    Analyzing screenshot with Claude Vision...")
+            # Send to GPT Vision for analysis
+            print("    Analyzing screenshot with GPT Vision...")
 
-            response = self.anthropic.messages.create(
-                model="claude-sonnet-4-20250514",
+            response = self.openai_client.chat.completions.create(
+                model="gpt-5-mini",
                 max_tokens=500,
                 messages=[
                     {
                         "role": "user",
                         "content": [
                             {
-                                "type": "image",
-                                "source": {
-                                    "type": "base64",
-                                    "media_type": "image/png",
-                                    "data": image_data
+                                "type": "image_url",
+                                "image_url": {
+                                    "url": f"data:image/png;base64,{image_data}"
                                 }
                             },
                             {
@@ -581,7 +579,7 @@ Be concise and direct."""
                 ]
             )
 
-            analysis = response.content[0].text
+            analysis = response.choices[0].message.content
             print(f"    Vision analysis: {analysis[:100]}...")
 
             return filepath, analysis

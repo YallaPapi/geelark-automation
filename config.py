@@ -117,17 +117,17 @@ class Config:
     CAMPAIGN_PROGRESS_FILE: str = "progress.csv"
     CAMPAIGN_STATE_FILE: str = "scheduler_state.json"
 
-    # ==================== CLAUDE AI ====================
+    # ==================== AI MODEL ====================
 
-    # Model for UI analysis - using Haiku 4.5 for cost efficiency
-    CLAUDE_MODEL: str = "claude-haiku-4-5-20251001"
+    # Model for UI analysis - using GPT-5 mini for cost efficiency
+    AI_MODEL: str = "gpt-5-mini"
 
     # Pricing per million tokens (for cost estimation)
-    CLAUDE_INPUT_PRICE: float = 1.0   # $/million input tokens
-    CLAUDE_OUTPUT_PRICE: float = 5.0  # $/million output tokens
+    AI_INPUT_PRICE: float = 0.25   # $/million input tokens
+    AI_OUTPUT_PRICE: float = 2.0   # $/million output tokens
 
     # Max tokens for response (keep low to reduce costs)
-    CLAUDE_MAX_TOKENS: int = 300
+    AI_MAX_TOKENS: int = 300
 
     # Max steps per post (cap API calls)
     MAX_STEPS_PER_POST: int = 20

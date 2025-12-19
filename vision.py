@@ -1,9 +1,11 @@
 """
-Vision module - uses Claude to analyze screenshots and determine actions
+Vision module - uses GPT-5 mini to analyze screenshots and determine actions
 """
-import anthropic
+import openai
 import base64
 import os
+
+from config import Config
 
 
 def encode_image(image_path):
@@ -27,7 +29,7 @@ def analyze_screen(image_path, task_context):
             - text: text to type
             - message: explanation
     """
-    client = anthropic.Anthropic()
+    client = openai.OpenAI()
 
     image_data = encode_image(image_path)
 
@@ -54,18 +56,16 @@ Important:
 
 Only output the JSON, nothing else."""
 
-    response = client.messages.create(
-        model="claude-sonnet-4-20250514",
+    response = client.chat.completions.create(
+        model=Config.AI_MODEL,
         max_tokens=500,
         messages=[{
             "role": "user",
             "content": [
                 {
-                    "type": "image",
-                    "source": {
-                        "type": "base64",
-                        "media_type": "image/png",
-                        "data": image_data
+                    "type": "image_url",
+                    "image_url": {
+                        "url": f"data:image/png;base64,{image_data}"
                     }
                 },
                 {
@@ -78,7 +78,7 @@ Only output the JSON, nothing else."""
 
     # Parse JSON response
     import json
-    text = response.content[0].text.strip()
+    text = response.choices[0].message.content.strip()
 
     # Handle markdown code blocks
     if text.startswith("```"):
@@ -105,7 +105,7 @@ def analyze_for_instagram_post(image_path, caption, video_uploaded=False):
         caption: The caption to post
         video_uploaded: Whether video has been selected already
     """
-    client = anthropic.Anthropic()
+    client = openai.OpenAI()
 
     image_data = encode_image(image_path)
 
@@ -146,18 +146,16 @@ Common Instagram UI elements:
 
 Only output the JSON, nothing else."""
 
-    response = client.messages.create(
-        model="claude-sonnet-4-20250514",
+    response = client.chat.completions.create(
+        model=Config.AI_MODEL,
         max_tokens=500,
         messages=[{
             "role": "user",
             "content": [
                 {
-                    "type": "image",
-                    "source": {
-                        "type": "base64",
-                        "media_type": "image/png",
-                        "data": image_data
+                    "type": "image_url",
+                    "image_url": {
+                        "url": f"data:image/png;base64,{image_data}"
                     }
                 },
                 {
@@ -169,7 +167,7 @@ Only output the JSON, nothing else."""
     )
 
     import json
-    text = response.content[0].text.strip()
+    text = response.choices[0].message.content.strip()
 
     if text.startswith("```"):
         text = text.split("```")[1]
