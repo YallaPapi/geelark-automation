@@ -58,7 +58,7 @@ Only output the JSON, nothing else."""
 
     response = client.chat.completions.create(
         model=Config.AI_MODEL,
-        max_tokens=500,
+        max_completion_tokens=1000,
         messages=[{
             "role": "user",
             "content": [
@@ -148,7 +148,7 @@ Only output the JSON, nothing else."""
 
     response = client.chat.completions.create(
         model=Config.AI_MODEL,
-        max_tokens=500,
+        max_completion_tokens=1000,
         messages=[{
             "role": "user",
             "content": [

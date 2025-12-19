@@ -197,8 +197,9 @@
           "65",
           "66"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2025-12-19T07:06:02.719Z"
       },
       {
         "id": "68",
@@ -212,15 +213,16 @@
           "66",
           "67"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "in-progress",
+        "subtasks": [],
+        "updatedAt": "2025-12-19T07:06:02.844Z"
       }
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2025-12-19T07:05:00.391Z",
+      "lastModified": "2025-12-19T07:06:02.845Z",
       "taskCount": 5,
-      "completedCount": 3,
+      "completedCount": 4,
       "tags": [
         "posting"
       ]

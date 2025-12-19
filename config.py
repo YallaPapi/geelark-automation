@@ -126,8 +126,9 @@ class Config:
     AI_INPUT_PRICE: float = 0.25   # $/million input tokens
     AI_OUTPUT_PRICE: float = 2.0   # $/million output tokens
 
-    # Max tokens for response (keep low to reduce costs)
-    AI_MAX_TOKENS: int = 300
+    # Max tokens for response (GPT-5 mini uses reasoning tokens, so need extra buffer)
+    # Reasoning typically uses 50-200 tokens, output is ~100 tokens for JSON
+    AI_MAX_TOKENS: int = 1000
 
     # Max steps per post (cap API calls)
     MAX_STEPS_PER_POST: int = 20

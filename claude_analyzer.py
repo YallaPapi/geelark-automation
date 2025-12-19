@@ -301,8 +301,7 @@ Respond JSON only:
             try:
                 response = self.client.chat.completions.create(
                     model=self.model,
-                    max_tokens=self.max_tokens,
-                    temperature=0.0,  # Deterministic for consistency
+                    max_completion_tokens=self.max_tokens,
                     messages=[{"role": "user", "content": prompt}]
                 )
 

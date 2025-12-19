@@ -544,7 +544,7 @@ class SmartInstagramPoster:
 
             response = self.openai_client.chat.completions.create(
                 model="gpt-5-mini",
-                max_tokens=500,
+                max_completion_tokens=1000,
                 messages=[
                     {
                         "role": "user",
