@@ -1,0 +1,1 @@
+job_id,account,video_path,caption,status,worker_id,claimed_at,completed_at,error,attempts,max_attempts,retry_at,error_type,error_category,pass_number
