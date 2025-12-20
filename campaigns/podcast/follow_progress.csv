@@ -1,0 +1,191 @@
+job_id,account,target,status,worker_id,claimed_at,completed_at,error,attempts,max_attempts,retry_at,error_type,error_category
+quickcutspod_05williamsjoselyn,quickcutspod,05williamsjoselyn,failed,0,2025-12-20T18:42:18.575590,2025-12-20T18:55:43.683643,Stale claim - max attempts reached,3,3,2025-12-20T18:41:06.559585,stale_claim,infrastructure
+podsnipline_1lizzielou,podsnipline,1lizzielou,failed,0,2025-12-20T18:45:57.442421,2025-12-20T18:47:13.018805,Exception: Device 98.98.125.32:20123 never appeared in ADB devices list after 60s,3,3,2025-12-20T18:44:05.707673,adb_timeout,infrastructure
+podreelsector_5hrinphpp3rxs,podreelsector,5hrinphpp3rxs,success,0,2025-12-20T18:50:38.252423,2025-12-20T18:52:04.449266,,2,3,2025-12-20T18:50:38.245523,,
+podpunchdaily_6izgmmartina,podpunchdaily,6izgmmartina,success,0,2025-12-20T18:58:49.559996,2025-12-20T19:00:10.844985,,2,3,2025-12-20T18:58:49.555713,,
+podpeakstudio__ajsteele,podpeakstudio,_ajsteele,success,0,2025-12-20T18:52:14.481435,2025-12-20T18:55:33.654585,,1,3,,,
+podcutstories__komi.n.agb_,podcutstories,_komi.n.agb_,success,0,2025-12-20T18:55:43.686121,2025-12-20T19:01:41.271720,,1,3,,,
+mindsetmiccuts_a.maly865,mindsetmiccuts,a.maly865,failed,1,2025-12-20T19:14:45.522281,2025-12-20T19:20:28.885525,Max steps (30) reached without completing follow,3,3,2025-12-20T19:14:37.397841,claude_stuck,infrastructure
+micwisdomdaily_aa0531539393,micwisdomdaily,aa0531539393,success,0,2025-12-20T19:00:20.868330,2025-12-20T19:01:41.506518,,1,3,,,
+micnotesarchive_aaronlcarney,micnotesarchive,aaronlcarney,success,2,2025-12-20T19:00:53.202872,2025-12-20T19:02:08.392637,,1,3,,,
+micmindvault_abig.ailjackson72mmq,micmindvault,abig.ailjackson72mmq,success,0,2025-12-20T19:01:51.294004,2025-12-20T19:05:04.395407,,1,3,,,
+castcoremedia_achmeezy,castcoremedia,achmeezy,failed,3,2025-12-20T19:25:24.618435,2025-12-20T19:25:41.955055,Exception: Appium connection failed after 3 attempts: ADB connection lost and reconnect failed,3,3,2025-12-20T19:25:24.616325,adb_timeout,infrastructure
+bitepodmedia_ahsan_qureshi97,bitepodmedia,ahsan_qureshi97,success,3,2025-12-20T19:01:54.138323,2025-12-20T19:05:24.946338,,1,3,,,
+bitecastclips_alex.duguay1,bitecastclips,alex.duguay1,success,2,2025-12-20T19:02:18.432022,2025-12-20T19:05:14.092778,,1,3,,,
+clipsonairwave_alextiratsuyan,clipsonairwave,alextiratsuyan,success,4,2025-12-20T19:02:53.231697,2025-12-20T19:05:33.367183,,1,3,,,
+archipelago_one_alicia30052,archipelago_one,alicia30052,success,3,2025-12-20T19:17:54.321358,2025-12-20T19:19:15.903429,,3,3,2025-12-20T19:17:46.246296,,
+warlordregent_alof0k3,warlordregent,alof0k3,success,1,2025-12-20T19:05:11.635034,2025-12-20T19:07:56.362752,,1,3,,,
+thequietbaron_alvarez.pnw,thequietbaron,alvarez.pnw,success,0,2025-12-20T19:05:14.415690,2025-12-20T19:08:42.638925,,1,3,,,
+thefieldsketcher_amani.ccll7325,thefieldsketcher,amani.ccll7325,success,2,2025-12-20T19:05:24.118009,2025-12-20T19:07:29.389298,,1,3,,,
+thebaysideduke_amyrinnemoon,thebaysideduke,amyrinnemoon,success,3,2025-12-20T19:05:34.990393,2025-12-20T19:08:04.260749,,1,3,,,
+thebackroadman_anabelle.redd_,thebackroadman,anabelle.redd_,success,4,2025-12-20T19:05:43.401455,2025-12-20T19:08:13.203609,,1,3,,,
+stone_mason_live_andrew.sibai,stone_mason_live,andrew.sibai,success,2,2025-12-20T19:07:39.410688,2025-12-20T19:08:56.053187,,1,3,,,
+sovereignclaw_andrewcampbelli,sovereignclaw,andrewcampbelli,success,1,2025-12-20T19:08:06.413811,2025-12-20T19:12:07.462211,,1,3,,,
+silverscribewindow_angei4362,silverscribewindow,angei4362,success,3,2025-12-20T19:08:14.290924,2025-12-20T19:09:47.346399,,1,3,,,
+seegloryvault_angelasmithy5036,seegloryvault,angelasmithy5036,success,4,2025-12-20T19:08:23.230949,2025-12-20T19:11:19.343093,,1,3,,,
+orbmasterstrike_annabeltiti13,orbmasterstrike,annabeltiti13,success,0,2025-12-20T19:08:52.645435,2025-12-20T19:13:52.375716,,1,3,,,
+kingmakerpulse_annachapman58h3c,kingmakerpulse,annachapman58h3c,success,2,2025-12-20T19:09:06.084526,2025-12-20T19:13:42.782649,,1,3,,,
+itsunpluggedlife_annachen2967,itsunpluggedlife,annachen2967,success,0,2025-12-20T19:09:47.441139,2025-12-20T19:12:31.295585,,1,3,,,
+ironwillascendant_annetheacademic,ironwillascendant,annetheacademic,success,3,2025-12-20T19:09:57.354724,2025-12-20T19:12:23.763639,,1,3,,,
+inreallifemaxx_aom.duangkamol94,inreallifemaxx,aom.duangkamol94,success,1,2025-12-20T19:12:17.470118,2025-12-20T19:14:35.514259,,1,3,,,
+empirestrongofmind_ariana.9653340,empirestrongofmind,ariana.9653340,success,3,2025-12-20T19:12:33.800551,2025-12-20T19:14:45.978891,,1,3,,,
+crimsonlegionshort_atulnav,crimsonlegionshort,atulnav,success,0,2025-12-20T19:12:41.317730,2025-12-20T19:16:45.970256,,1,3,,,
+bentzenithruler_audreyvance9634hc,bentzenithruler,audreyvance9634hc,success,4,2025-12-20T19:12:56.256188,2025-12-20T19:15:56.659849,,1,3,,,
+tjmexicosfinest_aurora_42149,tjmexicosfinest,aurora_42149,success,0,2025-12-20T19:14:02.383235,2025-12-20T19:17:28.330189,,1,3,,,
+rustywatermeal_austin.alexander.john,rustywatermeal,austin.alexander.john,success,3,2025-12-20T19:14:55.987513,2025-12-20T19:17:44.290179,,1,3,,,
+RoughConcreteShifter_austin.g.lord,RoughConcreteShifter,austin.g.lord,success,4,2025-12-20T19:16:06.684734,2025-12-20T19:19:40.843913,,1,3,,,
+reddyplayerwonton_axmksqwvig8a,reddyplayerwonton,axmksqwvig8a,success,0,2025-12-20T19:16:55.998895,2025-12-20T19:19:30.850797,,1,3,,,
+lucysplainyoself_ay1232lilah,lucysplainyoself,ay1232lilah,success,0,2025-12-20T19:17:38.337734,2025-12-20T19:20:31.804920,,1,3,,,
+LoomedTwillHook_bahuznas,LoomedTwillHook,bahuznas,success,3,2025-12-20T19:19:25.912472,2025-12-20T19:22:24.788782,,1,3,,,
+LockedVaultDuster_barbaramurray280rjj,LockedVaultDuster,barbaramurray280rjj,success,0,2025-12-20T19:19:40.877870,2025-12-20T19:22:51.216412,,1,3,,,
+HollowedBoneVessels_belindahabakkuk_1119,HollowedBoneVessels,belindahabakkuk_1119,failed,3,2025-12-20T19:39:03.526797,2025-12-20T19:44:13.983936,Max steps (30) reached without completing follow,3,3,2025-12-20T19:38:52.341224,claude_stuck,infrastructure
+FrozenGearSmoker_bella15.25,FrozenGearSmoker,bella15.25,success,1,2025-12-20T19:20:38.906123,2025-12-20T19:23:01.878587,,1,3,,,
+filbertthesmasher_berniec77,filbertthesmasher,berniec77,success,0,2025-12-20T19:20:41.829859,2025-12-20T19:25:50.435835,,1,3,,,
+FallenBarkSwitch_billy__lin,FallenBarkSwitch,billy__lin,success,3,2025-12-20T19:22:34.796464,2025-12-20T19:25:14.586032,,1,3,,,
+EmptyFuelMatrix_blakethom123,EmptyFuelMatrix,blakethom123,success,0,2025-12-20T19:23:01.224784,2025-12-20T19:27:52.821372,,1,3,,,
+daisochunks_bobbrandy440,daisochunks,bobbrandy440,success,1,2025-12-20T19:23:11.913996,2025-12-20T19:25:42.582139,,1,3,,,
+contibonit_body_by_barron_sd,contibonit,body_by_barron_sd,success,2,2025-12-20T19:25:43.828846,2025-12-20T19:28:15.445317,,1,3,,,
+ClosedCircuitMute_brian.wisneski,ClosedCircuitMute,brian.wisneski,success,3,2025-12-20T19:25:51.983220,2025-12-20T19:28:33.262769,,1,3,,,
+bondsgoldengun_bridgeovertrouble,bondsgoldengun,bridgeovertrouble,success,1,2025-12-20T19:25:52.620408,2025-12-20T19:28:19.855337,,1,3,,,
+blackietheblackest_bsachs.04,blackietheblackest,bsachs.04,success,0,2025-12-20T19:26:00.463739,2025-12-20T19:28:26.497720,,1,3,,,
+basilthymeoregano_buckeyeinfluence,basilthymeoregano,buckeyeinfluence,success,4,2025-12-20T19:26:38.929180,2025-12-20T19:30:13.983457,,1,3,,,
+AgedWalnutThrones_bukkey24,AgedWalnutThrones,bukkey24,success,0,2025-12-20T19:28:02.851495,2025-12-20T19:30:50.710202,,1,3,,,
+speckles_is_here_byronjayhousten,speckles_is_here,byronjayhousten,success,2,2025-12-20T19:28:25.473940,2025-12-20T19:31:16.626739,,1,3,,,
+rushhourresponse_cal.cornell,rushhourresponse,cal.cornell,success,1,2025-12-20T19:28:29.874130,2025-12-20T19:33:48.589354,,1,3,,,
+redcarelesscrocs_caleb85845451,redcarelesscrocs,caleb85845451,success,0,2025-12-20T19:28:36.520368,2025-12-20T19:31:11.864451,,1,3,,,
+ogtylerguy_cape_cowgirl,ogtylerguy,cape_cowgirl,success,3,2025-12-20T19:28:43.290447,2025-12-20T19:31:16.369936,,1,3,,,
+milkyjersey.trainer_carson.lushin,milkyjersey.trainer,carson.lushin,success,4,2025-12-20T19:30:24.009813,2025-12-20T19:32:26.528874,,1,3,,,
+markatetwobananas_carsontweeks,markatetwobananas,carsontweeks,success,0,2025-12-20T19:31:00.736492,2025-12-20T19:33:17.023322,,1,3,,,
+marblebasecase_casey.krueger_,marblebasecase,casey.krueger_,success,0,2025-12-20T19:31:21.881425,2025-12-20T19:37:03.025813,,1,3,,,
+lupethelooper_caterina76543,lupethelooper,caterina76543,success,3,2025-12-20T19:31:26.399004,2025-12-20T19:34:09.884649,,1,3,,,
+FusedMercurySpike_cathyrobjent,FusedMercurySpike,cathyrobjent,success,2,2025-12-20T19:31:26.664047,2025-12-20T19:34:15.591000,,1,3,,,
+DarkLichenCoded_caw48780,DarkLichenCoded,caw48780,success,0,2025-12-20T19:33:27.048483,2025-12-20T19:36:09.422573,,1,3,,,
+choice.jonestown_cecarrington,choice.jonestown,cecarrington,success,1,2025-12-20T19:33:58.618027,2025-12-20T19:39:06.788098,,1,3,,,
+BrokenRockPace_charisma_couture,BrokenRockPace,charisma_couture,success,4,2025-12-20T19:48:23.983710,2025-12-20T19:49:57.624608,,3,3,2025-12-20T19:48:06.035476,,
+ApexStratagem_charityandchester,ApexStratagem,charityandchester,success,1,2025-12-20T19:41:56.442567,2025-12-20T19:43:28.095954,,2,3,2025-12-20T19:41:14.543358,,
+clipsonpodcast_chloewallace557zvp,clipsonpodcast,chloewallace557zvp,success,2,2025-12-20T19:34:25.611509,2025-12-20T19:38:40.499303,,1,3,,,
+podsnipworks_chrisdesrouleaux,podsnipworks,chrisdesrouleaux,failed,0,2025-12-20T19:46:20.524760,2025-12-20T19:47:14.808973,Instagram is requiring ID verification to continue using the account. Cannot proceed with following user until verification is completed.,2,3,2025-12-20T19:44:26.665857,verification,account
+talkgembytes_ckkaka7,talkgembytes,ckkaka7,success,0,2025-12-20T19:36:19.447703,2025-12-20T19:38:23.544986,,1,3,,,
+castreelworks_cla.ra6044,castreelworks,cla.ra6044,success,3,2025-12-20T19:36:24.561905,2025-12-20T19:38:53.497627,,1,3,,,
+viraltalkfeed_clintaricks,viraltalkfeed,clintaricks,success,0,2025-12-20T19:37:13.056336,2025-12-20T19:40:05.554540,,1,3,,,
+reelpodsector_daniel.charles208330,reelpodsector,daniel.charles208330,success,0,2025-12-20T19:38:33.568660,2025-12-20T19:41:38.652179,,1,3,,,
+apodwavecentral_daria11759,apodwavecentral,daria11759,success,2,2025-12-20T19:38:50.517545,2025-12-20T19:44:04.856445,,1,3,,,
+micdropchannel_davearenberg,micdropchannel,davearenberg,success,1,2025-12-20T19:39:16.793878,2025-12-20T19:41:46.413475,,1,3,,,
+viralmicstudio_davejoseph__,viralmicstudio,davejoseph__,success,4,2025-12-20T19:39:36.683677,2025-12-20T19:42:33.144374,,1,3,,,
+quickpodsnaps_davidmcilhenney,quickpodsnaps,davidmcilhenney,success,0,2025-12-20T19:40:15.575437,2025-12-20T19:49:39.821276,,1,3,,,
+podmindstudio_debrosmanauthor,podmindstudio,debrosmanauthor,success,4,2025-12-20T19:42:43.163709,2025-12-20T19:46:30.352353,,1,3,,,
+talktrackhub_dennison.blackett,talktrackhub,dennison.blackett,success,0,2025-12-20T19:43:16.066529,2025-12-20T19:46:10.493022,,1,3,,,
+kianinspired_deven.autar,kianinspired,deven.autar,success,1,2025-12-20T19:43:38.122974,2025-12-20T19:50:02.181930,,1,3,,,
+sonbankinspired_deyyraa_wassey_6664,sonbankinspired,deyyraa_wassey_6664,success,2,2025-12-20T19:44:14.894673,2025-12-20T19:46:35.026601,,1,3,,,
+walinspired_diamond.sanfordjr,walinspired,diamond.sanfordjr,success,3,2025-12-20T19:44:23.991685,2025-12-20T19:47:04.195914,,1,3,,,
+emersoninspired_dianaqaz23,emersoninspired,dianaqaz23,retrying,0,2025-12-20T19:53:18.745901,,Exception: Device 128.14.109.187:20801 never appeared in ADB devices list after 60s,2,3,2025-12-20T19:59:33.251049,adb_timeout,infrastructure
+dennwilsoninspired_dieu_bichhai39694,dennwilsoninspired,dieu_bichhai39694,success,2,2025-12-20T19:46:45.052994,2025-12-20T19:49:09.732848,,1,3,,,
+neilinspired_djalexroc,neilinspired,djalexroc,success,3,2025-12-20T19:47:14.220937,2025-12-20T19:49:40.561185,,1,3,,,
+angelapenninspired_dojalopez99191,angelapenninspired,dojalopez99191,success,0,2025-12-20T19:47:24.839110,2025-12-20T19:50:44.292566,,1,3,,,
+carlooinspired_donnabaer13,carlooinspired,donnabaer13,retrying,2,2025-12-20T19:49:19.752929,,Max steps (30) reached without completing follow,1,3,2025-12-20T20:00:35.072772,claude_stuck,infrastructure
+penelopeinspired_donnaleo13,penelopeinspired,donnaleo13,success,0,2025-12-20T19:49:49.852108,2025-12-20T19:51:57.865947,,1,3,,,
+yourmindfuelpod_dr.ziyi,yourmindfuelpod,dr.ziyi,success,3,2025-12-20T19:49:50.599089,2025-12-20T19:52:32.776431,,1,3,,,
+weriseandruminate_dragan.manasievski.14,weriseandruminate,dragan.manasievski.14,retrying,4,2025-12-20T19:50:07.630610,,"InvalidElementStateException: Message: Unable to perform W3C actions. Check the logcat output for possible error reports and make sure your input actions chain is valid.
+Stacktrace:
+io.appium.uiautomator2.common.exceptions.InvalidElementStateException: Unable to perform W3C actions. Check the logcat output for possible error reports and make sure your input actions chain is valid.
+	at io.appium.uiautomator2.handler.W3CActions.safeHandle(W3CActions.java:82)
+	at io.appium.uiautomator2.handler.request.SafeRequestHandler.handle(SafeRequestHandler.java:59)
+	at io.appium.uiautomator2.server.AppiumServlet.handleRequest(AppiumServlet.java:267)
+	at io.appium.uiautomator2.server.AppiumServlet.handleHttpRequest(AppiumServlet.java:261)
+	at io.appium.uiautomator2.http.ServerHandler.channelRead(ServerHandler.java:77)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:356)
+	at io.netty.handler.codec.MessageToMessageDecoder.channelRead(MessageToMessageDecoder.java:107)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:356)
+	at io.netty.channel.CombinedChannelDuplexHandler$DelegatingChannelHandlerContext.fireChannelRead(CombinedChannelDuplexHandler.java:434)
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:346)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:318)
+	at io.netty.channel.CombinedChannelDuplexHandler.channelRead(CombinedChannelDuplexHandler.java:249)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:354)
+	at io.netty.handler.timeout.IdleStateHandler.channelRead(IdleStateHandler.java:293)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:354)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1429)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:918)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:168)
+	at io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.handle(AbstractNioChannel.java:445)
+	at io.netty.channel.nio.NioIoHandler$DefaultNioRegistration.handle(NioIoHandler.java:388)
+	at io.netty.channel.nio.NioIoHandler.processSelectedKey(NioIoHandler.java:596)
+	at io.netty.channel.nio.NioIoHandler.processSelectedKeysOptimized(NioIoHandler.java:571)
+	at io.netty.channel.nio.NioIoHandler.processSelectedKeys(NioIoHandler.java:512)
+	at io.netty.channel.nio.NioIoHandler.run(NioIoHandler.java:484)
+	at io.netty.channel.SingleThreadIoEventLoop.runIo(SingleThreadIoEventLoop.java:225)
+	at io.netty.channel.SingleThreadIoEventLoop.run(SingleThreadIoEventLoop.java:196)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:1193)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.lang.Thread.run(Thread.java:920)
+",1,3,2025-12-20T19:58:22.538383,adb_timeout,infrastructure
+madalynnnaustininspired_eamorrowesq,madalynnnaustininspired,eamorrowesq,success,1,2025-12-20T19:50:12.212138,2025-12-20T19:53:38.079040,,1,3,,,
+itsempoweringhour_ecohorizon.27,itsempoweringhour,ecohorizon.27,retrying,0,2025-12-20T19:50:54.321325,,"InvalidElementStateException: Message: Unable to perform W3C actions. Check the logcat output for possible error reports and make sure your input actions chain is valid.
+Stacktrace:
+io.appium.uiautomator2.common.exceptions.InvalidElementStateException: Unable to perform W3C actions. Check the logcat output for possible error reports and make sure your input actions chain is valid.
+	at io.appium.uiautomator2.handler.W3CActions.safeHandle(W3CActions.java:82)
+	at io.appium.uiautomator2.handler.request.SafeRequestHandler.handle(SafeRequestHandler.java:59)
+	at io.appium.uiautomator2.server.AppiumServlet.handleRequest(AppiumServlet.java:267)
+	at io.appium.uiautomator2.server.AppiumServlet.handleHttpRequest(AppiumServlet.java:261)
+	at io.appium.uiautomator2.http.ServerHandler.channelRead(ServerHandler.java:77)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:356)
+	at io.netty.handler.codec.MessageToMessageDecoder.channelRead(MessageToMessageDecoder.java:107)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:356)
+	at io.netty.channel.CombinedChannelDuplexHandler$DelegatingChannelHandlerContext.fireChannelRead(CombinedChannelDuplexHandler.java:434)
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:346)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:318)
+	at io.netty.channel.CombinedChannelDuplexHandler.channelRead(CombinedChannelDuplexHandler.java:249)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:354)
+	at io.netty.handler.timeout.IdleStateHandler.channelRead(IdleStateHandler.java:293)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:354)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1429)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:918)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:168)
+	at io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.handle(AbstractNioChannel.java:445)
+	at io.netty.channel.nio.NioIoHandler$DefaultNioRegistration.handle(NioIoHandler.java:388)
+	at io.netty.channel.nio.NioIoHandler.processSelectedKey(NioIoHandler.java:596)
+	at io.netty.channel.nio.NioIoHandler.processSelectedKeysOptimized(NioIoHandler.java:571)
+	at io.netty.channel.nio.NioIoHandler.processSelectedKeys(NioIoHandler.java:512)
+	at io.netty.channel.nio.NioIoHandler.run(NioIoHandler.java:484)
+	at io.netty.channel.SingleThreadIoEventLoop.runIo(SingleThreadIoEventLoop.java:225)
+	at io.netty.channel.SingleThreadIoEventLoop.run(SingleThreadIoEventLoop.java:196)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:1193)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.lang.Thread.run(Thread.java:920)
+",1,3,2025-12-20T19:57:53.671903,adb_timeout,infrastructure
+theheartandhustles_eiraylnne,theheartandhustles,eiraylnne,success,0,2025-12-20T19:52:07.873007,2025-12-20T19:56:57.762161,,1,3,,,
+mysparkedthoughts_ejwines2,mysparkedthoughts,ejwines2,retrying,3,2025-12-20T19:52:42.804016,,"InvalidElementStateException: Message: Unable to perform W3C actions. Check the logcat output for possible error reports and make sure your input actions chain is valid.
+Stacktrace:
+io.appium.uiautomator2.common.exceptions.InvalidElementStateException: Unable to perform W3C actions. Check the logcat output for possible error reports and make sure your input actions chain is valid.
+	at io.appium.uiautomator2.handler.W3CActions.safeHandle(W3CActions.java:82)
+	at io.appium.uiautomator2.handler.request.SafeRequestHandler.handle(SafeRequestHandler.java:59)
+	at io.appium.uiautomator2.server.AppiumServlet.handleRequest(AppiumServlet.java:267)
+	at io.appium.uiautomator2.server.AppiumServlet.handleHttpRequest(AppiumServlet.java:261)
+	at io.appium.uiautomator2.http.ServerHandler.channelRead(ServerHandler.java:77)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:356)
+	at io.netty.handler.codec.MessageToMessageDecoder.channelRead(MessageToMessageDecoder.java:107)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:356)
+	at io.netty.channel.CombinedChannelDuplexHandler$DelegatingChannelHandlerContext.fireChannelRead(CombinedChannelDuplexHandler.java:434)
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:346)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:318)
+	at io.netty.channel.CombinedChannelDuplexHandler.channelRead(CombinedChannelDuplexHandler.java:249)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:354)
+	at io.netty.handler.timeout.IdleStateHandler.channelRead(IdleStateHandler.java:293)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:354)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1429)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:918)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:168)
+	at io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.handle(AbstractNioChannel.java:445)
+	at io.netty.channel.nio.NioIoHandler$DefaultNioRegistration.handle(NioIoHandler.java:388)
+	at io.netty.channel.nio.NioIoHandler.processSelectedKey(NioIoHandler.java:596)
+	at io.netty.channel.nio.NioIoHandler.processSelectedKeysOptimized(NioIoHandler.java:571)
+	at io.netty.channel.nio.NioIoHandler.processSelectedKeys(NioIoHandler.java:512)
+	at io.netty.channel.nio.NioIoHandler.run(NioIoHandler.java:484)
+	at io.netty.channel.SingleThreadIoEventLoop.runIo(SingleThreadIoEventLoop.java:225)
+	at io.netty.channel.SingleThreadIoEventLoop.run(SingleThreadIoEventLoop.java:196)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:1193)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.lang.Thread.run(Thread.java:920)
+",1,3,2025-12-20T20:01:33.356916,adb_timeout,infrastructure
