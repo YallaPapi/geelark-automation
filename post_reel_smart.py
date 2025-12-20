@@ -38,6 +38,10 @@ from device_connection import DeviceConnectionManager
 from claude_analyzer import ClaudeUIAnalyzer
 # UI interactions (extracted for better separation)
 from appium_ui_controller import AppiumUIController
+# Flow logging for pattern analysis
+from flow_logger import FlowLogger
+# Hybrid navigation (rule-based + AI fallback)
+from hybrid_navigator import HybridNavigator
 
 # Use centralized paths and screen coordinates
 APPIUM_SERVER = Config.DEFAULT_APPIUM_URL
@@ -692,6 +696,19 @@ Be concise and direct."""
         """Handle 'scroll_up' action - swipe up."""
         self.adb(f"input swipe {SCREEN_CENTER_X} {FEED_TOP_Y} {SCREEN_CENTER_X} {FEED_BOTTOM_Y} {SWIPE_DURATION_FAST}")
 
+    def _action_tap_coordinate(self, action, elements):
+        """Handle 'tap_coordinate' action - tap at specific x,y."""
+        x = action.get('x', SCREEN_CENTER_X)
+        y = action.get('y', SCREEN_CENTER_Y)
+        print(f"  Tapping at coordinates ({x}, {y})")
+        self.tap(x, y)
+
+    def _action_wait(self, action, elements):
+        """Handle 'wait' action - wait for specified seconds."""
+        seconds = action.get('seconds', 1)
+        print(f"  Waiting {seconds}s...")
+        time.sleep(seconds)
+
     def _get_action_handlers(self):
         """Return dispatch table mapping action names to handler methods.
 
@@ -704,6 +721,8 @@ Be concise and direct."""
             'back': self._action_back,
             'scroll_down': self._action_scroll_down,
             'scroll_up': self._action_scroll_up,
+            'tap_coordinate': self._action_tap_coordinate,
+            'wait': self._action_wait,
         }
 
     def _track_action_for_loop_detection(self, action, elements, recent_actions, loop_threshold):
@@ -905,6 +924,15 @@ Be concise and direct."""
             humanize: If True, perform random human-like actions before/after posting
         """
 
+        # Initialize flow logger for pattern analysis
+        flow_logger = FlowLogger(self.phone_name, log_dir="flow_analysis")
+
+        # Initialize hybrid navigator (rule-based + AI fallback)
+        navigator = HybridNavigator(
+            ai_analyzer=self._analyzer,
+            caption=caption
+        )
+
         # Upload video first
         self.upload_video(video_path)
 
@@ -951,6 +979,9 @@ Be concise and direct."""
                     self.last_error_message = f"{error_type}: {error_msg} - Vision analysis: {analysis}"
                 else:
                     self.last_error_message = f"{error_type}: {error_msg}"
+                flow_logger.log_error(error_type, error_msg, elements)
+                flow_logger.log_failure(f"{error_type}: {error_msg}")
+                flow_logger.close()
                 return False
 
             # Show what we see (all elements)
@@ -964,23 +995,45 @@ Be concise and direct."""
                 if parts:
                     print(f"    {elem['bounds']} {' | '.join(parts)}")
 
-            # Ask Claude what to do
+            # Use hybrid navigation (rule-based + AI fallback)
             print("  Analyzing...")
             try:
-                action = self.analyze_ui(elements, caption)
+                nav_result = navigator.navigate(elements)
+                action = nav_result.action
+                if nav_result.used_ai:
+                    print(f"  [AI] {nav_result.screen_type.name} -> {action['action']}")
+                else:
+                    print(f"  [RULE] {nav_result.screen_type.name} -> {action['action']} (conf={nav_result.detection_confidence:.2f})")
             except Exception as e:
                 print(f"  Analysis error: {e}")
+                flow_logger.log_error("analysis_error", str(e), elements)
                 time.sleep(2)
                 continue
 
             print(f"  Action: {action['action']} - {action.get('reason', '')}")
 
-            # Update state (only video_selected and share_clicked from Claude's analysis)
+            # Log the step for pattern analysis
+            flow_logger.log_step(
+                elements=elements,
+                action=action,
+                ai_called=nav_result.used_ai,
+                ai_tokens=0,  # TODO: capture actual token usage from analyzer
+                state={
+                    'video_uploaded': self.video_uploaded,
+                    'caption_entered': self.caption_entered,
+                    'share_clicked': self.share_clicked
+                },
+                result="pending"
+            )
+
+            # Update state (only video_selected and share_clicked)
             # caption_entered is ONLY set after we actually type the caption
             if action.get('video_selected'):
                 self.video_uploaded = True
+                navigator.update_state(video_selected=True)
             if action.get('share_clicked'):
                 self.share_clicked = True
+                navigator.update_state(share_clicked=True)
 
             # Execute action using dispatch table (Command pattern)
             action_name = action['action']
@@ -995,12 +1048,32 @@ Be concise and direct."""
                     print("[WARNING] Upload confirmation timeout - may still be processing")
                 if humanize:
                     self.humanize_after_post()
+                # Log hybrid navigation stats
+                stats = navigator.get_stats()
+                print(f"\n[HYBRID STATS] {stats['rule_based_steps']}/{stats['total_steps']} rule-based "
+                      f"({stats['rule_rate_percent']:.0f}%), {stats['ai_calls']} AI calls")
+                flow_logger.log_success()
+                flow_logger.close()
                 return True
+
+            # Special case: 'error' - abort posting
+            if action_name == 'error':
+                error_reason = action.get('reason', 'Unknown error from hybrid navigator')
+                print(f"\n[ERROR] {error_reason}")
+                self.last_error_type = action.get('error_type', 'hybrid_error')
+                self.last_error_message = error_reason
+                flow_logger.log_failure(f"hybrid_error: {error_reason}")
+                flow_logger.close()
+                return False
 
             # Special case: 'tap_and_type' - needs caption and has continue logic
             if action_name == 'tap_and_type':
+                caption_was_entered = self.caption_entered
                 if self._handle_tap_and_type(action, elements, caption):
                     continue  # Helper handled it and wants to skip to next step
+                # Update navigator if caption was just entered
+                if self.caption_entered and not caption_was_entered:
+                    navigator.update_state(caption_entered=True)
 
             # Dispatch table for standard actions
             action_handlers = self._get_action_handlers()
@@ -1025,6 +1098,8 @@ Be concise and direct."""
                 else:
                     self.last_error_message = "Loop recovery failed - could not escape stuck state"
                     self.last_error_type = "loop_stuck"
+                flow_logger.log_failure(f"loop_stuck: {self.last_error_message}")
+                flow_logger.close()
                 return False
             if should_clear:
                 recent_actions.clear()
@@ -1044,6 +1119,8 @@ Be concise and direct."""
         else:
             self.last_error_message = f"Max steps ({max_steps}) reached without completing post"
             self.last_error_type = "max_steps"
+        flow_logger.log_failure(f"max_steps: {self.last_error_message}")
+        flow_logger.close()
         return False
 
     def cleanup(self):
