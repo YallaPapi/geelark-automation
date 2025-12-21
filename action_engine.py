@@ -112,48 +112,89 @@ class ActionEngine:
     # ==================== Screen Handlers ====================
 
     def _handle_feed(self, elements: List[Dict]) -> Action:
-        """Handle home feed - navigate to profile."""
-        # Find profile tab in bottom navigation
-        for i, el in enumerate(elements):
-            desc = el.get('desc', '').lower()
-            if 'profile' in desc or 'your profile' in desc:
-                return Action(
-                    action_type=ActionType.TAP,
-                    target_element=i,
-                    reason="Tap profile tab to navigate to profile",
-                    confidence=0.95
-                )
+        """Handle home feed - tap + button to start create flow.
 
-        # Alternative: Look for profile icon by position (usually bottom-right)
-        return Action(
-            action_type=ActionType.TAP_COORDINATE,
-            coordinates=(540, 2200),  # Approximate profile tab position
-            reason="Tap profile tab area (fallback)",
-            confidence=0.7
-        )
-
-    def _handle_profile(self, elements: List[Dict]) -> Action:
-        """Handle profile screen - start create flow."""
-        # Find the create/plus button
+        IMPORTANT: We tap the + (create) button directly from feed,
+        NOT navigate to profile first. The + button is in bottom nav.
+        """
+        # Look for create/plus button in bottom navigation
         for i, el in enumerate(elements):
             desc = el.get('desc', '').lower()
             text = el.get('text', '').lower()
 
-            # Look for create button
-            if 'create' in desc or '+' in text or 'new post' in desc:
+            # Create button patterns
+            if 'create' in desc or 'new post' in desc or '+' in text:
                 return Action(
                     action_type=ActionType.TAP,
                     target_element=i,
-                    reason="Tap create button to start posting flow",
+                    reason="Tap create (+) button to start posting flow",
+                    confidence=0.95
+                )
+
+        # Look for profile tab ONLY in bottom nav area (y > 1100)
+        # Must be exact match to avoid "Visit profile" false positives
+        for i, el in enumerate(elements):
+            desc = el.get('desc', '').lower()
+            bounds = el.get('bounds', '')
+
+            # Parse y coordinate from bounds like "[x1,y1][x2,y2]"
+            try:
+                y1 = int(bounds.split(',')[1].split(']')[0])
+                is_bottom_nav = y1 > 1100
+            except:
+                is_bottom_nav = False
+
+            # Only match exact "profile" or "your profile" in bottom nav
+            if is_bottom_nav and (desc == 'profile' or desc == 'your profile'):
+                return Action(
+                    action_type=ActionType.TAP,
+                    target_element=i,
+                    reason="Tap profile tab in bottom navigation",
                     confidence=0.9
                 )
 
-        # Fallback: Plus button usually at specific position
+        # Fallback: tap create button area (center bottom, above nav bar)
         return Action(
             action_type=ActionType.TAP_COORDINATE,
-            coordinates=(540, 2200),  # Center bottom area
+            coordinates=(360, 1240),  # Create button position (center bottom)
             reason="Tap create button area (fallback)",
-            confidence=0.6
+            confidence=0.7
+        )
+
+    def _handle_profile(self, elements: List[Dict]) -> Action:
+        """Handle profile screen - start create flow.
+
+        On Instagram profile, the + (create) button is in the TOP RIGHT corner,
+        NOT the bottom navigation. We need to tap that to open the create menu.
+        """
+        # Find the create/plus button in TOP area (y < 200)
+        for i, el in enumerate(elements):
+            desc = el.get('desc', '').lower()
+            text = el.get('text', '').lower()
+            bounds = el.get('bounds', '')
+
+            # Parse y coordinate
+            try:
+                y1 = int(bounds.split(',')[1].split(']')[0])
+                is_top_area = y1 < 200
+            except:
+                is_top_area = False
+
+            # Only match create button in top area to avoid "Add to story" confusion
+            if is_top_area and ('create' in desc or '+' in text or 'new post' in desc):
+                return Action(
+                    action_type=ActionType.TAP,
+                    target_element=i,
+                    reason="Tap create (+) button in top right",
+                    confidence=0.9
+                )
+
+        # Fallback: Create button is usually at top right (x~650, y~85)
+        return Action(
+            action_type=ActionType.TAP_COORDINATE,
+            coordinates=(650, 85),  # Top right create button
+            reason="Tap create button area (top right fallback)",
+            confidence=0.7
         )
 
     def _handle_create_menu(self, elements: List[Dict]) -> Action:

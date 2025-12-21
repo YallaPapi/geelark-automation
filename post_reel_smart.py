@@ -608,7 +608,7 @@ Be concise and direct."""
                 self.share_clicked = True
             return True  # continue to next step
 
-        idx = action.get('element_index', 0)
+        idx = action.get('element_index') or 0  # Handle None explicitly
         text = action.get('text', caption)
 
         # Step 1: Check if keyboard is already up
@@ -672,12 +672,12 @@ Be concise and direct."""
         print("  [OPEN] Opening Instagram...")
         self.adb("am force-stop com.instagram.android")
         time.sleep(1)
-        self.adb("monkey -p com.instagram.android 1")
+        self.adb("am start -n com.instagram.android/.activity.MainTabActivity")
         time.sleep(4)
 
     def _action_tap(self, action, elements):
         """Handle 'tap' action - tap an element by index."""
-        idx = action.get('element_index', 0)
+        idx = action.get('element_index') or 0  # Handle None explicitly
         if 0 <= idx < len(elements):
             elem = elements[idx]
             self.tap(elem['center'][0], elem['center'][1])
@@ -732,7 +732,7 @@ Be concise and direct."""
         """
         action_signature = action['action']
         if action['action'] == 'tap' and 'element_index' in action:
-            idx = action.get('element_index', 0)
+            idx = action.get('element_index') or 0  # Handle None explicitly
             if 0 <= idx < len(elements):
                 x, y = elements[idx]['center']
                 action_signature = f"tap_{x}_{y}"
@@ -767,7 +767,7 @@ Be concise and direct."""
         print("  Reopening Instagram...")
         self.adb("am force-stop com.instagram.android")
         time.sleep(2)
-        self.adb("monkey -p com.instagram.android 1")
+        self.adb("am start -n com.instagram.android/.activity.MainTabActivity")
         time.sleep(5)
 
         print("  [RECOVERY] Restarted - continuing")
@@ -936,11 +936,14 @@ Be concise and direct."""
         # Upload video first
         self.upload_video(video_path)
 
+        # CRITICAL: Update navigator state - video is now on device
+        navigator.update_state(video_selected=True)
+
         # Open Instagram
         print("\nOpening Instagram...")
         self.adb("am force-stop com.instagram.android")
         time.sleep(2)
-        self.adb("monkey -p com.instagram.android 1")
+        self.adb("am start -n com.instagram.android/.activity.MainTabActivity")
         time.sleep(5)
 
         # Humanize before posting

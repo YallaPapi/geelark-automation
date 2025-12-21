@@ -353,6 +353,103 @@ def cleanup_all_appium_servers(config: ParallelConfig) -> int:
     return killed
 
 
+def cleanup_orphaned_appium_servers(max_workers: int = 10, base_port: int = 4723) -> int:
+    """
+    Kill ALL orphaned Appium servers on our port range, regardless of current config.
+
+    This scans ALL ports we might ever use (based on max_workers) and kills any
+    Appium/Node processes listening on them. This handles cases where:
+    - Previous run crashed without cleanup
+    - Ran with more workers before than current config
+    - Zombie processes from failed workers
+
+    Args:
+        max_workers: Maximum number of workers to check ports for (default 10)
+        base_port: Starting port number (default 4723)
+
+    Returns:
+        Number of processes killed
+    """
+    killed = 0
+
+    # Generate all possible Appium ports (4723, 4725, 4727, ... based on worker count)
+    ports_to_check = [base_port + (i * 2) for i in range(max_workers)]
+
+    logger.info(f"Scanning for orphaned Appium servers on ports: {ports_to_check}")
+
+    if sys.platform == 'win32':
+        try:
+            # Get all listening ports and their PIDs
+            result = subprocess.run(
+                ['netstat', '-ano'],
+                capture_output=True, text=True, timeout=10
+            )
+
+            # Build map of port -> PID
+            port_pids = {}
+            for line in result.stdout.split('\n'):
+                if 'LISTENING' in line:
+                    parts = line.split()
+                    if len(parts) >= 5:
+                        # Parse address:port
+                        addr_port = parts[1]
+                        if ':' in addr_port:
+                            try:
+                                port = int(addr_port.split(':')[-1])
+                                pid = parts[-1]
+                                if port in ports_to_check and pid.isdigit():
+                                    port_pids[port] = pid
+                            except ValueError:
+                                continue
+
+            # Kill processes on our ports
+            # IMPORTANT: Do NOT kill by node.exe name - it will kill Claude Code!
+            # Instead, we kill by specific PID for our Appium ports only
+            for port, pid in port_pids.items():
+                try:
+                    # Kill the specific PID on our Appium port
+                    # We trust that anything on our Appium ports (4723, 4725, etc) is our Appium
+                    subprocess.run(['taskkill', '/F', '/PID', pid],
+                                  capture_output=True, timeout=10)
+                    logger.info(f"Killed process on Appium port {port} (PID {pid})")
+                    killed += 1
+                except Exception as e:
+                    logger.warning(f"Failed to kill process on port {port}: {e}")
+
+        except Exception as e:
+            logger.error(f"Error scanning for orphaned Appium servers: {e}")
+    else:
+        # Unix implementation
+        for port in ports_to_check:
+            try:
+                result = subprocess.run(
+                    ['lsof', '-ti', f':{port}'],
+                    capture_output=True, text=True, timeout=10
+                )
+                if result.stdout.strip():
+                    for pid in result.stdout.strip().split('\n'):
+                        if pid.isdigit():
+                            # Check if it's a node process
+                            ps_result = subprocess.run(
+                                ['ps', '-p', pid, '-o', 'comm='],
+                                capture_output=True, text=True, timeout=5
+                            )
+                            if 'node' in ps_result.stdout.lower():
+                                subprocess.run(['kill', '-9', pid], capture_output=True, timeout=5)
+                                logger.info(f"Killed orphaned Appium (Node) on port {port} (PID {pid})")
+                                killed += 1
+            except Exception as e:
+                logger.debug(f"Error checking port {port}: {e}")
+
+    if killed > 0:
+        logger.info(f"Cleaned up {killed} orphaned Appium server(s)")
+        time.sleep(2)  # Give OS time to release ports
+    else:
+        logger.info("No orphaned Appium servers found")
+
+    return killed
+
+
 def check_all_appium_servers(config: ParallelConfig) -> dict:
     """
     Check health status of all configured Appium servers.

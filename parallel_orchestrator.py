@@ -480,14 +480,35 @@ def stop_campaign_phones(campaign_accounts: List[str]) -> int:
         return 0
 
 
-def kill_all_appium_ports(config: ParallelConfig) -> int:
-    """Kill ALL processes on ALL Appium ports (regardless of health)."""
+def kill_all_appium_ports(config: ParallelConfig, max_workers: int = 10) -> int:
+    """
+    Kill ALL processes on ALL possible Appium ports (regardless of health).
+
+    IMPORTANT: This scans ALL ports we might ever use (up to max_workers),
+    not just the current config's workers. This ensures orphaned servers
+    from previous runs with more workers are cleaned up.
+
+    Args:
+        config: Parallel configuration
+        max_workers: Maximum workers to check ports for (default: 10)
+
+    Returns:
+        Number of processes killed
+    """
     killed = 0
-    for worker in config.workers:
-        port = worker.appium_port
-        if is_port_in_use(port)[0]:
+    base_port = Config.APPIUM_BASE_PORT
+
+    # Check ALL possible ports, not just current config's workers
+    # IMPORTANT: Do NOT check for node.exe - it will match Claude Code!
+    # We trust that anything on our Appium ports (4723, 4725, etc) is our Appium
+    for i in range(max_workers):
+        port = base_port + (i * 2)  # 4723, 4725, 4727, ...
+        in_use, pid = is_port_in_use(port)
+        if in_use:
             if kill_process_on_port(port):
+                logger.info(f"Killed process on Appium port {port}")
                 killed += 1
+
     return killed
 
 

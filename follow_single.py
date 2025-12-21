@@ -469,7 +469,7 @@ CRITICAL RULES:
         print("\nOpening Instagram...")
         self.adb("am force-stop com.instagram.android")
         time.sleep(2)
-        self.adb("monkey -p com.instagram.android 1")
+        self.adb("am start -n com.instagram.android/.activity.MainTabActivity")
         time.sleep(5)
 
         # Vision-action loop
