@@ -52,27 +52,28 @@ def compute_screen_signature(elements: List[Dict]) -> str:
     return hashlib.sha1(sig_str.encode()).hexdigest()[:16]
 
 
-def summarize_elements(elements: List[Dict], max_elements: int = 20) -> List[Dict]:
-    """Create a compact summary of UI elements for logging.
+def format_elements_full(elements: List[Dict]) -> List[Dict]:
+    """Format UI elements for logging WITHOUT any truncation.
+
+    Captures complete element data to match 12/17 log format.
 
     Args:
         elements: Full list of UI elements.
-        max_elements: Maximum number of elements to include.
 
     Returns:
-        List of summarized element dicts.
+        List of complete element dicts (no truncation).
     """
-    summary = []
-    for i, elem in enumerate(elements[:max_elements]):
-        summary.append({
-            'idx': i,
-            'text': (elem.get('text', '') or '')[:50],
-            'desc': (elem.get('desc', '') or '')[:50],
-            'clickable': elem.get('clickable', False),
+    formatted = []
+    for elem in elements:
+        formatted.append({
+            'text': elem.get('text', '') or '',
+            'desc': elem.get('desc', '') or '',
             'bounds': elem.get('bounds', ''),
-            'center': elem.get('center', [])
+            'center': elem.get('center', []),
+            'clickable': elem.get('clickable', False),
+            'id': elem.get('id', '')
         })
-    return summary
+    return formatted
 
 
 class FlowLogger:
@@ -134,7 +135,7 @@ class FlowLogger:
             'step': self.step_count,
             'screen_signature': compute_screen_signature(elements),
             'elements_count': len(elements),
-            'elements_summary': summarize_elements(elements),
+            'ui_elements': format_elements_full(elements),
             'action': action,
             'ai_called': ai_called,
             'ai_tokens': ai_tokens,
@@ -159,7 +160,7 @@ class FlowLogger:
             'error_type': error_type,
             'error_message': error_message,
             'screen_signature': compute_screen_signature(elements) if elements else None,
-            'elements_summary': summarize_elements(elements) if elements else None
+            'ui_elements': format_elements_full(elements) if elements else None
         }
 
         self._write_entry(entry)
