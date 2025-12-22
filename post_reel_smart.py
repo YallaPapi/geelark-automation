@@ -40,8 +40,7 @@ from claude_analyzer import ClaudeUIAnalyzer
 from appium_ui_controller import AppiumUIController
 # Flow logging for pattern analysis
 from flow_logger import FlowLogger
-# Hybrid navigation (rule-based + AI fallback)
-from hybrid_navigator import HybridNavigator
+# Note: HybridNavigator disabled - using AI-only mode until rules are rebuilt
 
 # Use centralized paths and screen coordinates
 APPIUM_SERVER = Config.DEFAULT_APPIUM_URL
@@ -927,11 +926,8 @@ Be concise and direct."""
         # Initialize flow logger for pattern analysis
         flow_logger = FlowLogger(self.phone_name, log_dir="flow_analysis")
 
-        # Initialize hybrid navigator (rule-based + AI fallback)
-        navigator = HybridNavigator(
-            ai_analyzer=self._analyzer,
-            caption=caption
-        )
+        # AI-only mode: Use Claude directly for all navigation decisions
+        # This bypasses HybridNavigator until screen detection rules are rebuilt
 
         # Upload video first
         self.upload_video(video_path)
@@ -995,15 +991,11 @@ Be concise and direct."""
                 if parts:
                     print(f"    {elem['bounds']} {' | '.join(parts)}")
 
-            # Use hybrid navigation (rule-based + AI fallback)
-            print("  Analyzing...")
+            # AI-only navigation: Use Claude for every decision
+            print("  Analyzing (AI-only)...")
             try:
-                nav_result = navigator.navigate(elements)
-                action = nav_result.action
-                if nav_result.used_ai:
-                    print(f"  [AI] {nav_result.screen_type.name} -> {action['action']}")
-                else:
-                    print(f"  [RULE] {nav_result.screen_type.name} -> {action['action']} (conf={nav_result.detection_confidence:.2f})")
+                action = self.analyze_ui(elements, caption)
+                print(f"  [AI] -> {action['action']}")
             except Exception as e:
                 print(f"  Analysis error: {e}")
                 flow_logger.log_error("analysis_error", str(e), elements)
@@ -1016,7 +1008,7 @@ Be concise and direct."""
             flow_logger.log_step(
                 elements=elements,
                 action=action,
-                ai_called=nav_result.used_ai,
+                ai_called=True,  # AI-only mode: always using AI
                 ai_tokens=0,  # TODO: capture actual token usage from analyzer
                 state={
                     'video_uploaded': self.video_uploaded,
@@ -1030,10 +1022,8 @@ Be concise and direct."""
             # caption_entered is ONLY set after we actually type the caption
             if action.get('video_selected'):
                 self.video_uploaded = True
-                navigator.update_state(video_selected=True)
             if action.get('share_clicked'):
                 self.share_clicked = True
-                navigator.update_state(share_clicked=True)
 
             # Execute action using dispatch table (Command pattern)
             action_name = action['action']
@@ -1048,32 +1038,26 @@ Be concise and direct."""
                     print("[WARNING] Upload confirmation timeout - may still be processing")
                 if humanize:
                     self.humanize_after_post()
-                # Log hybrid navigation stats
-                stats = navigator.get_stats()
-                print(f"\n[HYBRID STATS] {stats['rule_based_steps']}/{stats['total_steps']} rule-based "
-                      f"({stats['rule_rate_percent']:.0f}%), {stats['ai_calls']} AI calls")
+                # Log success
+                print(f"\n[SUCCESS] Post completed in {step + 1} steps (AI-only mode)")
                 flow_logger.log_success()
                 flow_logger.close()
                 return True
 
             # Special case: 'error' - abort posting
             if action_name == 'error':
-                error_reason = action.get('reason', 'Unknown error from hybrid navigator')
+                error_reason = action.get('reason', 'Unknown error from AI analysis')
                 print(f"\n[ERROR] {error_reason}")
-                self.last_error_type = action.get('error_type', 'hybrid_error')
+                self.last_error_type = action.get('error_type', 'ai_error')
                 self.last_error_message = error_reason
-                flow_logger.log_failure(f"hybrid_error: {error_reason}")
+                flow_logger.log_failure(f"ai_error: {error_reason}")
                 flow_logger.close()
                 return False
 
             # Special case: 'tap_and_type' - needs caption and has continue logic
             if action_name == 'tap_and_type':
-                caption_was_entered = self.caption_entered
                 if self._handle_tap_and_type(action, elements, caption):
                     continue  # Helper handled it and wants to skip to next step
-                # Update navigator if caption was just entered
-                if self.caption_entered and not caption_was_entered:
-                    navigator.update_state(caption_entered=True)
 
             # Dispatch table for standard actions
             action_handlers = self._get_action_handlers()
