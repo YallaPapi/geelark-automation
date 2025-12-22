@@ -188,7 +188,7 @@ class HybridNavigator:
         if action.action_type == ActionType.TAP:
             return {
                 'action': 'tap',
-                'element_index': action.target_element,
+                'element_index': action.target_element if action.target_element is not None else 0,
                 'reason': action.reason,
                 'video_selected': self.video_selected,
                 'caption_entered': self.caption_entered,
