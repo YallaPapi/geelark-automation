@@ -52,6 +52,15 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 
+# Import master ledger for duplicate checking
+try:
+    from posted_ledger import is_already_posted
+    HAS_LEDGER = True
+except ImportError:
+    HAS_LEDGER = False
+    def is_already_posted(account, video_path, ledger_path=None):
+        return False  # Fallback: no duplicate checking
+
 
 class FileLockError(Exception):
     """Raised when file lock cannot be acquired."""
@@ -581,7 +590,7 @@ class ProgressTracker:
             if job_id in existing_job_ids:
                 continue
 
-            # Find next available account
+            # Find next available account that hasn't posted this video before
             assigned_account = ''
             attempts = 0
             while attempts < len(available_accounts):
@@ -590,6 +599,10 @@ class ProgressTracker:
                 attempts += 1
 
                 if seeding_assigned_counts.get(acc, 0) < max_posts_per_account_per_day:
+                    # CRITICAL: Check master ledger to prevent duplicate posts
+                    if is_already_posted(acc, video_path):
+                        logger.debug(f"Skipping {video_filename} for {acc} - already posted (master ledger)")
+                        continue
                     assigned_account = acc
                     seeding_assigned_counts[acc] = seeding_assigned_counts.get(acc, 0) + 1
                     break

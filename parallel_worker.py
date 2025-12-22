@@ -46,6 +46,8 @@ from device_connection import (
 )
 # Comprehensive error debugging with screenshots
 from error_debugger import ErrorDebugger
+# Master ledger for tracking ALL posted videos
+from posted_ledger import record_successful_post
 
 
 # Global flag for clean shutdown
@@ -440,6 +442,11 @@ def run_worker(
 
                 if success:
                     tracker.update_job_status(job_id, 'success', worker_id)
+                    # Record to master ledger (prevents posting same video again)
+                    record_successful_post(
+                        account=job.get('account', ''),
+                        video_path=job.get('video_path', '')
+                    )
                     stats['jobs_completed'] += 1
                 else:
                     # Pass error classification for proper retry handling
