@@ -44,6 +44,8 @@ from device_connection import (
     is_adb_device_alive as ensure_device_alive,
     reconnect_adb_device as reconnect_adb
 )
+# Comprehensive error debugging with screenshots
+from error_debugger import ErrorDebugger
 
 
 # Global flag for clean shutdown
@@ -193,6 +195,9 @@ def execute_posting_job(
     caption = job['caption']
     job_id = job['job_id']
 
+    # Create error debugger for comprehensive error capture
+    debugger = ErrorDebugger(account=account, job_id=job_id, output_dir="error_logs")
+
     # Kill any orphaned Appium sessions before starting (prevents session limit issues)
     kill_appium_sessions(worker_config.appium_url, logger)
 
@@ -241,18 +246,56 @@ def execute_posting_job(
         # Explicit timeout - infrastructure issue
         error_msg = f"TimeoutError: {str(e)}"
         logger.error(f"Job {job_id} timeout: {error_msg}")
+        # Capture error with available info
+        try:
+            driver = poster.appium_driver if poster else None
+            debugger.capture_error(
+                error=e, driver=driver, error_type="TimeoutError",
+                phase="timeout", context={"video_path": video_path}
+            )
+        except:
+            pass
         return False, error_msg, 'infrastructure', 'adb_timeout'
 
     except ConnectionError as e:
         # Connection issues - infrastructure
         error_msg = f"ConnectionError: {str(e)}"
         logger.error(f"Job {job_id} connection error: {error_msg}")
+        # Capture error
+        try:
+            driver = poster.appium_driver if poster else None
+            debugger.capture_error(
+                error=e, driver=driver, error_type="ConnectionError",
+                phase="connection", context={"video_path": video_path}
+            )
+        except:
+            pass
         return False, error_msg, 'infrastructure', 'connection_dropped'
 
     except Exception as e:
         error_msg = f"{type(e).__name__}: {str(e)}"
         logger.error(f"Job {job_id} exception: {error_msg}")
         logger.debug(traceback.format_exc())
+
+        # COMPREHENSIVE ERROR CAPTURE WITH SCREENSHOT
+        try:
+            driver = poster.appium_driver if poster else None
+            debugger.capture_error(
+                error=e,
+                driver=driver,
+                ui_elements=None,  # Can't get UI elements if poster failed
+                error_type=type(e).__name__,
+                phase="execute_job",
+                context={
+                    "video_path": video_path,
+                    "caption": caption[:100] if caption else "",
+                    "worker_id": worker_id,
+                    "appium_url": worker_config.appium_url,
+                    "full_traceback": traceback.format_exc()
+                }
+            )
+        except Exception as debug_err:
+            logger.warning(f"Error debugger capture failed: {debug_err}")
 
         # Try to classify the exception
         if tracker:

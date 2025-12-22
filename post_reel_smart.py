@@ -40,6 +40,8 @@ from claude_analyzer import ClaudeUIAnalyzer
 from appium_ui_controller import AppiumUIController
 # Flow logging for pattern analysis
 from flow_logger import FlowLogger
+# Comprehensive error debugging with screenshots
+from error_debugger import ErrorDebugger
 # Note: HybridNavigator disabled - using AI-only mode until rules are rebuilt
 
 # Use centralized paths and screen coordinates
@@ -913,7 +915,7 @@ Be concise and direct."""
         self.video_uploaded = True
         return True
 
-    def post(self, video_path, caption, max_steps=30, humanize=False):
+    def post(self, video_path, caption, max_steps=30, humanize=False, job_id=None):
         """Main posting flow with smart navigation
 
         Args:
@@ -921,10 +923,19 @@ Be concise and direct."""
             caption: Caption text for the post
             max_steps: Maximum navigation steps
             humanize: If True, perform random human-like actions before/after posting
+            job_id: Optional job ID for error tracking
         """
 
         # Initialize flow logger for pattern analysis
         flow_logger = FlowLogger(self.phone_name, log_dir="flow_analysis")
+
+        # Initialize error debugger for comprehensive error capture
+        job_id = job_id or os.path.basename(video_path)
+        self._debugger = ErrorDebugger(
+            account=self.phone_name,
+            job_id=job_id,
+            output_dir="error_logs"
+        )
 
         # AI-only mode: Use Claude directly for all navigation decisions
         # This bypasses HybridNavigator until screen detection rules are rebuilt
@@ -965,6 +976,24 @@ Be concise and direct."""
             if error_type:
                 print(f"  [ERROR DETECTED] {error_type}: {error_msg}")
                 self.last_error_type = error_type
+
+                # COMPREHENSIVE ERROR CAPTURE - screenshot + full state
+                self._debugger.capture_error(
+                    error=Exception(f"{error_type}: {error_msg}"),
+                    driver=self.appium_driver,
+                    ui_elements=elements,
+                    error_type=error_type,
+                    phase="navigation",
+                    context={
+                        "step": step,
+                        "caption": caption[:100],
+                        "video_path": video_path,
+                        "video_uploaded": self.video_uploaded,
+                        "caption_entered": self.caption_entered,
+                        "share_clicked": self.share_clicked
+                    }
+                )
+
                 # Use Vision analysis for richer error context
                 print("  [VISION] Capturing error screenshot for analysis...")
                 screenshot_path, analysis = self.analyze_failure_screenshot(
@@ -998,6 +1027,19 @@ Be concise and direct."""
                 print(f"  [AI] -> {action['action']}")
             except Exception as e:
                 print(f"  Analysis error: {e}")
+                # COMPREHENSIVE ERROR CAPTURE
+                self._debugger.capture_error(
+                    error=e,
+                    driver=self.appium_driver,
+                    ui_elements=elements,
+                    error_type="analysis_error",
+                    phase="ai_analysis",
+                    context={
+                        "step": step,
+                        "caption": caption[:100],
+                        "video_uploaded": self.video_uploaded
+                    }
+                )
                 flow_logger.log_error("analysis_error", str(e), elements)
                 time.sleep(2)
                 continue
@@ -1070,6 +1112,23 @@ Be concise and direct."""
                 recent_actions, loop_recovery_count, LOOP_THRESHOLD, MAX_LOOP_RECOVERIES
             )
             if should_abort:
+                # COMPREHENSIVE ERROR CAPTURE
+                self._debugger.capture_error(
+                    error=Exception(f"Loop stuck on action: {recent_actions[-1] if recent_actions else 'unknown'}"),
+                    driver=self.appium_driver,
+                    ui_elements=elements,
+                    error_type="loop_stuck",
+                    phase="navigation",
+                    context={
+                        "step": step,
+                        "recent_actions": recent_actions[-10:],
+                        "loop_recovery_count": loop_recovery_count,
+                        "video_uploaded": self.video_uploaded,
+                        "caption_entered": self.caption_entered,
+                        "share_clicked": self.share_clicked
+                    }
+                )
+
                 # Capture and analyze failure screenshot
                 print("  [VISION] Capturing failure screenshot for analysis...")
                 screenshot_path, analysis = self.analyze_failure_screenshot(
@@ -1091,6 +1150,29 @@ Be concise and direct."""
             time.sleep(1)
 
         print(f"\n[FAILED] Max steps ({max_steps}) reached")
+
+        # Get final UI state for error capture
+        try:
+            final_elements, _ = self.dump_ui()
+        except:
+            final_elements = []
+
+        # COMPREHENSIVE ERROR CAPTURE
+        self._debugger.capture_error(
+            error=Exception(f"Max steps ({max_steps}) reached"),
+            driver=self.appium_driver,
+            ui_elements=final_elements,
+            error_type="max_steps",
+            phase="navigation",
+            context={
+                "max_steps": max_steps,
+                "video_uploaded": self.video_uploaded,
+                "caption_entered": self.caption_entered,
+                "share_clicked": self.share_clicked,
+                "caption": caption[:100]
+            }
+        )
+
         # Capture and analyze failure screenshot
         print("  [VISION] Capturing failure screenshot for analysis...")
         screenshot_path, analysis = self.analyze_failure_screenshot(

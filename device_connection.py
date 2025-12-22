@@ -246,10 +246,10 @@ class DeviceConnectionManager:
                         print(f"  Still waiting for ADB... ({(adb_attempt + 1) * 2}s / {max_adb_attempts * 2}s)")
                 time.sleep(2)
 
-            # ADB verification failed - try restarting phone
+            # ADB verification failed - restart phone to reset ADB state
             print(f"  ADB verification failed after 60s")
             if enable_retry < max_retries - 1:
-                print(f"  Restarting phone and retrying...")
+                print(f"  Restarting phone to reset ADB...")
                 self._restart_phone_for_adb_recovery()
 
         raise Exception(f"ADB failed to enable after {max_retries} attempts")
