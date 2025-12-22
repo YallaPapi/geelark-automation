@@ -93,10 +93,47 @@ class HybridNavigator:
 
         # Step 3: Fall back to AI
         if self.ai_analyzer is None:
-            # No AI available, return best-effort action
-            print(f"  [HYBRID] No AI fallback - using best-effort for {detection.screen_type.name}")
-            action = self.engine.get_action(detection.screen_type, elements)
-            return self._convert_action(action, detection, used_ai=False)
+            # NO AI FALLBACK MODE (testing) - fail immediately so we can capture the error
+            # This exposes which screens/rules need fixing
+            print(f"  [HYBRID] NO AI FALLBACK - Rules cannot handle: {detection.screen_type.name}")
+            print(f"  [HYBRID] Detection confidence: {detection.confidence:.2f}, Rule: {detection.matched_rule}")
+
+            # Build a descriptive error for debugging
+            element_summary = []
+            for e in elements[:10]:  # First 10 elements
+                parts = []
+                if e.get('text'):
+                    parts.append(f"text='{e['text'][:30]}'")
+                if e.get('desc'):
+                    parts.append(f"desc='{e['desc'][:30]}'")
+                if e.get('id'):
+                    parts.append(f"id='{e['id']}'")
+                if parts:
+                    element_summary.append(' '.join(parts))
+
+            error_reason = (
+                f"Rules-only mode: Cannot handle screen '{detection.screen_type.name}' "
+                f"(conf={detection.confidence:.2f}). "
+                f"Elements: {'; '.join(element_summary[:5])}"
+            )
+
+            # Return ERROR action - this will trigger screenshot capture
+            return NavigationResult(
+                action={
+                    'action': 'error',
+                    'reason': error_reason,
+                    'error_type': 'hybrid_rules_failed',
+                    'screen_type': detection.screen_type.name,
+                    'video_selected': self.video_selected,
+                    'caption_entered': self.caption_entered,
+                    'share_clicked': self.share_clicked
+                },
+                used_ai=False,
+                screen_type=detection.screen_type,
+                detection_confidence=detection.confidence,
+                action_confidence=0.0,
+                reason=error_reason
+            )
 
         # Use AI for unknown/uncertain screens
         self.ai_calls += 1

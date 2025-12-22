@@ -42,7 +42,8 @@ from appium_ui_controller import AppiumUIController
 from flow_logger import FlowLogger
 # Comprehensive error debugging with screenshots
 from error_debugger import ErrorDebugger
-# Note: HybridNavigator disabled - using AI-only mode until rules are rebuilt
+# Hybrid Navigator - rule-based + AI fallback
+from hybrid_navigator import HybridNavigator
 
 # Use centralized paths and screen coordinates
 APPIUM_SERVER = Config.DEFAULT_APPIUM_URL
@@ -74,6 +75,8 @@ class SmartInstagramPoster:
         # AI analyzer for UI analysis (extracted for better separation)
         self._analyzer = ClaudeUIAnalyzer()
         self.anthropic = self._analyzer.client  # For backwards compatibility
+        # Hybrid Navigator - uses rules first, falls back to AI
+        self._hybrid_navigator = None  # Initialized lazily with caption
         self.phone_name = phone_name
         # UI controller (created lazily when Appium is connected)
         self._ui_controller = None
@@ -915,7 +918,8 @@ Be concise and direct."""
         self.video_uploaded = True
         return True
 
-    def post(self, video_path, caption, max_steps=30, humanize=False, job_id=None):
+    def post(self, video_path, caption, max_steps=30, humanize=False, job_id=None,
+             use_hybrid=True, ai_fallback=True):
         """Main posting flow with smart navigation
 
         Args:
@@ -924,6 +928,12 @@ Be concise and direct."""
             max_steps: Maximum navigation steps
             humanize: If True, perform random human-like actions before/after posting
             job_id: Optional job ID for error tracking
+            use_hybrid: If True (default), use rule-based navigation
+                        If False, use AI-only mode (for mapping NEW flows)
+            ai_fallback: Only applies when use_hybrid=True
+                         If True (default), AI rescues when rules fail (production mode)
+                         If False, STRICT rules-only - failures expose broken rules
+                         Use ai_fallback=False to TEST which rules work/fail
         """
 
         # Initialize flow logger for pattern analysis
@@ -937,8 +947,22 @@ Be concise and direct."""
             output_dir="error_logs"
         )
 
-        # AI-only mode: Use Claude directly for all navigation decisions
-        # This bypasses HybridNavigator until screen detection rules are rebuilt
+        # Navigation mode setup
+        if use_hybrid:
+            # Initialize Hybrid Navigator - rule-based detection
+            # Pass ai_analyzer only if ai_fallback is enabled
+            self._hybrid_navigator = HybridNavigator(
+                ai_analyzer=self._analyzer if ai_fallback else None,
+                caption=caption
+            )
+            if ai_fallback:
+                print(f"[HYBRID MODE] Enabled - rule-based navigation with AI fallback")
+            else:
+                print(f"[HYBRID MODE] RULES-ONLY - NO AI fallback (testing mode)")
+                print(f"  WARNING: Failures will expose broken rules - this is intentional!")
+        else:
+            self._hybrid_navigator = None
+            print(f"[AI-ONLY MODE] Using Claude for every navigation decision (flow mapping)")
 
         # Upload video first
         self.upload_video(video_path)
@@ -1020,11 +1044,36 @@ Be concise and direct."""
                 if parts:
                     print(f"    {elem['bounds']} {' | '.join(parts)}")
 
-            # AI-only navigation: Use Claude for every decision
-            print("  Analyzing (AI-only)...")
+            # Navigation: Hybrid (rule-based + AI fallback) or AI-only
+            ai_called = False
             try:
-                action = self.analyze_ui(elements, caption)
-                print(f"  [AI] -> {action['action']}")
+                if self._hybrid_navigator is not None:
+                    # HYBRID MODE: Rule-based detection with AI fallback
+                    print("  Analyzing (hybrid)...")
+
+                    # Sync state with hybrid navigator
+                    self._hybrid_navigator.update_state(
+                        video_selected=self.video_uploaded,
+                        caption_entered=self.caption_entered,
+                        share_clicked=self.share_clicked
+                    )
+
+                    # Get navigation decision
+                    nav_result = self._hybrid_navigator.navigate(elements)
+                    action = nav_result.action
+                    ai_called = nav_result.used_ai
+
+                    # Log whether rule-based or AI was used
+                    if nav_result.used_ai:
+                        print(f"  [AI FALLBACK] {nav_result.screen_type.name} -> {action['action']}")
+                    else:
+                        print(f"  [RULE] {nav_result.screen_type.name} -> {action['action']} (conf={nav_result.action_confidence:.2f})")
+                else:
+                    # AI-ONLY MODE: Use Claude for every decision (for flow mapping)
+                    print("  Analyzing (AI-only)...")
+                    action = self.analyze_ui(elements, caption)
+                    ai_called = True
+                    print(f"  [AI] -> {action['action']}")
             except Exception as e:
                 print(f"  Analysis error: {e}")
                 # COMPREHENSIVE ERROR CAPTURE
@@ -1050,7 +1099,7 @@ Be concise and direct."""
             flow_logger.log_step(
                 elements=elements,
                 action=action,
-                ai_called=True,  # AI-only mode: always using AI
+                ai_called=ai_called,  # Track whether AI was used this step
                 ai_tokens=0,  # TODO: capture actual token usage from analyzer
                 state={
                     'video_uploaded': self.video_uploaded,
@@ -1060,10 +1109,31 @@ Be concise and direct."""
                 result="pending"
             )
 
-            # Update state (only video_selected and share_clicked)
-            # caption_entered is ONLY set after we actually type the caption
-            if action.get('video_selected'):
-                self.video_uploaded = True
+            # Update state based on screen progression, NOT action intent
+            # This prevents state desync when an action fails silently
+            #
+            # video_uploaded: Set True only when we detect post-gallery screens
+            # (VIDEO_EDITING, SHARE_PREVIEW, etc.) - NOT when AI says "selecting video"
+            #
+            # Check for post-gallery indicators in current screen:
+            post_gallery_indicators = [
+                'clips_right_action_button',  # Video editing Next button
+                'caption_input_text_view',    # Caption screen
+                'share_button',               # Share screen
+                'edit cover',                 # Share preview
+            ]
+            element_ids = [e.get('id', '') for e in elements]
+            element_texts = ' '.join([e.get('text', '').lower() for e in elements])
+
+            if not self.video_uploaded:
+                # Only set video_uploaded if we see post-gallery screen elements
+                if any(pid in element_ids for pid in post_gallery_indicators[:2]):
+                    self.video_uploaded = True
+                    print("  [STATE] video_uploaded = True (detected post-gallery screen)")
+                elif 'edit cover' in element_texts or 'write a caption' in element_texts:
+                    self.video_uploaded = True
+                    print("  [STATE] video_uploaded = True (detected caption/share screen)")
+
             if action.get('share_clicked'):
                 self.share_clicked = True
 
@@ -1080,8 +1150,15 @@ Be concise and direct."""
                     print("[WARNING] Upload confirmation timeout - may still be processing")
                 if humanize:
                     self.humanize_after_post()
-                # Log success
-                print(f"\n[SUCCESS] Post completed in {step + 1} steps (AI-only mode)")
+                # Log success with stats
+                if self._hybrid_navigator is not None:
+                    stats = self._hybrid_navigator.get_stats()
+                    print(f"\n[SUCCESS] Post completed in {step + 1} steps (HYBRID MODE)")
+                    print(f"  Rule-based: {stats['rule_based_steps']} steps ({stats['rule_rate_percent']:.1f}%)")
+                    print(f"  AI calls: {stats['ai_calls']} ({stats['ai_rate_percent']:.1f}%)")
+                    print(f"  Estimated savings: ${stats['estimated_savings_per_post']:.2f}")
+                else:
+                    print(f"\n[SUCCESS] Post completed in {step + 1} steps (AI-only mode)")
                 flow_logger.log_success()
                 flow_logger.close()
                 return True

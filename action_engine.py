@@ -113,71 +113,122 @@ class ActionEngine:
 
     def _handle_feed(self, elements: List[Dict]) -> Action:
         """Handle home feed - navigate to profile."""
-        # Find profile tab in bottom navigation
+        # Primary: Find profile_tab by element ID (92.4% of successful flows)
+        for i, el in enumerate(elements):
+            if el.get('id', '') == 'profile_tab':
+                return Action(
+                    action_type=ActionType.TAP,
+                    target_element=i,
+                    reason="Tap profile_tab (ID match) to navigate to profile",
+                    confidence=0.98
+                )
+
+        # Secondary: Find profile tab by desc
         for i, el in enumerate(elements):
             desc = el.get('desc', '').lower()
             if 'profile' in desc or 'your profile' in desc:
                 return Action(
                     action_type=ActionType.TAP,
                     target_element=i,
-                    reason="Tap profile tab to navigate to profile",
-                    confidence=0.95
+                    reason="Tap profile tab (desc match) to navigate to profile",
+                    confidence=0.9
                 )
 
-        # Alternative: Look for profile icon by position (usually bottom-right)
+        # Tertiary: Look for profile icon by position (usually bottom-right)
         return Action(
             action_type=ActionType.TAP_COORDINATE,
             coordinates=(540, 2200),  # Approximate profile tab position
-            reason="Tap profile tab area (fallback)",
-            confidence=0.7
+            reason="Tap profile tab area (coordinate fallback)",
+            confidence=0.6
         )
 
     def _handle_profile(self, elements: List[Dict]) -> Action:
         """Handle profile screen - start create flow."""
-        # Find the create/plus button
+        # Primary: Find "Create New" by desc (91.5% of successful flows)
         for i, el in enumerate(elements):
-            desc = el.get('desc', '').lower()
-            text = el.get('text', '').lower()
-
-            # Look for create button
-            if 'create' in desc or '+' in text or 'new post' in desc:
+            desc = el.get('desc', '')
+            if desc == 'Create New':
                 return Action(
                     action_type=ActionType.TAP,
                     target_element=i,
-                    reason="Tap create button to start posting flow",
+                    reason="Tap 'Create New' button (desc match)",
+                    confidence=0.98
+                )
+
+        # Secondary: Find creation_tab by element ID
+        for i, el in enumerate(elements):
+            if el.get('id', '') == 'creation_tab':
+                return Action(
+                    action_type=ActionType.TAP,
+                    target_element=i,
+                    reason="Tap creation_tab (ID fallback)",
                     confidence=0.9
                 )
 
-        # Fallback: Plus button usually at specific position
+        # Tertiary: Partial desc match
+        for i, el in enumerate(elements):
+            desc = el.get('desc', '').lower()
+            if 'create' in desc or 'new post' in desc:
+                return Action(
+                    action_type=ActionType.TAP,
+                    target_element=i,
+                    reason="Tap create button (partial desc match)",
+                    confidence=0.8
+                )
+
+        # Quaternary: Position fallback
         return Action(
             action_type=ActionType.TAP_COORDINATE,
             coordinates=(540, 2200),  # Center bottom area
-            reason="Tap create button area (fallback)",
-            confidence=0.6
+            reason="Tap create button area (coordinate fallback)",
+            confidence=0.5
         )
 
     def _handle_create_menu(self, elements: List[Dict]) -> Action:
         """Handle create menu - select Reel option."""
-        # Find the "Reel" option
+        # Primary: Find "Create new reel" by desc (90.8% of successful flows)
+        # NOTE: This is in desc, NOT text!
+        for i, el in enumerate(elements):
+            desc = el.get('desc', '')
+            if desc == 'Create new reel':
+                return Action(
+                    action_type=ActionType.TAP,
+                    target_element=i,
+                    reason="Tap 'Create new reel' (desc match)",
+                    confidence=0.98
+                )
+
+        # Secondary: Partial desc match
+        for i, el in enumerate(elements):
+            desc = el.get('desc', '').lower()
+            if 'reel' in desc and 'create' in desc:
+                return Action(
+                    action_type=ActionType.TAP,
+                    target_element=i,
+                    reason="Tap reel option (partial desc match)",
+                    confidence=0.9
+                )
+
+        # Tertiary: Text-based fallback (less reliable)
         for i, el in enumerate(elements):
             text = el.get('text', '').lower()
             if text == 'reel':
                 return Action(
                     action_type=ActionType.TAP,
                     target_element=i,
-                    reason="Tap Reel option to create a reel",
-                    confidence=0.95
+                    reason="Tap Reel option (text fallback)",
+                    confidence=0.8
                 )
 
-        # If no exact match, look for partial match
+        # Last resort
         for i, el in enumerate(elements):
             text = el.get('text', '').lower()
             if 'reel' in text:
                 return Action(
                     action_type=ActionType.TAP,
                     target_element=i,
-                    reason="Tap Reel option",
-                    confidence=0.85
+                    reason="Tap reel option (partial text match)",
+                    confidence=0.7
                 )
 
         return Action(
@@ -188,6 +239,29 @@ class ActionEngine:
 
     def _handle_gallery_picker(self, elements: List[Dict]) -> Action:
         """Handle gallery picker - select video."""
+        # CRITICAL: Check if REEL tab needs to be selected first (18.6% of flows need this)
+        # If cam_dest_clips is visible, we may need to tap it to switch to REEL mode
+        reel_tab_idx = None
+        for i, el in enumerate(elements):
+            if el.get('id', '') == 'cam_dest_clips':
+                reel_tab_idx = i
+                break
+
+        # Check if gallery is showing thumbnails yet
+        has_thumbnails = any(
+            el.get('id', '') == 'gallery_grid_item_thumbnail'
+            for el in elements
+        )
+
+        # If REEL tab exists but no thumbnails visible, tap the REEL tab
+        if reel_tab_idx is not None and not has_thumbnails:
+            return Action(
+                action_type=ActionType.TAP,
+                target_element=reel_tab_idx,
+                reason="Tap REEL tab (cam_dest_clips) to switch to reel mode",
+                confidence=0.95
+            )
+
         if self.video_selected:
             # Already selected, look for Next button
             for i, el in enumerate(elements):
@@ -200,29 +274,32 @@ class ActionEngine:
                         confidence=0.95
                     )
 
-        # Find first video thumbnail (usually marked as thumbnail or has no text)
-        # Thumbnails are typically clickable elements without text in the grid
-        clickable_elements = [
-            (i, el) for i, el in enumerate(elements)
-            if el.get('clickable', False)
-        ]
+        # Primary: Find video thumbnail by element ID (72.9% of successful flows)
+        for i, el in enumerate(elements):
+            if el.get('id', '') == 'gallery_grid_item_thumbnail':
+                return Action(
+                    action_type=ActionType.TAP,
+                    target_element=i,
+                    reason="Tap video thumbnail (ID match)",
+                    confidence=0.95
+                )
 
-        for i, el in clickable_elements:
+        # Secondary: Look for desc-based thumbnail
+        for i, el in enumerate(elements):
             desc = el.get('desc', '').lower()
-            # Look for video/thumbnail descriptions
             if 'thumbnail' in desc or 'video' in desc or 'select' in desc:
                 return Action(
                     action_type=ActionType.TAP,
                     target_element=i,
-                    reason="Tap video thumbnail to select",
+                    reason="Tap video thumbnail (desc match)",
                     confidence=0.85
                 )
 
-        # Fallback: Tap center area where gallery thumbnails typically are
+        # Tertiary: Fallback to coordinate tap
         return Action(
             action_type=ActionType.TAP_COORDINATE,
             coordinates=(270, 800),  # First thumbnail position
-            reason="Tap gallery area to select video (fallback)",
+            reason="Tap gallery area to select video (coordinate fallback)",
             confidence=0.6
         )
 
@@ -250,15 +327,36 @@ class ActionEngine:
 
     def _handle_video_editing(self, elements: List[Dict]) -> Action:
         """Handle video editing screen - tap Next to proceed."""
-        # Find Next button
+        # Primary: Find clips_right_action_button by element ID (73.3% of flows)
+        for i, el in enumerate(elements):
+            if el.get('id', '') == 'clips_right_action_button':
+                return Action(
+                    action_type=ActionType.TAP,
+                    target_element=i,
+                    reason="Tap Next button (clips_right_action_button ID)",
+                    confidence=0.98
+                )
+
+        # Secondary: Find Next button by desc
+        for i, el in enumerate(elements):
+            desc = el.get('desc', '')
+            if desc == 'Next':
+                return Action(
+                    action_type=ActionType.TAP,
+                    target_element=i,
+                    reason="Tap Next button (desc match)",
+                    confidence=0.9
+                )
+
+        # Tertiary: Find Next button by text
         for i, el in enumerate(elements):
             text = el.get('text', '').lower()
             if text == 'next':
                 return Action(
                     action_type=ActionType.TAP,
                     target_element=i,
-                    reason="Tap Next to proceed to share preview",
-                    confidence=0.95
+                    reason="Tap Next button (text match)",
+                    confidence=0.85
                 )
 
         return Action(
@@ -268,18 +366,28 @@ class ActionEngine:
         )
 
     def _handle_share_preview(self, elements: List[Dict]) -> Action:
-        """Handle share preview - enter caption and share."""
+        """Handle share preview - enter caption, dismiss keyboard, and share."""
+        # STEP 1: Check if we need to enter caption
         if not self.caption_entered and self.caption:
-            # Find caption input field
+            # Primary: Find caption_input_text_view by element ID (71.4% of flows)
+            for i, el in enumerate(elements):
+                if el.get('id', '') == 'caption_input_text_view':
+                    return Action(
+                        action_type=ActionType.TAP,
+                        target_element=i,
+                        reason="Tap caption field (caption_input_text_view ID)",
+                        confidence=0.98
+                    )
+
+            # Secondary: Find caption field by text/desc
             for i, el in enumerate(elements):
                 text = el.get('text', '').lower()
                 desc = el.get('desc', '').lower()
                 if 'caption' in text or 'caption' in desc or 'write a caption' in text:
-                    # First tap to focus the field
                     return Action(
                         action_type=ActionType.TAP,
                         target_element=i,
-                        reason="Tap caption field to focus it",
+                        reason="Tap caption field (text/desc match)",
                         confidence=0.9
                     )
 
@@ -291,20 +399,69 @@ class ActionEngine:
                 confidence=0.7
             )
 
-        # Caption entered, find Share button
+        # STEP 2: Check if OK button needs to be tapped to dismiss keyboard (62.4% of flows)
+        # This step was COMPLETELY MISSING before - critical fix!
+        for i, el in enumerate(elements):
+            if el.get('id', '') == 'action_bar_button_text':
+                desc = el.get('desc', '')
+                if desc == 'OK':
+                    return Action(
+                        action_type=ActionType.TAP,
+                        target_element=i,
+                        reason="Tap OK to dismiss keyboard (action_bar_button_text)",
+                        confidence=0.95
+                    )
+
+        # Also check for OK by desc without ID match
+        for i, el in enumerate(elements):
+            desc = el.get('desc', '')
+            text = el.get('text', '')
+            if desc == 'OK' or text == 'OK':
+                # Verify it's clickable
+                if el.get('clickable', False):
+                    return Action(
+                        action_type=ActionType.TAP,
+                        target_element=i,
+                        reason="Tap OK to dismiss keyboard (desc/text match)",
+                        confidence=0.9
+                    )
+
+        # STEP 3: Find Share button
+        # Primary: Find share_button by element ID (65% of flows)
+        for i, el in enumerate(elements):
+            if el.get('id', '') == 'share_button':
+                return Action(
+                    action_type=ActionType.TAP,
+                    target_element=i,
+                    reason="Tap Share button (share_button ID)",
+                    confidence=0.98
+                )
+
+        # Secondary: Find Share button by desc
+        for i, el in enumerate(elements):
+            desc = el.get('desc', '')
+            if desc == 'Share':
+                return Action(
+                    action_type=ActionType.TAP,
+                    target_element=i,
+                    reason="Tap Share button (desc match)",
+                    confidence=0.9
+                )
+
+        # Tertiary: Find Share button by text
         for i, el in enumerate(elements):
             text = el.get('text', '').lower()
             if text == 'share':
                 return Action(
                     action_type=ActionType.TAP,
                     target_element=i,
-                    reason="Tap Share to post the reel",
-                    confidence=0.95
+                    reason="Tap Share button (text match)",
+                    confidence=0.85
                 )
 
         return Action(
             action_type=ActionType.NEED_AI,
-            reason="Could not find Share button or caption field",
+            reason="Could not find Share button, OK button, or caption field",
             confidence=0.0
         )
 

@@ -1402,9 +1402,31 @@ Examples:
     parser.add_argument('--list-campaigns', action='store_true',
                         help='List all available campaigns')
 
+    # Navigation mode (hybrid vs AI-only)
+    parser.add_argument('--ai-only', action='store_true',
+                        help='Use AI-only mode (for mapping NEW flows, disables rule-based navigation)')
+    parser.add_argument('--no-ai-fallback', action='store_true',
+                        help='STRICT rules-only mode - no AI rescue when rules fail. '
+                             'Use this to TEST which rules work/fail. Failures are intentional!')
+
     args = parser.parse_args()
 
     parallel_config = get_config(num_workers=args.workers)
+
+    # Apply navigation mode settings
+    if args.ai_only:
+        parallel_config.use_hybrid = False
+        parallel_config.ai_fallback = True  # N/A in AI-only mode
+        logger.info("[NAV MODE] AI-ONLY - Claude decides every step (for mapping new flows)")
+    elif args.no_ai_fallback:
+        parallel_config.use_hybrid = True
+        parallel_config.ai_fallback = False
+        logger.warning("[NAV MODE] STRICT RULES-ONLY - No AI fallback!")
+        logger.warning("  Failures will expose broken rules - this is intentional for testing")
+    else:
+        parallel_config.use_hybrid = True
+        parallel_config.ai_fallback = True
+        logger.info("[NAV MODE] HYBRID - Rule-based navigation with AI fallback")
 
     # ============================================================
     # STEP 1: Handle --list-campaigns (no context needed)

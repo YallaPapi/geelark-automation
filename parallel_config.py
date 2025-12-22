@@ -85,6 +85,9 @@ class ParallelConfig:
     retry_delay_minutes: float = Config.RETRY_DELAY_MINUTES
     android_sdk_path: str = Config.ANDROID_SDK_PATH
     adb_path: str = Config.ADB_PATH
+    # Hybrid navigation settings
+    use_hybrid: bool = True       # Use rule-based navigation (True) or AI-only (False)
+    ai_fallback: bool = True      # Allow AI fallback when rules fail (False = rules-only testing mode)
 
     def __post_init__(self):
         """Generate worker configs if not provided."""

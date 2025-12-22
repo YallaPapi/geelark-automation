@@ -227,7 +227,11 @@ def execute_posting_job(
 
         # Post the video
         logger.info("Posting video...")
-        success = poster.post(video_path, caption, humanize=True)
+        success = poster.post(
+            video_path, caption, humanize=True,
+            use_hybrid=config.use_hybrid,
+            ai_fallback=config.ai_fallback
+        )
 
         if success:
             logger.info(f"Job {job_id} completed successfully!")

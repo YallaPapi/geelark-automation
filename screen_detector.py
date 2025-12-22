@@ -172,6 +172,18 @@ class ScreenDetector:
         """Extract description fields from elements."""
         return [e.get('desc', '').lower().strip() for e in elements if e.get('desc')]
 
+    def _extract_ids(self, elements: List[Dict]) -> List[str]:
+        """Extract element IDs from elements."""
+        return [e.get('id', '').lower().strip() for e in elements if e.get('id')]
+
+    def _has_element_id(self, elements: List[Dict], element_id: str) -> bool:
+        """Check if any element has the given ID."""
+        return any(e.get('id', '') == element_id for e in elements)
+
+    def _has_element_desc(self, elements: List[Dict], desc: str) -> bool:
+        """Check if any element has the given description."""
+        return any(desc.lower() in e.get('desc', '').lower() for e in elements)
+
     # ==================== Detection Rules ====================
 
     def _detect_verification_popup(self, elements, texts, descs, all_text) -> Tuple[float, List[str]]:
@@ -220,103 +232,241 @@ class ScreenDetector:
 
     def _detect_sharing_progress(self, elements, texts, descs, all_text) -> Tuple[float, List[str]]:
         """Detect sharing in progress screen."""
+        # Primary: Check for upload snackbar container ID (from successful flow data)
+        has_upload_snackbar = self._has_element_id(elements, 'upload_snackbar_container')
+
+        # Secondary: "Sharing to Reels" text indicator
+        has_sharing_to_reels = 'sharing to reels' in all_text
+
+        # Tertiary: Generic progress markers
         markers = ['sharing', 'posting', 'uploading', 'sending']
         progress_markers = ['...', 'progress', 'please wait']
 
-        found = [m for m in markers if m in all_text]
-        if found:
-            # Higher confidence if progress indicator present
-            if any(p in all_text for p in progress_markers):
-                return 0.9, found
-            return 0.75, found
-        return 0.0, []
+        found_markers = [m for m in markers if m in all_text]
+
+        score = 0
+        found = []
+
+        # ID-based detection (high confidence)
+        if has_upload_snackbar:
+            score += 0.6
+            found.append('upload_snackbar_id')
+
+        # Text-based detection
+        if has_sharing_to_reels:
+            score += 0.35
+            found.append('sharing_to_reels')
+        if found_markers:
+            score += 0.2
+            found.extend(found_markers)
+        if any(p in all_text for p in progress_markers):
+            score += 0.1
+            found.append('progress_indicator')
+
+        return min(score, 0.95), found
 
     def _detect_share_preview(self, elements, texts, descs, all_text) -> Tuple[float, List[str]]:
         """Detect share preview screen (caption input + edit cover)."""
+        # Primary: Check for share-specific element IDs (from successful flow data)
+        has_caption_input = self._has_element_id(elements, 'caption_input_text_view')  # 71.4% of flows
+        has_share_button = self._has_element_id(elements, 'share_button')  # 65% of flows
+        has_action_bar_text = self._has_element_id(elements, 'action_bar_button_text')  # OK button
+        has_save_draft = self._has_element_id(elements, 'save_draft_button')
+
+        # Secondary: Check for Share button by desc
+        has_share_desc = self._has_element_desc(elements, 'Share')
+        has_ok_desc = self._has_element_desc(elements, 'OK')  # 62.4% need this step
+
+        # Tertiary: Text-based detection
         has_caption = 'write a caption' in all_text or 'add a caption' in all_text
         has_edit_cover = 'edit cover' in all_text
-        has_share = 'share' in texts  # Share button
+        has_share = 'share' in texts
         has_hashtags = 'hashtags' in texts or 'hashtags' in all_text
         has_poll = 'poll' in texts
         has_link_reel = 'link a reel' in all_text
 
-        # Caption-related elements indicate share preview
-        caption_related = has_hashtags or has_poll or has_link_reel
+        score = 0
+        found = []
 
-        if has_caption or (has_edit_cover and has_share) or caption_related:
-            confidence = 0.5
-            found = []
-            if has_caption:
-                confidence += 0.2
-                found.append('caption')
-            if has_edit_cover:
-                confidence += 0.15
-                found.append('edit_cover')
-            if has_share:
-                confidence += 0.1
-                found.append('share')
-            if has_hashtags:
-                confidence += 0.2
-                found.append('hashtags')
-            if has_poll or has_link_reel:
-                confidence += 0.15
-                found.append('caption_options')
-            return min(confidence, 0.95), found
-        return 0.0, []
+        # ID-based detection (high confidence)
+        if has_caption_input:
+            score += 0.4
+            found.append('caption_input_id')
+        if has_share_button:
+            score += 0.35
+            found.append('share_button_id')
+        if has_action_bar_text and has_ok_desc:
+            score += 0.2
+            found.append('ok_button')
+        if has_save_draft:
+            score += 0.1
+            found.append('save_draft_id')
+
+        # Desc-based detection
+        if has_share_desc:
+            score += 0.2
+            found.append('share_desc')
+
+        # Text-based fallback
+        if has_caption:
+            score += 0.15
+            found.append('caption')
+        if has_edit_cover:
+            score += 0.1
+            found.append('edit_cover')
+        if has_share:
+            score += 0.1
+            found.append('share_text')
+        if has_hashtags:
+            score += 0.1
+            found.append('hashtags')
+        if has_poll or has_link_reel:
+            score += 0.1
+            found.append('caption_options')
+
+        return min(score, 0.95), found
 
     def _detect_video_editing(self, elements, texts, descs, all_text) -> Tuple[float, List[str]]:
         """Detect video editing screen."""
+        # Primary: Check for video editing element IDs (from successful flow data)
+        has_clips_right_button = self._has_element_id(elements, 'clips_right_action_button')  # Next button
+        has_clips_action_bar = any(self._has_element_id(elements, f'clips_action_bar_{x}')
+                                   for x in ['button', 'container', 'text'])
+        has_clips_left_button = self._has_element_id(elements, 'clips_left_action_button')
+
+        # Secondary: Check for Next button by desc (73.3% of flows)
+        has_next_desc = self._has_element_desc(elements, 'Next')
+
+        # Tertiary: Text-based detection
         has_edit_video = 'edit video' in all_text or 'swipe up to edit' in all_text
         has_next = 'next' in texts
         has_audio = 'add audio' in all_text or 'audio' in texts
         has_effects = 'effects' in all_text or 'filters' in all_text
 
-        if has_edit_video and has_next:
-            confidence = 0.9
-            found = ['edit_video', 'next']
-            if has_audio:
-                found.append('audio')
-            if has_effects:
-                found.append('effects')
-            return confidence, found
-        elif has_edit_video:
-            return 0.7, ['edit_video']
-        elif has_next and (has_audio or has_effects):
-            return 0.65, ['next', 'audio/effects']
-        return 0.0, []
+        score = 0
+        found = []
+
+        # ID-based detection (high confidence)
+        if has_clips_right_button:
+            score += 0.5
+            found.append('clips_right_button_id')
+        if has_clips_action_bar:
+            score += 0.2
+            found.append('clips_action_bar_id')
+        if has_clips_left_button:
+            score += 0.1
+            found.append('clips_left_button_id')
+
+        # Desc-based detection
+        if has_next_desc:
+            score += 0.25
+            found.append('next_desc')
+
+        # Text-based fallback
+        if has_edit_video:
+            score += 0.2
+            found.append('edit_video')
+        if has_next:
+            score += 0.1
+            found.append('next')
+        if has_audio or has_effects:
+            score += 0.1
+            found.append('audio/effects')
+
+        return min(score, 0.95), found
 
     def _detect_gallery_picker(self, elements, texts, descs, all_text) -> Tuple[float, List[str]]:
         """Detect gallery/video picker screen."""
+        # Primary: Check for gallery-specific element IDs (from successful flow data)
+        has_gallery_thumbnail = self._has_element_id(elements, 'gallery_grid_item_thumbnail')
+        has_cam_dest_clips = self._has_element_id(elements, 'cam_dest_clips')  # REEL tab
+        has_gallery_dest_item = self._has_element_id(elements, 'gallery_destination_item')
+        has_preview_container = self._has_element_id(elements, 'preview_container')
+
+        # Secondary: Text-based detection
         has_new_reel = 'new reel' in all_text
         has_recents = 'recents' in all_text
         has_gallery = 'gallery' in all_text or 'album' in all_text
         has_thumbnails = any('thumbnail' in d for d in descs)
 
+        score = 0
+        found = []
+
+        # ID-based detection (high confidence)
+        if has_gallery_thumbnail:
+            score += 0.45
+            found.append('gallery_thumbnail_id')
+        if has_cam_dest_clips:
+            score += 0.25
+            found.append('reel_tab_id')
+        if has_gallery_dest_item:
+            score += 0.2
+            found.append('gallery_dest_id')
+        if has_preview_container:
+            score += 0.1
+            found.append('preview_id')
+
+        # Text-based fallback
         if has_new_reel:
-            confidence = 0.85
-            found = ['new_reel']
-            if has_recents or has_gallery:
-                confidence = 0.9
-                found.append('recents/gallery')
-            return confidence, found
-        elif has_thumbnails and (has_recents or has_gallery):
-            return 0.7, ['thumbnails', 'gallery']
-        return 0.0, []
+            score += 0.25
+            found.append('new_reel')
+        if has_recents or has_gallery:
+            score += 0.15
+            found.append('recents/gallery')
+        if has_thumbnails:
+            score += 0.1
+            found.append('thumbnails')
+
+        return min(score, 0.95), found
 
     def _detect_create_menu(self, elements, texts, descs, all_text) -> Tuple[float, List[str]]:
         """Detect create menu popup (Reel/Story/Post options)."""
-        options = ['reel', 'story', 'post', 'live']
-        found = [o for o in options if o in texts]
+        # Primary: "Create new reel" in description (90.8% of successful flows)
+        # NOTE: This is in desc, not text!
+        has_create_new_reel = self._has_element_desc(elements, 'Create new reel')
+        has_create_new_story = self._has_element_desc(elements, 'Create new story')
+        has_create_new_post = self._has_element_desc(elements, 'Create new post')
 
-        # Create menu typically shows multiple create options
-        if len(found) >= 2:
-            return 0.85, found
-        elif len(found) == 1 and 'reel' in found:
-            return 0.6, found
-        return 0.0, []
+        # Secondary: text-based (less reliable)
+        options = ['reel', 'story', 'post', 'live']
+        found_text = [o for o in options if o in texts]
+
+        score = 0
+        found = []
+
+        # Desc-based detection (high confidence)
+        if has_create_new_reel:
+            score += 0.5
+            found.append('create_new_reel_desc')
+        if has_create_new_story:
+            score += 0.2
+            found.append('create_new_story_desc')
+        if has_create_new_post:
+            score += 0.2
+            found.append('create_new_post_desc')
+
+        # Text-based fallback
+        if len(found_text) >= 2:
+            score += 0.3
+            found.extend(found_text)
+        elif len(found_text) == 1:
+            score += 0.15
+            found.extend(found_text)
+
+        return min(score, 0.95), found
 
     def _detect_profile_screen(self, elements, texts, descs, all_text) -> Tuple[float, List[str]]:
         """Detect user profile screen."""
+        # Primary: Check for profile-specific element IDs (from successful flow data)
+        has_username_container = self._has_element_id(elements, 'action_bar_username_container')
+        has_profile_header = any(self._has_element_id(elements, f'profile_header_{x}')
+                                 for x in ['avatar', 'bio', 'followers'])
+        has_creation_tab = self._has_element_id(elements, 'creation_tab')
+
+        # Key indicator: "Create New" button in description (91.5% of successful flows)
+        has_create_new = self._has_element_desc(elements, 'Create New')
+
+        # Secondary: Text-based detection
         has_posts = 'posts' in all_text or any('posts' in d for d in descs)
         has_followers = 'followers' in all_text
         has_following = 'following' in all_text
@@ -328,29 +478,51 @@ class ScreenDetector:
         score = 0
         found = []
 
+        # ID-based detection (high confidence)
+        if has_username_container:
+            score += 0.4
+            found.append('username_container_id')
+        if has_create_new:
+            score += 0.35
+            found.append('create_new_desc')
+        if has_creation_tab:
+            score += 0.2
+            found.append('creation_tab_id')
+        if has_profile_header:
+            score += 0.15
+            found.append('profile_header_id')
+
+        # Text-based fallback
         if has_posts:
-            score += 0.3
+            score += 0.2
             found.append('posts')
         if has_followers:
-            score += 0.25
+            score += 0.15
             found.append('followers')
         if has_following:
-            score += 0.15
+            score += 0.1
             found.append('following')
         if has_edit_profile:
-            score += 0.2
+            score += 0.15
             found.append('edit_profile')
         if has_profile_desc:
-            score += 0.2
+            score += 0.1
             found.append('profile_desc')
         if has_your_story or has_add_story:
-            score += 0.1
+            score += 0.05
             found.append('story')
 
         return min(score, 0.95), found
 
     def _detect_feed_screen(self, elements, texts, descs, all_text) -> Tuple[float, List[str]]:
         """Detect home feed screen."""
+        # Primary: Check for navigation tab IDs (from successful flow data)
+        has_profile_tab = self._has_element_id(elements, 'profile_tab')
+        has_feed_tab = self._has_element_id(elements, 'feed_tab')
+        has_clips_tab = self._has_element_id(elements, 'clips_tab')
+        has_search_tab = self._has_element_id(elements, 'search_tab')
+
+        # Secondary: Text-based detection
         has_home = any('home' in d for d in descs)
         has_stories = 'story' in all_text and 'unseen' in all_text
         has_reels_tray = 'reels tray' in all_text
@@ -360,23 +532,32 @@ class ScreenDetector:
         score = 0
         found = []
 
+        # ID-based detection (high confidence)
+        if has_profile_tab and has_feed_tab:
+            score += 0.5
+            found.append('nav_tab_ids')
+        if has_clips_tab:
+            score += 0.2
+            found.append('clips_tab')
+
+        # Text-based fallback
         if has_home:
-            score += 0.3
+            score += 0.2
             found.append('home_tab')
         if has_stories:
-            score += 0.3
+            score += 0.2
             found.append('stories')
         if has_reels_tray:
-            score += 0.3
+            score += 0.2
             found.append('reels_tray')
         if has_nav_tabs:
-            score += 0.2
+            score += 0.1
             found.append('nav_tabs')
         if has_your_story:
-            score += 0.2
+            score += 0.1
             found.append('your_story')
 
-        return min(score, 0.9), found
+        return min(score, 0.95), found
 
     def _detect_android_home(self, elements, texts, descs, all_text) -> Tuple[float, List[str]]:
         """Detect Android home screen (not Instagram)."""
