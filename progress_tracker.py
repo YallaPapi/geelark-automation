@@ -79,7 +79,7 @@ class ProgressTracker:
         'job_id', 'account', 'video_path', 'caption', 'status',
         'worker_id', 'claimed_at', 'completed_at', 'error',
         'attempts', 'max_attempts', 'retry_at', 'error_type',
-        'error_category', 'pass_number'
+        'error_category', 'pass_number', 'run_id', 'video_id'
     ]
 
     # Valid status values
@@ -100,7 +100,8 @@ class ProgressTracker:
             'suspended': ['suspended', 'account has been suspended', 'your account is suspended'],
             'disabled': ['disabled', 'your account has been disabled', 'account disabled'],
             'verification': ['verify your identity', 'verification required', 'security check',
-                           'confirm it\'s you', 'verify your account'],
+                           'confirm it\'s you', 'verify your account', 'id_verification',
+                           'confirm your identity', 'video selfie', 'upload your id'],
             'logged_out': ['log in', 'logged out', 'sign up', 'session expired', 'login required'],
             'action_blocked': ['action blocked', 'try again later', 'temporarily blocked'],
             'banned': ['banned', 'permanently banned', 'violating our terms'],

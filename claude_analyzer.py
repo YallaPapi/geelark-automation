@@ -202,17 +202,55 @@ Only output JSON."""
         """
         text = response_text.strip()
 
-        # Handle markdown code blocks
-        if text.startswith("```"):
-            text = text.split("```")[1]
-            if text.startswith("json"):
-                text = text[4:]
-            text = text.strip()
+        # Handle markdown code blocks (anywhere in response, not just at start)
+        if "```json" in text:
+            # Extract content between ```json and ```
+            start = text.find("```json") + 7
+            end = text.find("```", start)
+            if end > start:
+                text = text[start:end].strip()
+        elif "```" in text:
+            # Generic code block
+            parts = text.split("```")
+            if len(parts) >= 3:
+                text = parts[1].strip()
+                if text.startswith("json"):
+                    text = text[4:].strip()
 
+        # Try direct parse first
         try:
             return json.loads(text)
-        except json.JSONDecodeError as e:
-            raise ValueError(f"JSON parse failed: {e}. Response: {text[:100]}")
+        except json.JSONDecodeError:
+            pass
+
+        # Try to find JSON object in text (handles leading natural language)
+        import re
+        json_match = re.search(r'\{[^{}]*"action"[^{}]*\}', text, re.DOTALL)
+        if json_match:
+            try:
+                return json.loads(json_match.group())
+            except json.JSONDecodeError:
+                pass
+
+        # Final fallback - try to find any valid JSON object
+        brace_start = text.find('{')
+        if brace_start >= 0:
+            # Find matching closing brace
+            depth = 0
+            for i, c in enumerate(text[brace_start:]):
+                if c == '{':
+                    depth += 1
+                elif c == '}':
+                    depth -= 1
+                    if depth == 0:
+                        json_str = text[brace_start:brace_start + i + 1]
+                        try:
+                            return json.loads(json_str)
+                        except json.JSONDecodeError:
+                            pass
+                        break
+
+        raise ValueError(f"JSON parse failed: Could not extract valid JSON. Response: {text[:100]}")
 
     def analyze(
         self,
