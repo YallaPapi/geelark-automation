@@ -239,34 +239,29 @@ class ActionEngine:
 
     def _handle_gallery_picker(self, elements: List[Dict]) -> Action:
         """Handle gallery picker - select video."""
-        # CRITICAL: Check if REEL tab needs to be selected first (18.6% of flows need this)
-        # If cam_dest_clips is visible, we may need to tap it to switch to REEL mode
-        reel_tab_idx = None
-        for i, el in enumerate(elements):
-            if el.get('id', '') == 'cam_dest_clips':
-                reel_tab_idx = i
-                break
+        # Check for both gallery variants: "New reel" AND "New post" modes
+        # Both work the same - just select a video thumbnail
 
-        # Check if gallery is showing thumbnails yet
+        # Check if gallery is showing thumbnails yet (both ID variants)
         has_thumbnails = any(
-            el.get('id', '') == 'gallery_grid_item_thumbnail'
+            el.get('id', '') in ('gallery_grid_item_thumbnail', 'gallery_picker_grid_item_container')
             for el in elements
         )
 
-        # If REEL tab exists but no thumbnails visible, tap the REEL tab
-        if reel_tab_idx is not None and not has_thumbnails:
-            return Action(
-                action_type=ActionType.TAP,
-                target_element=reel_tab_idx,
-                reason="Tap REEL tab (cam_dest_clips) to switch to reel mode",
-                confidence=0.95
-            )
+        # Check if there's a video_preview_view (video already selected in preview)
+        has_video_preview = any(
+            el.get('id', '') == 'video_preview_view'
+            for el in elements
+        )
 
-        if self.video_selected:
-            # Already selected, look for Next button
+        # If video is already previewed, look for Next button
+        if has_video_preview or self.video_selected:
             for i, el in enumerate(elements):
+                el_id = el.get('id', '')
                 text = el.get('text', '').lower()
-                if text == 'next':
+                desc = el.get('desc', '').lower()
+                # Look for Next button by ID or text
+                if el_id == 'next_button_textview' or text == 'next' or desc == 'next':
                     return Action(
                         action_type=ActionType.TAP,
                         target_element=i,
@@ -274,20 +269,30 @@ class ActionEngine:
                         confidence=0.95
                     )
 
-        # Primary: Find video thumbnail by element ID (72.9% of successful flows)
+        # Primary: Find video thumbnail by element ID - "New reel" variant
         for i, el in enumerate(elements):
             if el.get('id', '') == 'gallery_grid_item_thumbnail':
                 return Action(
                     action_type=ActionType.TAP,
                     target_element=i,
-                    reason="Tap video thumbnail (ID match)",
+                    reason="Tap video thumbnail (gallery_grid_item_thumbnail ID)",
+                    confidence=0.95
+                )
+
+        # Primary variant 2: Find video thumbnail - "New post" variant
+        for i, el in enumerate(elements):
+            if el.get('id', '') == 'gallery_picker_grid_item_container':
+                return Action(
+                    action_type=ActionType.TAP,
+                    target_element=i,
+                    reason="Tap video thumbnail (gallery_picker_grid_item_container ID)",
                     confidence=0.95
                 )
 
         # Secondary: Look for desc-based thumbnail
         for i, el in enumerate(elements):
             desc = el.get('desc', '').lower()
-            if 'thumbnail' in desc or 'video' in desc or 'select' in desc:
+            if 'thumbnail' in desc or ('video' in desc and 'added' in desc):
                 return Action(
                     action_type=ActionType.TAP,
                     target_element=i,
@@ -298,7 +303,7 @@ class ActionEngine:
         # Tertiary: Fallback to coordinate tap
         return Action(
             action_type=ActionType.TAP_COORDINATE,
-            coordinates=(270, 800),  # First thumbnail position
+            coordinates=(270, 986),  # First thumbnail position based on flow data
             reason="Tap gallery area to select video (coordinate fallback)",
             confidence=0.6
         )
@@ -513,16 +518,53 @@ class ActionEngine:
         )
 
     def _handle_feed_post(self, elements: List[Dict]) -> Action:
-        """Handle viewing a post in feed - navigate away to continue posting flow."""
+        """Handle viewing a post in feed - navigate to profile to start creation flow.
+
+        When we land on feed viewing content, we still need to navigate to profile
+        to start the posting flow. Look for profile_tab first.
+        """
+        # Primary: Find profile_tab by element ID
+        for i, el in enumerate(elements):
+            if el.get('id', '') == 'profile_tab':
+                return Action(
+                    action_type=ActionType.TAP,
+                    target_element=i,
+                    reason="Tap profile_tab from feed post to navigate to profile",
+                    confidence=0.95
+                )
+
+        # Secondary: Find profile tab by desc
+        for i, el in enumerate(elements):
+            desc = el.get('desc', '').lower()
+            if 'profile' in desc:
+                return Action(
+                    action_type=ActionType.TAP,
+                    target_element=i,
+                    reason="Tap profile tab (desc match) from feed post",
+                    confidence=0.9
+                )
+
+        # Fallback: press back if no profile tab found
         return Action(
             action_type=ActionType.PRESS_KEY,
             target_text="BACK",
-            reason="Press back to exit feed post view",
-            confidence=0.85
+            reason="Press back to exit feed post view (no profile tab found)",
+            confidence=0.7
         )
 
     def _handle_reels_tab(self, elements: List[Dict]) -> Action:
-        """Handle Reels tab - navigate away to profile."""
+        """Handle Reels tab - navigate to profile to start creation flow."""
+        # Primary: Find profile_tab by element ID
+        for i, el in enumerate(elements):
+            if el.get('id', '') == 'profile_tab':
+                return Action(
+                    action_type=ActionType.TAP,
+                    target_element=i,
+                    reason="Tap profile_tab from Reels tab to navigate to profile",
+                    confidence=0.95
+                )
+
+        # Fallback: press back
         return Action(
             action_type=ActionType.PRESS_KEY,
             target_text="BACK",

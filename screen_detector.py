@@ -76,24 +76,16 @@ class ScreenDetector:
             ('POPUP_VERIFICATION', self._detect_verification_popup),
             ('LOGIN_SCREEN', self._detect_login_screen),
 
-            # VIDEO_EDITING before POPUP_DISMISSIBLE - the video editing screen has a
-            # "Cancel" button which triggers POPUP_DISMISSIBLE's detection. VIDEO_EDITING
-            # scores 0.95 vs POPUP_DISMISSIBLE's 0.85, but priority order matters!
+            # VIDEO_EDITING and GALLERY_PICKER before POPUP_DISMISSIBLE - both have
+            # "Cancel" button which triggers POPUP_DISMISSIBLE's detection
             ('VIDEO_EDITING', self._detect_video_editing),
-
+            ('STORY_EDITOR', self._detect_story_editor),
+            ('GALLERY_PICKER', self._detect_gallery_picker),
             ('POPUP_DISMISSIBLE', self._detect_dismissible_popup),
 
             # Success/progress screens
             ('SUCCESS_SCREEN', self._detect_success_screen),
             ('SHARING_PROGRESS', self._detect_sharing_progress),
-
-            # STORY_EDITOR before GALLERY_PICKER - story gallery has "Add to story" title
-            # which looks like regular gallery but should trigger story exit flow
-            ('STORY_EDITOR', self._detect_story_editor),
-
-            # Instagram gallery picker (must come before ANDROID_HOME to avoid false positive)
-            # Gallery picker has "camera" and "gallery" text which triggers ANDROID_HOME
-            ('GALLERY_PICKER', self._detect_gallery_picker),
 
             # New popups (high priority - they overlay other screens)
             ('ANDROID_HOME', self._detect_android_home),
@@ -108,7 +100,6 @@ class ScreenDetector:
 
             # Content viewing (can appear during navigation)
             ('SHARE_SHEET', self._detect_share_sheet),
-            # STORY_EDITOR moved above GALLERY_PICKER for priority
             ('OWN_REEL_VIEW', self._detect_own_reel_view),
             ('REELS_TAB', self._detect_reels_tab),
             ('STORY_VIEW', self._detect_story_view),
@@ -118,7 +109,6 @@ class ScreenDetector:
             # Main flow screens (order matters)
             ('SHARE_PREVIEW', self._detect_share_preview),
             ('CAMERA_SCREEN', self._detect_camera_screen),
-            # GALLERY_PICKER moved above ANDROID_HOME to avoid false positive
             ('CREATE_MENU', self._detect_create_menu),
             ('PROFILE_SCREEN', self._detect_profile_screen),
             ('FEED_SCREEN', self._detect_feed_screen),
@@ -234,36 +224,29 @@ class ScreenDetector:
 
     def _detect_success_screen(self, elements, texts, descs, all_text) -> Tuple[float, List[str]]:
         """Detect post success confirmation."""
-        # HIGH CONFIDENCE: Check for specific Instagram success popup elements
-        # These appear after upload completes: "Posted! Nicely done." / "Posted! Boom." etc.
-        has_posted_status = self._has_element_id(elements, 'row_pending_media_status_textview')
-        has_send_prompt = self._has_element_id(elements, 'row_pending_media_sub_status_textview')
+        # HIGH CONFIDENCE: "Done posting" snackbar (appears viewing own reel after upload)
+        status_text = self._get_element_text_by_id(elements, 'status_text').lower()
+        if 'done posting' in status_text:
+            return 0.98, ['done_posting_snackbar']
 
-        # Get text from these specific elements
+        # HIGH CONFIDENCE: "Posted!" in pending status element
         posted_text = self._get_element_text_by_id(elements, 'row_pending_media_status_textview').lower()
         send_text = self._get_element_text_by_id(elements, 'row_pending_media_sub_status_textview').lower()
-
-        # Success pattern: "Posted!" in status + "send it to friends" in sub-status
-        if has_posted_status and 'posted' in posted_text:
-            if has_send_prompt and 'send it to friends' in send_text:
+        if 'posted' in posted_text:
+            if 'send it to friends' in send_text:
                 return 0.98, ['posted_status_element', 'send_to_friends_prompt']
-            # Just "Posted!" without send prompt is still success
             if 'posted!' in posted_text:
                 return 0.95, ['posted_status_element']
 
         # MEDIUM CONFIDENCE: Text-based fallbacks
         if 'your reel' in all_text and ('shared' in all_text or 'posted' in all_text):
             return 0.90, ['your reel shared']
-
-        # Detect "Your reel just dropped" pattern
         if 'reel just dropped' in all_text:
             return 0.90, ['reel just dropped']
-
         markers = ['your reel', 'shared', 'uploaded successfully']
         found = [m for m in markers if m in all_text]
         if len(found) >= 2:
             return 0.8, found
-
         return 0.0, []
 
     def _get_element_text_by_id(self, elements: List[Dict], element_id: str) -> str:
@@ -275,6 +258,12 @@ class ScreenDetector:
 
     def _detect_sharing_progress(self, elements, texts, descs, all_text) -> Tuple[float, List[str]]:
         """Detect sharing in progress screen."""
+        # CRITICAL: Check for ERROR states first - these are NOT upload progress!
+        # "Video can't be posted" is a leftover error banner, not active upload
+        status_text_from_pending = self._get_element_text_by_id(elements, 'row_pending_media_status_textview').lower()
+        if "can't be posted" in status_text_from_pending or "couldn't be posted" in status_text_from_pending:
+            return 0.0, []  # This is an error state, not upload progress
+
         # HIGH CONFIDENCE: Check for specific upload progress element IDs
         has_upload_snackbar = self._has_element_id(elements, 'upload_snackbar_container')
         has_pending_container = self._has_element_id(elements, 'row_pending_container')
@@ -450,11 +439,16 @@ class ScreenDetector:
         # Primary: Check for gallery-specific element IDs (from successful flow data)
         has_gallery_thumbnail = self._has_element_id(elements, 'gallery_grid_item_thumbnail')
         has_cam_dest_clips = self._has_element_id(elements, 'cam_dest_clips')  # REEL tab
+        has_cam_dest_feed = self._has_element_id(elements, 'cam_dest_feed')  # POST tab (variant)
         has_gallery_dest_item = self._has_element_id(elements, 'gallery_destination_item')
         has_preview_container = self._has_element_id(elements, 'preview_container')
+        has_gallery_picker_container = self._has_element_id(elements, 'gallery_picker_grid_item_container')
+        has_video_preview = self._has_element_id(elements, 'video_preview_view')
+        has_new_post_title = self._has_element_id(elements, 'new_post_title')  # "New post" variant
 
         # Secondary: Text-based detection
         has_new_reel = 'new reel' in all_text
+        has_new_post = 'new post' in all_text  # POST mode variant (treated same as reel)
         has_recents = 'recents' in all_text
         has_gallery = 'gallery' in all_text or 'album' in all_text
         has_thumbnails = any('thumbnail' in d for d in descs)
@@ -466,9 +460,21 @@ class ScreenDetector:
         if has_gallery_thumbnail:
             score += 0.45
             found.append('gallery_thumbnail_id')
+        if has_gallery_picker_container:
+            score += 0.4
+            found.append('gallery_picker_container_id')
         if has_cam_dest_clips:
             score += 0.25
             found.append('reel_tab_id')
+        if has_cam_dest_feed:
+            score += 0.25
+            found.append('post_tab_id')
+        if has_video_preview:
+            score += 0.2
+            found.append('video_preview_id')
+        if has_new_post_title:
+            score += 0.35
+            found.append('new_post_title_id')
         if has_gallery_dest_item:
             score += 0.2
             found.append('gallery_dest_id')
@@ -480,6 +486,9 @@ class ScreenDetector:
         if has_new_reel:
             score += 0.25
             found.append('new_reel')
+        if has_new_post:
+            score += 0.25
+            found.append('new_post')
         if has_recents or has_gallery:
             score += 0.15
             found.append('recents/gallery')
