@@ -81,7 +81,8 @@ class SmartInstagramPoster:
         # UI controller (created lazily when Appium is connected)
         self._ui_controller = None
         # State tracking
-        self.video_uploaded = False
+        self.video_uploaded = False  # File has been ADB-pushed to device storage
+        self.video_selected = False  # User has selected video in gallery UI (past GALLERY_PICKER)
         self.caption_entered = False
         self.share_clicked = False
         # Error tracking
@@ -672,10 +673,39 @@ Be concise and direct."""
         time.sleep(2)
 
     def _action_open_instagram(self, action, elements):
-        """Handle 'open_instagram' action - restart Instagram app."""
+        """Handle 'open_instagram' action - restart Instagram app.
+
+        Uses multiple methods with fallbacks:
+        1. Appium activate_app() - most reliable on Android 15+
+        2. ADB am start with explicit activity - more reliable than monkey
+        3. ADB monkey command - last resort fallback
+        """
         print("  [OPEN] Opening Instagram...")
         self.adb("am force-stop com.instagram.android")
         time.sleep(1)
+
+        # Method 1: Try Appium activate_app() (most reliable)
+        if self.driver:
+            try:
+                self.driver.activate_app('com.instagram.android')
+                print("  [OPEN] Launched via Appium activate_app()")
+                time.sleep(4)
+                return
+            except Exception as e:
+                print(f"  [OPEN] Appium activate_app failed: {e}")
+
+        # Method 2: Try ADB am start with explicit activity (more reliable than monkey)
+        try:
+            result = self.adb("am start -n com.instagram.android/com.instagram.mainactivity.LauncherActivity")
+            if result and 'Error' not in result:
+                print("  [OPEN] Launched via ADB am start")
+                time.sleep(4)
+                return
+        except Exception as e:
+            print(f"  [OPEN] ADB am start failed: {e}")
+
+        # Method 3: Fallback to monkey command (least reliable)
+        print("  [OPEN] Falling back to monkey command...")
         self.adb("monkey -p com.instagram.android 1")
         time.sleep(4)
 
@@ -735,6 +765,31 @@ Be concise and direct."""
         Modifies recent_actions in place.
         """
         action_signature = action['action']
+
+        # Don't count 'wait' toward loop detection ONLY when we're in a legitimate upload state
+        # Check for specific upload progress indicators to avoid false loop detection
+        if action_signature == 'wait':
+            # Check for upload progress indicators by element ID
+            upload_indicators = [
+                'upload_snackbar_container',      # Sharing to Reels snackbar
+                'row_pending_media_progress_bar', # Progress bar in feed banner
+                'progress_bar',                   # Generic progress bar
+                'status_text',                    # "Sharing to Reels" text
+                'row_pending_container',          # Pending upload container
+            ]
+            element_ids = [el.get('id', '') for el in elements]
+            has_upload_progress = any(uid in element_ids for uid in upload_indicators)
+
+            # Also check for upload-related text
+            all_text = ' '.join([el.get('text', '').lower() for el in elements])
+            has_upload_text = any(t in all_text for t in [
+                'sharing to reels', 'posting to', 'keep instagram open', 'uploading'
+            ])
+
+            if has_upload_progress or has_upload_text:
+                # Legitimate upload in progress - don't count toward loop detection
+                return
+
         if action['action'] == 'tap' and 'element_index' in action:
             idx = action.get('element_index', 0)
             if 0 <= idx < len(elements):
@@ -1013,6 +1068,7 @@ Be concise and direct."""
                         "caption": caption[:100],
                         "video_path": video_path,
                         "video_uploaded": self.video_uploaded,
+                        "video_selected": self.video_selected,
                         "caption_entered": self.caption_entered,
                         "share_clicked": self.share_clicked
                     }
@@ -1052,8 +1108,11 @@ Be concise and direct."""
                     print("  Analyzing (hybrid)...")
 
                     # Sync state with hybrid navigator
+                    # NOTE: video_selected != video_uploaded
+                    # video_uploaded = ADB file push complete
+                    # video_selected = user has selected video in gallery (past GALLERY_PICKER screen)
                     self._hybrid_navigator.update_state(
-                        video_selected=self.video_uploaded,
+                        video_selected=self.video_selected,
                         caption_entered=self.caption_entered,
                         share_clicked=self.share_clicked
                     )
@@ -1103,6 +1162,7 @@ Be concise and direct."""
                 ai_tokens=0,  # TODO: capture actual token usage from analyzer
                 state={
                     'video_uploaded': self.video_uploaded,
+                    'video_selected': self.video_selected,
                     'caption_entered': self.caption_entered,
                     'share_clicked': self.share_clicked
                 },
@@ -1112,8 +1172,8 @@ Be concise and direct."""
             # Update state based on screen progression, NOT action intent
             # This prevents state desync when an action fails silently
             #
-            # video_uploaded: Set True only when we detect post-gallery screens
-            # (VIDEO_EDITING, SHARE_PREVIEW, etc.) - NOT when AI says "selecting video"
+            # video_selected: Set True when we detect post-gallery screens
+            # (VIDEO_EDITING, SHARE_PREVIEW, etc.) - means user has selected a video in gallery
             #
             # Check for post-gallery indicators in current screen:
             post_gallery_indicators = [
@@ -1125,14 +1185,15 @@ Be concise and direct."""
             element_ids = [e.get('id', '') for e in elements]
             element_texts = ' '.join([e.get('text', '').lower() for e in elements])
 
-            if not self.video_uploaded:
-                # Only set video_uploaded if we see post-gallery screen elements
+            if not self.video_selected:
+                # Set video_selected when we detect post-gallery screen elements
+                # This means the video has been selected in the gallery UI
                 if any(pid in element_ids for pid in post_gallery_indicators[:2]):
-                    self.video_uploaded = True
-                    print("  [STATE] video_uploaded = True (detected post-gallery screen)")
+                    self.video_selected = True
+                    print("  [STATE] video_selected = True (detected VIDEO_EDITING screen)")
                 elif 'edit cover' in element_texts or 'write a caption' in element_texts:
-                    self.video_uploaded = True
-                    print("  [STATE] video_uploaded = True (detected caption/share screen)")
+                    self.video_selected = True
+                    print("  [STATE] video_selected = True (detected caption/share screen)")
 
             if action.get('share_clicked'):
                 self.share_clicked = True
@@ -1201,6 +1262,7 @@ Be concise and direct."""
                         "recent_actions": recent_actions[-10:],
                         "loop_recovery_count": loop_recovery_count,
                         "video_uploaded": self.video_uploaded,
+                        "video_selected": self.video_selected,
                         "caption_entered": self.caption_entered,
                         "share_clicked": self.share_clicked
                     }
@@ -1223,6 +1285,22 @@ Be concise and direct."""
                 return False
             if should_clear:
                 recent_actions.clear()
+                # CRITICAL: Reset posting state when starting fresh after loop recovery
+                # This prevents the bug where caption_entered=True persists but caption
+                # wasn't actually typed in the new posting attempt
+                print("  [RECOVERY] Resetting posting state for fresh attempt...")
+                self.video_selected = False  # Will need to select video again
+                self.caption_entered = False  # MUST re-type caption
+                self.share_clicked = False  # Haven't clicked share yet
+                # Note: video_uploaded stays True since file is still on device
+
+                # Also reset the HybridNavigator's internal state
+                if self._hybrid_navigator is not None:
+                    self._hybrid_navigator.update_state(
+                        video_selected=False,
+                        caption_entered=False,
+                        share_clicked=False
+                    )
 
             time.sleep(1)
 
@@ -1244,6 +1322,7 @@ Be concise and direct."""
             context={
                 "max_steps": max_steps,
                 "video_uploaded": self.video_uploaded,
+                "video_selected": self.video_selected,
                 "caption_entered": self.caption_entered,
                 "share_clicked": self.share_clicked,
                 "caption": caption[:100]

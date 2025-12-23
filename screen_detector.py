@@ -75,11 +75,25 @@ class ScreenDetector:
             # Popups first (highest priority - they overlay other screens)
             ('POPUP_VERIFICATION', self._detect_verification_popup),
             ('LOGIN_SCREEN', self._detect_login_screen),
+
+            # VIDEO_EDITING before POPUP_DISMISSIBLE - the video editing screen has a
+            # "Cancel" button which triggers POPUP_DISMISSIBLE's detection. VIDEO_EDITING
+            # scores 0.95 vs POPUP_DISMISSIBLE's 0.85, but priority order matters!
+            ('VIDEO_EDITING', self._detect_video_editing),
+
             ('POPUP_DISMISSIBLE', self._detect_dismissible_popup),
 
             # Success/progress screens
             ('SUCCESS_SCREEN', self._detect_success_screen),
             ('SHARING_PROGRESS', self._detect_sharing_progress),
+
+            # STORY_EDITOR before GALLERY_PICKER - story gallery has "Add to story" title
+            # which looks like regular gallery but should trigger story exit flow
+            ('STORY_EDITOR', self._detect_story_editor),
+
+            # Instagram gallery picker (must come before ANDROID_HOME to avoid false positive)
+            # Gallery picker has "camera" and "gallery" text which triggers ANDROID_HOME
+            ('GALLERY_PICKER', self._detect_gallery_picker),
 
             # New popups (high priority - they overlay other screens)
             ('ANDROID_HOME', self._detect_android_home),
@@ -94,7 +108,7 @@ class ScreenDetector:
 
             # Content viewing (can appear during navigation)
             ('SHARE_SHEET', self._detect_share_sheet),
-            ('STORY_EDITOR', self._detect_story_editor),
+            # STORY_EDITOR moved above GALLERY_PICKER for priority
             ('OWN_REEL_VIEW', self._detect_own_reel_view),
             ('REELS_TAB', self._detect_reels_tab),
             ('STORY_VIEW', self._detect_story_view),
@@ -103,9 +117,8 @@ class ScreenDetector:
 
             # Main flow screens (order matters)
             ('SHARE_PREVIEW', self._detect_share_preview),
-            ('VIDEO_EDITING', self._detect_video_editing),
             ('CAMERA_SCREEN', self._detect_camera_screen),
-            ('GALLERY_PICKER', self._detect_gallery_picker),
+            # GALLERY_PICKER moved above ANDROID_HOME to avoid false positive
             ('CREATE_MENU', self._detect_create_menu),
             ('PROFILE_SCREEN', self._detect_profile_screen),
             ('FEED_SCREEN', self._detect_feed_screen),
@@ -221,28 +234,68 @@ class ScreenDetector:
 
     def _detect_success_screen(self, elements, texts, descs, all_text) -> Tuple[float, List[str]]:
         """Detect post success confirmation."""
-        markers = ['your reel', 'shared', 'posted', 'uploaded successfully']
-        found = [m for m in markers if m in all_text]
+        # HIGH CONFIDENCE: Check for specific Instagram success popup elements
+        # These appear after upload completes: "Posted! Nicely done." / "Posted! Boom." etc.
+        has_posted_status = self._has_element_id(elements, 'row_pending_media_status_textview')
+        has_send_prompt = self._has_element_id(elements, 'row_pending_media_sub_status_textview')
 
+        # Get text from these specific elements
+        posted_text = self._get_element_text_by_id(elements, 'row_pending_media_status_textview').lower()
+        send_text = self._get_element_text_by_id(elements, 'row_pending_media_sub_status_textview').lower()
+
+        # Success pattern: "Posted!" in status + "send it to friends" in sub-status
+        if has_posted_status and 'posted' in posted_text:
+            if has_send_prompt and 'send it to friends' in send_text:
+                return 0.98, ['posted_status_element', 'send_to_friends_prompt']
+            # Just "Posted!" without send prompt is still success
+            if 'posted!' in posted_text:
+                return 0.95, ['posted_status_element']
+
+        # MEDIUM CONFIDENCE: Text-based fallbacks
         if 'your reel' in all_text and ('shared' in all_text or 'posted' in all_text):
-            return 0.95, ['your reel shared']
-        elif len(found) >= 2:
+            return 0.90, ['your reel shared']
+
+        # Detect "Your reel just dropped" pattern
+        if 'reel just dropped' in all_text:
+            return 0.90, ['reel just dropped']
+
+        markers = ['your reel', 'shared', 'uploaded successfully']
+        found = [m for m in markers if m in all_text]
+        if len(found) >= 2:
             return 0.8, found
+
         return 0.0, []
+
+    def _get_element_text_by_id(self, elements: List[Dict], element_id: str) -> str:
+        """Get text content of element with given ID."""
+        for el in elements:
+            if el.get('id', '') == element_id:
+                return el.get('text', '')
+        return ''
 
     def _detect_sharing_progress(self, elements, texts, descs, all_text) -> Tuple[float, List[str]]:
         """Detect sharing in progress screen."""
-        # Primary: Check for upload snackbar container ID (from successful flow data)
+        # HIGH CONFIDENCE: Check for specific upload progress element IDs
         has_upload_snackbar = self._has_element_id(elements, 'upload_snackbar_container')
+        has_pending_container = self._has_element_id(elements, 'row_pending_container')
+        has_progress_bar = self._has_element_id(elements, 'row_pending_media_progress_bar')
+        has_status_progress_bar = self._has_element_id(elements, 'progress_bar')
 
-        # Secondary: "Sharing to Reels" text indicator
-        has_sharing_to_reels = 'sharing to reels' in all_text
+        # Check for specific text in identified elements
+        sub_status_text = self._get_element_text_by_id(elements, 'row_pending_media_sub_status_textview').lower()
+        status_text = self._get_element_text_by_id(elements, 'status_text').lower()
 
-        # Tertiary: Generic progress markers
-        markers = ['sharing', 'posting', 'uploading', 'sending']
-        progress_markers = ['...', 'progress', 'please wait']
+        # "Keep Instagram open to finish posting" is definitive upload indicator
+        has_keep_open_msg = 'keep instagram open' in sub_status_text
 
-        found_markers = [m for m in markers if m in all_text]
+        # "Posting to username..." in the sub-status
+        has_posting_to_user = 'posting to' in sub_status_text
+
+        # "Sharing to Reels" in status_text element
+        has_sharing_to_reels = 'sharing to reels' in status_text or 'sharing to reels' in all_text
+
+        # Generic "Posting to" anywhere
+        has_posting_to = 'posting to' in all_text
 
         score = 0
         found = []
@@ -252,18 +305,35 @@ class ScreenDetector:
             score += 0.6
             found.append('upload_snackbar_id')
 
-        # Text-based detection
-        if has_sharing_to_reels:
-            score += 0.35
-            found.append('sharing_to_reels')
-        if found_markers:
-            score += 0.2
-            found.extend(found_markers)
-        if any(p in all_text for p in progress_markers):
-            score += 0.1
-            found.append('progress_indicator')
+        if has_pending_container:
+            score += 0.7
+            found.append('pending_container_id')
 
-        return min(score, 0.95), found
+        # Progress bar elements are very specific to upload
+        if has_progress_bar or has_status_progress_bar:
+            score += 0.5
+            found.append('progress_bar_id')
+
+        # Text-based detection with specific elements
+        if has_keep_open_msg:
+            # Very specific - definitely uploading
+            score += 0.8
+            found.append('keep_instagram_open')
+
+        if has_posting_to_user:
+            score += 0.6
+            found.append('posting_to_user_element')
+
+        if has_sharing_to_reels:
+            score += 0.4
+            found.append('sharing_to_reels')
+
+        if has_posting_to and not has_posting_to_user:
+            # Generic text fallback
+            score += 0.3
+            found.append('posting_to_text')
+
+        return min(score, 0.98), found
 
     def _detect_share_preview(self, elements, texts, descs, all_text) -> Tuple[float, List[str]]:
         """Detect share preview screen (caption input + edit cover)."""
@@ -560,14 +630,53 @@ class ScreenDetector:
         return min(score, 0.95), found
 
     def _detect_android_home(self, elements, texts, descs, all_text) -> Tuple[float, List[str]]:
-        """Detect Android home screen (not Instagram)."""
+        """Detect Android home screen, Google search, Chrome, or any non-Instagram app."""
+        # Common Android home screen app names
         android_apps = ['gallery', 'play store', 'phone', 'messaging', 'chrome', 'camera', 'settings']
         found_apps = [app for app in android_apps if app in all_text]
 
+        # Check element IDs for Google search/Chrome indicators
+        element_ids = [el.get('id', '').lower() for el in elements]
+        all_ids = ' '.join(element_ids)
+
+        # Google Quick Search Box / Google Search app indicators
+        google_indicators = [
+            'com.google.android.googlequicksearchbox',  # Google Search app package
+            'search_box',        # Google search box
+            'search_plate',      # Google search plate
+            'search_src_text',   # Search input field
+            'omnibox',           # Chrome/browser search
+            'url_bar',           # Chrome URL bar
+            'toolbar',           # Chrome toolbar (without instagram indicators)
+        ]
+
+        # Text-based Google/Chrome indicators
+        google_text_indicators = [
+            'google',            # Google branding
+            'search or type url',  # Chrome new tab
+            'search the web',    # Google search
+            'what do you want to search',  # Google voice search
+            'new tab',           # Chrome new tab
+        ]
+
+        # Check for Google/Chrome by element ID
+        has_google_id = any(gid in all_ids for gid in google_indicators)
+
+        # Check for Google/Chrome by text (case insensitive)
+        has_google_text = any(gt in all_text for gt in google_text_indicators)
+
+        # If we're in Google search or Chrome, return high confidence
+        if has_google_id:
+            return 0.95, ['google_search_id']
+        if has_google_text and 'instagram' not in all_text.lower():
+            return 0.90, ['google_search_text']
+
+        # Android home screen detection (original logic)
         if len(found_apps) >= 3:
             return 0.95, found_apps
         if len(found_apps) >= 2 and 'home' in descs:
             return 0.85, found_apps
+
         return 0.0, []
 
     def _detect_sponsored_post(self, elements, texts, descs, all_text) -> Tuple[float, List[str]]:
@@ -705,6 +814,13 @@ class ScreenDetector:
 
     def _detect_suggested_popup(self, elements, texts, descs, all_text) -> Tuple[float, List[str]]:
         """Detect 'Suggested for you' follow popup."""
+        # If bottom navigation is visible, this is NOT a popup - it's the regular feed
+        # showing suggested accounts inline. Don't misdetect as popup.
+        has_nav_bar = self._has_element_id(elements, 'profile_tab') or \
+                      self._has_element_id(elements, 'feed_tab')
+        if has_nav_bar:
+            return 0.0, []
+
         has_suggested = 'suggested for you' in all_text
         has_see_all = 'see all' in texts
         has_follow = 'follow' in texts
@@ -735,7 +851,42 @@ class ScreenDetector:
         return 0.0, []
 
     def _detect_story_editor(self, elements, texts, descs, all_text) -> Tuple[float, List[str]]:
-        """Detect story editor with stickers."""
+        """Detect story editor/posting screen (NOT reel editor).
+
+        Key indicators that distinguish Story from Reel:
+        - "Your story" + "Close Friends" together
+        - "Add to story" in gallery title
+        - Story-specific stickers
+        - No "clips_right_action_button" (reel Next button)
+        """
+        # Check element IDs for story-specific elements
+        element_ids = [el.get('id', '').lower() for el in elements]
+        all_ids = ' '.join(element_ids)
+
+        # Story posting screen indicators
+        has_your_story = 'your story' in all_text
+        has_close_friends = 'close friends' in all_text
+        has_add_to_story = 'add to story' in all_text
+
+        # Story-specific element IDs (from bondsgoldengun flow)
+        has_story_elements = any(x in all_ids for x in [
+            'story_destination',  # Story destination selector
+        ])
+
+        # If we see "Your story" + "Close Friends" together, this is Story editor
+        if has_your_story and has_close_friends:
+            # Make sure we're NOT on the reel editor (which doesn't have these)
+            has_reel_button = 'clips_right_action_button' in all_ids
+            if not has_reel_button:
+                return 0.95, ['your_story', 'close_friends']
+
+        # Gallery showing "Add to story" instead of "New reel"
+        if has_add_to_story:
+            has_gallery = 'gallery_title_text' in all_ids or 'gallery_grid' in all_ids
+            if has_gallery:
+                return 0.90, ['add_to_story', 'gallery']
+
+        # Original sticker-based detection
         has_location_sticker = 'location sticker' in all_text
         has_mention_sticker = 'mention sticker' in all_text
         has_add_yours = 'add yours sticker' in all_text
@@ -751,6 +902,7 @@ class ScreenDetector:
             if has_add_yours:
                 found.append('add_yours')
             return 0.85, found
+
         return 0.0, []
 
     def _detect_reels_tab(self, elements, texts, descs, all_text) -> Tuple[float, List[str]]:

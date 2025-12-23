@@ -370,12 +370,14 @@ class ActionEngine:
         # STEP 1: Check if we need to enter caption
         if not self.caption_entered and self.caption:
             # Primary: Find caption_input_text_view by element ID (71.4% of flows)
+            # Use TYPE_TEXT to both tap the field AND type the caption
             for i, el in enumerate(elements):
                 if el.get('id', '') == 'caption_input_text_view':
                     return Action(
-                        action_type=ActionType.TAP,
+                        action_type=ActionType.TYPE_TEXT,
                         target_element=i,
-                        reason="Tap caption field (caption_input_text_view ID)",
+                        text_to_type=self.caption,
+                        reason="Type caption into caption_input_text_view field",
                         confidence=0.98
                     )
 
@@ -385,9 +387,10 @@ class ActionEngine:
                 desc = el.get('desc', '').lower()
                 if 'caption' in text or 'caption' in desc or 'write a caption' in text:
                     return Action(
-                        action_type=ActionType.TAP,
+                        action_type=ActionType.TYPE_TEXT,
                         target_element=i,
-                        reason="Tap caption field (text/desc match)",
+                        text_to_type=self.caption,
+                        reason="Type caption into field (text/desc match)",
                         confidence=0.9
                     )
 

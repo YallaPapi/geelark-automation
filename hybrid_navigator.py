@@ -51,6 +51,10 @@ class HybridNavigator:
         self.caption_entered = False
         self.share_clicked = False
 
+        # Gallery stuck detection - track consecutive gallery screen appearances
+        self._gallery_tap_attempts = 0
+        self._last_screen_type = None
+
         # Statistics
         self.total_steps = 0
         self.ai_calls = 0
@@ -82,9 +86,57 @@ class HybridNavigator:
         # Step 1: Try rule-based detection
         detection = self.detector.detect(elements)
 
+        # Step 1b: Track gallery stuck state
+        # If we're on GALLERY_PICKER again after previously being on GALLERY_PICKER,
+        # increment the counter (tap didn't work)
+        if detection.screen_type == ScreenType.GALLERY_PICKER:
+            if self._last_screen_type == ScreenType.GALLERY_PICKER:
+                self._gallery_tap_attempts += 1
+                print(f"  [HYBRID] Gallery tap attempt #{self._gallery_tap_attempts} - previous tap may have failed")
+            else:
+                self._gallery_tap_attempts = 1  # First time on gallery
+        else:
+            # Successfully left gallery or on different screen
+            if self._gallery_tap_attempts > 0:
+                print(f"  [HYBRID] Left gallery after {self._gallery_tap_attempts} attempts")
+            self._gallery_tap_attempts = 0
+
+        self._last_screen_type = detection.screen_type
+
         # Step 2: If high confidence, use ActionEngine
         if detection.screen_type != ScreenType.UNKNOWN:
             action = self.engine.get_action(detection.screen_type, elements)
+
+            # Step 2b: Gallery stuck fallback - progressive strategies
+            if (detection.screen_type == ScreenType.GALLERY_PICKER and
+                self._gallery_tap_attempts >= 2 and
+                action.action_type == ActionType.TAP):
+
+                # Find the thumbnail's coordinates for direct tap
+                thumb_center = None
+                for el in elements:
+                    if el.get('id', '') == 'gallery_grid_item_thumbnail':
+                        thumb_center = el.get('center')
+                        break
+
+                if self._gallery_tap_attempts >= 4:
+                    # After 4 attempts, scroll down to try a different thumbnail
+                    print(f"  [HYBRID] Gallery stuck after {self._gallery_tap_attempts} attempts! Scrolling to try different thumbnail")
+                    action = Action(
+                        action_type=ActionType.SWIPE,
+                        swipe_direction='up',
+                        reason=f"Scroll gallery to try different thumbnail (attempt #{self._gallery_tap_attempts})",
+                        confidence=0.7
+                    )
+                elif thumb_center:
+                    # Attempts 2-3: Try coordinate-based tap instead of element tap
+                    print(f"  [HYBRID] Gallery stuck! Using coordinate tap at {thumb_center} instead of element tap")
+                    action = Action(
+                        action_type=ActionType.TAP_COORDINATE,
+                        coordinates=(thumb_center[0], thumb_center[1]),
+                        reason=f"Coordinate tap on thumbnail (gallery stuck fallback, attempt #{self._gallery_tap_attempts})",
+                        confidence=0.8
+                    )
 
             # If ActionEngine can handle it deterministically
             if action.action_type not in (ActionType.NEED_AI, ActionType.ERROR):
@@ -186,6 +238,15 @@ class HybridNavigator:
 
         # Map ActionType to action names used by post_reel_smart.py
         if action.action_type == ActionType.TAP:
+            # Special case: open_instagram is a special action flag for ANDROID_HOME screen
+            if action.target_text == 'open_instagram':
+                return {
+                    'action': 'open_instagram',
+                    'reason': action.reason,
+                    'video_selected': self.video_selected,
+                    'caption_entered': self.caption_entered,
+                    'share_clicked': self.share_clicked
+                }
             return {
                 'action': 'tap',
                 'element_index': action.target_element if action.target_element is not None else 0,
