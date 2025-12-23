@@ -1,0 +1,483 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T22:24:22.631499",
+  "account": "emersoninspired",
+  "job_id": "DQ49_Pakz4--2.mp4",
+  "phase": "navigation",
+  "error_type": "loop_stuck",
+  "error_class": "Exception",
+  "error_message": "Loop stuck on action: wait",
+  "error_repr": "Exception('Loop stuck on action: wait')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "step": 26,
+    "recent_actions": [
+      "wait",
+      "wait",
+      "wait",
+      "wait",
+      "wait"
+    ],
+    "loop_recovery_count": 3,
+    "video_uploaded": true,
+    "video_selected": true,
+    "caption_entered": true,
+    "share_clicked": false
+  },
+  "ui_elements_count": 41,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "reels tray container",
+      "id": "",
+      "bounds": "[0,139][720,354]",
+      "center": [
+        360,
+        246
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[0,139][183,354]",
+      "center": [
+        91,
+        246
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "emersoninspired's story, 0 of 22, Unseen.",
+      "id": "",
+      "bounds": "[0,139][183,315]",
+      "center": [
+        91,
+        227
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "emersoninspired's story, 0 of 22, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[22,161][160,299]",
+      "center": [
+        91,
+        230
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Add to story",
+      "id": "reel_empty_badge",
+      "bounds": "[121,260][170,309]",
+      "center": [
+        145,
+        284
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Your story",
+      "desc": "",
+      "id": "username",
+      "bounds": "[44,315][140,341]",
+      "center": [
+        92,
+        328
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[183,139][366,354]",
+      "center": [
+        274,
+        246
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "betsysodaro's story, 1 of 22, Unseen.",
+      "id": "",
+      "bounds": "[183,139][366,315]",
+      "center": [
+        274,
+        227
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "betsysodaro's story, 1 of 22, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[205,161][343,299]",
+      "center": [
+        274,
+        230
+      ],
+      "clickable": false
+    },
+    {
+      "text": "betsysodaro",
+      "desc": "",
+      "id": "username",
+      "bounds": "[217,315][333,341]",
+      "center": [
+        275,
+        328
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[366,139][549,354]",
+      "center": [
+        457,
+        246
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "aidybryant's story, 2 of 22, Unseen.",
+      "id": "",
+      "bounds": "[366,139][549,315]",
+      "center": [
+        457,
+        227
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "aidybryant's story, 2 of 22, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[388,161][526,299]",
+      "center": [
+        457,
+        230
+      ],
+      "clickable": false
+    },
+    {
+      "text": "aidybryant",
+      "desc": "",
+      "id": "username",
+      "bounds": "[408,315][508,341]",
+      "center": [
+        458,
+        328
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[549,139][720,354]",
+      "center": [
+        634,
+        246
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "caseyrosewilson's story, 3 of 22, Unseen.",
+      "id": "",
+      "bounds": "[549,139][720,315]",
+      "center": [
+        634,
+        227
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "caseyrosewilson's story, 3 of 22, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[571,161][709,299]",
+      "center": [
+        640,
+        230
+      ],
+      "clickable": false
+    },
+    {
+      "text": "caseyrosewilson",
+      "desc": "",
+      "id": "username",
+      "bounds": "[564,315][718,341]",
+      "center": [
+        641,
+        328
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "row_pending_container",
+      "bounds": "[0,354][720,484]",
+      "center": [
+        360,
+        419
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Keep Instagram open to finish posting…",
+      "desc": "",
+      "id": "row_pending_media_sub_status_textview",
+      "bounds": "[111,391][472,417]",
+      "center": [
+        291,
+        404
+      ],
+      "clickable": false
+    },
+    {
+      "text": "24.0",
+      "desc": "",
+      "id": "row_pending_media_progress_bar",
+      "bounds": "[111,430][691,433]",
+      "center": [
+        401,
+        431
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "evanrosskatz posted a carousel 6 days ago",
+      "id": "row_feed_profile_header",
+      "bounds": "[0,485][720,570]",
+      "center": [
+        360,
+        527
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,485][83,570]",
+      "center": [
+        41,
+        527
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "User avatars",
+      "id": "",
+      "bounds": "[18,485][83,570]",
+      "center": [
+        50,
+        527
+      ],
+      "clickable": false
+    },
+    {
+      "text": "evanrosskatz and mary_steenburgen",
+      "desc": "evanrosskatz and mary_steenburgen",
+      "id": "row_feed_photo_profile_name",
+      "bounds": "[83,485][649,570]",
+      "center": [
+        366,
+        527
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "More actions for this post",
+      "id": "media_option_button",
+      "bounds": "[649,488][720,567]",
+      "center": [
+        684,
+        527
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "carousel_media_group",
+      "bounds": "[0,570][720,1266]",
+      "center": [
+        360,
+        918
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "carousel_image_media_group",
+      "bounds": "[0,570][720,1266]",
+      "center": [
+        360,
+        918
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Photo 1 of 20 by Evan Ross Katz, 12,590 likes, 117 comments",
+      "id": "carousel_image",
+      "bounds": "[0,570][720,1266]",
+      "center": [
+        360,
+        918
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "indicator_background_view",
+      "bounds": "[23,1222][68,1266]",
+      "center": [
+        45,
+        1244
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "View tagged people",
+      "id": "indicator_icon_view",
+      "bounds": "[34,1233][57,1256]",
+      "center": [
+        45,
+        1244
+      ],
+      "clickable": false
+    },
+    {
+      "text": "1/20",
+      "desc": "1/20",
+      "id": "carousel_index_indicator_text_view",
+      "bounds": "[621,593][697,639]",
+      "center": [
+        659,
+        616
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,48][79,139]",
+      "center": [
+        39,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar_title_view",
+      "bounds": "[79,68][641,119]",
+      "center": [
+        360,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Instagram Home Feed",
+      "id": "title_logo",
+      "bounds": "[272,68][448,119]",
+      "center": [
+        360,
+        93
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "notification",
+      "bounds": "[641,48][720,139]",
+      "center": [
+        680,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1266][144,1344]",
+      "center": [
+        72,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1266][288,1344]",
+      "center": [
+        216,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1266][432,1344]",
+      "center": [
+        360,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1266][576,1344]",
+      "center": [
+        504,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1266][720,1344]",
+      "center": [
+        648,
+        1305
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\emersoninspired_20251222_222105\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\emersoninspired_20251222_222105\\error_001_page_source.xml"
+}

@@ -1,0 +1,124 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T17:33:47.705809",
+  "account": "theawakenedmic",
+  "job_id": "DMgLBZRh4Tf-1.mp4",
+  "phase": "navigation",
+  "error_type": "captcha",
+  "error_class": "Exception",
+  "error_message": "captcha: enter the code",
+  "error_repr": "Exception('captcha: enter the code')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "step": 0,
+    "caption": "The wait is finally over—Summer S'Mores featuring Conan and the Chill Chums makes its highly anticip",
+    "video_path": "C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\campaigns\\podcast\\videos\\chunk_01a\\teamcocopodcasts\\DMgLBZRh4Tf-1.mp4",
+    "video_uploaded": true,
+    "caption_entered": false,
+    "share_clicked": false
+  },
+  "ui_elements_count": 9,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "Menu",
+      "id": "",
+      "bounds": "[636,51][706,116]",
+      "center": [
+        671,
+        83
+      ],
+      "clickable": true
+    },
+    {
+      "text": " ",
+      "desc": "",
+      "id": "",
+      "bounds": "[688,69][693,99]",
+      "center": [
+        690,
+        84
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Confirm you're human",
+      "desc": "Confirm you're human",
+      "id": "",
+      "bounds": "[52,180][402,227]",
+      "center": [
+        227,
+        203
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Can't read this text? Hear this code or Get a new code",
+      "desc": "Can't read this text? Hear this code or Get a new code",
+      "id": "",
+      "bounds": "[52,496][668,532]",
+      "center": [
+        360,
+        514
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Hear this code",
+      "desc": "",
+      "id": "",
+      "bounds": "[284,496][452,532]",
+      "center": [
+        368,
+        514
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Get a new code",
+      "desc": "",
+      "id": "",
+      "bounds": "[488,496][667,532]",
+      "center": [
+        577,
+        514
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Enter the code from the image",
+      "desc": "",
+      "id": "",
+      "bounds": "[78,592][642,622]",
+      "center": [
+        360,
+        607
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Next",
+      "id": "",
+      "bounds": "[26,1249][694,1318]",
+      "center": [
+        360,
+        1283
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Next",
+      "desc": "",
+      "id": "",
+      "bounds": "[337,1269][383,1299]",
+      "center": [
+        360,
+        1284
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\theawakenedmic_20251222_173323\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\theawakenedmic_20251222_173323\\error_001_page_source.xml"
+}

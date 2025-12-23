@@ -1,0 +1,330 @@
+{
+  "error_id": "error_008",
+  "timestamp": "2025-12-22T13:51:27.222903",
+  "account": "micdropchannel",
+  "job_id": "DO37nBZj9HC-1.mp4",
+  "phase": "ai_analysis",
+  "error_type": "analysis_error",
+  "error_class": "ValueError",
+  "error_message": "JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see:\n- Video uploaded: True\n- Caption entered: True  \n- Share bu",
+  "error_repr": "ValueError('JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see:\\n- Video uploaded: True\\n- Caption entered: True  \\n- Share bu')",
+  "stack_trace": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 213, in parse_response\n    # Generic code block\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\__init__.py\", line 346, in loads\n    return _default_decoder.decode(s)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 345, in decode\n    obj, end = self.raw_decode(s, idx=_w(s, 0).end())\n               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 363, in raw_decode\n    raise JSONDecodeError(\"Expecting value\", s, err.value) from None\njson.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 275, in analyze\n    Action dictionary with action, element_index, text, reason, etc.\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 215, in parse_response\n    if len(parts) >= 3:\nValueError: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see:\n- Video uploaded: True\n- Caption entered: True  \n- Share bu\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 1026, in post\n    action = self.analyze_ui(elements, caption)\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 870, in analyze_ui\n    return self._analyzer.analyze(\n           ~~~~~~~~~~~~~~~~~~~~~~^\n        elements=elements,\n        ^^^^^^^^^^^^^^^^^^\n    ...<3 lines>...\n        share_clicked=self.share_clicked\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 282, in analyze\n    caption=caption,\n            ^^^^^^^^\nValueError: JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see:\n- Video uploaded: True\n- Caption entered: True  \n- Share bu\n",
+  "context": {
+    "step": 17,
+    "caption": "The moment you realize someone's speaking nothing but facts 💯 @charliekirk1776 breaks it down in a w",
+    "video_uploaded": true
+  },
+  "ui_elements_count": 28,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "Reel by micdropchannel. Double tap to play or pause.",
+      "id": "clips_media_component",
+      "bounds": "[0,39][720,1284]",
+      "center": [
+        360,
+        661
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Reel by micdropchannel. Double tap to play or pause.",
+      "id": "clips_video_container",
+      "bounds": "[0,39][720,1284]",
+      "center": [
+        360,
+        661
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "clips_author_info_component",
+      "bounds": "[26,1019][286,1094]",
+      "center": [
+        156,
+        1056
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile picture of micdropchannel",
+      "id": "clips_author_profile_pic",
+      "bounds": "[26,1035][85,1094]",
+      "center": [
+        55,
+        1064
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[85,1050][286,1080]",
+      "center": [
+        185,
+        1065
+      ],
+      "clickable": true
+    },
+    {
+      "text": "micdropchannel",
+      "desc": "micdropchannel",
+      "id": "clips_author_username",
+      "bounds": "[85,1050][286,1080]",
+      "center": [
+        185,
+        1065
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "The moment you realize someone's speaking nothing but …",
+      "id": "",
+      "bounds": "[26,1101][635,1168]",
+      "center": [
+        330,
+        1134
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Like",
+      "id": "like_button",
+      "bounds": "[635,779][707,851]",
+      "center": [
+        671,
+        815
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Comment",
+      "id": "comment_button",
+      "bounds": "[635,864][707,936]",
+      "center": [
+        671,
+        900
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Repost",
+      "id": "",
+      "bounds": "[635,949][707,1021]",
+      "center": [
+        671,
+        985
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Share",
+      "id": "direct_share_button",
+      "bounds": "[635,1034][707,1106]",
+      "center": [
+        671,
+        1070
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More",
+      "id": "clips_ufi_more_button_component",
+      "bounds": "[635,1106][707,1178]",
+      "center": [
+        671,
+        1142
+      ],
+      "clickable": true
+    },
+    {
+      "text": "View insights",
+      "desc": "View insights",
+      "id": "",
+      "bounds": "[26,1193][360,1242]",
+      "center": [
+        193,
+        1217
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Boost reel",
+      "desc": "Boost reel",
+      "id": "",
+      "bounds": "[360,1193][694,1242]",
+      "center": [
+        527,
+        1217
+      ],
+      "clickable": true
+    },
+    {
+      "text": "5222.0",
+      "desc": "@2131976834",
+      "id": "scrubber",
+      "bounds": "[0,1267][720,1284]",
+      "center": [
+        360,
+        1275
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Create a reel",
+      "id": "",
+      "bounds": "[0,46][77,123]",
+      "center": [
+        38,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Reels",
+      "desc": "",
+      "id": "clips_viewer_action_bar_title",
+      "bounds": "[287,60][433,109]",
+      "center": [
+        360,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1284][144,1362]",
+      "center": [
+        72,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1284][288,1362]",
+      "center": [
+        216,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1284][432,1362]",
+      "center": [
+        360,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1284][576,1362]",
+      "center": [
+        504,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1284][720,1362]",
+      "center": [
+        648,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "@2131954894",
+      "id": "background_dimmer",
+      "bounds": "[0,39][720,1362]",
+      "center": [
+        360,
+        700
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "layout_container_bottom_sheet",
+      "bounds": "[0,721][720,1362]",
+      "center": [
+        360,
+        1041
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Get more from your next reel",
+      "desc": "",
+      "id": "igds_headline_emphasized_headline",
+      "bounds": "[52,1026][668,1076]",
+      "center": [
+        360,
+        1051
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Reels from profiles with a verified badge get more engagement on average. Sign up for Meta Verified for a verified badge and more.",
+      "desc": "",
+      "id": "igds_headline_body",
+      "bounds": "[52,1089][668,1171]",
+      "center": [
+        360,
+        1130
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Get started",
+      "id": "bb_primary_action_container",
+      "bounds": "[26,1270][694,1342]",
+      "center": [
+        360,
+        1306
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Get started",
+      "desc": "",
+      "id": "",
+      "bounds": "[297,1291][423,1321]",
+      "center": [
+        360,
+        1306
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\micdropchannel_20251222_134426\\error_008_screenshot.png",
+  "page_source_file": "error_logs\\micdropchannel_20251222_134426\\error_008_page_source.xml"
+}

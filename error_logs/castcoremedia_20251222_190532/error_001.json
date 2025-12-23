@@ -1,0 +1,420 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T19:08:20.647705",
+  "account": "castcoremedia",
+  "job_id": "DK3DhQDyWjE-2.mp4",
+  "phase": "navigation",
+  "error_type": "max_steps",
+  "error_class": "Exception",
+  "error_message": "Max steps (30) reached",
+  "error_repr": "Exception('Max steps (30) reached')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "max_steps": 30,
+    "video_uploaded": true,
+    "caption_entered": false,
+    "share_clicked": false,
+    "caption": "A bold statement incoming from @realalexclark 👀\n\nGlam: @kissbykatietx\n\n#trend #trends #style #outfit"
+  },
+  "ui_elements_count": 36,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "content_view",
+      "bounds": "[0,130][720,1233]",
+      "center": [
+        360,
+        681
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "cover_photo_preview",
+      "bounds": "[239,130][480,161]",
+      "center": [
+        359,
+        145
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Double tap to edit cover photo",
+      "id": "clip_thumbnail_image",
+      "bounds": "[239,130][480,161]",
+      "center": [
+        359,
+        145
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "clip_thumbnail_layout",
+      "bounds": "[254,130][392,145]",
+      "center": [
+        323,
+        137
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Edit cover",
+      "desc": "",
+      "id": "clip_thumbnail_text",
+      "bounds": "[274,130][372,135]",
+      "center": [
+        323,
+        132
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Write a caption and add hashtags…",
+      "desc": "",
+      "id": "caption_input_text_view",
+      "bounds": "[26,214][694,292]",
+      "center": [
+        360,
+        253
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,305][166,373]",
+      "center": [
+        96,
+        339
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Hashtags",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[66,334][153,360]",
+      "center": [
+        109,
+        347
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[179,305][326,373]",
+      "center": [
+        252,
+        339
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Link a reel",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[219,334][313,360]",
+      "center": [
+        266,
+        347
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[339,305][427,373]",
+      "center": [
+        383,
+        339
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Poll",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[379,334][414,360]",
+      "center": [
+        396,
+        347
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[440,305][563,373]",
+      "center": [
+        501,
+        339
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Prompt",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[480,334][550,360]",
+      "center": [
+        515,
+        347
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,386][720,465]",
+      "center": [
+        360,
+        425
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Tag people",
+      "desc": "",
+      "id": "title",
+      "bounds": "[85,409][239,442]",
+      "center": [
+        162,
+        425
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,465][720,619]",
+      "center": [
+        360,
+        542
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Add location",
+      "id": "metadata_location_row",
+      "bounds": "[0,465][720,619]",
+      "center": [
+        360,
+        542
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "metadata_location_first_row",
+      "bounds": "[0,465][720,543]",
+      "center": [
+        360,
+        504
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Add location",
+      "desc": "",
+      "id": "location_label",
+      "bounds": "[85,465][655,543]",
+      "center": [
+        370,
+        504
+      ],
+      "clickable": false
+    },
+    {
+      "text": "People you share this content with can see the location you tag and view this content on the map.",
+      "desc": "",
+      "id": "map_content_education",
+      "bounds": "[0,543][720,599]",
+      "center": [
+        360,
+        571
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,619][720,698]",
+      "center": [
+        360,
+        658
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Rename audio",
+      "desc": "",
+      "id": "title",
+      "bounds": "[85,642][276,675]",
+      "center": [
+        180,
+        658
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Original Audio",
+      "desc": "",
+      "id": "inline_subtitle",
+      "bounds": "[276,644][642,673]",
+      "center": [
+        459,
+        658
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,698][720,834]",
+      "center": [
+        360,
+        766
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Add AI label",
+      "desc": "",
+      "id": "title",
+      "bounds": "[85,718][231,751]",
+      "center": [
+        158,
+        734
+      ],
+      "clickable": false
+    },
+    {
+      "text": "We require you to label certain realistic content that's made with AI. Learn more",
+      "desc": "We require you to label certain realistic content that's made with AI. Learn more",
+      "id": "subtitle",
+      "bounds": "[85,751][583,814]",
+      "center": [
+        334,
+        782
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "toggle",
+      "bounds": "[609,725][694,777]",
+      "center": [
+        651,
+        751
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,844][720,923]",
+      "center": [
+        360,
+        883
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Audience",
+      "desc": "",
+      "id": "title",
+      "bounds": "[85,867][220,900]",
+      "center": [
+        152,
+        883
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Everyone",
+      "desc": "",
+      "id": "inline_subtitle",
+      "bounds": "[220,869][642,898]",
+      "center": [
+        431,
+        883
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar",
+      "bounds": "[0,39][720,130]",
+      "center": [
+        360,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar_new_title_container",
+      "bounds": "[0,39][634,130]",
+      "center": [
+        317,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Back",
+      "id": "action_bar_button_back",
+      "bounds": "[0,39][91,130]",
+      "center": [
+        45,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "New reel",
+      "desc": "New reel",
+      "id": "action_bar_title",
+      "bounds": "[117,65][255,104]",
+      "center": [
+        186,
+        84
+      ],
+      "clickable": false
+    },
+    {
+      "text": "OK",
+      "desc": "OK",
+      "id": "action_bar_button_text",
+      "bounds": "[634,52][707,130]",
+      "center": [
+        670,
+        91
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\castcoremedia_20251222_190532\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\castcoremedia_20251222_190532\\error_001_page_source.xml"
+}

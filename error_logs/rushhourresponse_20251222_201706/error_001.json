@@ -1,0 +1,211 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T20:19:05.990501",
+  "account": "rushhourresponse",
+  "job_id": "C9AFtzEueug-2.mp4",
+  "phase": "navigation",
+  "error_type": "max_steps",
+  "error_class": "Exception",
+  "error_message": "Max steps (30) reached",
+  "error_repr": "Exception('Max steps (30) reached')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "max_steps": 30,
+    "video_uploaded": true,
+    "caption_entered": false,
+    "share_clicked": false,
+    "caption": "# The alcohol metabolism hack hiding in your fruit bowl 🍊\n\nData shows fructose can slash alcohol eli"
+  },
+  "ui_elements_count": 17,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "quick_capture_root_container",
+      "bounds": "[0,0][720,1440]",
+      "center": [
+        360,
+        720
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Back to Home",
+      "id": "gallery_cancel_button",
+      "bounds": "[0,7][85,92]",
+      "center": [
+        42,
+        49
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Add to story",
+      "desc": "",
+      "id": "gallery_title_text",
+      "bounds": "[273,31][447,68]",
+      "center": [
+        360,
+        49
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Camera settings",
+      "id": "gallery_settings_gear",
+      "bounds": "[635,7][720,92]",
+      "center": [
+        677,
+        49
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "gallery_destination_item",
+      "bounds": "[7,113][228,240]",
+      "center": [
+        117,
+        176
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Templates",
+      "desc": "",
+      "id": "button_name",
+      "bounds": "[70,200][165,226]",
+      "center": [
+        117,
+        213
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "gallery_destination_item",
+      "bounds": "[247,113][468,240]",
+      "center": [
+        357,
+        176
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Music",
+      "desc": "",
+      "id": "button_name",
+      "bounds": "[330,200][385,226]",
+      "center": [
+        357,
+        213
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "gallery_destination_item",
+      "bounds": "[487,113][708,240]",
+      "center": [
+        597,
+        176
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Collage",
+      "desc": "",
+      "id": "button_name",
+      "bounds": "[563,200][633,226]",
+      "center": [
+        598,
+        213
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Select multiple, activate to select multiple photos in your gallery",
+      "id": "gallery_menu_multi_select_button",
+      "bounds": "[644,279][702,337]",
+      "center": [
+        673,
+        308
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Album switcher, Recents, button, double tap to change album",
+      "desc": "",
+      "id": "gallery_folder_menu_tv",
+      "bounds": "[0,285][172,322]",
+      "center": [
+        86,
+        303
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Open camera",
+      "id": "",
+      "bounds": "[3,350][239,769]",
+      "center": [
+        121,
+        559
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Camera",
+      "id": "gallery_grid_camera_item_icon",
+      "bounds": "[102,540][141,579]",
+      "center": [
+        121,
+        559
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[242,350][478,769]",
+      "center": [
+        360,
+        559
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Unselected Video thumbnail created on December 22, 2025 5:17 AM",
+      "id": "gallery_grid_item_thumbnail",
+      "bounds": "[242,350][478,769]",
+      "center": [
+        360,
+        559
+      ],
+      "clickable": true
+    },
+    {
+      "text": "0:39",
+      "desc": "",
+      "id": "gallery_grid_item_label",
+      "bounds": "[420,726][465,758]",
+      "center": [
+        442,
+        742
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\rushhourresponse_20251222_201706\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\rushhourresponse_20251222_201706\\error_001_page_source.xml"
+}

@@ -1,0 +1,718 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T21:57:36.999285",
+  "account": "EmptyFuelMatrix",
+  "job_id": "DJXQN1dOc59-1.mp4",
+  "phase": "navigation",
+  "error_type": "max_steps",
+  "error_class": "Exception",
+  "error_message": "Max steps (30) reached",
+  "error_repr": "Exception('Max steps (30) reached')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "max_steps": 30,
+    "video_uploaded": true,
+    "video_selected": true,
+    "caption_entered": true,
+    "share_clicked": false,
+    "caption": "@michaeljknowles thinks someone needs a history lesson – and a one-way ticket on the Mayflowers 📦⛴️\n"
+  },
+  "ui_elements_count": 63,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "reels tray container",
+      "id": "",
+      "bounds": "[0,139][720,354]",
+      "center": [
+        360,
+        246
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[0,139][183,354]",
+      "center": [
+        91,
+        246
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "emptyfuelmatrix's story, 0 of 24, Unseen.",
+      "id": "",
+      "bounds": "[0,139][183,315]",
+      "center": [
+        91,
+        227
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "emptyfuelmatrix's story, 0 of 24, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[22,161][160,299]",
+      "center": [
+        91,
+        230
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Add to story",
+      "id": "reel_empty_badge",
+      "bounds": "[121,260][170,309]",
+      "center": [
+        145,
+        284
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Your story",
+      "desc": "",
+      "id": "username",
+      "bounds": "[44,315][140,341]",
+      "center": [
+        92,
+        328
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[183,139][366,354]",
+      "center": [
+        274,
+        246
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "rupaulson's story, 1 of 24, Unseen.",
+      "id": "",
+      "bounds": "[183,139][366,315]",
+      "center": [
+        274,
+        227
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "rupaulson's story, 1 of 24, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[205,161][343,299]",
+      "center": [
+        274,
+        230
+      ],
+      "clickable": false
+    },
+    {
+      "text": "rupaulson",
+      "desc": "",
+      "id": "username",
+      "bounds": "[229,315][320,341]",
+      "center": [
+        274,
+        328
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[366,139][549,354]",
+      "center": [
+        457,
+        246
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "lilterrio's story, 2 of 24, Unseen.",
+      "id": "",
+      "bounds": "[366,139][549,315]",
+      "center": [
+        457,
+        227
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "lilterrio's story, 2 of 24, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[388,161][526,299]",
+      "center": [
+        457,
+        230
+      ],
+      "clickable": false
+    },
+    {
+      "text": "lilterrio",
+      "desc": "",
+      "id": "username",
+      "bounds": "[424,315][491,341]",
+      "center": [
+        457,
+        328
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[549,139][720,354]",
+      "center": [
+        634,
+        246
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "trippy.tha.kid's story, 3 of 24, Unseen.",
+      "id": "",
+      "bounds": "[549,139][720,315]",
+      "center": [
+        634,
+        227
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "trippy.tha.kid's story, 3 of 24, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[571,161][709,299]",
+      "center": [
+        640,
+        230
+      ],
+      "clickable": false
+    },
+    {
+      "text": "trippy.tha.kid",
+      "desc": "",
+      "id": "username",
+      "bounds": "[580,315][702,341]",
+      "center": [
+        641,
+        328
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "row_pending_container",
+      "bounds": "[0,354][720,484]",
+      "center": [
+        360,
+        419
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Posting to emptyfuelmatrix…",
+      "desc": "",
+      "id": "row_pending_media_sub_status_textview",
+      "bounds": "[111,406][375,432]",
+      "center": [
+        243,
+        419
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "bukumusic posted a video December 13",
+      "id": "row_feed_profile_header",
+      "bounds": "[0,485][720,570]",
+      "center": [
+        360,
+        527
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,485][79,570]",
+      "center": [
+        39,
+        527
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile picture of bukumusic",
+      "id": "row_feed_photo_profile_imageview",
+      "bounds": "[24,503][73,552]",
+      "center": [
+        48,
+        527
+      ],
+      "clickable": false
+    },
+    {
+      "text": "bukumusic",
+      "desc": "bukumusic",
+      "id": "row_feed_photo_profile_name",
+      "bounds": "[79,485][649,526]",
+      "center": [
+        364,
+        505
+      ],
+      "clickable": true
+    },
+    {
+      "text": " bukumusic • Buku Music & Mo County",
+      "desc": " bukumusic • Buku Music & Mo County",
+      "id": "secondary_label",
+      "bounds": "[79,526][649,570]",
+      "center": [
+        364,
+        548
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More actions for this post",
+      "id": "media_option_button",
+      "bounds": "[649,488][720,567]",
+      "center": [
+        684,
+        527
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "media_group",
+      "bounds": "[0,570][720,976]",
+      "center": [
+        360,
+        773
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[628,907][720,976]",
+      "center": [
+        674,
+        941
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Turn sound on",
+      "id": "",
+      "bounds": "[651,907][697,953]",
+      "center": [
+        674,
+        930
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[20,976][66,1051]",
+      "center": [
+        43,
+        1013
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Like",
+      "id": "row_feed_button_like",
+      "bounds": "[20,976][59,1051]",
+      "center": [
+        39,
+        1013
+      ],
+      "clickable": false
+    },
+    {
+      "text": "23",
+      "desc": "",
+      "id": "",
+      "bounds": "[66,976][93,1051]",
+      "center": [
+        79,
+        1013
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[93,976][159,1051]",
+      "center": [
+        126,
+        1013
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Comment",
+      "id": "row_feed_button_comment",
+      "bounds": "[113,976][152,1051]",
+      "center": [
+        132,
+        1013
+      ],
+      "clickable": false
+    },
+    {
+      "text": "1",
+      "desc": "",
+      "id": "",
+      "bounds": "[159,976][168,1051]",
+      "center": [
+        163,
+        1013
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[168,976][241,1051]",
+      "center": [
+        204,
+        1013
+      ],
+      "clickable": true
+    },
+    {
+      "text": "2",
+      "desc": "",
+      "id": "",
+      "bounds": "[241,976][255,1051]",
+      "center": [
+        248,
+        1013
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[265,976][321,1051]",
+      "center": [
+        293,
+        1013
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Send post",
+      "id": "row_feed_button_share",
+      "bounds": "[275,976][314,1051]",
+      "center": [
+        294,
+        1013
+      ],
+      "clickable": false
+    },
+    {
+      "text": "2",
+      "desc": "",
+      "id": "",
+      "bounds": "[321,976][335,1051]",
+      "center": [
+        328,
+        1013
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Add to Saved",
+      "id": "row_feed_button_save",
+      "bounds": "[645,976][717,1044]",
+      "center": [
+        681,
+        1010
+      ],
+      "clickable": true
+    },
+    {
+      "text": "bukumusic 📸 @josephvalente \n @mocountythehomie",
+      "desc": "",
+      "id": "",
+      "bounds": "[20,1051][720,1113]",
+      "center": [
+        370,
+        1082
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "bukumusic",
+      "id": "",
+      "bounds": "[20,1051][131,1079]",
+      "center": [
+        75,
+        1065
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "@josephvalente",
+      "id": "",
+      "bounds": "[169,1051][330,1079]",
+      "center": [
+        249,
+        1065
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "@mocountythehomie",
+      "id": "",
+      "bounds": "[25,1082][243,1110]",
+      "center": [
+        134,
+        1096
+      ],
+      "clickable": true
+    },
+    {
+      "text": "December 13",
+      "desc": "December 13",
+      "id": "",
+      "bounds": "[0,1120][720,1146]",
+      "center": [
+        360,
+        1133
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "rhapsido_remibrutinib posted a video November 13",
+      "id": "row_feed_profile_header",
+      "bounds": "[0,1165][720,1250]",
+      "center": [
+        360,
+        1207
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,1165][79,1250]",
+      "center": [
+        39,
+        1207
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile picture of rhapsido_remibrutinib",
+      "id": "row_feed_photo_profile_imageview",
+      "bounds": "[24,1183][73,1232]",
+      "center": [
+        48,
+        1207
+      ],
+      "clickable": false
+    },
+    {
+      "text": "rhapsido_remibrutinib",
+      "desc": "rhapsido_remibrutinib",
+      "id": "row_feed_photo_profile_name",
+      "bounds": "[79,1165][649,1206]",
+      "center": [
+        364,
+        1185
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Sponsored",
+      "desc": "Sponsored",
+      "id": "secondary_label",
+      "bounds": "[79,1206][649,1250]",
+      "center": [
+        364,
+        1228
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More actions for this post",
+      "id": "media_option_button",
+      "bounds": "[649,1168][720,1247]",
+      "center": [
+        684,
+        1207
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "media_group",
+      "bounds": "[0,1250][720,1266]",
+      "center": [
+        360,
+        1258
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Sponsored Video by RHAPSIDO® (remibrutinib), 1,215 likes, 2 comments, November 13",
+      "id": "row_feed_photo_imageview",
+      "bounds": "[0,1250][720,1266]",
+      "center": [
+        360,
+        1258
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,48][79,139]",
+      "center": [
+        39,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar_title_view",
+      "bounds": "[79,68][641,119]",
+      "center": [
+        360,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Instagram Home Feed",
+      "id": "title_logo",
+      "bounds": "[272,68][448,119]",
+      "center": [
+        360,
+        93
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "notification",
+      "bounds": "[641,48][720,139]",
+      "center": [
+        680,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1266][144,1344]",
+      "center": [
+        72,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1266][288,1344]",
+      "center": [
+        216,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1266][432,1344]",
+      "center": [
+        360,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1266][576,1344]",
+      "center": [
+        504,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1266][720,1344]",
+      "center": [
+        648,
+        1305
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\EmptyFuelMatrix_20251222_215402\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\EmptyFuelMatrix_20251222_215402\\error_001_page_source.xml"
+}

@@ -1,0 +1,120 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T22:12:51.664169",
+  "account": "podsnipworks",
+  "job_id": "DKSE3Zsomw8-2.mp4",
+  "phase": "navigation",
+  "error_type": "loop_stuck",
+  "error_class": "Exception",
+  "error_message": "Loop stuck on action: back",
+  "error_repr": "Exception('Loop stuck on action: back')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "step": 20,
+    "recent_actions": [
+      "back",
+      "back",
+      "back",
+      "back",
+      "back"
+    ],
+    "loop_recovery_count": 3,
+    "video_uploaded": true,
+    "video_selected": false,
+    "caption_entered": false,
+    "share_clicked": false
+  },
+  "ui_elements_count": 8,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "Menu",
+      "id": "",
+      "bounds": "[925,77][1055,197]",
+      "center": [
+        990,
+        137
+      ],
+      "clickable": true
+    },
+    {
+      "text": " ",
+      "desc": "",
+      "id": "",
+      "bounds": "[1021,109][1031,166]",
+      "center": [
+        1026,
+        137
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Upload your ID",
+      "desc": "Upload your ID",
+      "id": "",
+      "bounds": "[96,312][528,400]",
+      "center": [
+        312,
+        356
+      ],
+      "clickable": false
+    },
+    {
+      "text": "We need a photo of your official ID with your date of birth visible. This could be a birth certificate, passport or other type of official identification. You can also use unofficial ID like a library or school ID card, as long as it includes your name, date of birth and a photograph. If there are any issues, we'll send you an email.\n\nWe don't accept photos of a computer screen, a phone screen or a photocopy. If there are any issues, we'll send you an email.\n\nYour ID will be stored securely and deleted within 30 days after we finish confirming your identity. We might use trusted service providers to help review your information.",
+      "desc": "We need a photo of your official ID with your date of birth visible. This could be a birth certificate, passport or other type of official identification. You can also use unofficial ID like a library or school ID card, as long as it includes your name, date of birth and a photograph. If there are any issues, we'll send you an email.\n\nWe don't accept photos of a computer screen, a phone screen or a photocopy. If there are any issues, we'll send you an email.\n\nYour ID will be stored securely and deleted within 30 days after we finish confirming your identity. We might use trusted service providers to help review your information.",
+      "id": "",
+      "bounds": "[96,424][984,1216]",
+      "center": [
+        540,
+        820
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Upload a photo",
+      "id": "",
+      "bounds": "[96,1300][984,1402]",
+      "center": [
+        540,
+        1351
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Upload a photo",
+      "desc": "",
+      "id": "",
+      "bounds": "[398,1323][683,1380]",
+      "center": [
+        540,
+        1351
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Submit",
+      "id": "",
+      "bounds": "[48,1549][1032,1675]",
+      "center": [
+        540,
+        1612
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Submit",
+      "desc": "",
+      "id": "",
+      "bounds": "[473,1584][607,1641]",
+      "center": [
+        540,
+        1612
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\podsnipworks_20251222_220935\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\podsnipworks_20251222_220935\\error_001_page_source.xml"
+}

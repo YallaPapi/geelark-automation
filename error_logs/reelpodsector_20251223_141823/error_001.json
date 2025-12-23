@@ -1,0 +1,377 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-23T14:21:32.818390",
+  "account": "reelpodsector",
+  "job_id": "DJtup4uuXrX-2.mp4",
+  "phase": "navigation",
+  "error_type": "max_steps",
+  "error_class": "Exception",
+  "error_message": "Max steps (30) reached",
+  "error_repr": "Exception('Max steps (30) reached')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "max_steps": 30,
+    "video_uploaded": true,
+    "video_selected": true,
+    "caption_entered": true,
+    "share_clicked": false,
+    "caption": "@neri_lewis walked away with the grand prize! 🏆\n\n@askvinh wrapped up his 5M follower celebration giv"
+  },
+  "ui_elements_count": 32,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "Reel by ericawald_",
+      "id": "clips_media_component",
+      "bounds": "[0,39][720,1284]",
+      "center": [
+        360,
+        661
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Reel by ericawald_. Double tap to play or pause.",
+      "id": "clips_video_container",
+      "bounds": "[0,39][720,1284]",
+      "center": [
+        360,
+        661
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "clips_author_info_component",
+      "bounds": "[26,1100][386,1187]",
+      "center": [
+        206,
+        1143
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile picture of ericawald_",
+      "id": "clips_author_profile_pic",
+      "bounds": "[32,1122][91,1181]",
+      "center": [
+        61,
+        1151
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[97,1121][386,1151]",
+      "center": [
+        241,
+        1136
+      ],
+      "clickable": true
+    },
+    {
+      "text": "ericawald_",
+      "desc": "ericawald_",
+      "id": "clips_author_username",
+      "bounds": "[97,1121][238,1151]",
+      "center": [
+        167,
+        1136
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "t.A.T.u. • All The Things She Said ",
+      "id": "",
+      "bounds": "[97,1159][379,1183]",
+      "center": [
+        238,
+        1171
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[386,1116][531,1187]",
+      "center": [
+        458,
+        1151
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Follow",
+      "desc": "Follow Erica Wald | Prenatal + Postpartum Fitness Coach",
+      "id": "inline_follow_button",
+      "bounds": "[396,1129][508,1177]",
+      "center": [
+        452,
+        1153
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "If this found you, it wasn’t by accident. My name is Erica. I a …",
+      "id": "",
+      "bounds": "[26,1194][635,1261]",
+      "center": [
+        330,
+        1227
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Like",
+      "id": "like_button",
+      "bounds": "[635,706][707,778]",
+      "center": [
+        671,
+        742
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Like number is37. View likes",
+      "desc": "Like number is37. View likes",
+      "id": "like_count",
+      "bounds": "[635,778][707,817]",
+      "center": [
+        671,
+        797
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Comment",
+      "id": "comment_button",
+      "bounds": "[635,817][707,889]",
+      "center": [
+        671,
+        853
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Repost",
+      "id": "",
+      "bounds": "[635,902][707,974]",
+      "center": [
+        671,
+        938
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Reposted 1 times",
+      "desc": "Reposted 1 times",
+      "id": "repost_count",
+      "bounds": "[635,974][707,1013]",
+      "center": [
+        671,
+        993
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Share",
+      "id": "direct_share_button",
+      "bounds": "[635,1013][707,1085]",
+      "center": [
+        671,
+        1049
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Reshare number is1",
+      "desc": "Reshare number is1",
+      "id": "ufi_text_component",
+      "bounds": "[635,1085][707,1124]",
+      "center": [
+        671,
+        1104
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More",
+      "id": "clips_ufi_more_button_component",
+      "bounds": "[635,1124][707,1196]",
+      "center": [
+        671,
+        1160
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Audio",
+      "id": "media_album_art_button",
+      "bounds": "[647,1209][696,1258]",
+      "center": [
+        671,
+        1233
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Create a reel",
+      "id": "",
+      "bounds": "[0,53][77,130]",
+      "center": [
+        38,
+        91
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "",
+      "bounds": "[192,64][330,119]",
+      "center": [
+        261,
+        91
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Reels",
+      "desc": "",
+      "id": "text1",
+      "bounds": "[195,64][297,119]",
+      "center": [
+        246,
+        91
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Friends",
+      "id": "",
+      "bounds": "[330,64][556,119]",
+      "center": [
+        443,
+        91
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Friends",
+      "desc": "",
+      "id": "text1",
+      "bounds": "[333,64][466,119]",
+      "center": [
+        399,
+        91
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1284][144,1362]",
+      "center": [
+        72,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1284][288,1362]",
+      "center": [
+        216,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1284][432,1362]",
+      "center": [
+        360,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1284][576,1362]",
+      "center": [
+        504,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1284][720,1362]",
+      "center": [
+        648,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "upload_snackbar_container",
+      "bounds": "[13,1161][707,1271]",
+      "center": [
+        360,
+        1216
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Sharing to Reels…",
+      "desc": "",
+      "id": "status_text",
+      "bounds": "[107,1194][691,1223]",
+      "center": [
+        399,
+        1208
+      ],
+      "clickable": false
+    },
+    {
+      "text": "90.0",
+      "desc": "",
+      "id": "progress_bar",
+      "bounds": "[107,1236][691,1238]",
+      "center": [
+        399,
+        1237
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\reelpodsector_20251223_141823\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\reelpodsector_20251223_141823\\error_001_page_source.xml"
+}

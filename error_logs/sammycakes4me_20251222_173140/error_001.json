@@ -1,0 +1,22 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T17:31:42.056698",
+  "account": "sammycakes4me",
+  "job_id": "DOrAixxkbbP-1.mp4_podcast",
+  "phase": "execute_job",
+  "error_type": "Exception",
+  "error_class": "Exception",
+  "error_message": "Phone not found: sammycakes4me",
+  "error_repr": "Exception('Phone not found: sammycakes4me')",
+  "stack_trace": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\parallel_worker.py\", line 226, in execute_posting_job\n    poster.connect()\n    ~~~~~~~~~~~~~~^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 883, in connect\n    return self._conn.connect()\n           ~~~~~~~~~~~~~~~~~~^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\device_connection.py\", line 463, in connect\n    phone = self.find_phone()\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\device_connection.py\", line 187, in find_phone\n    raise Exception(f\"Phone not found: {self.phone_name}\")\nException: Phone not found: sammycakes4me\n",
+  "context": {
+    "video_path": "C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\campaigns\\podcast\\videos\\chunk_01c\\theovon\\DOrAixxkbbP-1.mp4",
+    "caption": "Chris D'Elia might be making a comeback 👀\n\n@theovon caught this moment that has everyone talking. Th",
+    "worker_id": 2,
+    "appium_url": "http://127.0.0.1:4727",
+    "full_traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\parallel_worker.py\", line 226, in execute_posting_job\n    poster.connect()\n    ~~~~~~~~~~~~~~^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 883, in connect\n    return self._conn.connect()\n           ~~~~~~~~~~~~~~~~~~^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\device_connection.py\", line 463, in connect\n    phone = self.find_phone()\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\device_connection.py\", line 187, in find_phone\n    raise Exception(f\"Phone not found: {self.phone_name}\")\nException: Phone not found: sammycakes4me\n"
+  },
+  "ui_elements_count": 0,
+  "ui_elements": null,
+  "screenshot_file": null
+}

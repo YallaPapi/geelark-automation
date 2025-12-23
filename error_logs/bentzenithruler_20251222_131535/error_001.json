@@ -1,0 +1,418 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T13:17:31.138682",
+  "account": "bentzenithruler",
+  "job_id": "DNNvWXnRJ5E-1.mp4",
+  "phase": "ai_analysis",
+  "error_type": "analysis_error",
+  "error_class": "ValueError",
+  "error_message": "JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state:\n- I'm on the Instagram home feed \n- Video uploaded: True, Caption ente",
+  "error_repr": "ValueError(\"JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state:\\n- I'm on the Instagram home feed \\n- Video uploaded: True, Caption ente\")",
+  "stack_trace": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 213, in parse_response\n    # Generic code block\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\__init__.py\", line 346, in loads\n    return _default_decoder.decode(s)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 345, in decode\n    obj, end = self.raw_decode(s, idx=_w(s, 0).end())\n               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 363, in raw_decode\n    raise JSONDecodeError(\"Expecting value\", s, err.value) from None\njson.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 275, in analyze\n    Action dictionary with action, element_index, text, reason, etc.\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 215, in parse_response\n    if len(parts) >= 3:\nValueError: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state:\n- I'm on the Instagram home feed \n- Video uploaded: True, Caption ente\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 1026, in post\n    action = self.analyze_ui(elements, caption)\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 870, in analyze_ui\n    return self._analyzer.analyze(\n           ~~~~~~~~~~~~~~~~~~~~~~^\n        elements=elements,\n        ^^^^^^^^^^^^^^^^^^\n    ...<3 lines>...\n        share_clicked=self.share_clicked\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 282, in analyze\n    caption=caption,\n            ^^^^^^^^\nValueError: JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state:\n- I'm on the Instagram home feed \n- Video uploaded: True, Caption ente\n",
+  "context": {
+    "step": 2,
+    "caption": "@askvinh wrapped up his Melbourne STAGE workshop with this incredible energy ❤️\n\nWhen you watch some",
+    "video_uploaded": true
+  },
+  "ui_elements_count": 36,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "reels tray container",
+      "id": "",
+      "bounds": "[0,130][720,345]",
+      "center": [
+        360,
+        237
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[0,130][171,345]",
+      "center": [
+        85,
+        237
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "bentzenithruler's story, 0 of 27, Unseen.",
+      "id": "",
+      "bounds": "[0,130][171,306]",
+      "center": [
+        85,
+        218
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "bentzenithruler's story, 0 of 27, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[10,152][148,290]",
+      "center": [
+        79,
+        221
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Add to story",
+      "id": "reel_empty_badge",
+      "bounds": "[109,251][158,300]",
+      "center": [
+        133,
+        275
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Your story",
+      "desc": "",
+      "id": "username",
+      "bounds": "[32,306][128,332]",
+      "center": [
+        80,
+        319
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[171,130][354,345]",
+      "center": [
+        262,
+        237
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "ludwigahgren's story, 1 of 27, Unseen.",
+      "id": "",
+      "bounds": "[171,130][354,306]",
+      "center": [
+        262,
+        218
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "ludwigahgren's story, 1 of 27, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[193,152][331,290]",
+      "center": [
+        262,
+        221
+      ],
+      "clickable": false
+    },
+    {
+      "text": "ludwigahgren",
+      "desc": "",
+      "id": "username",
+      "bounds": "[200,306][326,332]",
+      "center": [
+        263,
+        319
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[354,130][537,345]",
+      "center": [
+        445,
+        237
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "sam_sulek's story, 2 of 27, Unseen.",
+      "id": "",
+      "bounds": "[354,130][537,306]",
+      "center": [
+        445,
+        218
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "sam_sulek's story, 2 of 27, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[376,152][514,290]",
+      "center": [
+        445,
+        221
+      ],
+      "clickable": false
+    },
+    {
+      "text": "sam_sulek",
+      "desc": "",
+      "id": "username",
+      "bounds": "[399,306][493,332]",
+      "center": [
+        446,
+        319
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[537,130][720,345]",
+      "center": [
+        628,
+        237
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "maya_higa's story, 3 of 27, Seen.",
+      "id": "",
+      "bounds": "[537,130][720,306]",
+      "center": [
+        628,
+        218
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "maya_higa's story, 3 of 27, Seen.",
+      "id": "avatar_image_view",
+      "bounds": "[559,152][697,290]",
+      "center": [
+        628,
+        221
+      ],
+      "clickable": false
+    },
+    {
+      "text": "maya_higa",
+      "desc": "",
+      "id": "username",
+      "bounds": "[579,306][678,332]",
+      "center": [
+        628,
+        319
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "media_group",
+      "bounds": "[0,345][720,1284]",
+      "center": [
+        360,
+        814
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "hellocanadamag posted a video December 4",
+      "id": "row_feed_profile_header",
+      "bounds": "[0,345][720,430]",
+      "center": [
+        360,
+        387
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,345][79,430]",
+      "center": [
+        39,
+        387
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile picture of hellocanadamag",
+      "id": "row_feed_photo_profile_imageview",
+      "bounds": "[24,363][73,412]",
+      "center": [
+        48,
+        387
+      ],
+      "clickable": false
+    },
+    {
+      "text": "hellocanadamag  ",
+      "desc": "hellocanadamag  ",
+      "id": "row_feed_photo_profile_name",
+      "bounds": "[79,345][525,386]",
+      "center": [
+        302,
+        365
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[79,386][525,430]",
+      "center": [
+        302,
+        408
+      ],
+      "clickable": true
+    },
+    {
+      "text": " hellocanadamag • Original audio",
+      "desc": " hellocanadamag • Original audio",
+      "id": "secondary_label",
+      "bounds": "[79,386][525,430]",
+      "center": [
+        302,
+        408
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Follow",
+      "desc": "Follow HELLO! Canada Magazine",
+      "id": "inline_follow_button",
+      "bounds": "[525,361][649,413]",
+      "center": [
+        587,
+        387
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More actions for this post",
+      "id": "media_option_button",
+      "bounds": "[649,348][720,427]",
+      "center": [
+        684,
+        387
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,39][79,130]",
+      "center": [
+        39,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar_title_view",
+      "bounds": "[79,59][641,110]",
+      "center": [
+        360,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "For you",
+      "desc": "",
+      "id": "title_text",
+      "bounds": "[79,59][207,102]",
+      "center": [
+        143,
+        80
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "notification",
+      "bounds": "[641,39][720,130]",
+      "center": [
+        680,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1284][144,1362]",
+      "center": [
+        72,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1284][288,1362]",
+      "center": [
+        216,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1284][432,1362]",
+      "center": [
+        360,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1284][576,1362]",
+      "center": [
+        504,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1284][720,1362]",
+      "center": [
+        648,
+        1323
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\bentzenithruler_20251222_131535\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\bentzenithruler_20251222_131535\\error_001_page_source.xml"
+}

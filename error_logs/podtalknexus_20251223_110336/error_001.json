@@ -1,0 +1,839 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-23T11:11:04.458974",
+  "account": "podtalknexus",
+  "job_id": "a7ohYYIQn8Yr-3.mp4",
+  "phase": "navigation",
+  "error_type": "max_steps",
+  "error_class": "Exception",
+  "error_message": "Max steps (30) reached",
+  "error_repr": "Exception('Max steps (30) reached')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "max_steps": 30,
+    "video_uploaded": true,
+    "video_selected": false,
+    "caption_entered": false,
+    "share_clicked": false,
+    "caption": "Own your path. No excuses. Your move, your rules. Rise or fall - it's all on you."
+  },
+  "ui_elements_count": 74,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "reels tray container",
+      "id": "",
+      "bounds": "[0,130][720,345]",
+      "center": [
+        360,
+        237
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[0,130][183,345]",
+      "center": [
+        91,
+        237
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "podtalknexus's story, 0 of 17, Unseen.",
+      "id": "",
+      "bounds": "[0,130][183,306]",
+      "center": [
+        91,
+        218
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "podtalknexus's story, 0 of 17, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[22,152][160,290]",
+      "center": [
+        91,
+        221
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Add to story",
+      "id": "reel_empty_badge",
+      "bounds": "[121,251][170,300]",
+      "center": [
+        145,
+        275
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Your story",
+      "desc": "",
+      "id": "username",
+      "bounds": "[44,306][140,332]",
+      "center": [
+        92,
+        319
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[183,130][366,345]",
+      "center": [
+        274,
+        237
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "robertfkennedyjr's story, 1 of 17, Unseen.",
+      "id": "",
+      "bounds": "[183,130][366,306]",
+      "center": [
+        274,
+        218
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "robertfkennedyjr's story, 1 of 17, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[205,152][343,290]",
+      "center": [
+        274,
+        221
+      ],
+      "clickable": false
+    },
+    {
+      "text": "robertfkennedyjr",
+      "desc": "",
+      "id": "username",
+      "bounds": "[197,306][353,332]",
+      "center": [
+        275,
+        319
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[366,130][549,345]",
+      "center": [
+        457,
+        237
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "jockowillink's story, 2 of 17, Unseen.",
+      "id": "",
+      "bounds": "[366,130][549,306]",
+      "center": [
+        457,
+        218
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "jockowillink's story, 2 of 17, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[388,152][526,290]",
+      "center": [
+        457,
+        221
+      ],
+      "clickable": false
+    },
+    {
+      "text": "jockowillink",
+      "desc": "",
+      "id": "username",
+      "bounds": "[404,306][512,332]",
+      "center": [
+        458,
+        319
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[549,130][720,345]",
+      "center": [
+        634,
+        237
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "killtonyshow's story, 3 of 17, Unseen.",
+      "id": "",
+      "bounds": "[549,130][720,306]",
+      "center": [
+        634,
+        218
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "killtonyshow's story, 3 of 17, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[571,152][709,290]",
+      "center": [
+        640,
+        221
+      ],
+      "clickable": false
+    },
+    {
+      "text": "killtonyshow",
+      "desc": "",
+      "id": "username",
+      "bounds": "[582,306][699,332]",
+      "center": [
+        640,
+        319
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "row_pending_container",
+      "bounds": "[0,345][720,430]",
+      "center": [
+        360,
+        387
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Video can't be posted",
+      "desc": "",
+      "id": "row_pending_media_status_textview",
+      "bounds": "[98,371][642,403]",
+      "center": [
+        370,
+        387
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "row_pending_media_discard_button",
+      "bounds": "[642,368][720,407]",
+      "center": [
+        681,
+        387
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "foxandfriends posted a video in Nashville, TN 2 days ago",
+      "id": "row_feed_profile_header",
+      "bounds": "[0,431][720,516]",
+      "center": [
+        360,
+        473
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,431][83,516]",
+      "center": [
+        41,
+        473
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "User avatars",
+      "id": "",
+      "bounds": "[18,431][83,516]",
+      "center": [
+        50,
+        473
+      ],
+      "clickable": false
+    },
+    {
+      "text": "kidrock and 3 others ",
+      "desc": "kidrock and 3 others ",
+      "id": "row_feed_photo_profile_name",
+      "bounds": "[83,431][649,472]",
+      "center": [
+        366,
+        451
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Nashville, TN",
+      "desc": "Nashville, TN",
+      "id": "secondary_label",
+      "bounds": "[83,475][649,516]",
+      "center": [
+        366,
+        495
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[83,472][649,516]",
+      "center": [
+        366,
+        494
+      ],
+      "clickable": true
+    },
+    {
+      "text": " foxandfriends • Original audio",
+      "desc": " foxandfriends • Original audio",
+      "id": "secondary_label",
+      "bounds": "[83,472][649,511]",
+      "center": [
+        366,
+        491
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More actions for this post",
+      "id": "media_option_button",
+      "bounds": "[649,434][720,513]",
+      "center": [
+        684,
+        473
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "media_group",
+      "bounds": "[0,516][720,922]",
+      "center": [
+        360,
+        719
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "kidrock liked this reel",
+      "id": "",
+      "bounds": "[30,762][115,847]",
+      "center": [
+        72,
+        804
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "indicator_background_view",
+      "bounds": "[23,853][68,898]",
+      "center": [
+        45,
+        875
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "View tagged people",
+      "id": "indicator_icon_view",
+      "bounds": "[34,864][57,887]",
+      "center": [
+        45,
+        875
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[628,853][720,922]",
+      "center": [
+        674,
+        887
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Turn sound on",
+      "id": "",
+      "bounds": "[651,853][697,899]",
+      "center": [
+        674,
+        876
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[20,922][66,997]",
+      "center": [
+        43,
+        959
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Like",
+      "id": "row_feed_button_like",
+      "bounds": "[20,922][59,997]",
+      "center": [
+        39,
+        959
+      ],
+      "clickable": false
+    },
+    {
+      "text": "15K",
+      "desc": "",
+      "id": "",
+      "bounds": "[66,922][105,997]",
+      "center": [
+        85,
+        959
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[105,922][171,997]",
+      "center": [
+        138,
+        959
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Comment",
+      "id": "row_feed_button_comment",
+      "bounds": "[125,922][164,997]",
+      "center": [
+        144,
+        959
+      ],
+      "clickable": false
+    },
+    {
+      "text": "891",
+      "desc": "",
+      "id": "",
+      "bounds": "[171,922][208,997]",
+      "center": [
+        189,
+        959
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[208,922][281,997]",
+      "center": [
+        244,
+        959
+      ],
+      "clickable": true
+    },
+    {
+      "text": "103",
+      "desc": "",
+      "id": "",
+      "bounds": "[281,922][317,997]",
+      "center": [
+        299,
+        959
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[327,922][383,997]",
+      "center": [
+        355,
+        959
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Send post",
+      "id": "row_feed_button_share",
+      "bounds": "[337,922][376,997]",
+      "center": [
+        356,
+        959
+      ],
+      "clickable": false
+    },
+    {
+      "text": "743",
+      "desc": "",
+      "id": "",
+      "bounds": "[383,922][423,997]",
+      "center": [
+        403,
+        959
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Add to Saved",
+      "id": "row_feed_button_save",
+      "bounds": "[645,922][717,990]",
+      "center": [
+        681,
+        956
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "User avatars",
+      "id": "",
+      "bounds": "[20,997][58,1035]",
+      "center": [
+        39,
+        1016
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Liked by kidrock and others",
+      "desc": "",
+      "id": "",
+      "bounds": "[68,1002][379,1030]",
+      "center": [
+        223,
+        1016
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "kidrock",
+      "id": "",
+      "bounds": "[163,1002][244,1030]",
+      "center": [
+        203,
+        1016
+      ],
+      "clickable": true
+    },
+    {
+      "text": "foxandfriends Step into Kid Rock’s kitchen! @rcamposduffy j… more",
+      "desc": "",
+      "id": "",
+      "bounds": "[20,1042][720,1073]",
+      "center": [
+        370,
+        1057
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "foxandfriends",
+      "id": "",
+      "bounds": "[20,1042][162,1070]",
+      "center": [
+        91,
+        1056
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "@rcamposduffy",
+      "id": "",
+      "bounds": "[457,1042][616,1070]",
+      "center": [
+        536,
+        1056
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Step into Kid Rock’s kitchen! @rcamposduffy j",
+      "id": "",
+      "bounds": "[167,1042][626,1070]",
+      "center": [
+        396,
+        1056
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Step into Kid Rock’s kitchen! @rcamposduffy j",
+      "id": "",
+      "bounds": "[167,1042][626,1070]",
+      "center": [
+        396,
+        1056
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "more",
+      "id": "",
+      "bounds": "[646,1042][698,1070]",
+      "center": [
+        672,
+        1056
+      ],
+      "clickable": true
+    },
+    {
+      "text": "2 days ago",
+      "desc": "2 days ago",
+      "id": "",
+      "bounds": "[0,1080][720,1106]",
+      "center": [
+        360,
+        1093
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "smokeys984 posted a photo December 6",
+      "id": "row_feed_profile_header",
+      "bounds": "[0,1125][720,1210]",
+      "center": [
+        360,
+        1167
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,1125][79,1210]",
+      "center": [
+        39,
+        1167
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile picture of smokeys984",
+      "id": "row_feed_photo_profile_imageview",
+      "bounds": "[24,1143][73,1192]",
+      "center": [
+        48,
+        1167
+      ],
+      "clickable": false
+    },
+    {
+      "text": "smokeys984",
+      "desc": "smokeys984",
+      "id": "row_feed_photo_profile_name",
+      "bounds": "[79,1125][649,1166]",
+      "center": [
+        364,
+        1145
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Sponsored",
+      "desc": "Sponsored",
+      "id": "secondary_label",
+      "bounds": "[79,1166][649,1210]",
+      "center": [
+        364,
+        1188
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More actions for this post",
+      "id": "media_option_button",
+      "bounds": "[649,1128][720,1207]",
+      "center": [
+        684,
+        1167
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "media_group",
+      "bounds": "[0,1210][720,1284]",
+      "center": [
+        360,
+        1247
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Sponsored Photo by Smokey’s Smoke & Smoothie, 41 likes, 8 comments",
+      "id": "row_feed_photo_imageview",
+      "bounds": "[0,1210][720,1284]",
+      "center": [
+        360,
+        1247
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,39][79,130]",
+      "center": [
+        39,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar_title_view",
+      "bounds": "[79,59][641,110]",
+      "center": [
+        360,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Instagram Home Feed",
+      "id": "title_logo",
+      "bounds": "[272,59][448,110]",
+      "center": [
+        360,
+        84
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "notification",
+      "bounds": "[641,39][720,130]",
+      "center": [
+        680,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1284][144,1362]",
+      "center": [
+        72,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1284][288,1362]",
+      "center": [
+        216,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1284][432,1362]",
+      "center": [
+        360,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1284][576,1362]",
+      "center": [
+        504,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1284][720,1362]",
+      "center": [
+        648,
+        1323
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\podtalknexus_20251223_110336\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\podtalknexus_20251223_110336\\error_001_page_source.xml"
+}

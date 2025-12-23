@@ -1,0 +1,476 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T21:54:46.739744",
+  "account": "daisochunks",
+  "job_id": "DJsYxpvzPea-1.mp4",
+  "phase": "navigation",
+  "error_type": "max_steps",
+  "error_class": "Exception",
+  "error_message": "Max steps (30) reached",
+  "error_repr": "Exception('Max steps (30) reached')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "max_steps": 30,
+    "video_uploaded": true,
+    "video_selected": true,
+    "caption_entered": true,
+    "share_clicked": false,
+    "caption": "The question on everyone's mind after watching this thought-provoking moment from jordan.b.peterson."
+  },
+  "ui_elements_count": 41,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "content_view",
+      "bounds": "[0,130][720,1233]",
+      "center": [
+        360,
+        681
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "cover_photo_preview",
+      "bounds": "[239,153][480,584]",
+      "center": [
+        359,
+        368
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Double tap to edit cover photo",
+      "id": "clip_thumbnail_image",
+      "bounds": "[239,153][480,584]",
+      "center": [
+        359,
+        368
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "clip_thumbnail_layout",
+      "bounds": "[254,522][392,568]",
+      "center": [
+        323,
+        545
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Edit cover",
+      "desc": "",
+      "id": "clip_thumbnail_text",
+      "bounds": "[274,532][372,558]",
+      "center": [
+        323,
+        545
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Write a caption and add hashtags…",
+      "desc": "",
+      "id": "caption_input_text_view",
+      "bounds": "[26,637][694,715]",
+      "center": [
+        360,
+        676
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,728][166,796]",
+      "center": [
+        96,
+        762
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Hashtags",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[66,757][153,783]",
+      "center": [
+        109,
+        770
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[179,728][326,796]",
+      "center": [
+        252,
+        762
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Link a reel",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[219,757][313,783]",
+      "center": [
+        266,
+        770
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[339,728][427,796]",
+      "center": [
+        383,
+        762
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Poll",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[379,757][414,783]",
+      "center": [
+        396,
+        770
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[440,728][563,796]",
+      "center": [
+        501,
+        762
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Prompt",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[480,757][550,783]",
+      "center": [
+        515,
+        770
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,809][720,888]",
+      "center": [
+        360,
+        848
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Tag people",
+      "desc": "",
+      "id": "title",
+      "bounds": "[85,832][239,865]",
+      "center": [
+        162,
+        848
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,888][720,1130]",
+      "center": [
+        360,
+        1009
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Add location",
+      "id": "metadata_location_row",
+      "bounds": "[0,888][720,1130]",
+      "center": [
+        360,
+        1009
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "metadata_location_first_row",
+      "bounds": "[0,888][720,966]",
+      "center": [
+        360,
+        927
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Add location",
+      "desc": "",
+      "id": "location_label",
+      "bounds": "[85,888][655,966]",
+      "center": [
+        370,
+        927
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,979][240,1041]",
+      "center": [
+        133,
+        1010
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Troy, Michigan",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[79,1005][214,1031]",
+      "center": [
+        146,
+        1018
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[253,979][566,1041]",
+      "center": [
+        409,
+        1010
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Rochester Hills, Michigan",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[306,1005][540,1031]",
+      "center": [
+        423,
+        1018
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[579,979][720,1041]",
+      "center": [
+        649,
+        1010
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Royal Oak, Michigan",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[632,1005][720,1031]",
+      "center": [
+        676,
+        1018
+      ],
+      "clickable": false
+    },
+    {
+      "text": "People you share this content with can see the location you tag and view this content on the map.",
+      "desc": "",
+      "id": "map_content_education",
+      "bounds": "[0,1054][720,1110]",
+      "center": [
+        360,
+        1082
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,1130][720,1209]",
+      "center": [
+        360,
+        1169
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Rename audio",
+      "desc": "",
+      "id": "title",
+      "bounds": "[85,1153][276,1186]",
+      "center": [
+        180,
+        1169
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Original Audio",
+      "desc": "",
+      "id": "inline_subtitle",
+      "bounds": "[276,1155][642,1184]",
+      "center": [
+        459,
+        1169
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,1209][720,1233]",
+      "center": [
+        360,
+        1221
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Add AI label",
+      "desc": "",
+      "id": "title",
+      "bounds": "[85,1229][231,1233]",
+      "center": [
+        158,
+        1231
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "share_button_container",
+      "bounds": "[0,1233][720,1362]",
+      "center": [
+        360,
+        1297
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Save draft",
+      "id": "save_draft_button",
+      "bounds": "[26,1257][347,1329]",
+      "center": [
+        186,
+        1293
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Save draft",
+      "desc": "",
+      "id": "",
+      "bounds": "[129,1278][243,1308]",
+      "center": [
+        186,
+        1293
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Share",
+      "id": "share_button",
+      "bounds": "[373,1257][694,1329]",
+      "center": [
+        533,
+        1293
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Share",
+      "desc": "",
+      "id": "",
+      "bounds": "[501,1278][566,1308]",
+      "center": [
+        533,
+        1293
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar",
+      "bounds": "[0,39][720,130]",
+      "center": [
+        360,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar_new_title_container",
+      "bounds": "[0,39][707,130]",
+      "center": [
+        353,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Back",
+      "id": "action_bar_button_back",
+      "bounds": "[0,39][91,130]",
+      "center": [
+        45,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "New reel",
+      "desc": "New reel",
+      "id": "action_bar_title",
+      "bounds": "[117,65][255,104]",
+      "center": [
+        186,
+        84
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\daisochunks_20251222_215124\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\daisochunks_20251222_215124\\error_001_page_source.xml"
+}

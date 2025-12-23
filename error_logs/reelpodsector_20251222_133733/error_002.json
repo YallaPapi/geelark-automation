@@ -1,0 +1,616 @@
+{
+  "error_id": "error_002",
+  "timestamp": "2025-12-22T13:40:14.457920",
+  "account": "reelpodsector",
+  "job_id": "DNl2UpbyqjS-2.mp4",
+  "phase": "ai_analysis",
+  "error_type": "analysis_error",
+  "error_class": "ValueError",
+  "error_message": "JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see that:\n- Video is uploaded: True\n- Caption entered: False  \n-",
+  "error_repr": "ValueError('JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see that:\\n- Video is uploaded: True\\n- Caption entered: False  \\n-')",
+  "stack_trace": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 213, in parse_response\n    # Generic code block\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\__init__.py\", line 346, in loads\n    return _default_decoder.decode(s)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 345, in decode\n    obj, end = self.raw_decode(s, idx=_w(s, 0).end())\n               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 363, in raw_decode\n    raise JSONDecodeError(\"Expecting value\", s, err.value) from None\njson.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 275, in analyze\n    Action dictionary with action, element_index, text, reason, etc.\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 215, in parse_response\n    if len(parts) >= 3:\nValueError: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see that:\n- Video is uploaded: True\n- Caption entered: False  \n-\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 1026, in post\n    action = self.analyze_ui(elements, caption)\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 870, in analyze_ui\n    return self._analyzer.analyze(\n           ~~~~~~~~~~~~~~~~~~~~~~^\n        elements=elements,\n        ^^^^^^^^^^^^^^^^^^\n    ...<3 lines>...\n        share_clicked=self.share_clicked\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 282, in analyze\n    caption=caption,\n            ^^^^^^^^\nValueError: JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see that:\n- Video is uploaded: True\n- Caption entered: False  \n-\n",
+  "context": {
+    "step": 1,
+    "caption": "The audacity is real 😤 When they tried it but @charliekirk1776 wasn't having ANY of it. That's what ",
+    "video_uploaded": true
+  },
+  "ui_elements_count": 54,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "backed_by_destiny shared a note: ",
+      "id": "",
+      "bounds": "[20,340][124,418]",
+      "center": [
+        72,
+        379
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[628,351][720,420]",
+      "center": [
+        674,
+        385
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Turn sound on",
+      "id": "",
+      "bounds": "[651,351][697,397]",
+      "center": [
+        674,
+        374
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "media_group",
+      "bounds": "[0,39][720,420]",
+      "center": [
+        360,
+        229
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Jake Paul, 371,730 likes, 13.8K comments, 2 days ago",
+      "id": "row_feed_photo_imageview",
+      "bounds": "[0,39][720,420]",
+      "center": [
+        360,
+        229
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "See reel",
+      "id": "bottom_button",
+      "bounds": "[301,342][418,394]",
+      "center": [
+        359,
+        368
+      ],
+      "clickable": true
+    },
+    {
+      "text": "See reel",
+      "desc": "",
+      "id": "",
+      "bounds": "[320,355][399,381]",
+      "center": [
+        359,
+        368
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "blurred_image_view_overlay",
+      "bounds": "[0,39][720,420]",
+      "center": [
+        360,
+        229
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[20,420][73,495]",
+      "center": [
+        46,
+        457
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Like",
+      "id": "row_feed_button_like",
+      "bounds": "[27,420][66,495]",
+      "center": [
+        46,
+        457
+      ],
+      "clickable": false
+    },
+    {
+      "text": "371K",
+      "desc": "",
+      "id": "",
+      "bounds": "[73,420][123,495]",
+      "center": [
+        98,
+        457
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[123,420][189,495]",
+      "center": [
+        156,
+        457
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Comment",
+      "id": "row_feed_button_comment",
+      "bounds": "[143,420][182,495]",
+      "center": [
+        162,
+        457
+      ],
+      "clickable": false
+    },
+    {
+      "text": "13.8K",
+      "desc": "",
+      "id": "",
+      "bounds": "[189,420][246,495]",
+      "center": [
+        217,
+        457
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[246,420][319,495]",
+      "center": [
+        282,
+        457
+      ],
+      "clickable": true
+    },
+    {
+      "text": "11.2K",
+      "desc": "",
+      "id": "",
+      "bounds": "[319,420][372,495]",
+      "center": [
+        345,
+        457
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[382,420][438,495]",
+      "center": [
+        410,
+        457
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Send post",
+      "id": "row_feed_button_share",
+      "bounds": "[392,420][431,495]",
+      "center": [
+        411,
+        457
+      ],
+      "clickable": false
+    },
+    {
+      "text": "620K",
+      "desc": "",
+      "id": "",
+      "bounds": "[438,420][495,495]",
+      "center": [
+        466,
+        457
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Add to Saved",
+      "id": "row_feed_button_save",
+      "bounds": "[637,420][709,488]",
+      "center": [
+        673,
+        454
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "User avatars",
+      "id": "",
+      "bounds": "[23,495][107,533]",
+      "center": [
+        65,
+        514
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Liked by woodie.hillyard and others",
+      "desc": "",
+      "id": "",
+      "bounds": "[117,500][515,528]",
+      "center": [
+        316,
+        514
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "woodie.hillyard",
+      "id": "",
+      "bounds": "[212,500][380,528]",
+      "center": [
+        296,
+        514
+      ],
+      "clickable": true
+    },
+    {
+      "text": "jakepaul it’s fine right?",
+      "desc": "",
+      "id": "",
+      "bounds": "[23,540][720,571]",
+      "center": [
+        371,
+        555
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "jakepaul",
+      "id": "",
+      "bounds": "[23,540][109,568]",
+      "center": [
+        66,
+        554
+      ],
+      "clickable": true
+    },
+    {
+      "text": "adsterphotos ",
+      "desc": "",
+      "id": "",
+      "bounds": "[23,578][651,609]",
+      "center": [
+        337,
+        593
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "adsterphotos",
+      "id": "",
+      "bounds": "[23,578][162,606]",
+      "center": [
+        92,
+        592
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[651,578][720,598]",
+      "center": [
+        685,
+        588
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Like",
+      "id": "",
+      "bounds": "[674,578][694,598]",
+      "center": [
+        684,
+        588
+      ],
+      "clickable": false
+    },
+    {
+      "text": "2 days ago",
+      "desc": "2 days ago",
+      "id": "",
+      "bounds": "[0,616][720,642]",
+      "center": [
+        360,
+        629
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Suggested for you",
+      "desc": "Suggested for you",
+      "id": "netego_carousel_title",
+      "bounds": "[23,674][225,704]",
+      "center": [
+        124,
+        689
+      ],
+      "clickable": false
+    },
+    {
+      "text": "See all",
+      "desc": "",
+      "id": "netego_carousel_cta",
+      "bounds": "[603,674][694,704]",
+      "center": [
+        648,
+        689
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "suggested_entity_card_container",
+      "bounds": "[23,726][469,1171]",
+      "center": [
+        246,
+        948
+      ],
+      "clickable": true
+    },
+    {
+      "text": "50 Cent",
+      "desc": "",
+      "id": "suggested_entity_card_name",
+      "bounds": "[190,1000][302,1028]",
+      "center": [
+        246,
+        1014
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Followed by 3rdworldboxing, mikehermalyn + 1 more",
+      "desc": "",
+      "id": "suggested_entity_card_context",
+      "bounds": "[142,1035][415,1082]",
+      "center": [
+        278,
+        1058
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Follow",
+      "desc": "Follow 50 Cent",
+      "id": "suggested_user_card_follow_button",
+      "bounds": "[43,1099][449,1151]",
+      "center": [
+        246,
+        1125
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Dismiss",
+      "id": "dismiss_button",
+      "bounds": "[423,726][469,772]",
+      "center": [
+        446,
+        749
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "suggested_entity_card_container",
+      "bounds": "[489,726][720,1171]",
+      "center": [
+        604,
+        948
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Darkweb Secret",
+      "desc": "",
+      "id": "suggested_entity_card_name",
+      "bounds": "[624,1008][720,1036]",
+      "center": [
+        672,
+        1022
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Followed by dave79499",
+      "desc": "",
+      "id": "suggested_entity_card_context",
+      "bounds": "[626,1046][720,1070]",
+      "center": [
+        673,
+        1058
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Follow",
+      "desc": "Follow Darkweb Secret",
+      "id": "suggested_user_card_follow_button",
+      "bounds": "[509,1099][720,1151]",
+      "center": [
+        614,
+        1125
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "meta posted a video 7 days ago",
+      "id": "row_feed_profile_header",
+      "bounds": "[0,1197][720,1282]",
+      "center": [
+        360,
+        1239
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,1197][79,1282]",
+      "center": [
+        39,
+        1239
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile picture of meta",
+      "id": "row_feed_photo_profile_imageview",
+      "bounds": "[24,1215][73,1264]",
+      "center": [
+        48,
+        1239
+      ],
+      "clickable": false
+    },
+    {
+      "text": "meta  ",
+      "desc": "meta  ",
+      "id": "row_feed_photo_profile_name",
+      "bounds": "[79,1197][649,1238]",
+      "center": [
+        364,
+        1217
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Sponsored",
+      "desc": "Sponsored",
+      "id": "secondary_label",
+      "bounds": "[79,1238][649,1282]",
+      "center": [
+        364,
+        1260
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More actions for this post",
+      "id": "media_option_button",
+      "bounds": "[649,1200][720,1279]",
+      "center": [
+        684,
+        1239
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "media_group",
+      "bounds": "[0,1282][720,1284]",
+      "center": [
+        360,
+        1283
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Sponsored Video by Meta, 1,466 likes, 14 comments, 7 days ago",
+      "id": "row_feed_photo_imageview",
+      "bounds": "[0,1282][720,1284]",
+      "center": [
+        360,
+        1283
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1284][144,1362]",
+      "center": [
+        72,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1284][288,1362]",
+      "center": [
+        216,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1284][432,1362]",
+      "center": [
+        360,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1284][576,1362]",
+      "center": [
+        504,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1284][720,1362]",
+      "center": [
+        648,
+        1323
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\reelpodsector_20251222_133733\\error_002_screenshot.png",
+  "page_source_file": "error_logs\\reelpodsector_20251222_133733\\error_002_page_source.xml"
+}

@@ -1,0 +1,220 @@
+{
+  "error_id": "error_004",
+  "timestamp": "2025-12-22T13:47:47.740800",
+  "account": "micdropchannel",
+  "job_id": "DO37nBZj9HC-1.mp4",
+  "phase": "ai_analysis",
+  "error_type": "analysis_error",
+  "error_class": "ValueError",
+  "error_message": "JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current screen, I can see this is the video editing interface with a video already up",
+  "error_repr": "ValueError('JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current screen, I can see this is the video editing interface with a video already up')",
+  "stack_trace": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 213, in parse_response\n    # Generic code block\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\__init__.py\", line 346, in loads\n    return _default_decoder.decode(s)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 345, in decode\n    obj, end = self.raw_decode(s, idx=_w(s, 0).end())\n               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 363, in raw_decode\n    raise JSONDecodeError(\"Expecting value\", s, err.value) from None\njson.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 275, in analyze\n    Action dictionary with action, element_index, text, reason, etc.\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 215, in parse_response\n    if len(parts) >= 3:\nValueError: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current screen, I can see this is the video editing interface with a video already up\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 1026, in post\n    action = self.analyze_ui(elements, caption)\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 870, in analyze_ui\n    return self._analyzer.analyze(\n           ~~~~~~~~~~~~~~~~~~~~~~^\n        elements=elements,\n        ^^^^^^^^^^^^^^^^^^\n    ...<3 lines>...\n        share_clicked=self.share_clicked\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 282, in analyze\n    caption=caption,\n            ^^^^^^^^\nValueError: JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current screen, I can see this is the video editing interface with a video already up\n",
+  "context": {
+    "step": 9,
+    "caption": "The moment you realize someone's speaking nothing but facts 💯 @charliekirk1776 breaks it down in a w",
+    "video_uploaded": true
+  },
+  "ui_elements_count": 18,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "quick_capture_root_container",
+      "bounds": "[0,0][720,1440]",
+      "center": [
+        360,
+        720
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Swipe up to edit",
+      "desc": "",
+      "id": "clips_stacked_timeline_swipe_up_helper_text",
+      "bounds": "[271,1141][448,1170]",
+      "center": [
+        359,
+        1155
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Double tap for tools that edit your video clips.",
+      "id": "clips_left_action_button",
+      "bounds": "[20,1292][168,1362]",
+      "center": [
+        94,
+        1327
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Edit video",
+      "desc": "",
+      "id": "",
+      "bounds": "[46,1314][142,1340]",
+      "center": [
+        94,
+        1327
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Next",
+      "id": "clips_right_action_button",
+      "bounds": "[579,1292][700,1362]",
+      "center": [
+        639,
+        1327
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Next",
+      "desc": "",
+      "id": "",
+      "bounds": "[605,1314][681,1340]",
+      "center": [
+        643,
+        1327
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Add audio",
+      "id": "clips_action_bar_volume_controls_button",
+      "bounds": "[12,1126][83,1197]",
+      "center": [
+        47,
+        1161
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Add text",
+      "id": "clips_action_bar_add_text_button",
+      "bounds": "[95,1126][166,1197]",
+      "center": [
+        130,
+        1161
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Add sticker",
+      "id": "clips_action_bar_add_sticker_button",
+      "bounds": "[178,1126][249,1197]",
+      "center": [
+        213,
+        1161
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Effects",
+      "id": "clips_action_bar_ar_effects_button",
+      "bounds": "[261,1126][332,1197]",
+      "center": [
+        296,
+        1161
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Overlay",
+      "id": "clips_action_bar_overlay_button",
+      "bounds": "[344,1126][415,1197]",
+      "center": [
+        379,
+        1161
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Voiceover",
+      "id": "clips_action_bar_voiceover_button",
+      "bounds": "[427,1126][498,1197]",
+      "center": [
+        462,
+        1161
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Add clips",
+      "id": "clips_action_bar_add_clips_button",
+      "bounds": "[510,1126][581,1197]",
+      "center": [
+        545,
+        1161
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Captions",
+      "id": "clips_action_bar_captions_button",
+      "bounds": "[593,1126][664,1197]",
+      "center": [
+        628,
+        1161
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Volume",
+      "id": "clips_action_bar_volume_controls_button",
+      "bounds": "[676,1126][720,1197]",
+      "center": [
+        698,
+        1161
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Cancel",
+      "id": "cancel_button",
+      "bounds": "[12,26][84,98]",
+      "center": [
+        48,
+        62
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "@2131966362",
+      "id": "overflow_button",
+      "bounds": "[636,26][708,98]",
+      "center": [
+        672,
+        62
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel preview playing",
+      "id": "capture_interactive_drawable_container",
+      "bounds": "[0,0][720,1280]",
+      "center": [
+        360,
+        640
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\micdropchannel_20251222_134426\\error_004_screenshot.png",
+  "page_source_file": "error_logs\\micdropchannel_20251222_134426\\error_004_page_source.xml"
+}

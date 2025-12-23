@@ -1,0 +1,110 @@
+{
+  "error_id": "error_016",
+  "timestamp": "2025-12-22T13:45:42.962281",
+  "account": "podsnipworks",
+  "job_id": "DKaNohNSTwy-2.mp4",
+  "phase": "ai_analysis",
+  "error_type": "analysis_error",
+  "error_class": "ValueError",
+  "error_message": "JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current UI, I can see this is an ID verification screen that Instagram is showing, wh",
+  "error_repr": "ValueError('JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current UI, I can see this is an ID verification screen that Instagram is showing, wh')",
+  "stack_trace": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 213, in parse_response\n    # Generic code block\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\__init__.py\", line 346, in loads\n    return _default_decoder.decode(s)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 345, in decode\n    obj, end = self.raw_decode(s, idx=_w(s, 0).end())\n               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 363, in raw_decode\n    raise JSONDecodeError(\"Expecting value\", s, err.value) from None\njson.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 275, in analyze\n    Action dictionary with action, element_index, text, reason, etc.\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 215, in parse_response\n    if len(parts) >= 3:\nValueError: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current UI, I can see this is an ID verification screen that Instagram is showing, wh\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 1026, in post\n    action = self.analyze_ui(elements, caption)\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 870, in analyze_ui\n    return self._analyzer.analyze(\n           ~~~~~~~~~~~~~~~~~~~~~~^\n        elements=elements,\n        ^^^^^^^^^^^^^^^^^^\n    ...<3 lines>...\n        share_clicked=self.share_clicked\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 282, in analyze\n    caption=caption,\n            ^^^^^^^^\nValueError: JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current UI, I can see this is an ID verification screen that Instagram is showing, wh\n",
+  "context": {
+    "step": 28,
+    "caption": "When the TV remote becomes a dealbreaker—@charliekirk1776 isn't wrong about this one. Shared values ",
+    "video_uploaded": true
+  },
+  "ui_elements_count": 8,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "Menu",
+      "id": "",
+      "bounds": "[925,77][1055,197]",
+      "center": [
+        990,
+        137
+      ],
+      "clickable": true
+    },
+    {
+      "text": " ",
+      "desc": "",
+      "id": "",
+      "bounds": "[1021,109][1031,166]",
+      "center": [
+        1026,
+        137
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Upload your ID",
+      "desc": "Upload your ID",
+      "id": "",
+      "bounds": "[96,312][528,400]",
+      "center": [
+        312,
+        356
+      ],
+      "clickable": false
+    },
+    {
+      "text": "We need a photo of your official ID with your date of birth visible. This could be a birth certificate, passport or other type of official identification. You can also use unofficial ID like a library or school ID card, as long as it includes your name, date of birth and a photograph. If there are any issues, we'll send you an email.\n\nWe don't accept photos of a computer screen, a phone screen or a photocopy. If there are any issues, we'll send you an email.\n\nYour ID will be stored securely and deleted within 30 days after we finish confirming your identity. We might use trusted service providers to help review your information.",
+      "desc": "We need a photo of your official ID with your date of birth visible. This could be a birth certificate, passport or other type of official identification. You can also use unofficial ID like a library or school ID card, as long as it includes your name, date of birth and a photograph. If there are any issues, we'll send you an email.\n\nWe don't accept photos of a computer screen, a phone screen or a photocopy. If there are any issues, we'll send you an email.\n\nYour ID will be stored securely and deleted within 30 days after we finish confirming your identity. We might use trusted service providers to help review your information.",
+      "id": "",
+      "bounds": "[96,424][984,1216]",
+      "center": [
+        540,
+        820
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Upload a photo",
+      "id": "",
+      "bounds": "[96,1300][984,1402]",
+      "center": [
+        540,
+        1351
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Upload a photo",
+      "desc": "",
+      "id": "",
+      "bounds": "[398,1323][683,1380]",
+      "center": [
+        540,
+        1351
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Submit",
+      "id": "",
+      "bounds": "[48,1549][1032,1675]",
+      "center": [
+        540,
+        1612
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Submit",
+      "desc": "",
+      "id": "",
+      "bounds": "[473,1584][607,1641]",
+      "center": [
+        540,
+        1612
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\podsnipworks_20251222_133703\\error_016_screenshot.png",
+  "page_source_file": "error_logs\\podsnipworks_20251222_133703\\error_016_page_source.xml"
+}

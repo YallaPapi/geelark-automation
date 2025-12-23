@@ -1,0 +1,519 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T19:29:50.789608",
+  "account": "quickcutspod",
+  "job_id": "DPjiXlpDhEV-1.mp4",
+  "phase": "navigation",
+  "error_type": "max_steps",
+  "error_class": "Exception",
+  "error_message": "Max steps (30) reached",
+  "error_repr": "Exception('Max steps (30) reached')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "max_steps": 30,
+    "video_uploaded": true,
+    "caption_entered": false,
+    "share_clicked": false,
+    "caption": "@profgalloway called it before everyone else jumped on the Emerging Markets wave. 🔮\n\nFrom episode: T"
+  },
+  "ui_elements_count": 45,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[628,76][720,145]",
+      "center": [
+        674,
+        110
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Turn sound on",
+      "id": "",
+      "bounds": "[651,76][697,122]",
+      "center": [
+        674,
+        99
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "media_group",
+      "bounds": "[0,39][720,145]",
+      "center": [
+        360,
+        92
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Suggested Reel by Onlymemefans, 205,439 likes, 2,361 comments, December 9",
+      "id": "row_feed_photo_imageview",
+      "bounds": "[0,39][720,145]",
+      "center": [
+        360,
+        92
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[20,145][66,220]",
+      "center": [
+        43,
+        182
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Like",
+      "id": "row_feed_button_like",
+      "bounds": "[20,145][59,220]",
+      "center": [
+        39,
+        182
+      ],
+      "clickable": false
+    },
+    {
+      "text": "205K",
+      "desc": "",
+      "id": "",
+      "bounds": "[66,145][123,220]",
+      "center": [
+        94,
+        182
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[123,145][189,220]",
+      "center": [
+        156,
+        182
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Comment",
+      "id": "row_feed_button_comment",
+      "bounds": "[143,145][182,220]",
+      "center": [
+        162,
+        182
+      ],
+      "clickable": false
+    },
+    {
+      "text": "2,361",
+      "desc": "",
+      "id": "",
+      "bounds": "[189,145][245,220]",
+      "center": [
+        217,
+        182
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[245,145][318,220]",
+      "center": [
+        281,
+        182
+      ],
+      "clickable": true
+    },
+    {
+      "text": "7,370",
+      "desc": "",
+      "id": "",
+      "bounds": "[318,145][376,220]",
+      "center": [
+        347,
+        182
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[386,145][442,220]",
+      "center": [
+        414,
+        182
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Send post",
+      "id": "row_feed_button_share",
+      "bounds": "[396,145][435,220]",
+      "center": [
+        415,
+        182
+      ],
+      "clickable": false
+    },
+    {
+      "text": "354K",
+      "desc": "",
+      "id": "",
+      "bounds": "[442,145][498,220]",
+      "center": [
+        470,
+        182
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Add to Saved",
+      "id": "row_feed_button_save",
+      "bounds": "[645,145][717,213]",
+      "center": [
+        681,
+        179
+      ],
+      "clickable": true
+    },
+    {
+      "text": "_onlymemefans Hoping Santa reads the list properly this… more",
+      "desc": "",
+      "id": "",
+      "bounds": "[20,220][720,251]",
+      "center": [
+        370,
+        235
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "_onlymemefans",
+      "id": "",
+      "bounds": "[20,220][181,248]",
+      "center": [
+        100,
+        234
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Hoping Santa reads the list properly this",
+      "id": "",
+      "bounds": "[186,220][591,248]",
+      "center": [
+        388,
+        234
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Hoping Santa reads the list properly this",
+      "id": "",
+      "bounds": "[186,220][591,248]",
+      "center": [
+        388,
+        234
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "more",
+      "id": "",
+      "bounds": "[611,220][663,248]",
+      "center": [
+        637,
+        234
+      ],
+      "clickable": true
+    },
+    {
+      "text": "December 9",
+      "desc": "December 9",
+      "id": "",
+      "bounds": "[0,258][720,284]",
+      "center": [
+        360,
+        271
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Suggested reels",
+      "desc": "Title of suggested content",
+      "id": "clips_header_title",
+      "bounds": "[23,303][645,373]",
+      "center": [
+        334,
+        338
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "preview_container",
+      "bounds": "[19,373][312,893]",
+      "center": [
+        165,
+        633
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More",
+      "id": "three_dot_menu",
+      "bounds": "[266,373][312,425]",
+      "center": [
+        289,
+        399
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "preview_container",
+      "bounds": "[331,373][624,893]",
+      "center": [
+        477,
+        633
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More",
+      "id": "three_dot_menu",
+      "bounds": "[578,373][624,425]",
+      "center": [
+        601,
+        399
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "preview_container",
+      "bounds": "[643,373][720,893]",
+      "center": [
+        681,
+        633
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Dismiss",
+      "id": "clips_dismiss_button",
+      "bounds": "[645,303][720,378]",
+      "center": [
+        682,
+        340
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "thishowthingswork posted a carousel December 7",
+      "id": "row_feed_profile_header",
+      "bounds": "[0,915][720,1000]",
+      "center": [
+        360,
+        957
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,915][79,1000]",
+      "center": [
+        39,
+        957
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile picture of thishowthingswork",
+      "id": "row_feed_photo_profile_imageview",
+      "bounds": "[24,933][73,982]",
+      "center": [
+        48,
+        957
+      ],
+      "clickable": false
+    },
+    {
+      "text": "thishowthingswork",
+      "desc": "thishowthingswork",
+      "id": "row_feed_photo_profile_name",
+      "bounds": "[79,915][525,956]",
+      "center": [
+        302,
+        935
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[79,956][525,1000]",
+      "center": [
+        302,
+        978
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Suggested for you",
+      "desc": "Suggested for you",
+      "id": "secondary_label",
+      "bounds": "[79,956][525,1000]",
+      "center": [
+        302,
+        978
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Follow",
+      "desc": "Follow How Things Work",
+      "id": "inline_follow_button",
+      "bounds": "[525,931][649,983]",
+      "center": [
+        587,
+        957
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More actions for this post",
+      "id": "media_option_button",
+      "bounds": "[649,918][720,997]",
+      "center": [
+        684,
+        957
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "carousel_media_group",
+      "bounds": "[0,1000][720,1284]",
+      "center": [
+        360,
+        1142
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Photo 1 of 2 by How Things Work, 288,203 likes, 302 comments",
+      "id": "carousel_video_media_group",
+      "bounds": "[0,1000][720,1284]",
+      "center": [
+        360,
+        1142
+      ],
+      "clickable": true
+    },
+    {
+      "text": "1/2",
+      "desc": "1/2",
+      "id": "carousel_index_indicator_text_view",
+      "bounds": "[633,1023][697,1069]",
+      "center": [
+        665,
+        1046
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1284][144,1362]",
+      "center": [
+        72,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1284][288,1362]",
+      "center": [
+        216,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1284][432,1362]",
+      "center": [
+        360,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1284][576,1362]",
+      "center": [
+        504,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1284][720,1362]",
+      "center": [
+        648,
+        1323
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\quickcutspod_20251222_192748\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\quickcutspod_20251222_192748\\error_001_page_source.xml"
+}

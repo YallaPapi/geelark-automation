@@ -1,0 +1,343 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T20:39:05.028588",
+  "account": "neilinspired",
+  "job_id": "DFlONgbSdM_-2.mp4",
+  "phase": "navigation",
+  "error_type": "max_steps",
+  "error_class": "Exception",
+  "error_message": "Max steps (30) reached",
+  "error_repr": "Exception('Max steps (30) reached')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "max_steps": 30,
+    "video_uploaded": true,
+    "caption_entered": true,
+    "share_clicked": false,
+    "caption": "When Jules came for Bobby's 🍑-hole, nobody saw it coming! @tigerbelly stays unhinged 😭\n\n#tigerbelly "
+  },
+  "ui_elements_count": 29,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "Reel by jutzgambles",
+      "id": "clips_media_component",
+      "bounds": "[0,48][720,1266]",
+      "center": [
+        360,
+        657
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Reel by jutzgambles. Double tap to play or pause.",
+      "id": "clips_video_container",
+      "bounds": "[0,48][720,1266]",
+      "center": [
+        360,
+        657
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "clips_author_info_component",
+      "bounds": "[26,1110][242,1197]",
+      "center": [
+        134,
+        1153
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile picture of jutzgambles",
+      "id": "clips_author_profile_pic",
+      "bounds": "[26,1132][85,1191]",
+      "center": [
+        55,
+        1161
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[85,1147][242,1177]",
+      "center": [
+        163,
+        1162
+      ],
+      "clickable": true
+    },
+    {
+      "text": "jutzgambles",
+      "desc": "jutzgambles",
+      "id": "clips_author_username",
+      "bounds": "[85,1147][242,1177]",
+      "center": [
+        163,
+        1162
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[242,1126][387,1197]",
+      "center": [
+        314,
+        1161
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Follow",
+      "desc": "Follow Jaiden Miller",
+      "id": "inline_follow_button",
+      "bounds": "[252,1139][364,1187]",
+      "center": [
+        308,
+        1163
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "this will be easy for some of yall #minecraft #bro #fyp …",
+      "id": "",
+      "bounds": "[26,1204][635,1243]",
+      "center": [
+        330,
+        1223
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Like",
+      "id": "like_button",
+      "bounds": "[635,662][707,734]",
+      "center": [
+        671,
+        698
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Like number is103554. View likes",
+      "desc": "Like number is103554. View likes",
+      "id": "like_count",
+      "bounds": "[635,734][707,773]",
+      "center": [
+        671,
+        753
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Comment",
+      "id": "comment_button",
+      "bounds": "[635,773][707,845]",
+      "center": [
+        671,
+        809
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Comment number is3162. View comments",
+      "desc": "Comment number is3162. View comments",
+      "id": "comment_count",
+      "bounds": "[635,845][707,884]",
+      "center": [
+        671,
+        864
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Repost",
+      "id": "",
+      "bounds": "[635,884][707,956]",
+      "center": [
+        671,
+        920
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Reposted 2565 times",
+      "desc": "Reposted 2565 times",
+      "id": "repost_count",
+      "bounds": "[635,956][707,995]",
+      "center": [
+        671,
+        975
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Share",
+      "id": "direct_share_button",
+      "bounds": "[635,995][707,1067]",
+      "center": [
+        671,
+        1031
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Reshare number is65902",
+      "desc": "Reshare number is65902",
+      "id": "ufi_text_component",
+      "bounds": "[635,1067][707,1106]",
+      "center": [
+        671,
+        1086
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More",
+      "id": "clips_ufi_more_button_component",
+      "bounds": "[635,1106][707,1178]",
+      "center": [
+        671,
+        1142
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Audio",
+      "id": "media_album_art_button",
+      "bounds": "[647,1191][696,1240]",
+      "center": [
+        671,
+        1215
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Create a reel",
+      "id": "",
+      "bounds": "[0,55][77,132]",
+      "center": [
+        38,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Reels",
+      "desc": "",
+      "id": "clips_viewer_action_bar_title",
+      "bounds": "[287,69][433,118]",
+      "center": [
+        360,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1266][144,1344]",
+      "center": [
+        72,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1266][288,1344]",
+      "center": [
+        216,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1266][432,1344]",
+      "center": [
+        360,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1266][576,1344]",
+      "center": [
+        504,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1266][720,1344]",
+      "center": [
+        648,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "upload_snackbar_container",
+      "bounds": "[13,1143][707,1253]",
+      "center": [
+        360,
+        1198
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Sharing to Reels…",
+      "desc": "",
+      "id": "status_text",
+      "bounds": "[107,1176][691,1205]",
+      "center": [
+        399,
+        1190
+      ],
+      "clickable": false
+    },
+    {
+      "text": "0.0",
+      "desc": "",
+      "id": "progress_bar",
+      "bounds": "[107,1218][691,1220]",
+      "center": [
+        399,
+        1219
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\neilinspired_20251222_203623\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\neilinspired_20251222_203623\\error_001_page_source.xml"
+}

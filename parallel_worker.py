@@ -124,7 +124,7 @@ def stop_phone_by_name(phone_name: str, logger: logging.Logger) -> bool:
         client = GeelarkClient()
         result = client.list_phones(page_size=100)
         for phone in result.get('items', []):
-            if phone.get('serialName') == phone_name and phone.get('status') == 1:
+            if phone.get('serialName') == phone_name and phone.get('status') != 0:  # 0=stopped, 1=starting, 2=running
                 client.stop_phone(phone['id'])
                 logger.info(f"Stopped phone: {phone_name}")
                 return True

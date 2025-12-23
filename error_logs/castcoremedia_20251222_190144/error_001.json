@@ -1,0 +1,244 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T19:04:53.605212",
+  "account": "castcoremedia",
+  "job_id": "DK3DhQDyWjE-2.mp4",
+  "phase": "navigation",
+  "error_type": "max_steps",
+  "error_class": "Exception",
+  "error_message": "Max steps (30) reached",
+  "error_repr": "Exception('Max steps (30) reached')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "max_steps": 30,
+    "video_uploaded": true,
+    "caption_entered": false,
+    "share_clicked": false,
+    "caption": "A bold statement incoming from @realalexclark 👀\n\nGlam: @kissbykatietx\n\n#trend #trends #style #outfit"
+  },
+  "ui_elements_count": 20,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "quick_capture_root_container",
+      "bounds": "[0,0][720,1440]",
+      "center": [
+        360,
+        720
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Double tap for tools that edit your video clips.",
+      "id": "clips_left_action_button",
+      "bounds": "[20,1292][168,1362]",
+      "center": [
+        94,
+        1327
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Edit video",
+      "desc": "",
+      "id": "",
+      "bounds": "[46,1314][142,1340]",
+      "center": [
+        94,
+        1327
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Next",
+      "id": "clips_right_action_button",
+      "bounds": "[579,1292][700,1362]",
+      "center": [
+        639,
+        1327
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Next",
+      "desc": "",
+      "id": "",
+      "bounds": "[605,1314][681,1340]",
+      "center": [
+        643,
+        1327
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Add audio",
+      "id": "clips_action_bar_volume_controls_button",
+      "bounds": "[12,1126][83,1197]",
+      "center": [
+        47,
+        1161
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Add text",
+      "id": "clips_action_bar_add_text_button",
+      "bounds": "[95,1126][166,1197]",
+      "center": [
+        130,
+        1161
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Add sticker",
+      "id": "clips_action_bar_add_sticker_button",
+      "bounds": "[178,1126][249,1197]",
+      "center": [
+        213,
+        1161
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Effects",
+      "id": "clips_action_bar_ar_effects_button",
+      "bounds": "[261,1126][332,1197]",
+      "center": [
+        296,
+        1161
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Overlay",
+      "id": "clips_action_bar_overlay_button",
+      "bounds": "[344,1126][415,1197]",
+      "center": [
+        379,
+        1161
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Voiceover",
+      "id": "clips_action_bar_voiceover_button",
+      "bounds": "[427,1126][498,1197]",
+      "center": [
+        462,
+        1161
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Add clips",
+      "id": "clips_action_bar_add_clips_button",
+      "bounds": "[510,1126][581,1197]",
+      "center": [
+        545,
+        1161
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Captions",
+      "id": "clips_action_bar_captions_button",
+      "bounds": "[593,1126][664,1197]",
+      "center": [
+        628,
+        1161
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Volume",
+      "id": "clips_action_bar_volume_controls_button",
+      "bounds": "[676,1126][720,1197]",
+      "center": [
+        698,
+        1161
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Cancel",
+      "id": "cancel_button",
+      "bounds": "[12,26][84,98]",
+      "center": [
+        48,
+        62
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "@2131966362",
+      "id": "overflow_button",
+      "bounds": "[636,26][708,98]",
+      "center": [
+        672,
+        62
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "camera_sticky_toast",
+      "bounds": "[208,26][512,104]",
+      "center": [
+        360,
+        65
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Explore audio",
+      "desc": "",
+      "id": "toast_message_title",
+      "bounds": "[294,39][426,65]",
+      "center": [
+        360,
+        52
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Tap to browse",
+      "desc": "",
+      "id": "toast_message_subtitle",
+      "bounds": "[294,65][426,91]",
+      "center": [
+        360,
+        78
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Reel preview playing",
+      "id": "capture_interactive_drawable_container",
+      "bounds": "[0,0][720,1280]",
+      "center": [
+        360,
+        640
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\castcoremedia_20251222_190144\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\castcoremedia_20251222_190144\\error_001_page_source.xml"
+}

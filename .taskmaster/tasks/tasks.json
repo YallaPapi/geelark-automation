@@ -146,86 +146,312 @@
   "posting": {
     "tasks": [
       {
-        "id": "64",
-        "title": "Update dependencies and environment for OpenAI GPT-5 mini usage",
-        "description": "Replace Anthropic SDK dependency with OpenAI Python SDK, ensure correct environment variables for OpenAI, and prepare the project for GPT-5 mini and vision calls without changing any business logic or prompts.",
-        "details": "Implementation details:\n- Dependencies:\n  - Uninstall Anthropic SDK if no longer needed elsewhere in the project (or scope changes to this module only):\n    - `pip uninstall anthropic` (only if safe for the rest of the codebase).\n  - Install latest stable OpenAI Python SDK following current docs:\n    - `pip install --upgrade openai`.[6]\n  - Confirm Python version compatibility (OpenAI SDK currently supports modern 3.x; ensure your runtime matches docs).[6]\n- Environment configuration:\n  - Use the standard `OPENAI_API_KEY` environment variable; do NOT hardcode the key.[2][6]\n  - If the project currently uses an `ANTHROPIC_API_KEY`, add `OPENAI_API_KEY` alongside it to avoid breaking existing deployments.\n  - Example initialization snippet (top-level utility module or in claude_analyzer.py):\n    ```python\n    import os\n    from openai import OpenAI\n\n    client = OpenAI(api_key=os.getenv(\"OPENAI_API_KEY\"))\n    ```\n- Global configuration:\n  - Define constants for the new model IDs so later tasks can reuse them without magic strings:\n    ```python\n    GPT5_MINI_MODEL = \"gpt-5-mini\"      # text/chat\n    GPT5_MINI_VISION_MODEL = \"gpt-5-mini\"  # if same model supports vision via image content\n    ```\n  - Keep max_tokens, temperature, and other parameters identical to existing Anthropic usage unless the OpenAI API requires renaming or minimal format changes.\n- Security & best practices:\n  - Ensure `.env` / config files are git-ignored.\n  - If using a settings module, centralize provider choice there, but keep logic identical for now as required by the PRD.\n- Pseudo-code summary:\n  ```python\n  # config_models.py\n  GPT_TEXT_MODEL = \"gpt-5-mini\"\n  GPT_VISION_MODEL = \"gpt-5-mini\"  # same id if unified\n\n  from openai import OpenAI\n  import os\n\n  client = OpenAI(api_key=os.environ[\"OPENAI_API_KEY\"])\n  ```",
-        "testStrategy": "- Install & import tests:\n  - Run `pip show openai` to confirm installation and version.\n  - Run the test suite or a minimal script that imports `OpenAI` and creates a dummy client.\n- Environment tests:\n  - Temporarily add a small script:\n    ```python\n    from openai import OpenAI\n    import os\n\n    client = OpenAI(api_key=os.getenv(\"OPENAI_API_KEY\"))\n    print(\"client ok\")\n    ```\n    and run it in the target environment to verify the key is loaded and no ImportError/KeyError occurs.\n- Regression risk checks:\n  - Confirm no other modules in the project that still depend on `anthropic` are broken by any dependency cleanup.\n  - If Anthropic usage exists elsewhere, ensure this task only adds OpenAI without removing Anthropic.",
+        "id": "69",
+        "title": "Setup Hybrid Restoration Environment and Branch",
+        "description": "Create a new git branch from commit fdd41f6 (working follow system) and verify the follow system still operates at 92%+ success rate before making any changes.",
+        "details": "Implementation steps:\n1. Create new branch from the follow commit:\n   ```bash\n   git checkout fdd41f6\n   git checkout -b hybrid-restoration\n   ```\n2. Verify all follow system files exist from that commit:\n   - follow_single.py\n   - follow_worker.py\n   - follow_orchestrator.py\n   - follow_tracker.py\n3. Run 5 test follows to confirm 92%+ success rate:\n   ```bash\n   python follow_single.py <test_account> <target_username>\n   ```\n4. Document current state in a restoration status file:\n   - Working: Follow system (AI-only, 92%)\n   - Broken: Hybrid posting (screen_detector.py, action_engine.py patterns incorrect)\n   - Truncated: flow_logger.py (20 elements, 50 chars limit)\n5. Ensure Appium server connectivity and Geelark phone access\n6. Backup current scheduler_state.json and accounts.txt\n\nPseudo-code for verification:\n```python\n# test_follow_baseline.py\nresults = []\nfor i in range(5):\n    success = run_follow_test(test_account, test_target)\n    results.append(success)\nsuccess_rate = sum(results) / len(results)\nassert success_rate >= 0.92, f\"Follow baseline failed: {success_rate}\"\n```",
+        "testStrategy": "Run 5 follow operations on test accounts. Verify 4+ succeed (80%+ as minimum, target 92%). Check logs for any errors. Document baseline metrics including: average time per follow, AI calls per follow, failure types if any.",
         "priority": "high",
         "dependencies": [],
         "status": "done",
         "subtasks": [],
-        "updatedAt": "2025-12-19T06:59:24.189Z"
+        "updatedAt": "2025-12-22T02:35:37.264Z"
       },
       {
-        "id": "65",
-        "title": "Migrate claude_analyzer.py from Anthropic messages API to OpenAI GPT-5 mini chat API",
-        "description": "Refactor claude_analyzer.py to call OpenAI GPT-5 mini via the OpenAI Python SDK, preserving prompts, parameters (where possible), and all logic, while adapting to the OpenAI chat completion message and response formats.",
-        "details": "Implementation details:\n- Identify current Anthropic usage pattern in `claude_analyzer.py` similar to:\n  ```python\n  import anthropic\n\n  client = anthropic.Anthropic()\n  response = client.messages.create(\n      model=\"claude-sonnet-4-20250514\",\n      max_tokens=500,\n      messages=[{\"role\": \"user\", \"content\": prompt}]\n  )\n  text = response.content[0].text\n  ```\n- Replace with OpenAI chat completions using GPT-5 mini, matching the provided example pattern:\n  ```python\n  from openai import OpenAI\n  from config_models import GPT_TEXT_MODEL\n\n  client = OpenAI()  # key from env\n\n  def analyze_ui(prompt: str, max_tokens: int = 500) -> str:\n      # IMPORTANT: do not change `prompt` text content\n      response = client.chat.completions.create(\n          model=GPT_TEXT_MODEL,          # \"gpt-5-mini\"\n          max_tokens=max_tokens,\n          messages=[{\"role\": \"user\", \"content\": prompt}],\n      )\n      return response.choices[0].message.content\n  ```\n- Keep all surrounding logic identical:\n  - Do NOT change how `prompt` is constructed.\n  - Do NOT re-order steps or add system prompts unless the current code already uses them.\n  - Keep temperatures, top_p, etc., equivalent where the OpenAI API supports them; only rename parameters to the OpenAI equivalents.\n- Handle message format differences:\n  - Anthropic `messages.create` may accept role/content differently; map to OpenAI's `[{\"role\": \"user\", \"content\": prompt}]` format as shown.[6]\n  - If the existing code uses multiple turns, map each to `{ \"role\": \"user\" | \"assistant\" | \"system\", \"content\": ... }` preserving roles and order.\n- Handle response structure differences:\n  - Anthropic: `response.content[0].text`.\n  - OpenAI: `response.choices[0].message.content`.\n  - Update all call sites that rely on the returned text to expect a simple string.\n- Error handling & timeouts:\n  - Wrap calls in try/except for `openai` HTTP errors (if the project has a common error wrapper, reuse it).\n  - Consider adding a short timeout via client or HTTP config if there was some equivalent before, but avoid behavioral changes unless necessary.\n- Pseudo-code (core refactor):\n  ```python\n  # claude_analyzer.py (renaming optional; keep filename if referenced elsewhere)\n\n  from openai import OpenAI\n  from config_models import GPT_TEXT_MODEL\n\n  client = OpenAI()\n\n  def call_llm(prompt: str) -> str:\n      # DO NOT modify prompt text\n      resp = client.chat.completions.create(\n          model=GPT_TEXT_MODEL,\n          messages=[{\"role\": \"user\", \"content\": prompt}],\n          max_tokens=500,\n      )\n      return resp.choices[0].message.content\n  ```\n- Keep function names and signatures unchanged so all callers behave identically.\n- If any logging stores the model name, update logs to reflect `gpt-5-mini` without altering log formats consumed elsewhere.",
-        "testStrategy": "- Unit/functional tests for claude_analyzer:\n  - Create or update tests that mock OpenAI client responses, asserting:\n    - The function sends the exact same `prompt` string content.\n    - `model` is set to `\"gpt-5-mini\"`.\n    - `messages` structure is `[{\"role\": \"user\", \"content\": prompt}]` (plus any existing system messages).\n    - The returned value equals `response.choices[0].message.content` from the mock.\n  - Add tests for multi-turn prompts if used.\n- Regression tests on existing flows using claude_analyzer:\n  - Run the full posting pipeline for a small sample and compare key behavior:\n    - Same number of calls.\n    - No change in control-flow (e.g., decision branches based on analyzer output still produce valid next steps).\n- Manual validation:\n  - For a few existing prompts, capture the old Claude output and the new GPT-5 mini output:\n    - Verify they are semantically equivalent for the downstream logic (accepting natural wording differences).\n  - Monitor logs for any parsing errors or unexpected `None`/empty strings.\n- Failure-path tests:\n  - Simulate OpenAI API error and ensure the same retry/fallback logic used with Anthropic is still invoked.",
+        "id": "70",
+        "title": "Fix FlowLogger Truncation - Remove All Limits",
+        "description": "Update flow_logger.py to remove all truncation limits (max_elements=20, text[:50]) so logs capture complete UI element data matching the format of the 12/17 successful flow logs.",
+        "details": "Implementation steps:\n1. Modify summarize_elements() function in flow_logger.py:\n   - Remove max_elements=20 parameter default, make it unlimited\n   - Remove text[:50] and desc[:50] truncation\n   ```python\n   def summarize_elements(elements: List[Dict], max_elements: int = None) -> List[Dict]:\n       summary = []\n       items = elements if max_elements is None else elements[:max_elements]\n       for i, elem in enumerate(items):\n           summary.append({\n               'idx': i,\n               'text': elem.get('text', '') or '',  # NO truncation\n               'desc': elem.get('desc', '') or '',  # NO truncation\n               'clickable': elem.get('clickable', False),\n               'bounds': elem.get('bounds', ''),\n               'center': elem.get('center', [])\n           })\n       return summary\n   ```\n2. Update log_step() to pass max_elements=None:\n   ```python\n   'elements_summary': summarize_elements(elements),  # Removed limit\n   ```\n3. Update compute_screen_signature() to also remove truncation:\n   - Remove norm_text[:30] and norm_desc[:30] truncation\n   - Remove tuples[:40] limit\n4. Add optional screenshot capture method:\n   ```python\n   def log_step_with_screenshot(self, elements, action, screenshot_bytes=None, ...):\n       entry = self.log_step(elements, action, ...)\n       if screenshot_bytes:\n           screenshot_path = self._save_screenshot(screenshot_bytes)\n           entry['screenshot_path'] = screenshot_path\n   ```\n5. Add before/after tap verification logging fields\n6. Move log_dir default to flow_analysis/ (already set)\n\nKey changes:\n- summarize_elements: max_elements default None, no text slicing\n- compute_screen_signature: no normalization truncation, no tuple limit\n- log_step: capture full elements array",
+        "testStrategy": "1. Run a single test post with the updated logger\n2. Inspect output JSONL file - verify elements_summary contains ALL elements (not capped at 20)\n3. Verify text/desc fields contain full strings (check for entries with >50 chars)\n4. Compare with 12/17 flow logs format to ensure compatibility\n5. Run analyze_logs.py and verify it can parse new format",
         "priority": "high",
         "dependencies": [
-          "64"
-        ],
-        "status": "done",
-        "subtasks": [],
-        "updatedAt": "2025-12-19T07:00:52.377Z"
-      },
-      {
-        "id": "66",
-        "title": "Migrate post_reel_smart.py vision-based screenshot analysis to OpenAI GPT-5 mini vision API",
-        "description": "Refactor vision-related calls in post_reel_smart.py to use the OpenAI GPT-5 mini vision capabilities, preserving all prompts and control logic while adapting to OpenAI’s multimodal message format and response parsing.",
-        "details": "Implementation details:\n- Identify current vision usage in `post_reel_smart.py` (likely calling Claude vision via Anthropic SDK):\n  - Find functions that analyze screenshots or failure images.\n  - Note how images are currently passed (e.g., as bytes, file paths, or URLs) and how the prompt is structured.\n- Update to OpenAI multimodal chat format (current pattern is to pass images in `messages` content as a list of text+image parts):[6]\n  - Typical OpenAI multimodal message format:\n    ```python\n    response = client.chat.completions.create(\n        model=\"gpt-5-mini\",  # vision-capable variant\n        messages=[\n            {\n                \"role\": \"user\",\n                \"content\": [\n                    {\"type\": \"text\", \"text\": prompt},  # keep prompt text identical\n                    {\"type\": \"image_url\", \"image_url\": {\"url\": image_url}},\n                ],\n            }\n        ],\n        max_tokens=500,\n    )\n    text = response.choices[0].message.content\n    ```\n  - If images are local files, you may need to either:\n    - Upload them to a temporary secure URL, or\n    - Use the latest OpenAI SDK support for sending image bytes directly if available; follow the current SDK docs for the simplest supported method.[6]\n- Preserve prompts and logic:\n  - Do NOT alter the textual instructions; just change how the image is attached.\n  - Keep parameters like `max_tokens`, `temperature`, etc., aligned with previous Claude calls.\n- Implement a helper function in `post_reel_smart.py` (or a shared utility) for screenshot analysis:\n  ```python\n  from openai import OpenAI\n  from config_models import GPT_VISION_MODEL\n\n  client = OpenAI()\n\n  def analyze_screenshot(prompt: str, image_url: str, max_tokens: int = 500) -> str:\n      resp = client.chat.completions.create(\n          model=GPT_VISION_MODEL,\n          messages=[{\n              \"role\": \"user\",\n              \"content\": [\n                  {\"type\": \"text\", \"text\": prompt},\n                  {\"type\": \"image_url\", \"image_url\": {\"url\": image_url}},\n              ],\n          }],\n          max_tokens=max_tokens,\n      )\n      return resp.choices[0].message.content\n  ```\n- Replace all existing Claude vision calls in `post_reel_smart.py` with the helper, keeping signatures and caller behavior the same.\n- Response structure:\n  - As with text, expect `response.choices[0].message.content`.\n  - Ensure any downstream parsing that assumed Claude formatting is robust to natural language variation.\n- Performance & cost:\n  - Reuse the same GPT-5 mini model for both text and vision if supported (per PRD assumption), to keep configuration simple and cost predictable.\n- Error handling:\n  - Implement the same retry/fallback behavior used for previous vision calls.\n  - Guard against missing/invalid image URLs and log appropriately.",
-        "testStrategy": "- Unit tests for the vision helper:\n  - Mock the OpenAI client’s `chat.completions.create` to verify:\n    - `model` is set to GPT_VISION_MODEL (`\"gpt-5-mini\"`).\n    - `messages[0][\"content\"]` is a list including both a text part with the exact prompt and an `image_url` part with the given URL.\n    - The function returns `response.choices[0].message.content`.\n- Integration tests in `post_reel_smart.py`:\n  - Run the failure-handling / screenshot-analysis path with a sample image (test or staging environment) and ensure:\n    - No exceptions from the OpenAI call.\n    - The control-flow (e.g., decisions based on analysis) remains valid.\n- Manual validation:\n  - Use a few representative failure screenshots to compare old Claude output vs new GPT-5 mini vision output for semantic equivalence.\n  - Check logs for any repeated errors or malformed payloads.\n- Negative-path tests:\n  - Simulate missing image URL or invalid image and ensure behavior matches the old implementation (same error messages or fallbacks where applicable).",
-        "priority": "high",
-        "dependencies": [
-          "64",
-          "65"
-        ],
-        "status": "done",
-        "subtasks": [],
-        "updatedAt": "2025-12-19T07:05:00.391Z"
-      },
-      {
-        "id": "67",
-        "title": "Refine configuration, error handling, and logging for OpenAI calls",
-        "description": "Standardize configuration, error handling, and logging around the new OpenAI GPT-5 mini text and vision calls to ensure reliable operation, debuggability, and cost visibility while preserving existing control-flow.",
-        "details": "Implementation details:\n- Centralize configuration:\n  - Create or update a config module to hold:\n    - Model names (`GPT_TEXT_MODEL`, `GPT_VISION_MODEL`).\n    - Default `max_tokens`, `temperature`, and any other parameters needed by both `claude_analyzer.py` and `post_reel_smart.py`.\n  - Use these constants in both files to avoid drift.\n- Error handling:\n  - Wrap all OpenAI calls in a small common helper that:\n    ```python\n    import logging\n    from openai import APIError, RateLimitError\n\n    logger = logging.getLogger(__name__)\n\n    def safe_chat_completion(client, **kwargs):\n        try:\n            return client.chat.completions.create(**kwargs)\n        except RateLimitError as e:\n            logger.warning(\"OpenAI rate limit: %s\", e)\n            # propagate or trigger existing retry logic\n            raise\n        except APIError as e:\n            logger.error(\"OpenAI API error: %s\", e)\n            raise\n    ```\n  - Integrate with existing retry/backoff logic if present, keeping behavior equivalent to previous Anthropic handling.\n- Logging and cost visibility:\n  - Add structured logs around each OpenAI call including:\n    - Model name, type (text vs vision), and high-level purpose (e.g., `ui_analysis`, `failure_screenshot_analysis`).\n    - `max_tokens` and maybe a rough estimate of tokens used if the response object exposes it.\n  - Ensure logs do not include API keys or sensitive user content.\n- Timeout and robustness:\n  - If current Anthropic calls used timeouts, replicate them via HTTP client or SDK options, following best practices in current OpenAI docs.[6]\n- Maintain behavior parity:\n  - Any new abstractions must preserve existing signatures and return values so the posting flow logic is unchanged.\n- Pseudo-code for shared wrapper usage:\n  ```python\n  def call_text_llm(prompt: str) -> str:\n      resp = safe_chat_completion(\n          client,\n          model=GPT_TEXT_MODEL,\n          messages=[{\"role\": \"user\", \"content\": prompt}],\n          max_tokens=500,\n      )\n      return resp.choices[0].message.content\n  ```",
-        "testStrategy": "- Unit tests for error wrapper:\n  - Mock `client.chat.completions.create` to raise `RateLimitError` and `APIError` and assert that:\n    - The exceptions propagate as expected by existing retry logic or higher-level handlers.\n    - Appropriate log messages are written (using a log-capture fixture).\n- Configuration tests:\n  - Verify that `GPT_TEXT_MODEL` and `GPT_VISION_MODEL` are used consistently in both `claude_analyzer.py` and `post_reel_smart.py`.\n  - If model IDs are changed in one place, tests should fail where hard-coded strings remain.\n- Observability tests:\n  - Run a short end-to-end test and inspect logs to confirm:\n    - Each OpenAI call logs model, call type, and basic metadata.\n    - No secrets or full prompts are logged unless already allowed by existing standards.\n- Regression tests:\n  - Ensure adding the wrapper does not change return values by comparing outputs from direct vs wrapped calls using mocks.",
-        "priority": "medium",
-        "dependencies": [
-          "65",
-          "66"
-        ],
-        "status": "done",
-        "subtasks": [],
-        "updatedAt": "2025-12-19T07:06:02.719Z"
-      },
-      {
-        "id": "68",
-        "title": "End-to-end regression and cost verification for GPT-5 mini migration",
-        "description": "Run full posting flows using the new GPT-5 mini text and vision integrations, verify behavior equivalence to the previous Claude Sonnet implementation, and confirm that estimated API costs meet the target reduction.",
-        "details": "Implementation details:\n- End-to-end functional runs:\n  - Execute the complete posting flow for at least the same scale used in the PRD baseline (e.g., 127 successful posts) in a staging or controlled environment.\n  - Ensure:\n    - All 19 steps per successful post complete without errors.\n    - No new timeouts or unexpected failures appear in analyzer or vision steps.\n- Behavioral equivalence checks:\n  - For a representative subset of posts:\n    - Compare key intermediate decisions and outputs between the old Claude-based logs and the new GPT-5 mini logs.\n    - Confirm that “equivalent quality responses” are produced (semantic equivalence and no breakage of downstream parsing).\n- Cost verification:\n  - Using OpenAI usage metrics and your own logging, compute:\n    - Average tokens per API call (prompt + completion) around the target 2,200 tokens.\n    - Total tokens used for 127 successful posts.\n  - Estimate cost with GPT-5 mini pricing from the PRD (~$0.25/MTok) and confirm it is ≈$1.67 for 127 posts versus the previous ~$20.\n- Performance & scalability:\n  - Measure latency per call and ensure there is no unacceptable slowdown versus Claude Sonnet.\n  - If necessary, adjust concurrency settings while ensuring no logic changes.\n- Rollout plan:\n  - Prepare a simple feature flag or config toggle (if not already present) allowing switching between Anthropic and OpenAI during rollout, while defaulting to OpenAI once validated.\n  - Document how to roll back to Claude Sonnet quickly if issues arise, without touching prompt text.\n- Documentation updates:\n  - Update internal README/ops docs explaining:\n    - New environment variables (`OPENAI_API_KEY`).\n    - New model IDs used.\n    - Any new monitoring dashboards or log fields relevant to the migration.",
-        "testStrategy": "- Automated regression suite:\n  - Run all existing tests after the migration and ensure they pass.\n  - Add integration tests that simulate the entire posting pipeline at least once end-to-end using mocked or low-cost real calls.\n- Manual QA:\n  - Have a human reviewer inspect a sample of generated posts and intermediate analyzer outputs to confirm quality equivalence.\n- Cost and performance validation:\n  - After running a batch close to 127 posts, export token usage and compute effective cost.\n  - Compare latency and error rates before vs after migration using logs or monitoring tools.\n- Rollout verification:\n  - Test the configuration toggle (if implemented) by switching between providers in staging and confirming that behavior flips accordingly without code changes.\n  - Once stable, enable OpenAI by default in production and monitor for 24–48 hours for any anomalies.",
-        "priority": "medium",
-        "dependencies": [
-          "65",
-          "66",
-          "67"
+          "69"
         ],
         "status": "in-progress",
         "subtasks": [],
-        "updatedAt": "2025-12-19T07:06:02.844Z"
+        "updatedAt": "2025-12-22T02:35:41.358Z"
+      },
+      {
+        "id": "71",
+        "title": "Restore AI-Only Posting from Commit 05de639",
+        "description": "Restore the working AI-only posting implementation from commit 05de639 that achieved 98% success rate, bypassing the broken HybridNavigator to use analyze_ui() directly.",
+        "details": "Implementation steps:\n1. Extract AI-only posting logic from commit 05de639:\n   ```bash\n   git show 05de639:post_reel_smart.py > post_reel_smart_ai_only.py.bak\n   ```\n2. Compare current post_reel_smart.py with 05de639 version to identify differences:\n   - Current uses: navigator = HybridNavigator(ai_analyzer=self._analyzer, caption=caption)\n   - 05de639 uses: self.analyze_ui(elements, caption) directly\n3. Modify current post_reel_smart.py post() method to bypass HybridNavigator:\n   ```python\n   # Option A: Add flag to bypass hybrid\n   def post(self, video_path, caption, max_steps=30, humanize=False, use_hybrid=False):\n       if use_hybrid:\n           navigator = HybridNavigator(ai_analyzer=self._analyzer, caption=caption)\n       else:\n           # AI-only mode - direct analyze_ui calls\n           pass\n   \n   # In the loop:\n   if use_hybrid:\n       nav_result = navigator.navigate(elements)\n       action = nav_result.action\n   else:\n       action = self.analyze_ui(elements, caption)\n   ```\n4. Integrate FlowLogger with AI-only path (from Task 70)\n5. Keep HybridNavigator code intact for later fixing\n6. Test AI-only posting on 5 accounts\n\nPseudo-code for AI-only loop:\n```python\nfor step in range(max_steps):\n    elements, _ = self.dump_ui()\n    # Use AI directly instead of hybrid\n    action = self.analyze_ui(elements, caption)\n    flow_logger.log_step(elements, action, ai_called=True)\n    # Execute action...\n```",
+        "testStrategy": "1. Run AI-only posting with use_hybrid=False on 5 test accounts\n2. Verify 4+ posts succeed (80%+ minimum, target 95%)\n3. Check flow_analysis/ directory for complete JSONL logs\n4. Compare success rate with original 98% baseline\n5. Verify FlowLogger captures all elements without truncation",
+        "priority": "high",
+        "dependencies": [
+          "70"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "72",
+        "title": "Run Full AI-Only Posting Campaign with Complete Logging",
+        "description": "Execute a full AI-only posting campaign across both podcast and viral campaigns to collect fresh, untruncated flow data for rebuilding hybrid rules.",
+        "details": "Implementation steps:\n1. Prepare campaign configuration:\n   - Ensure both podcast and viral campaigns have pending jobs\n   - Verify accounts.txt has available accounts\n   - Clear old flow_analysis/ logs or archive to flow_analysis_archive/\n2. Run parallel orchestrator with AI-only mode:\n   ```bash\n   python parallel_orchestrator.py --workers 5 --run --ai-only\n   ```\n3. Monitor campaign execution:\n   - Track success/failure rates in real-time\n   - Watch for flow logs being created in flow_analysis/\n   - Monitor for any truncation issues\n4. Separate successful flows from failed flows:\n   ```python\n   # Post-campaign script\n   for log_file in glob.glob('flow_analysis/*.jsonl'):\n       entries = parse_jsonl(log_file)\n       has_success = any(e['event'] == 'success' for e in entries)\n       if has_success:\n           shutil.copy(log_file, 'flow_analysis/successful/')\n       else:\n           shutil.copy(log_file, 'flow_analysis/failed/')\n   ```\n5. Target: Collect maximum successful flow logs (aim for 50+ successful posts with complete data)\n6. Document campaign metrics:\n   - Total posts attempted\n   - Success rate\n   - Average steps per successful post\n   - AI calls per post\n   - Common failure points",
+        "testStrategy": "1. Verify flow_analysis/ contains new JSONL files with complete (untruncated) element data\n2. Count successful vs failed sessions using analyze_logs.py\n3. Confirm success rate >=95% for AI-only posting\n4. Spot-check 5 random successful logs - verify they contain complete navigation flows from start to 'done'\n5. Run analyze_logs.py to generate screen_analysis_report.json",
+        "priority": "high",
+        "dependencies": [
+          "71"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "73",
+        "title": "Build Enhanced Flow Analysis Script",
+        "description": "Create an improved analyze_flows.py script that extracts screen types, detection patterns, and action mappings from successful flow logs to automatically generate hybrid rule candidates.",
+        "details": "Implementation steps:\n1. Create analyze_flows.py with enhanced capabilities:\n   ```python\n   class FlowAnalyzer:\n       def __init__(self, log_dir='flow_analysis/successful'):\n           self.log_dir = log_dir\n           \n       def load_all_flows(self) -> List[Flow]:\n           # Parse all JSONL files\n           \n       def identify_unique_screens(self) -> Dict[str, ScreenPattern]:\n           # Group by screen_signature\n           # Extract common elements for each signature\n           \n       def map_screen_to_action(self) -> Dict[str, ActionMapping]:\n           # For each screen type, find most common successful action\n           \n       def generate_detection_rules(self) -> str:\n           # Output Python code for screen_detector.py\n           \n       def generate_action_handlers(self) -> str:\n           # Output Python code for action_engine.py\n   ```\n2. For each unique screen, document:\n   - Key identifying elements (text patterns, desc patterns)\n   - Element indices of interactive elements\n   - Most common action taken (tap index, coordinates)\n   - Expected next screen after action\n3. Output formats:\n   - screen_patterns.json: Raw pattern data\n   - detection_rules.py: Ready-to-use ScreenDetector rules\n   - action_mappings.py: Ready-to-use ActionEngine handlers\n4. Handle edge cases:\n   - Screens with variable content (usernames, timestamps)\n   - Popup/overlay screens\n   - Error/recovery screens\n5. Add visualization of flow state machine",
+        "testStrategy": "1. Run analyze_flows.py on collected successful flow logs\n2. Verify output screen_patterns.json contains all expected Instagram screens:\n   - FEED_SCREEN, PROFILE_SCREEN, CREATE_MENU, GALLERY_PICKER\n   - VIDEO_EDITING, SHARE_PREVIEW, SHARING_PROGRESS, SUCCESS_SCREEN\n3. Manually review 3-5 generated detection rules for accuracy\n4. Compare generated rules with current screen_detector.py - identify discrepancies\n5. Test generated rules against sample UI dumps",
+        "priority": "high",
+        "dependencies": [
+          "72"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "74",
+        "title": "Rebuild ScreenDetector with Correct Detection Rules",
+        "description": "Rebuild screen_detector.py using patterns extracted from analyze_flows.py, ensuring accurate detection of all Instagram posting flow screens.",
+        "details": "Implementation steps:\n1. Review current screen_detector.py detection rules (lines 176-752)\n2. Compare with patterns from analyze_flows.py output\n3. Update detection rules based on fresh data:\n   ```python\n   def _detect_share_preview(self, elements, texts, descs, all_text) -> Tuple[float, List[str]]:\n       # Updated based on actual screen data from successful flows\n       # Key markers from analyze_flows.py:\n       has_caption = 'write a caption' in all_text or 'add a caption' in all_text\n       has_hashtags = 'hashtags' in texts\n       has_poll = 'poll' in texts\n       has_share_button = 'share' in texts\n       # ... adjust based on real data\n   ```\n4. Add new screen types if discovered in flow analysis\n5. Update confidence thresholds based on false positive/negative rates\n6. Create unit tests for each screen type using real UI dumps:\n   ```python\n   def test_detect_share_preview():\n       # Load actual elements from successful flow log\n       elements = load_test_elements('share_preview_sample.json')\n       detector = ScreenDetector()\n       result = detector.detect(elements)\n       assert result.screen_type == ScreenType.SHARE_PREVIEW\n       assert result.confidence >= 0.8\n   ```\n7. Handle ambiguous screens by adding distinguishing markers\n8. Document each screen type with example elements",
+        "testStrategy": "1. Create test cases for each ScreenType using real UI dumps from flow logs\n2. Run detector against 50+ sample screens from successful flows\n3. Measure detection accuracy: target 95%+ correct classification\n4. Test edge cases: popups, loading screens, error states\n5. Verify no regressions on previously working detections\n6. Cross-validate with AI classifications from logs",
+        "priority": "high",
+        "dependencies": [
+          "73"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "75",
+        "title": "Rebuild ActionEngine with Correct Action Mappings",
+        "description": "Rebuild action_engine.py with correct tap targets and action sequences derived from successful flow data, ensuring deterministic navigation through posting flow.",
+        "details": "Implementation steps:\n1. Review current action_engine.py handlers (lines 114-569)\n2. For each screen type, analyze successful flow logs to find:\n   - Which element index was tapped\n   - What coordinates were used\n   - What was the next screen after the action\n3. Update handlers with correct mappings:\n   ```python\n   def _handle_share_preview(self, elements: List[Dict]) -> Action:\n       # Based on flow analysis: successful posts always tap element with text='Share'\n       if not self.caption_entered and self.caption:\n           # Find caption field - from analysis, typically has 'write a caption' text\n           for i, el in enumerate(elements):\n               if 'caption' in el.get('text', '').lower():\n                   return Action(\n                       action_type=ActionType.TAP,\n                       target_element=i,\n                       reason=\"Tap caption field to enter caption\",\n                       confidence=0.95\n                   )\n       # After caption, tap Share button\n       for i, el in enumerate(elements):\n           if el.get('text', '').lower() == 'share':\n               return Action(\n                   action_type=ActionType.TAP,\n                   target_element=i,\n                   reason=\"Tap Share to post reel\",\n                   confidence=0.95\n               )\n   ```\n4. Add fallback coordinate taps for common failure cases\n5. Ensure state flags (video_selected, caption_entered) are updated correctly\n6. Add action verification - after tap, check if expected screen appeared\n7. Create test cases using real flow sequences",
+        "testStrategy": "1. Unit test each handler with real element lists from flow logs\n2. Verify returned Action matches what was successfully used in AI-only flow\n3. Test state transitions: caption_entered flag set after typing\n4. Validate coordinate fallbacks are within reasonable bounds\n5. Run integration test: feed elements through detector -> engine -> verify action",
+        "priority": "high",
+        "dependencies": [
+          "74"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "76",
+        "title": "Integration Test Hybrid Posting System",
+        "description": "Re-enable HybridNavigator with rebuilt ScreenDetector and ActionEngine, run integration tests against 10+ accounts, and validate 95%+ success rate.",
+        "details": "Implementation steps:\n1. Update HybridNavigator to use rebuilt components:\n   - No code changes needed if screen_detector.py and action_engine.py are correctly rebuilt\n2. Modify post_reel_smart.py to enable hybrid mode:\n   ```python\n   def post(self, video_path, caption, max_steps=30, humanize=False, use_hybrid=True):\n       # Now default to hybrid=True\n   ```\n3. Run hybrid posting on 10 test accounts:\n   ```bash\n   python posting_scheduler.py --add-accounts test1 test2 ... --run --hybrid\n   ```\n4. Compare metrics with AI-only baseline:\n   - Success rate (target: 95%+)\n   - AI call rate (target: <20%, was 12% originally)\n   - Average steps per post\n   - Time per post\n5. Debug failures using complete flow logs:\n   - Which screen was misdetected?\n   - Which action was incorrect?\n   - Was it a true unknown screen needing AI?\n6. Iterate on detection rules until 95%+ success rate achieved\n7. Document any screens requiring AI fallback (acceptable if <15% of steps)",
+        "testStrategy": "1. Run hybrid posting on 10 accounts minimum\n2. Achieve 9+ successful posts (90%+ minimum, target 95%+)\n3. Compare AI call rate: hybrid should be <20% vs AI-only 100%\n4. Log and analyze any failures - identify root cause\n5. Verify HybridNavigator stats show >80% rule-based steps\n6. Run full campaign batch if 10-account test passes",
+        "priority": "high",
+        "dependencies": [
+          "75"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "77",
+        "title": "Document Hybrid Development Process",
+        "description": "Create comprehensive documentation for the hybrid development methodology, including screen type reference, rule creation process, and debugging procedures.",
+        "details": "Implementation steps:\n1. Create docs/HYBRID_DEVELOPMENT.md:\n   ```markdown\n   # Hybrid Development Process\n   \n   ## Overview\n   The hybrid system combines rule-based navigation (fast, cheap) with AI fallback (flexible, expensive).\n   \n   ## Adding a New Screen Type\n   1. Collect flow logs with complete element data\n   2. Run analyze_flows.py to identify unique signatures\n   3. Add detection rule to screen_detector.py\n   4. Add action handler to action_engine.py\n   5. Test against sample data\n   6. Integration test with real posts\n   \n   ## Screen Type Reference\n   [Document each ScreenType with examples]\n   \n   ## Debugging Guide\n   - If screen misdetected: check detection rules, adjust confidence\n   - If action wrong: check element indices in action_engine\n   - If stuck in loop: check for missing screen types\n   ```\n2. Create docs/SCREEN_TYPES.md with detailed screen documentation:\n   - Screenshot examples\n   - Key identifying elements\n   - Expected action\n   - Common variants\n3. Update CLAUDE.md with hybrid system section:\n   - How to switch between AI-only and hybrid modes\n   - When to use which mode\n   - How to debug hybrid failures\n4. Create templates:\n   - screen_detector_rule_template.py\n   - action_handler_template.py\n5. Archive obsolete files:\n   - Move old flow logs to archived/flow_analysis_YYYYMMDD/\n   - Remove duplicate progress CSVs",
+        "testStrategy": "1. Review documentation for completeness and accuracy\n2. Have another developer follow the docs to add a mock screen type\n3. Verify all screen types are documented with examples\n4. Check CLAUDE.md updates are consistent with implementation\n5. Ensure archived files are properly organized",
+        "priority": "medium",
+        "dependencies": [
+          "76"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "78",
+        "title": "Add FlowLogger to Follow System and Collect Follow Flow Data",
+        "description": "Integrate the updated FlowLogger (with no truncation) into follow_single.py and run a full follow campaign to collect complete flow data for building follow hybrid rules.",
+        "details": "Implementation steps:\n1. Review follow_single.py from commit fdd41f6:\n   - Understand current AI-driven navigation flow\n   - Identify where UI analysis happens\n   - Find equivalent to analyze_ui() in follow context\n2. Integrate FlowLogger into follow_single.py:\n   ```python\n   from flow_logger import FlowLogger\n   \n   def follow_user(self, target_username):\n       flow_logger = FlowLogger(f\"{self.account_name}_follow\", log_dir=\"flow_analysis_follow\")\n       \n       for step in range(max_steps):\n           elements, _ = self.dump_ui()\n           action = self.analyze_ui(elements, target_username)\n           \n           flow_logger.log_step(\n               elements=elements,\n               action=action,\n               ai_called=True,\n               state={'target': target_username, 'followed': self.followed}\n           )\n   ```\n3. Create flow_analysis_follow/ directory for follow logs\n4. Run full follow campaign on both podcast and viral campaigns:\n   ```bash\n   python follow_orchestrator.py --workers 5 --run\n   ```\n5. Collect maximum successful follow logs\n6. Document follow-specific screens:\n   - Search screen, Search input, Search results\n   - Target profile, Follow button variations\n   - Confirmation states",
+        "testStrategy": "1. Verify flow_analysis_follow/ contains complete JSONL logs\n2. Check logs contain all elements without truncation\n3. Count successful vs failed follow sessions\n4. Confirm follow success rate maintains 92%+ baseline\n5. Run analyze_logs.py on follow logs to identify screen patterns",
+        "priority": "medium",
+        "dependencies": [
+          "77"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "79",
+        "title": "Build Follow Hybrid Components",
+        "description": "Extend screen_detector.py and action_engine.py with follow-specific screen types and action handlers, creating a follow hybrid navigator.",
+        "details": "Implementation steps:\n1. Analyze follow flow logs to identify unique screens:\n   - EXPLORE_PAGE: Explore tab with search bar\n   - SEARCH_INPUT: Search text field active\n   - SEARCH_RESULTS: List of accounts matching search\n   - TARGET_PROFILE: User profile page with Follow button\n   - ALREADY_FOLLOWING: Profile shows Following button\n   - FOLLOW_REQUESTED: Private account, request sent\n2. Add to screen_detector.py ScreenType enum:\n   ```python\n   class ScreenType(Enum):\n       # ... existing posting screens ...\n       # Follow-specific screens\n       EXPLORE_PAGE = auto()\n       SEARCH_INPUT = auto()\n       SEARCH_RESULTS = auto()\n       TARGET_PROFILE = auto()\n       ALREADY_FOLLOWING = auto()\n       FOLLOW_REQUESTED = auto()\n   ```\n3. Add detection methods:\n   ```python\n   def _detect_target_profile(self, elements, texts, descs, all_text):\n       has_follow_button = 'follow' in texts and 'following' not in texts\n       has_posts_count = 'posts' in all_text\n       has_followers = 'followers' in all_text\n       # ...\n   ```\n4. Add to action_engine.py:\n   ```python\n   def _handle_explore_page(self, elements):\n       # Find search bar and tap\n   def _handle_search_results(self, elements):\n       # Find target username and tap\n   def _handle_target_profile(self, elements):\n       # Find Follow button and tap\n   ```\n5. Create FollowHybridNavigator or extend HybridNavigator with follow state",
+        "testStrategy": "1. Unit test each new follow screen detection rule\n2. Unit test each new follow action handler\n3. Test detection accuracy on follow flow log samples\n4. Verify no regressions on posting screen detection\n5. Integration test: run follow with hybrid on 5 accounts",
+        "priority": "medium",
+        "dependencies": [
+          "78"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "80",
+        "title": "Integration Test Follow Hybrid and Achieve 95%+ Success Rate",
+        "description": "Enable follow hybrid system, run integration tests on 10+ accounts, debug failures, and iterate until achieving 95%+ success rate.",
+        "details": "Implementation steps:\n1. Update follow_single.py to use follow hybrid navigator:\n   ```python\n   def follow_user(self, target_username, use_hybrid=True):\n       if use_hybrid:\n           navigator = FollowHybridNavigator(\n               ai_analyzer=self._analyzer,\n               target_username=target_username\n           )\n       # ...\n   ```\n2. Run hybrid follows on 10 test accounts:\n   ```bash\n   python follow_orchestrator.py --workers 5 --run --hybrid --max-follows 10\n   ```\n3. Compare metrics with AI-only baseline (92%):\n   - Success rate (target: 95%+)\n   - AI call rate (target: <25%)\n   - Time per follow\n4. Debug failures:\n   - Review flow logs for failed follows\n   - Identify misdetected screens or wrong actions\n   - Update detection rules and action handlers\n5. Iterate until 95%+ success rate achieved\n6. Document follow-specific edge cases:\n   - Private accounts\n   - Already following\n   - Account not found\n   - Rate limiting popups\n7. Update follow_orchestrator.py to support hybrid mode flag",
+        "testStrategy": "1. Run follow hybrid on 10 accounts minimum\n2. Achieve 9+ successful follows (90%+ minimum, target 95%+)\n3. Compare with AI-only baseline: should improve from 92% to 95%+\n4. Verify AI call rate is <25% (hybrid benefit)\n5. Monitor for any banned/rate-limited accounts\n6. Full campaign test if 10-account test passes",
+        "priority": "medium",
+        "dependencies": [
+          "79"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 81,
+        "title": "Update Screen Detector with Element ID Primary Matching",
+        "description": "Refactor screen_detector.py to use element IDs as the primary matching criteria instead of text/description-based matching. This includes updating detection for FEED_SCREEN, PROFILE_SCREEN, CREATE_MENU, GALLERY_PICKER, VIDEO_EDITING, SHARE_PREVIEW, and SHARING_PROGRESS screens based on proven element IDs from 119 successful flow logs.",
+        "details": "Based on flow log analysis, update each screen detection method:\n\n1. **FEED_SCREEN** - Add ID checks:\n   - `profile_tab` (id) - Profile tab in bottom nav\n   - `feed_tab` (id) - Home tab\n   - `clips_tab` (id) - Reels tab\n   \n2. **PROFILE_SCREEN** - Add ID checks:\n   - `action_bar_username_container` (id) - Username in action bar\n   - Look for 'Create New' in desc (not text)\n   - `row_profile_header_imageview` (id) - Profile image\n   \n3. **CREATE_MENU** - Update detection:\n   - Look for 'Create new reel' in desc (not text)\n   - `layout_container_bottom_sheet` (id) - Bottom sheet container\n   \n4. **GALLERY_PICKER** - Add ID checks:\n   - `gallery_grid_item_thumbnail` (id) - Video thumbnails\n   - `cam_dest_clips` (id) - REEL tab selector\n   - `gallery_destination_item` (id) - Destination items\n   \n5. **VIDEO_EDITING** - Add ID checks:\n   - `clips_right_action_button` (id) - Next button\n   - `clips_action_bar_*` (id pattern) - Action bar buttons\n   \n6. **SHARE_PREVIEW** - Add ID checks:\n   - `caption_input_text_view` (id) - Caption input field\n   - `share_button` (id) - Share button\n   - `action_bar_button_text` (id) - OK button for keyboard dismiss\n   \n7. **SHARING_PROGRESS** - Add ID checks:\n   - `upload_snackbar_container` (id)\n   - 'Sharing to Reels' text\n\nImplementation:\n```python\ndef _detect_feed_screen(self, elements, texts, descs, all_text):\n    # Primary: Check for element IDs\n    ids = [e.get('id', '') for e in elements]\n    has_profile_tab = 'profile_tab' in ids\n    has_feed_tab = 'feed_tab' in ids\n    has_clips_tab = 'clips_tab' in ids\n    \n    if has_profile_tab and has_feed_tab and has_clips_tab:\n        return 0.95, ['profile_tab', 'feed_tab', 'clips_tab']\n    # ... fallback to existing text-based matching\n```",
+        "testStrategy": "1. Create unit tests with sample UI element dictionaries containing element IDs from real flow logs\n2. Test each screen detector method returns correct ScreenType with high confidence when IDs present\n3. Verify fallback to text-based matching when IDs not present\n4. Run against 10+ flow log files and verify 90%+ correct screen detection",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 82,
+        "title": "Update Action Engine with ID-First Element Lookups",
+        "description": "Refactor action_engine.py to find elements by ID first, then fallback to description/text matching. Update all step handlers (Feed→Profile, Profile→Create, Create Menu→Reel, Gallery→Video, Video Edit→Next, Caption Entry, Keyboard Dismiss, and Share) with the correct element lookup order from flow log analysis.",
+        "details": "Update each action handler with ID-first lookups:\n\n**Step 1: Feed → Profile**\n```python\ndef _handle_feed(self, elements):\n    # Primary: element.id == 'profile_tab'\n    for i, el in enumerate(elements):\n        if el.get('id') == 'profile_tab':\n            return Action(ActionType.TAP, target_element=i, reason='Tap profile_tab', confidence=0.98)\n    # Fallback: element.desc == 'Profile'\n    for i, el in enumerate(elements):\n        if 'profile' in el.get('desc', '').lower():\n            return Action(ActionType.TAP, target_element=i, reason='Tap Profile tab (fallback)', confidence=0.85)\n```\n\n**Step 2: Profile → Create**\n```python\ndef _handle_profile(self, elements):\n    # Primary: element.desc == 'Create New'\n    for i, el in enumerate(elements):\n        if el.get('desc', '').lower() == 'create new':\n            return Action(ActionType.TAP, target_element=i, reason=\"Tap 'Create New'\", confidence=0.98)\n    # Fallback: element.id == 'creation_tab'\n    for i, el in enumerate(elements):\n        if el.get('id') == 'creation_tab':\n            return Action(ActionType.TAP, target_element=i, confidence=0.85)\n```\n\n**Step 3: Create Menu → Reel**\n```python\ndef _handle_create_menu(self, elements):\n    # Primary: element.desc == 'Create new reel'\n    for i, el in enumerate(elements):\n        if 'create new reel' in el.get('desc', '').lower():\n            return Action(ActionType.TAP, target_element=i, reason=\"Tap 'Create new reel'\", confidence=0.98)\n```\n\n**Step 4: Gallery → Video** (see Task 83 for REEL tab logic)\n```python\ndef _handle_gallery_picker(self, elements):\n    # First check: If cam_dest_clips visible, tap it (REEL tab selection)\n    # Then: element.id == 'gallery_grid_item_thumbnail'\n```\n\n**Step 5: Video Edit → Next**\n```python\ndef _handle_video_editing(self, elements):\n    # Primary: element.id == 'clips_right_action_button'\n    for i, el in enumerate(elements):\n        if el.get('id') == 'clips_right_action_button':\n            return Action(ActionType.TAP, target_element=i, reason='Tap Next button', confidence=0.98)\n    # Fallback: element.desc == 'Next'\n```\n\n**Step 6: Caption Entry**\n```python\ndef _handle_share_preview(self, elements):\n    # Primary: element.id == 'caption_input_text_view'\n    for i, el in enumerate(elements):\n        if el.get('id') == 'caption_input_text_view':\n            return Action(ActionType.TAP, target_element=i, confidence=0.98)\n```\n\n**Step 7: Keyboard Dismiss** (see Task 84)\n\n**Step 8: Share**\n```python\n# Primary: element.id == 'share_button'\n# Fallback: element.desc == 'Share'\n```",
+        "testStrategy": "1. Create test cases with element dicts containing IDs matching flow logs\n2. Verify ID-based matches return higher confidence than text-based\n3. Test fallback behavior when IDs are missing\n4. Integration test: Run full posting flow and verify correct element selection at each step",
+        "priority": "high",
+        "dependencies": [
+          81
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 83,
+        "title": "Add REEL Tab Selection Logic in Gallery Picker",
+        "description": "Add logic in GALLERY_PICKER handler to check if gallery is in REEL mode and tap cam_dest_clips element if needed before selecting a video. Flow logs show 18.6% of successful flows required tapping the REEL tab first.",
+        "details": "In action_engine.py, update _handle_gallery_picker() to:\n\n1. Check if `cam_dest_clips` element exists (indicates REEL/TEMPLATES mode tabs visible)\n2. If the REEL tab is not already selected (determine by checking if thumbnails show video durations), tap cam_dest_clips first\n3. After REEL mode confirmed, proceed to tap gallery_grid_item_thumbnail\n\n```python\ndef _handle_gallery_picker(self, elements):\n    # Check if we need to tap REEL tab first\n    for i, el in enumerate(elements):\n        if el.get('id') == 'cam_dest_clips':\n            # REEL tab exists - check if we need to tap it\n            # If gallery_grid_item_thumbnail elements don't show video durations,\n            # we might be in wrong mode\n            thumbnails = [e for e in elements if e.get('id') == 'gallery_grid_item_thumbnail']\n            video_labels = [e for e in elements if e.get('id') == 'gallery_grid_item_label']\n            \n            # If no video duration labels visible, tap REEL tab\n            if not video_labels:\n                return Action(\n                    action_type=ActionType.TAP,\n                    target_element=i,\n                    reason=\"Tap REEL tab to switch to video mode\",\n                    confidence=0.95\n                )\n    \n    # If already in REEL mode or REEL tab not visible, select video\n    if self.video_selected:\n        # Look for Next button\n        for i, el in enumerate(elements):\n            if el.get('text', '').lower() == 'next':\n                return Action(ActionType.TAP, target_element=i, confidence=0.95)\n    \n    # Select first video thumbnail\n    for i, el in enumerate(elements):\n        if el.get('id') == 'gallery_grid_item_thumbnail':\n            return Action(\n                action_type=ActionType.TAP,\n                target_element=i,\n                reason=\"Tap video thumbnail to select\",\n                confidence=0.95\n            )\n```",
+        "testStrategy": "1. Test with gallery UI dumps where cam_dest_clips is visible but no video labels\n2. Verify REEL tab tap is triggered\n3. Test with gallery already in REEL mode - verify direct thumbnail selection\n4. Run 20+ posting flows and verify REEL tab selection works correctly in all cases",
+        "priority": "high",
+        "dependencies": [
+          81,
+          82
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 84,
+        "title": "Add OK Button Keyboard Dismissal Step",
+        "description": "Add handling for keyboard dismissal after caption entry. Flow logs show 62.4% of successful flows needed to tap the OK button (action_bar_button_text with desc 'OK') before the Share button becomes tappable.",
+        "details": "Update action_engine.py _handle_share_preview() to include keyboard dismissal logic:\n\n```python\ndef _handle_share_preview(self, elements):\n    # If caption not entered, focus caption field\n    if not self.caption_entered and self.caption:\n        for i, el in enumerate(elements):\n            if el.get('id') == 'caption_input_text_view':\n                return Action(ActionType.TAP, target_element=i, reason='Focus caption field', confidence=0.95)\n        return Action(ActionType.TYPE_TEXT, text_to_type=self.caption, confidence=0.8)\n    \n    # NEW: Check for OK button to dismiss keyboard\n    # This step is needed in 62.4% of flows after caption entry\n    for i, el in enumerate(elements):\n        if el.get('id') == 'action_bar_button_text' and el.get('desc', '').lower() == 'ok':\n            return Action(\n                action_type=ActionType.TAP,\n                target_element=i,\n                reason=\"Dismiss keyboard by tapping OK\",\n                confidence=0.95\n            )\n    \n    # Caption entered and keyboard dismissed, find Share button\n    for i, el in enumerate(elements):\n        if el.get('id') == 'share_button':\n            return Action(ActionType.TAP, target_element=i, reason='Tap Share', confidence=0.98)\n    \n    # Fallback: Look for Share by desc\n    for i, el in enumerate(elements):\n        if el.get('desc', '').lower() == 'share':\n            return Action(ActionType.TAP, target_element=i, reason='Tap Share (fallback)', confidence=0.85)\n```\n\nAlso update HybridNavigator state management to track keyboard_dismissed state.",
+        "testStrategy": "1. Test with share preview UI dumps containing action_bar_button_text with desc='OK'\n2. Verify OK button tap is triggered when caption is entered but keyboard visible\n3. Test transition to Share button after OK dismissed\n4. Run posting flows and measure improvement in caption→share success rate",
+        "priority": "high",
+        "dependencies": [
+          81,
+          82
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 85,
+        "title": "Run Podcast Campaign with Updated Hybrid Navigator",
+        "description": "Reset podcast campaign progress and run with 5 workers using the updated hybrid navigator. Monitor failures in real-time via error_debugger logs and capture all failure screenshots and UI dumps for analysis.",
+        "details": "Execute the following steps:\n\n1. **Reset Campaign Progress**:\n```bash\ncd /c/Users/asus/Desktop/projects/geelark-automation\npython parallel_orchestrator.py --reset-day\n```\n\n2. **Verify No Running Orchestrators**:\n```bash\npython parallel_orchestrator.py --status\n```\n\n3. **Start Podcast Campaign with Hybrid Navigator**:\n```bash\n# Ensure hybrid navigator is enabled (not AI-only mode)\n# Check post_reel_smart.py line ~45 comment about HybridNavigator\npython parallel_orchestrator.py --workers 5 --run --campaign podcast\n```\n\n4. **Monitor in Real-Time**:\n   - Watch `logs/worker_*.log` for failures\n   - Check `error_logs/` for comprehensive error captures\n   - Monitor `parallel_progress.csv` for success/failure rates\n\n5. **Capture Failure Data**:\n   - Error screenshots saved to `error_screenshots/`\n   - UI dumps in `error_logs/`\n   - Flow analysis logs in `flow_analysis/`\n\n6. **Record Statistics**:\n   - Total posts attempted\n   - Success count and rate\n   - Failure count and types\n   - Hybrid vs AI fallback usage",
+        "testStrategy": "1. Verify all 5 workers start successfully\n2. Monitor for at least 20 posting attempts\n3. Record success rate and compare to baseline (88% AI-only)\n4. Collect all failure logs for Task 86 analysis",
+        "priority": "high",
+        "dependencies": [
+          81,
+          82,
+          83,
+          84
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 86,
+        "title": "Analyze Podcast Failures and Fix Edge Cases",
+        "description": "Review each podcast campaign failure's screenshot and UI dump. Identify missing if/else rules for popups, unexpected screens, or navigation edge cases. Update screen_detector.py and action_engine.py with fixes and document each edge case found.",
+        "details": "Systematic failure analysis process:\n\n1. **Collect Failure Data**:\n```bash\n# List recent failures\ngrep -l 'failed' error_logs/*.json | head -20\n\n# View failure screenshots\nls -la error_screenshots/ | grep podcast\n```\n\n2. **Analyze Each Failure**:\n   - Open screenshot to see visual state\n   - Parse UI dump JSON to identify elements present\n   - Categorize failure type:\n     - Screen detection failure (UNKNOWN returned)\n     - Action selection failure (wrong element tapped)\n     - New popup not handled\n     - State machine stuck\n\n3. **Common Edge Cases to Check**:\n   - Meta Verified popup (already handled but verify)\n   - \"Your reel may get limited reach\" warning popup\n   - \"Suggested for you\" follow popup\n   - Onboarding tips (\"Swipe to access...\")\n   - Audio permission dialogs\n   - Location permission dialogs\n   - Network error screens\n   - \"Try again\" dialogs\n\n4. **Fix Implementation Pattern**:\n```python\n# In screen_detector.py - add new popup detection\ndef _detect_new_popup_type(self, elements, texts, descs, all_text):\n    # Check for unique identifiers from failure analysis\n    has_specific_text = 'specific popup text' in all_text\n    if has_specific_text:\n        return 0.9, ['popup_identifier']\n    return 0.0, []\n\n# In action_engine.py - add handler\ndef _handle_new_popup_type(self, elements):\n    # Dismiss by tapping appropriate button\n    for i, el in enumerate(elements):\n        if el.get('text', '').lower() in ['not now', 'skip', 'dismiss']:\n            return Action(ActionType.TAP, target_element=i, confidence=0.9)\n```\n\n5. **Document Findings**:\n   - Create `docs/edge_cases.md` listing each edge case\n   - Include screenshot reference, UI elements, and fix applied",
+        "testStrategy": "1. For each identified edge case, create a test with the actual UI dump\n2. Verify screen detector correctly identifies the new screen type\n3. Verify action engine produces correct dismissal action\n4. Re-run affected posting scenarios to confirm fix",
+        "priority": "high",
+        "dependencies": [
+          85
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 87,
+        "title": "Retry Podcast Campaign Failures",
+        "description": "Reset failed podcast jobs to pending status and run retry with the updated hybrid navigator. Measure improvement in success rate after edge case fixes.",
+        "details": "Execute retry process:\n\n1. **Identify Failed Jobs**:\n```bash\n# Check current progress file for failed jobs\ngrep ',failed,' parallel_progress.csv | wc -l\ngrep ',failed,' parallel_progress.csv | head -20\n```\n\n2. **Reset Failed Jobs** (create script if needed):\n```python\nimport csv\n\nwith open('parallel_progress.csv', 'r') as f:\n    rows = list(csv.DictReader(f))\n\nfor row in rows:\n    if row.get('status') == 'failed':\n        row['status'] = 'pending'\n        row['retry_count'] = str(int(row.get('retry_count', 0)) + 1)\n\nwith open('parallel_progress.csv', 'w', newline='') as f:\n    writer = csv.DictWriter(f, fieldnames=rows[0].keys())\n    writer.writeheader()\n    writer.writerows(rows)\n```\n\n3. **Run Retry with Updated Navigator**:\n```bash\npython parallel_orchestrator.py --workers 5 --run --campaign podcast\n```\n\n4. **Measure Improvement**:\n   - Original failure count\n   - Retry success count\n   - New failure count (residual)\n   - Calculate improvement percentage\n\n5. **Document Results**:\n   - Initial success rate\n   - Post-fix success rate\n   - Remaining edge cases for future work",
+        "testStrategy": "1. Verify failed jobs are correctly reset to pending\n2. Run retry batch with monitoring\n3. Compare before/after success rates\n4. Identify any remaining failures for further analysis",
+        "priority": "medium",
+        "dependencies": [
+          86
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 88,
+        "title": "Run Viral Campaign with Updated Hybrid Navigator",
+        "description": "Reset viral campaign progress and run with 5 workers using the hybrid navigator. Monitor failures in real-time to capture any edge cases specific to viral campaign content.",
+        "details": "Execute the following steps:\n\n1. **Reset Viral Campaign Progress**:\n```bash\ncd /c/Users/asus/Desktop/projects/geelark-automation\n# Archive current progress\ncp campaigns/viral/progress.csv campaigns/viral/progress_backup_$(date +%Y%m%d_%H%M%S).csv\n# Reset or use orchestrator\npython parallel_orchestrator.py --reset-day\n```\n\n2. **Start Viral Campaign**:\n```bash\npython parallel_orchestrator.py --workers 5 --run --campaign viral\n```\n\n3. **Monitor Execution**:\n   - Check `logs/worker_*.log` for errors\n   - Monitor `error_logs/` for new failure patterns\n   - Compare to podcast campaign behavior\n\n4. **Capture Differences**:\n   - Viral videos may have different aspect ratios\n   - Different caption lengths/formats\n   - Potentially different Instagram behavior\n\n5. **Record Statistics**:\n   - Total attempts\n   - Success/failure counts\n   - Compare to podcast campaign rates",
+        "testStrategy": "1. Verify all workers process viral campaign content\n2. Monitor for minimum 20 posting attempts\n3. Compare success rate to podcast campaign\n4. Identify any viral-specific edge cases",
+        "priority": "medium",
+        "dependencies": [
+          87
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 89,
+        "title": "Analyze Viral Failures and Fix Cross-Campaign Edge Cases",
+        "description": "Perform the same failure analysis process as Task 86 for viral campaign failures. Cross-reference findings with podcast analysis to identify common patterns and add any new edge cases discovered.",
+        "details": "Analyze viral campaign failures:\n\n1. **Collect Viral Failure Data**:\n```bash\n# List viral failures\ngrep -l 'viral' error_logs/*.json | xargs grep -l 'failed'\n\n# Compare to podcast failures\ndiff <(ls error_screenshots/*podcast*) <(ls error_screenshots/*viral*)\n```\n\n2. **Cross-Reference Analysis**:\n   - Compare viral failure types to podcast failure types\n   - Identify common edge cases vs campaign-specific ones\n   - Note any differences in Instagram behavior\n\n3. **Add Missing Rules**:\n   - Any new popups seen only in viral campaign\n   - Different button layouts or text\n   - Content-specific warnings (e.g., music copyright)\n\n4. **Update Detection/Action Code**:\n   - Same pattern as Task 86\n   - Ensure fixes work for both campaigns\n\n5. **Document Cross-Campaign Findings**:\n   - Update `docs/edge_cases.md`\n   - Note which edge cases are universal vs campaign-specific",
+        "testStrategy": "1. Apply same testing methodology as Task 86\n2. Verify fixes work for both podcast and viral campaigns\n3. Run test posts from both campaign types to confirm\n4. Document final coverage of edge cases",
+        "priority": "medium",
+        "dependencies": [
+          88
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 90,
+        "title": "Retry Viral Failures and Document Final Results",
+        "description": "Reset failed viral jobs to pending and run retry with fully updated rules. Measure final success rates for both campaigns and document the complete comparison between AI-only and hybrid navigator approaches.",
+        "details": "Complete the validation cycle:\n\n1. **Retry Viral Failures**:\n```bash\n# Same process as Task 87 but for viral campaign\npython parallel_orchestrator.py --workers 5 --run --campaign viral\n```\n\n2. **Calculate Final Metrics**:\n   - Podcast campaign:\n     - Initial hybrid success rate\n     - Post-fix success rate\n     - Final success rate after retries\n   - Viral campaign:\n     - Initial hybrid success rate\n     - Post-fix success rate\n     - Final success rate after retries\n\n3. **Compare to AI-Only Baseline**:\n   - AI-only success rate: 88-92%\n   - Hybrid navigator target: 85%+\n   - Actual hybrid achievement: X%\n\n4. **Document Results**:\n   Create `docs/hybrid_navigator_v2_results.md`:\n   ```markdown\n   # Hybrid Navigator V2 Results\n   \n   ## Performance Comparison\n   | Metric | AI-Only | Hybrid V2 |\n   |--------|---------|----------|\n   | Podcast Success Rate | 88% | X% |\n   | Viral Success Rate | 92% | X% |\n   | Avg Steps per Post | 9 | Y |\n   | Cost per Post | $0.XX | $0.XX |\n   \n   ## Edge Cases Fixed\n   1. REEL tab selection (18.6% of flows)\n   2. OK button keyboard dismiss (62.4% of flows)\n   3. [List all others]\n   \n   ## Remaining AI Fallback Cases\n   - [List any scenarios still requiring AI]\n   ```\n\n5. **Commit Final Version**:\n```bash\ngit add screen_detector.py action_engine.py hybrid_navigator.py docs/\ngit commit -m \"Hybrid Navigator V2: Data-driven fixes from flow analysis\"\n```",
+        "testStrategy": "1. Verify final success rates meet 85% target\n2. Confirm all edge cases from analysis are handled\n3. Run full end-to-end test with both campaigns\n4. Document and commit final working version",
+        "priority": "medium",
+        "dependencies": [
+          89
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 91,
+        "title": "Enable Hybrid Navigator in Production",
+        "description": "Re-enable the HybridNavigator in post_reel_smart.py, replacing the AI-only mode. Update integration to use the fixed screen detector and action engine for all posting flows.",
+        "details": "Production enablement steps:\n\n1. **Update post_reel_smart.py**:\n```python\n# Line ~45-46 currently has:\n# Note: HybridNavigator disabled - using AI-only mode until rules are rebuilt\n\n# Change to enable hybrid:\nfrom hybrid_navigator import HybridNavigator, create_hybrid_navigator\n\n# In SmartInstagramPoster.__init__:\nself._navigator = None  # Created lazily with caption\n\n# In post() method, replace AI-only analysis with hybrid:\ndef post(self, video_path, caption, max_steps=30, humanize=False, job_id=None):\n    # Initialize hybrid navigator\n    self._navigator = create_hybrid_navigator(\n        ai_analyzer=self._analyzer,\n        caption=caption\n    )\n    \n    # In vision-action loop:\n    result = self._navigator.navigate(elements)\n    action = result.action\n    used_ai = result.used_ai\n    \n    if used_ai:\n        print(f\"  [HYBRID] AI fallback used: {result.reason}\")\n    else:\n        print(f\"  [HYBRID] Rule-based: {result.screen_type.name}\")\n```\n\n2. **Add Statistics Logging**:\n```python\n# At end of post():\nstats = self._navigator.get_stats()\nprint(f\"\\n[HYBRID STATS] Rule-based: {stats['rule_rate_percent']:.1f}%, AI: {stats['ai_rate_percent']:.1f}%\")\nprint(f\"  Estimated savings: ${stats['estimated_savings_per_post']:.2f}\")\n```\n\n3. **Update Flow Logger**:\n   - Log whether hybrid or AI was used for each step\n   - Track rule-based vs AI fallback ratio\n\n4. **Test Integration**:\n```bash\n# Test single post\npython post_reel_smart.py test_account test_video.mp4 \"Test caption #test\"\n```",
+        "testStrategy": "1. Run single posting test with hybrid enabled\n2. Verify rule-based detection triggers for known screens\n3. Verify AI fallback works for unknown screens\n4. Run batch of 10 posts and measure hybrid vs AI ratio",
+        "priority": "medium",
+        "dependencies": [
+          90
+        ],
+        "status": "pending",
+        "subtasks": []
       }
     ],
     "metadata": {
-      "version": "1.0.0",
-      "lastModified": "2025-12-19T07:06:02.845Z",
-      "taskCount": 5,
-      "completedCount": 4,
-      "tags": [
-        "posting"
-      ]
+      "created": "2025-12-22T08:17:10.031Z",
+      "updated": "2025-12-22T08:17:10.031Z",
+      "description": "Tasks for posting context"
     }
   }
 }

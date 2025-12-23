@@ -1,0 +1,213 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-23T16:55:55.601683",
+  "account": "podsnipworks",
+  "job_id": "DRVMzaukz87-2.mp4",
+  "phase": "navigation",
+  "error_type": "logged_out",
+  "error_class": "Exception",
+  "error_message": "logged_out: create new account",
+  "error_repr": "Exception('logged_out: create new account')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "step": 0,
+    "caption": "Scott Jennings shares his unexpected observations from Dick Cheney's funeral service\n\nVia @pbd.podca",
+    "video_path": "C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\campaigns\\podcast\\videos\\chunk_01c\\pbd.podcast\\DRVMzaukz87-2.mp4",
+    "video_uploaded": true,
+    "video_selected": false,
+    "caption_entered": false,
+    "share_clicked": false
+  },
+  "ui_elements_count": 17,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[48,542][1032,1793]",
+      "center": [
+        540,
+        1167
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "English (US)",
+      "id": "",
+      "bounds": "[48,542][1032,607]",
+      "center": [
+        540,
+        574
+      ],
+      "clickable": true
+    },
+    {
+      "text": "English (US)",
+      "desc": "English (US)",
+      "id": "",
+      "bounds": "[398,542][625,607]",
+      "center": [
+        511,
+        574
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Instagram from Meta",
+      "id": "",
+      "bounds": "[48,607][1032,787]",
+      "center": [
+        540,
+        697
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[48,847][1032,1026]",
+      "center": [
+        540,
+        936
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Username, email or mobile number",
+      "desc": "Username, email or mobile number",
+      "id": "",
+      "bounds": "[96,909][814,965]",
+      "center": [
+        455,
+        937
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Username, email or mobile number,",
+      "id": "",
+      "bounds": "[96,930][876,989]",
+      "center": [
+        486,
+        959
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[48,1062][1032,1241]",
+      "center": [
+        540,
+        1151
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Password",
+      "desc": "Password",
+      "id": "",
+      "bounds": "[96,1124][299,1180]",
+      "center": [
+        197,
+        1152
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Password,",
+      "id": "",
+      "bounds": "[96,1145][876,1204]",
+      "center": [
+        486,
+        1174
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Log in",
+      "id": "",
+      "bounds": "[48,1277][1032,1409]",
+      "center": [
+        540,
+        1343
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Log in",
+      "desc": "Log in",
+      "id": "",
+      "bounds": "[474,1312][607,1374]",
+      "center": [
+        540,
+        1343
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Forgot password?",
+      "id": "",
+      "bounds": "[298,1445][782,1553]",
+      "center": [
+        540,
+        1499
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Forgot password?",
+      "desc": "Forgot password?",
+      "id": "",
+      "bounds": "[346,1462][734,1536]",
+      "center": [
+        540,
+        1499
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Create new account",
+      "id": "",
+      "bounds": "[48,1553][1032,1685]",
+      "center": [
+        540,
+        1619
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Create new account",
+      "desc": "Create new account",
+      "id": "",
+      "bounds": "[324,1588][756,1650]",
+      "center": [
+        540,
+        1619
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Meta logo",
+      "id": "",
+      "bounds": "[450,1745][630,1781]",
+      "center": [
+        540,
+        1763
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\podsnipworks_20251223_165523\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\podsnipworks_20251223_165523\\error_001_page_source.xml"
+}

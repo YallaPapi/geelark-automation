@@ -1,0 +1,432 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-23T11:10:33.738821",
+  "account": "dreaminspiredynamo",
+  "job_id": "7oSc9K8NOO-Z-2.mp4",
+  "phase": "navigation",
+  "error_type": "max_steps",
+  "error_class": "Exception",
+  "error_message": "Max steps (30) reached",
+  "error_repr": "Exception('Max steps (30) reached')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "max_steps": 30,
+    "video_uploaded": true,
+    "video_selected": true,
+    "caption_entered": true,
+    "share_clicked": false,
+    "caption": "Some stories never leave you, no matter how far you run."
+  },
+  "ui_elements_count": 37,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "content_view",
+      "bounds": "[0,139][720,1215]",
+      "center": [
+        360,
+        677
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "cover_photo_preview",
+      "bounds": "[239,162][480,593]",
+      "center": [
+        359,
+        377
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Double tap to edit cover photo",
+      "id": "clip_thumbnail_image",
+      "bounds": "[239,162][480,593]",
+      "center": [
+        359,
+        377
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "clip_thumbnail_layout",
+      "bounds": "[254,531][392,577]",
+      "center": [
+        323,
+        554
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Edit cover",
+      "desc": "",
+      "id": "clip_thumbnail_text",
+      "bounds": "[274,541][372,567]",
+      "center": [
+        323,
+        554
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Write a caption and add hashtags…",
+      "desc": "",
+      "id": "caption_input_text_view",
+      "bounds": "[26,646][694,724]",
+      "center": [
+        360,
+        685
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,737][166,805]",
+      "center": [
+        96,
+        771
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Hashtags",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[66,766][153,792]",
+      "center": [
+        109,
+        779
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[179,737][326,805]",
+      "center": [
+        252,
+        771
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Link a reel",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[219,766][313,792]",
+      "center": [
+        266,
+        779
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[339,737][427,805]",
+      "center": [
+        383,
+        771
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Poll",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[379,766][414,792]",
+      "center": [
+        396,
+        779
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[440,737][563,805]",
+      "center": [
+        501,
+        771
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Prompt",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[480,766][550,792]",
+      "center": [
+        515,
+        779
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,818][720,897]",
+      "center": [
+        360,
+        857
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Tag people",
+      "desc": "",
+      "id": "title",
+      "bounds": "[85,841][239,874]",
+      "center": [
+        162,
+        857
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,897][720,1051]",
+      "center": [
+        360,
+        974
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Add location",
+      "id": "metadata_location_row",
+      "bounds": "[0,897][720,1051]",
+      "center": [
+        360,
+        974
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "metadata_location_first_row",
+      "bounds": "[0,897][720,975]",
+      "center": [
+        360,
+        936
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Add location",
+      "desc": "",
+      "id": "location_label",
+      "bounds": "[85,897][655,975]",
+      "center": [
+        370,
+        936
+      ],
+      "clickable": false
+    },
+    {
+      "text": "People you share this content with can see the location you tag and view this content on the map.",
+      "desc": "",
+      "id": "map_content_education",
+      "bounds": "[0,975][720,1031]",
+      "center": [
+        360,
+        1003
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,1051][720,1130]",
+      "center": [
+        360,
+        1090
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Rename audio",
+      "desc": "",
+      "id": "title",
+      "bounds": "[85,1074][276,1107]",
+      "center": [
+        180,
+        1090
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Original Audio",
+      "desc": "",
+      "id": "inline_subtitle",
+      "bounds": "[276,1076][642,1105]",
+      "center": [
+        459,
+        1090
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,1130][720,1215]",
+      "center": [
+        360,
+        1172
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Add AI label",
+      "desc": "",
+      "id": "title",
+      "bounds": "[85,1150][231,1183]",
+      "center": [
+        158,
+        1166
+      ],
+      "clickable": false
+    },
+    {
+      "text": "We require you to label certain realistic content that's made with AI. Learn more",
+      "desc": "We require you to label certain realistic content that's made with AI. Learn more",
+      "id": "subtitle",
+      "bounds": "[85,1183][583,1215]",
+      "center": [
+        334,
+        1199
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "toggle",
+      "bounds": "[609,1157][694,1209]",
+      "center": [
+        651,
+        1183
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "share_button_container",
+      "bounds": "[0,1215][720,1344]",
+      "center": [
+        360,
+        1279
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Save draft",
+      "id": "save_draft_button",
+      "bounds": "[26,1239][347,1311]",
+      "center": [
+        186,
+        1275
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Save draft",
+      "desc": "",
+      "id": "",
+      "bounds": "[129,1260][243,1290]",
+      "center": [
+        186,
+        1275
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Share",
+      "id": "share_button",
+      "bounds": "[373,1239][694,1311]",
+      "center": [
+        533,
+        1275
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Share",
+      "desc": "",
+      "id": "",
+      "bounds": "[501,1260][566,1290]",
+      "center": [
+        533,
+        1275
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar",
+      "bounds": "[0,48][720,139]",
+      "center": [
+        360,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar_new_title_container",
+      "bounds": "[0,48][707,139]",
+      "center": [
+        353,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Back",
+      "id": "action_bar_button_back",
+      "bounds": "[0,48][91,139]",
+      "center": [
+        45,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "New reel",
+      "desc": "New reel",
+      "id": "action_bar_title",
+      "bounds": "[117,74][255,113]",
+      "center": [
+        186,
+        93
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\dreaminspiredynamo_20251223_110727\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\dreaminspiredynamo_20251223_110727\\error_001_page_source.xml"
+}

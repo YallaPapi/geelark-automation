@@ -1,0 +1,318 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T22:01:29.281906",
+  "account": "rushhourresponse",
+  "job_id": "DPPFF6mCHBt-2.mp4",
+  "phase": "navigation",
+  "error_type": "loop_stuck",
+  "error_class": "Exception",
+  "error_message": "Loop stuck on action: wait",
+  "error_repr": "Exception('Loop stuck on action: wait')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "step": 26,
+    "recent_actions": [
+      "wait",
+      "wait",
+      "wait",
+      "wait",
+      "wait"
+    ],
+    "loop_recovery_count": 3,
+    "video_uploaded": true,
+    "video_selected": true,
+    "caption_entered": true,
+    "share_clicked": false
+  },
+  "ui_elements_count": 26,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "Reel by bigggwinter",
+      "id": "clips_media_component",
+      "bounds": "[0,39][720,1284]",
+      "center": [
+        360,
+        661
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Reel by bigggwinter. Double tap to play or pause.",
+      "id": "clips_video_container",
+      "bounds": "[0,39][720,1284]",
+      "center": [
+        360,
+        661
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "clips_author_info_component",
+      "bounds": "[26,1135][285,1222]",
+      "center": [
+        155,
+        1178
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile picture of bigggwinter",
+      "id": "clips_author_profile_pic",
+      "bounds": "[32,1157][91,1216]",
+      "center": [
+        61,
+        1186
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[97,1172][285,1202]",
+      "center": [
+        191,
+        1187
+      ],
+      "clickable": true
+    },
+    {
+      "text": "bigggwinter  ",
+      "desc": "bigggwinter  ",
+      "id": "clips_author_username",
+      "bounds": "[97,1172][285,1202]",
+      "center": [
+        191,
+        1187
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[285,1151][430,1222]",
+      "center": [
+        357,
+        1186
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Follow",
+      "desc": "Follow Kamerron Rowe",
+      "id": "inline_follow_button",
+      "bounds": "[295,1164][407,1212]",
+      "center": [
+        351,
+        1188
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "See more",
+      "id": "",
+      "bounds": "[26,1222][635,1261]",
+      "center": [
+        330,
+        1241
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Like",
+      "id": "like_button",
+      "bounds": "[635,957][707,1029]",
+      "center": [
+        671,
+        993
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Comment",
+      "id": "comment_button",
+      "bounds": "[635,1042][707,1114]",
+      "center": [
+        671,
+        1078
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Share",
+      "id": "direct_share_button",
+      "bounds": "[635,1127][707,1199]",
+      "center": [
+        671,
+        1163
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More",
+      "id": "clips_ufi_more_button_component",
+      "bounds": "[635,1199][707,1271]",
+      "center": [
+        671,
+        1235
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Create a reel",
+      "id": "",
+      "bounds": "[0,53][77,130]",
+      "center": [
+        38,
+        91
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "",
+      "bounds": "[192,64][330,119]",
+      "center": [
+        261,
+        91
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Reels",
+      "desc": "",
+      "id": "text1",
+      "bounds": "[195,64][297,119]",
+      "center": [
+        246,
+        91
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Friends",
+      "id": "",
+      "bounds": "[330,64][556,119]",
+      "center": [
+        443,
+        91
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Friends",
+      "desc": "",
+      "id": "text1",
+      "bounds": "[333,64][466,119]",
+      "center": [
+        399,
+        91
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1284][144,1362]",
+      "center": [
+        72,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1284][288,1362]",
+      "center": [
+        216,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1284][432,1362]",
+      "center": [
+        360,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1284][576,1362]",
+      "center": [
+        504,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1284][720,1362]",
+      "center": [
+        648,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "upload_snackbar_container",
+      "bounds": "[13,1161][707,1271]",
+      "center": [
+        360,
+        1216
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Sharing to Reels…",
+      "desc": "",
+      "id": "status_text",
+      "bounds": "[107,1194][691,1223]",
+      "center": [
+        399,
+        1208
+      ],
+      "clickable": false
+    },
+    {
+      "text": "90.0",
+      "desc": "",
+      "id": "progress_bar",
+      "bounds": "[107,1236][691,1238]",
+      "center": [
+        399,
+        1237
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\rushhourresponse_20251222_215827\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\rushhourresponse_20251222_215827\\error_001_page_source.xml"
+}

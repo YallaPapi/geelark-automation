@@ -1,0 +1,702 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T19:41:01.295666",
+  "account": "mindsetmiccuts",
+  "job_id": "DRxMe9fjx6U-2.mp4",
+  "phase": "navigation",
+  "error_type": "loop_stuck",
+  "error_class": "Exception",
+  "error_message": "Loop stuck on action: tap_446_1213",
+  "error_repr": "Exception('Loop stuck on action: tap_446_1213')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "step": 27,
+    "recent_actions": [
+      "tap_446_1213",
+      "tap_446_1213",
+      "tap_446_1213",
+      "tap_446_1213",
+      "tap_446_1213"
+    ],
+    "loop_recovery_count": 3,
+    "video_uploaded": true,
+    "caption_entered": true,
+    "share_clicked": false
+  },
+  "ui_elements_count": 61,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "reels tray container",
+      "id": "",
+      "bounds": "[0,130][720,345]",
+      "center": [
+        360,
+        237
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[0,130][183,345]",
+      "center": [
+        91,
+        237
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "mindsetmiccuts's story, 0 of 22, Unseen.",
+      "id": "",
+      "bounds": "[0,130][183,306]",
+      "center": [
+        91,
+        218
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "mindsetmiccuts's story, 0 of 22, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[22,152][160,290]",
+      "center": [
+        91,
+        221
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Add to story",
+      "id": "reel_empty_badge",
+      "bounds": "[121,251][170,300]",
+      "center": [
+        145,
+        275
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Your story",
+      "desc": "",
+      "id": "username",
+      "bounds": "[44,306][140,332]",
+      "center": [
+        92,
+        319
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[183,130][366,345]",
+      "center": [
+        274,
+        237
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "khloekardashian's story, 1 of 22, Unseen.",
+      "id": "",
+      "bounds": "[183,130][366,306]",
+      "center": [
+        274,
+        218
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "khloekardashian's story, 1 of 22, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[205,152][343,290]",
+      "center": [
+        274,
+        221
+      ],
+      "clickable": false
+    },
+    {
+      "text": "khloekardashian",
+      "desc": "",
+      "id": "username",
+      "bounds": "[199,306][350,332]",
+      "center": [
+        274,
+        319
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[366,130][549,345]",
+      "center": [
+        457,
+        237
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "joansmalls's story, 2 of 22, Unseen.",
+      "id": "",
+      "bounds": "[366,130][549,306]",
+      "center": [
+        457,
+        218
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "joansmalls's story, 2 of 22, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[388,152][526,290]",
+      "center": [
+        457,
+        221
+      ],
+      "clickable": false
+    },
+    {
+      "text": "joansmalls",
+      "desc": "",
+      "id": "username",
+      "bounds": "[409,306][506,332]",
+      "center": [
+        457,
+        319
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[549,130][720,345]",
+      "center": [
+        634,
+        237
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "natgeo's story, 3 of 22, Unseen.",
+      "id": "",
+      "bounds": "[549,130][720,306]",
+      "center": [
+        634,
+        218
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "natgeo's story, 3 of 22, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[571,152][709,290]",
+      "center": [
+        640,
+        221
+      ],
+      "clickable": false
+    },
+    {
+      "text": "natgeo",
+      "desc": "",
+      "id": "username",
+      "bounds": "[608,306][673,332]",
+      "center": [
+        640,
+        319
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "row_pending_container",
+      "bounds": "[0,345][720,475]",
+      "center": [
+        360,
+        410
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Posting to mindsetmiccuts…",
+      "desc": "",
+      "id": "row_pending_media_sub_status_textview",
+      "bounds": "[111,397][370,423]",
+      "center": [
+        240,
+        410
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "mileycyrus posted a video December 9",
+      "id": "row_feed_profile_header",
+      "bounds": "[0,476][720,561]",
+      "center": [
+        360,
+        518
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,476][79,561]",
+      "center": [
+        39,
+        518
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile picture of mileycyrus",
+      "id": "row_feed_photo_profile_imageview",
+      "bounds": "[24,494][73,543]",
+      "center": [
+        48,
+        518
+      ],
+      "clickable": false
+    },
+    {
+      "text": "mileycyrus  ",
+      "desc": "mileycyrus  ",
+      "id": "row_feed_photo_profile_name",
+      "bounds": "[79,476][649,517]",
+      "center": [
+        364,
+        496
+      ],
+      "clickable": true
+    },
+    {
+      "text": " Miley Cyrus • Dream As One (from Avatar: Fire and Ash)",
+      "desc": " Miley Cyrus • Dream As One (from Avatar: Fire and Ash)",
+      "id": "secondary_label",
+      "bounds": "[79,517][649,561]",
+      "center": [
+        364,
+        539
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More actions for this post",
+      "id": "media_option_button",
+      "bounds": "[649,479][720,558]",
+      "center": [
+        684,
+        518
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "media_group",
+      "bounds": "[0,561][720,967]",
+      "center": [
+        360,
+        764
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[628,898][720,967]",
+      "center": [
+        674,
+        932
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Turn sound on",
+      "id": "",
+      "bounds": "[651,898][697,944]",
+      "center": [
+        674,
+        921
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[20,967][66,1042]",
+      "center": [
+        43,
+        1004
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Like",
+      "id": "row_feed_button_like",
+      "bounds": "[20,967][59,1042]",
+      "center": [
+        39,
+        1004
+      ],
+      "clickable": false
+    },
+    {
+      "text": "487K",
+      "desc": "",
+      "id": "",
+      "bounds": "[66,967][122,1042]",
+      "center": [
+        94,
+        1004
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[122,967][188,1042]",
+      "center": [
+        155,
+        1004
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Comment",
+      "id": "row_feed_button_comment",
+      "bounds": "[142,967][181,1042]",
+      "center": [
+        161,
+        1004
+      ],
+      "clickable": false
+    },
+    {
+      "text": "4,959",
+      "desc": "",
+      "id": "",
+      "bounds": "[188,967][250,1042]",
+      "center": [
+        219,
+        1004
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[250,967][323,1042]",
+      "center": [
+        286,
+        1004
+      ],
+      "clickable": true
+    },
+    {
+      "text": "10.2K",
+      "desc": "",
+      "id": "",
+      "bounds": "[323,967][381,1042]",
+      "center": [
+        352,
+        1004
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[391,967][447,1042]",
+      "center": [
+        419,
+        1004
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Send post",
+      "id": "row_feed_button_share",
+      "bounds": "[401,967][440,1042]",
+      "center": [
+        420,
+        1004
+      ],
+      "clickable": false
+    },
+    {
+      "text": "9,717",
+      "desc": "",
+      "id": "",
+      "bounds": "[447,967][501,1042]",
+      "center": [
+        474,
+        1004
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Add to Saved",
+      "id": "row_feed_button_save",
+      "bounds": "[645,967][717,1035]",
+      "center": [
+        681,
+        1001
+      ],
+      "clickable": true
+    },
+    {
+      "text": "mileycyrus It’s been one beautiful moment after the next lat… more",
+      "desc": "",
+      "id": "",
+      "bounds": "[20,1042][720,1073]",
+      "center": [
+        370,
+        1057
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "mileycyrus",
+      "id": "",
+      "bounds": "[20,1042][132,1070]",
+      "center": [
+        76,
+        1056
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "It’s been one beautiful moment after the next lat",
+      "id": "",
+      "bounds": "[137,1042][627,1070]",
+      "center": [
+        382,
+        1056
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "It’s been one beautiful moment after the next lat",
+      "id": "",
+      "bounds": "[137,1042][627,1070]",
+      "center": [
+        382,
+        1056
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "more",
+      "id": "",
+      "bounds": "[647,1042][698,1070]",
+      "center": [
+        672,
+        1056
+      ],
+      "clickable": true
+    },
+    {
+      "text": "December 9",
+      "desc": "December 9",
+      "id": "",
+      "bounds": "[0,1080][720,1106]",
+      "center": [
+        360,
+        1093
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Suggested for you",
+      "desc": "Suggested for you",
+      "id": "netego_carousel_title",
+      "bounds": "[23,1138][225,1168]",
+      "center": [
+        124,
+        1153
+      ],
+      "clickable": false
+    },
+    {
+      "text": "See all",
+      "desc": "",
+      "id": "netego_carousel_cta",
+      "bounds": "[603,1138][694,1168]",
+      "center": [
+        648,
+        1153
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "suggested_entity_card_container",
+      "bounds": "[23,1190][469,1284]",
+      "center": [
+        246,
+        1237
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Dismiss",
+      "id": "dismiss_button",
+      "bounds": "[423,1190][469,1236]",
+      "center": [
+        446,
+        1213
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "suggested_entity_card_container",
+      "bounds": "[489,1190][720,1284]",
+      "center": [
+        604,
+        1237
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,39][79,130]",
+      "center": [
+        39,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar_title_view",
+      "bounds": "[79,59][641,110]",
+      "center": [
+        360,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "For you",
+      "desc": "",
+      "id": "title_text",
+      "bounds": "[79,59][207,102]",
+      "center": [
+        143,
+        80
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "notification",
+      "bounds": "[641,39][720,130]",
+      "center": [
+        680,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1284][144,1362]",
+      "center": [
+        72,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1284][288,1362]",
+      "center": [
+        216,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1284][432,1362]",
+      "center": [
+        360,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1284][576,1362]",
+      "center": [
+        504,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1284][720,1362]",
+      "center": [
+        648,
+        1323
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\mindsetmiccuts_20251222_193806\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\mindsetmiccuts_20251222_193806\\error_001_page_source.xml"
+}

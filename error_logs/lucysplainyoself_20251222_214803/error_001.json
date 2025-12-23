@@ -1,0 +1,505 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T21:50:10.729231",
+  "account": "lucysplainyoself",
+  "job_id": "DPuaQQHjJsu-2.mp4",
+  "phase": "navigation",
+  "error_type": "loop_stuck",
+  "error_class": "Exception",
+  "error_message": "Loop stuck on action: wait",
+  "error_repr": "Exception('Loop stuck on action: wait')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "step": 14,
+    "recent_actions": [
+      "wait",
+      "wait",
+      "wait",
+      "wait",
+      "wait"
+    ],
+    "loop_recovery_count": 3,
+    "video_uploaded": true,
+    "video_selected": false,
+    "caption_entered": false,
+    "share_clicked": false
+  },
+  "ui_elements_count": 43,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "reels tray container",
+      "id": "",
+      "bounds": "[0,139][720,354]",
+      "center": [
+        360,
+        246
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[0,139][183,354]",
+      "center": [
+        91,
+        246
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "lucysplainyoself's story, 0 of 27, Unseen.",
+      "id": "",
+      "bounds": "[0,139][183,315]",
+      "center": [
+        91,
+        227
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "lucysplainyoself's story, 0 of 27, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[22,161][160,299]",
+      "center": [
+        91,
+        230
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Add to story",
+      "id": "reel_empty_badge",
+      "bounds": "[121,260][170,309]",
+      "center": [
+        145,
+        284
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Your story",
+      "desc": "",
+      "id": "username",
+      "bounds": "[44,315][140,341]",
+      "center": [
+        92,
+        328
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[183,139][366,354]",
+      "center": [
+        274,
+        246
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "lucilles_bbq's story, 1 of 27, Unseen.",
+      "id": "",
+      "bounds": "[183,139][366,315]",
+      "center": [
+        274,
+        227
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "lucilles_bbq's story, 1 of 27, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[205,161][343,299]",
+      "center": [
+        274,
+        230
+      ],
+      "clickable": false
+    },
+    {
+      "text": "lucilles_bbq",
+      "desc": "",
+      "id": "username",
+      "bounds": "[221,315][329,341]",
+      "center": [
+        275,
+        328
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[366,139][549,354]",
+      "center": [
+        457,
+        246
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "sassatdisney's story, 2 of 27, Unseen.",
+      "id": "",
+      "bounds": "[366,139][549,315]",
+      "center": [
+        457,
+        227
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "sassatdisney's story, 2 of 27, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[388,161][526,299]",
+      "center": [
+        457,
+        230
+      ],
+      "clickable": false
+    },
+    {
+      "text": "sassatdisney",
+      "desc": "",
+      "id": "username",
+      "bounds": "[398,315][517,341]",
+      "center": [
+        457,
+        328
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[549,139][720,354]",
+      "center": [
+        634,
+        246
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "ovationhollywood's story, 3 of 27, Unseen.",
+      "id": "",
+      "bounds": "[549,139][720,315]",
+      "center": [
+        634,
+        227
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "ovationhollywood's story, 3 of 27, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[571,161][709,299]",
+      "center": [
+        640,
+        230
+      ],
+      "clickable": false
+    },
+    {
+      "text": "ovationhollywood",
+      "desc": "",
+      "id": "username",
+      "bounds": "[558,315][720,341]",
+      "center": [
+        639,
+        328
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "row_pending_container",
+      "bounds": "[0,354][720,484]",
+      "center": [
+        360,
+        419
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Video can't be posted",
+      "desc": "",
+      "id": "row_pending_media_status_textview",
+      "bounds": "[111,403][642,435]",
+      "center": [
+        376,
+        419
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "row_pending_media_discard_button",
+      "bounds": "[642,399][720,438]",
+      "center": [
+        681,
+        418
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "ghirardelli posted a carousel 2 days ago",
+      "id": "row_feed_profile_header",
+      "bounds": "[0,485][720,570]",
+      "center": [
+        360,
+        527
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,485][79,570]",
+      "center": [
+        39,
+        527
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile picture of ghirardelli",
+      "id": "row_feed_photo_profile_imageview",
+      "bounds": "[24,503][73,552]",
+      "center": [
+        48,
+        527
+      ],
+      "clickable": false
+    },
+    {
+      "text": "ghirardelli  ",
+      "desc": "ghirardelli  ",
+      "id": "row_feed_photo_profile_name",
+      "bounds": "[79,485][525,526]",
+      "center": [
+        302,
+        505
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Suggested for you",
+      "desc": "Suggested for you",
+      "id": "secondary_label",
+      "bounds": "[79,526][525,570]",
+      "center": [
+        302,
+        548
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Follow",
+      "desc": "Follow Ghirardelli Chocolate Company",
+      "id": "inline_follow_button",
+      "bounds": "[525,501][649,553]",
+      "center": [
+        587,
+        527
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More actions for this post",
+      "id": "media_option_button",
+      "bounds": "[649,488][720,567]",
+      "center": [
+        684,
+        527
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "carousel_media_group",
+      "bounds": "[0,570][720,1266]",
+      "center": [
+        360,
+        918
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "carousel_image_media_group",
+      "bounds": "[0,570][720,1266]",
+      "center": [
+        360,
+        918
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Photo 1 of 5 by Ghirardelli Chocolate Company, 2,040 likes, 29 comments",
+      "id": "carousel_image",
+      "bounds": "[0,570][720,1266]",
+      "center": [
+        360,
+        918
+      ],
+      "clickable": false
+    },
+    {
+      "text": "1/5",
+      "desc": "1/5",
+      "id": "carousel_index_indicator_text_view",
+      "bounds": "[633,593][697,639]",
+      "center": [
+        665,
+        616
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,48][79,139]",
+      "center": [
+        39,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar_title_view",
+      "bounds": "[79,68][641,119]",
+      "center": [
+        360,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Instagram Home Feed",
+      "id": "title_logo",
+      "bounds": "[272,68][448,119]",
+      "center": [
+        360,
+        93
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "notification",
+      "bounds": "[641,48][720,139]",
+      "center": [
+        680,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1266][144,1344]",
+      "center": [
+        72,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1266][288,1344]",
+      "center": [
+        216,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1266][432,1344]",
+      "center": [
+        360,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1266][576,1344]",
+      "center": [
+        504,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1266][720,1344]",
+      "center": [
+        648,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "4",
+      "desc": "",
+      "id": "section_1",
+      "bounds": "[572,129][635,178]",
+      "center": [
+        603,
+        153
+      ],
+      "clickable": false
+    },
+    {
+      "text": "8",
+      "desc": "",
+      "id": "section_2",
+      "bounds": "[635,129][697,178]",
+      "center": [
+        666,
+        153
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\lucysplainyoself_20251222_214803\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\lucysplainyoself_20251222_214803\\error_001_page_source.xml"
+}

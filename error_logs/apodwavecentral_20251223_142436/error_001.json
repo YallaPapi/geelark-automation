@@ -1,0 +1,344 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-23T14:27:39.567733",
+  "account": "apodwavecentral",
+  "job_id": "C6r4JFEPDHi-1.mp4",
+  "phase": "navigation",
+  "error_type": "max_steps",
+  "error_class": "Exception",
+  "error_message": "Max steps (30) reached",
+  "error_repr": "Exception('Max steps (30) reached')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "max_steps": 30,
+    "video_uploaded": true,
+    "video_selected": true,
+    "caption_entered": true,
+    "share_clicked": false,
+    "caption": "Paul Saladino breaks down the critical decision point for atherosclerosis medication in this thought"
+  },
+  "ui_elements_count": 29,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "clips_author_info_component",
+      "bounds": "[26,944][635,1031]",
+      "center": [
+        330,
+        987
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "clips_author_info_component",
+      "bounds": "[26,944][379,1031]",
+      "center": [
+        202,
+        987
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile picture of californiasleevecenters",
+      "id": "clips_author_profile_pic",
+      "bounds": "[32,966][91,1025]",
+      "center": [
+        61,
+        995
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[97,981][379,1011]",
+      "center": [
+        238,
+        996
+      ],
+      "clickable": true
+    },
+    {
+      "text": "californiasleevecenters",
+      "desc": "californiasleevecenters",
+      "id": "clips_author_username",
+      "bounds": "[97,981][379,1011]",
+      "center": [
+        238,
+        996
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,1031][635,1122]",
+      "center": [
+        330,
+        1076
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,1044][602,1109]",
+      "center": [
+        314,
+        1076
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "✈️✨ ¿Vives fuera de California? ¡Esto es para ti! …",
+      "id": "",
+      "bounds": "[26,1116][635,1155]",
+      "center": [
+        330,
+        1135
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,1168][90,1197]",
+      "center": [
+        58,
+        1182
+      ],
+      "clickable": true
+    },
+    {
+      "text": "6,945 followers",
+      "desc": "6,945 followers",
+      "id": "",
+      "bounds": "[90,1169][635,1195]",
+      "center": [
+        362,
+        1182
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,1216][191,1258]",
+      "center": [
+        108,
+        1237
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Sponsored",
+      "desc": "Sponsored",
+      "id": "",
+      "bounds": "[68,1225][169,1249]",
+      "center": [
+        118,
+        1237
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Like",
+      "id": "like_button",
+      "bounds": "[635,817][707,889]",
+      "center": [
+        671,
+        853
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Like number is1262. View likes",
+      "desc": "Like number is1262. View likes",
+      "id": "like_count",
+      "bounds": "[635,889][707,928]",
+      "center": [
+        671,
+        908
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Comment",
+      "id": "comment_button",
+      "bounds": "[635,928][707,1000]",
+      "center": [
+        671,
+        964
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Share",
+      "id": "direct_share_button",
+      "bounds": "[635,1013][707,1085]",
+      "center": [
+        671,
+        1049
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Reshare number is27",
+      "desc": "Reshare number is27",
+      "id": "ufi_text_component",
+      "bounds": "[635,1085][707,1124]",
+      "center": [
+        671,
+        1104
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More",
+      "id": "clips_ufi_more_button_component",
+      "bounds": "[635,1124][707,1196]",
+      "center": [
+        671,
+        1160
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Audio",
+      "id": "media_album_art_button",
+      "bounds": "[647,1209][696,1258]",
+      "center": [
+        671,
+        1233
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by californiasleevecenters. Double tap to play or pause.",
+      "id": "clips_media_component",
+      "bounds": "[0,39][720,1284]",
+      "center": [
+        360,
+        661
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Sponsored Reel by californiasleevecenters. Double tap to play or pause.",
+      "id": "clips_video_container",
+      "bounds": "[0,39][720,1284]",
+      "center": [
+        360,
+        661
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1284][144,1362]",
+      "center": [
+        72,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1284][288,1362]",
+      "center": [
+        216,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1284][432,1362]",
+      "center": [
+        360,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1284][576,1362]",
+      "center": [
+        504,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1284][720,1362]",
+      "center": [
+        648,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "upload_snackbar_container",
+      "bounds": "[13,1161][707,1271]",
+      "center": [
+        360,
+        1216
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Sharing to Reels…",
+      "desc": "",
+      "id": "status_text",
+      "bounds": "[107,1194][691,1223]",
+      "center": [
+        399,
+        1208
+      ],
+      "clickable": false
+    },
+    {
+      "text": "90.0",
+      "desc": "",
+      "id": "progress_bar",
+      "bounds": "[107,1236][691,1238]",
+      "center": [
+        399,
+        1237
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\apodwavecentral_20251223_142436\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\apodwavecentral_20251223_142436\\error_001_page_source.xml"
+}

@@ -1,0 +1,355 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-23T14:39:25.093000",
+  "account": "angelapenninspired",
+  "job_id": "DNVofDpN-5Q-2.mp4",
+  "phase": "navigation",
+  "error_type": "max_steps",
+  "error_class": "Exception",
+  "error_message": "Max steps (30) reached",
+  "error_repr": "Exception('Max steps (30) reached')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "max_steps": 30,
+    "video_uploaded": true,
+    "video_selected": true,
+    "caption_entered": true,
+    "share_clicked": false,
+    "caption": "What if the secret to living longer and feeling happier has nothing to do with diet, exercise, or ca"
+  },
+  "ui_elements_count": 30,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "clips_author_info_component",
+      "bounds": "[26,910][635,985]",
+      "center": [
+        330,
+        947
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "clips_author_info_component",
+      "bounds": "[26,910][199,985]",
+      "center": [
+        112,
+        947
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile picture of apple",
+      "id": "clips_author_profile_pic",
+      "bounds": "[26,926][85,985]",
+      "center": [
+        55,
+        955
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[85,941][199,971]",
+      "center": [
+        142,
+        956
+      ],
+      "clickable": true
+    },
+    {
+      "text": "apple  ",
+      "desc": "apple  ",
+      "id": "clips_author_username",
+      "bounds": "[85,941][199,971]",
+      "center": [
+        142,
+        956
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,985][635,1076]",
+      "center": [
+        330,
+        1030
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,998][602,1063]",
+      "center": [
+        314,
+        1030
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Our whole squad of woodland puppets couldn’t leave set …",
+      "id": "",
+      "bounds": "[26,1070][635,1137]",
+      "center": [
+        330,
+        1103
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,1150][55,1179]",
+      "center": [
+        40,
+        1164
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Followed by nianaguerrero and 34.1M others",
+      "desc": "Followed by nianaguerrero and 34.1M others",
+      "id": "",
+      "bounds": "[55,1150][635,1178]",
+      "center": [
+        345,
+        1164
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,1198][191,1240]",
+      "center": [
+        108,
+        1219
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Sponsored",
+      "desc": "Sponsored",
+      "id": "",
+      "bounds": "[68,1207][169,1231]",
+      "center": [
+        118,
+        1219
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Like",
+      "id": "like_button",
+      "bounds": "[635,773][707,845]",
+      "center": [
+        671,
+        809
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Like number is14875. View likes",
+      "desc": "Like number is14875. View likes",
+      "id": "like_count",
+      "bounds": "[635,845][707,884]",
+      "center": [
+        671,
+        864
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Comment",
+      "id": "comment_button",
+      "bounds": "[635,884][707,956]",
+      "center": [
+        671,
+        920
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Comment number is118. View comments",
+      "desc": "Comment number is118. View comments",
+      "id": "comment_count",
+      "bounds": "[635,956][707,995]",
+      "center": [
+        671,
+        975
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Share",
+      "id": "direct_share_button",
+      "bounds": "[635,995][707,1067]",
+      "center": [
+        671,
+        1031
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Reshare number is1060",
+      "desc": "Reshare number is1060",
+      "id": "ufi_text_component",
+      "bounds": "[635,1067][707,1106]",
+      "center": [
+        671,
+        1086
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More",
+      "id": "clips_ufi_more_button_component",
+      "bounds": "[635,1106][707,1178]",
+      "center": [
+        671,
+        1142
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Audio",
+      "id": "media_album_art_button",
+      "bounds": "[647,1191][696,1240]",
+      "center": [
+        671,
+        1215
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by apple",
+      "id": "clips_media_component",
+      "bounds": "[0,48][720,1266]",
+      "center": [
+        360,
+        657
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Sponsored Reel by apple. Double tap to play or pause.",
+      "id": "clips_video_container",
+      "bounds": "[0,48][720,1266]",
+      "center": [
+        360,
+        657
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1266][144,1344]",
+      "center": [
+        72,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1266][288,1344]",
+      "center": [
+        216,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1266][432,1344]",
+      "center": [
+        360,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1266][576,1344]",
+      "center": [
+        504,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1266][720,1344]",
+      "center": [
+        648,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "upload_snackbar_container",
+      "bounds": "[13,1143][707,1253]",
+      "center": [
+        360,
+        1198
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Sharing to Reels…",
+      "desc": "",
+      "id": "status_text",
+      "bounds": "[107,1176][691,1205]",
+      "center": [
+        399,
+        1190
+      ],
+      "clickable": false
+    },
+    {
+      "text": "90.0",
+      "desc": "",
+      "id": "progress_bar",
+      "bounds": "[107,1218][691,1220]",
+      "center": [
+        399,
+        1219
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\angelapenninspired_20251223_143612\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\angelapenninspired_20251223_143612\\error_001_page_source.xml"
+}

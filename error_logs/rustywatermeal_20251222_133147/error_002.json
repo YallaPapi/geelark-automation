@@ -1,0 +1,319 @@
+{
+  "error_id": "error_002",
+  "timestamp": "2025-12-22T13:35:45.007434",
+  "account": "rustywatermeal",
+  "job_id": "DOBWH5Skb4b-2.mp4",
+  "phase": "ai_analysis",
+  "error_type": "analysis_error",
+  "error_class": "ValueError",
+  "error_message": "JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see:\n\n- Video uploaded: True\n- Caption entered: True  \n- Share b",
+  "error_repr": "ValueError('JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see:\\n\\n- Video uploaded: True\\n- Caption entered: True  \\n- Share b')",
+  "stack_trace": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 213, in parse_response\n    # Generic code block\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\__init__.py\", line 346, in loads\n    return _default_decoder.decode(s)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 345, in decode\n    obj, end = self.raw_decode(s, idx=_w(s, 0).end())\n               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 363, in raw_decode\n    raise JSONDecodeError(\"Expecting value\", s, err.value) from None\njson.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 275, in analyze\n    Action dictionary with action, element_index, text, reason, etc.\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 215, in parse_response\n    if len(parts) >= 3:\nValueError: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see:\n\n- Video uploaded: True\n- Caption entered: True  \n- Share b\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 1026, in post\n    action = self.analyze_ui(elements, caption)\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 870, in analyze_ui\n    return self._analyzer.analyze(\n           ~~~~~~~~~~~~~~~~~~~~~~^\n        elements=elements,\n        ^^^^^^^^^^^^^^^^^^\n    ...<3 lines>...\n        share_clicked=self.share_clicked\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 282, in analyze\n    caption=caption,\n            ^^^^^^^^\nValueError: JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see:\n\n- Video uploaded: True\n- Caption entered: True  \n- Share b\n",
+  "context": {
+    "step": 9,
+    "caption": "Most people want the extraordinary life but bail the moment they realize they have to suck first. @a",
+    "video_uploaded": true
+  },
+  "ui_elements_count": 27,
+  "ui_elements": [
+    {
+      "text": "New York City's greatest city in the world",
+      "desc": "New York City's greatest city in the world",
+      "id": "",
+      "bounds": "[26,1025][510,1077]",
+      "center": [
+        268,
+        1051
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "clips_author_info_component",
+      "bounds": "[26,1084][341,1171]",
+      "center": [
+        183,
+        1127
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile picture of zohrankmamdani",
+      "id": "clips_author_profile_pic",
+      "bounds": "[32,1106][91,1165]",
+      "center": [
+        61,
+        1135
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[97,1121][341,1151]",
+      "center": [
+        219,
+        1136
+      ],
+      "clickable": true
+    },
+    {
+      "text": "zohrankmamdani  ",
+      "desc": "zohrankmamdani  ",
+      "id": "clips_author_username",
+      "bounds": "[97,1121][341,1151]",
+      "center": [
+        219,
+        1136
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "New York, this moment belongs to you. Please join us for th …",
+      "id": "",
+      "bounds": "[26,1178][635,1245]",
+      "center": [
+        330,
+        1211
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Like",
+      "id": "like_button",
+      "bounds": "[635,775][707,847]",
+      "center": [
+        671,
+        811
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Like number is43667. View likes",
+      "desc": "Like number is43667. View likes",
+      "id": "like_count",
+      "bounds": "[635,847][707,886]",
+      "center": [
+        671,
+        866
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Comment",
+      "id": "comment_button",
+      "bounds": "[635,886][707,958]",
+      "center": [
+        671,
+        922
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Comment number is1255. View comments",
+      "desc": "Comment number is1255. View comments",
+      "id": "comment_count",
+      "bounds": "[635,958][707,997]",
+      "center": [
+        671,
+        977
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Share",
+      "id": "direct_share_button",
+      "bounds": "[635,997][707,1069]",
+      "center": [
+        671,
+        1033
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Reshare number is1745",
+      "desc": "Reshare number is1745",
+      "id": "ufi_text_component",
+      "bounds": "[635,1069][707,1108]",
+      "center": [
+        671,
+        1088
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More",
+      "id": "clips_ufi_more_button_component",
+      "bounds": "[635,1108][707,1180]",
+      "center": [
+        671,
+        1144
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Audio",
+      "id": "media_album_art_button",
+      "bounds": "[647,1193][696,1242]",
+      "center": [
+        671,
+        1217
+      ],
+      "clickable": true
+    },
+    {
+      "text": "4888.0",
+      "desc": "@2131976834",
+      "id": "scrubber",
+      "bounds": "[0,1267][720,1284]",
+      "center": [
+        360,
+        1275
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Reel by zohrankmamdani. Double tap to play or pause.",
+      "id": "clips_media_component",
+      "bounds": "[0,39][720,1284]",
+      "center": [
+        360,
+        661
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Reel by zohrankmamdani. Double tap to play or pause.",
+      "id": "clips_video_container",
+      "bounds": "[0,39][720,1284]",
+      "center": [
+        360,
+        661
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Create a reel",
+      "id": "",
+      "bounds": "[0,46][77,123]",
+      "center": [
+        38,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Reels",
+      "desc": "",
+      "id": "clips_viewer_action_bar_title",
+      "bounds": "[287,60][433,109]",
+      "center": [
+        360,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1284][144,1362]",
+      "center": [
+        72,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1284][288,1362]",
+      "center": [
+        216,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1284][432,1362]",
+      "center": [
+        360,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1284][576,1362]",
+      "center": [
+        504,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1284][720,1362]",
+      "center": [
+        648,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "upload_snackbar_container",
+      "bounds": "[13,1161][707,1271]",
+      "center": [
+        360,
+        1216
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Sharing to Reels…",
+      "desc": "",
+      "id": "status_text",
+      "bounds": "[107,1194][691,1223]",
+      "center": [
+        399,
+        1208
+      ],
+      "clickable": false
+    },
+    {
+      "text": "90.0",
+      "desc": "",
+      "id": "progress_bar",
+      "bounds": "[107,1236][691,1238]",
+      "center": [
+        399,
+        1237
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\rustywatermeal_20251222_133147\\error_002_screenshot.png",
+  "page_source_file": "error_logs\\rustywatermeal_20251222_133147\\error_002_page_source.xml"
+}

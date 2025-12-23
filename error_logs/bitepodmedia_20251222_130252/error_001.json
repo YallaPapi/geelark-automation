@@ -1,0 +1,418 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T13:04:15.735562",
+  "account": "bitepodmedia",
+  "job_id": "DPzZGHOEY7S-2.mp4",
+  "phase": "ai_analysis",
+  "error_type": "analysis_error",
+  "error_class": "ValueError",
+  "error_message": "JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state and UI elements, I can see we're on the Instagram home feed viewing Ree",
+  "error_repr": "ValueError(\"JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state and UI elements, I can see we're on the Instagram home feed viewing Ree\")",
+  "stack_trace": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 213, in parse_response\n    return json.loads(text)\n           ~~~~~~~~~~^^^^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\__init__.py\", line 346, in loads\n    return _default_decoder.decode(s)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 345, in decode\n    obj, end = self.raw_decode(s, idx=_w(s, 0).end())\n               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 363, in raw_decode\n    raise JSONDecodeError(\"Expecting value\", s, err.value) from None\njson.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 275, in analyze\n    return self.parse_response(text)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 215, in parse_response\n    raise ValueError(f\"JSON parse failed: {e}. Response: {text[:100]}\")\nValueError: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state and UI elements, I can see we're on the Instagram home feed viewing Ree\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 1026, in post\n    action = self.analyze_ui(elements, caption)\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 870, in analyze_ui\n    return self._analyzer.analyze(\n           ~~~~~~~~~~~~~~~~~~~~~~^\n        elements=elements,\n        ^^^^^^^^^^^^^^^^^^\n    ...<3 lines>...\n        share_clicked=self.share_clicked\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 282, in analyze\n    raise ValueError(f\"JSON parse failed after {retries} attempts: {e}\")\nValueError: JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state and UI elements, I can see we're on the Instagram home feed viewing Ree\n",
+  "context": {
+    "step": 0,
+    "caption": "Behind the scenes of a media empire's final chapter—Ed Martin's rescue attempt for INFOWARS hit a wa",
+    "video_uploaded": true
+  },
+  "ui_elements_count": 36,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "indicator_background_view",
+      "bounds": "[23,180][68,225]",
+      "center": [
+        45,
+        202
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "View tagged people",
+      "id": "indicator_icon_view",
+      "bounds": "[34,191][57,214]",
+      "center": [
+        45,
+        202
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[628,180][720,249]",
+      "center": [
+        674,
+        214
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Turn sound on",
+      "id": "",
+      "bounds": "[651,180][697,226]",
+      "center": [
+        674,
+        203
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "media_group",
+      "bounds": "[0,39][720,249]",
+      "center": [
+        360,
+        144
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Suggested Reel by Instagram, 274,398 likes, 4,357 comments, 4 days ago",
+      "id": "row_feed_photo_imageview",
+      "bounds": "[0,39][720,249]",
+      "center": [
+        360,
+        144
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[20,249][73,324]",
+      "center": [
+        46,
+        286
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Like",
+      "id": "row_feed_button_like",
+      "bounds": "[27,249][66,324]",
+      "center": [
+        46,
+        286
+      ],
+      "clickable": false
+    },
+    {
+      "text": "274K",
+      "desc": "",
+      "id": "",
+      "bounds": "[73,249][128,324]",
+      "center": [
+        100,
+        286
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[128,249][194,324]",
+      "center": [
+        161,
+        286
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Comment",
+      "id": "row_feed_button_comment",
+      "bounds": "[148,249][187,324]",
+      "center": [
+        167,
+        286
+      ],
+      "clickable": false
+    },
+    {
+      "text": "4,357",
+      "desc": "",
+      "id": "",
+      "bounds": "[194,249][254,324]",
+      "center": [
+        224,
+        286
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[254,249][327,324]",
+      "center": [
+        290,
+        286
+      ],
+      "clickable": true
+    },
+    {
+      "text": "2,891",
+      "desc": "",
+      "id": "",
+      "bounds": "[327,249][384,324]",
+      "center": [
+        355,
+        286
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[394,249][450,324]",
+      "center": [
+        422,
+        286
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Send post",
+      "id": "row_feed_button_share",
+      "bounds": "[404,249][443,324]",
+      "center": [
+        423,
+        286
+      ],
+      "clickable": false
+    },
+    {
+      "text": "5,078",
+      "desc": "",
+      "id": "",
+      "bounds": "[450,249][511,324]",
+      "center": [
+        480,
+        286
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Add to Saved",
+      "id": "row_feed_button_save",
+      "bounds": "[638,249][710,317]",
+      "center": [
+        674,
+        283
+      ],
+      "clickable": true
+    },
+    {
+      "text": "instagram @usher (Usher) goes dad mode 🚗⁣… more",
+      "desc": "",
+      "id": "",
+      "bounds": "[23,324][720,355]",
+      "center": [
+        371,
+        339
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "instagram",
+      "id": "",
+      "bounds": "[23,324][127,352]",
+      "center": [
+        75,
+        338
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "@usher",
+      "id": "",
+      "bounds": "[132,324][209,352]",
+      "center": [
+        170,
+        338
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "@usher (Usher) goes dad mode 🚗⁣",
+      "id": "",
+      "bounds": "[132,324][480,352]",
+      "center": [
+        306,
+        338
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "more",
+      "id": "",
+      "bounds": "[500,324][551,352]",
+      "center": [
+        525,
+        338
+      ],
+      "clickable": true
+    },
+    {
+      "text": "4 days ago",
+      "desc": "4 days ago",
+      "id": "",
+      "bounds": "[0,362][720,388]",
+      "center": [
+        360,
+        375
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "nexplanon posted a video November 14",
+      "id": "row_feed_profile_header",
+      "bounds": "[0,407][720,492]",
+      "center": [
+        360,
+        449
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,407][79,492]",
+      "center": [
+        39,
+        449
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile picture of nexplanon",
+      "id": "row_feed_photo_profile_imageview",
+      "bounds": "[24,425][73,474]",
+      "center": [
+        48,
+        449
+      ],
+      "clickable": false
+    },
+    {
+      "text": "nexplanon  ",
+      "desc": "nexplanon  ",
+      "id": "row_feed_photo_profile_name",
+      "bounds": "[79,407][649,448]",
+      "center": [
+        364,
+        427
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Sponsored",
+      "desc": "Sponsored",
+      "id": "secondary_label",
+      "bounds": "[79,448][649,492]",
+      "center": [
+        364,
+        470
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More actions for this post",
+      "id": "media_option_button",
+      "bounds": "[649,410][720,489]",
+      "center": [
+        684,
+        449
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "media_group",
+      "bounds": "[0,492][720,1284]",
+      "center": [
+        360,
+        888
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1284][144,1362]",
+      "center": [
+        72,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1284][288,1362]",
+      "center": [
+        216,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1284][432,1362]",
+      "center": [
+        360,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1284][576,1362]",
+      "center": [
+        504,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1284][720,1362]",
+      "center": [
+        648,
+        1323
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\bitepodmedia_20251222_130252\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\bitepodmedia_20251222_130252\\error_001_page_source.xml"
+}

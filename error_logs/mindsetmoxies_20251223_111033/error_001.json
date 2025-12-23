@@ -1,0 +1,311 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-23T11:14:48.147334",
+  "account": "mindsetmoxies",
+  "job_id": "V7GA7hUKYw-q-1.mp4",
+  "phase": "navigation",
+  "error_type": "max_steps",
+  "error_class": "Exception",
+  "error_message": "Max steps (30) reached",
+  "error_repr": "Exception('Max steps (30) reached')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "max_steps": 30,
+    "video_uploaded": true,
+    "video_selected": true,
+    "caption_entered": true,
+    "share_clicked": false,
+    "caption": "Oopsie, turns out shortcuts are just work in disguise - plot twist!"
+  },
+  "ui_elements_count": 26,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "reels tray container",
+      "id": "",
+      "bounds": "[0,139][720,354]",
+      "center": [
+        360,
+        246
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[0,139][183,354]",
+      "center": [
+        91,
+        246
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "mindsetmoxies's story, 0 of 1, Unseen.",
+      "id": "",
+      "bounds": "[0,139][183,315]",
+      "center": [
+        91,
+        227
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "mindsetmoxies's story, 0 of 1, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[22,161][160,299]",
+      "center": [
+        91,
+        230
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Add to story",
+      "id": "reel_empty_badge",
+      "bounds": "[121,260][170,309]",
+      "center": [
+        145,
+        284
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Your story",
+      "desc": "",
+      "id": "username",
+      "bounds": "[44,315][140,341]",
+      "center": [
+        92,
+        328
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "media_group",
+      "bounds": "[0,354][720,1266]",
+      "center": [
+        360,
+        810
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "feed_preview_keep_watching_backdrop",
+      "bounds": "[0,354][720,1266]",
+      "center": [
+        360,
+        810
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Tap to watch more reels",
+      "id": "feed_preview_keep_watching_button",
+      "bounds": "[214,887][506,965]",
+      "center": [
+        360,
+        926
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Watch more reels",
+      "desc": "",
+      "id": "feed_preview_keep_watching_text",
+      "bounds": "[248,911][472,941]",
+      "center": [
+        360,
+        926
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Watch again",
+      "desc": "",
+      "id": "feed_preview_watch_again_text",
+      "bounds": "[270,965][451,1047]",
+      "center": [
+        360,
+        1006
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "mindsetmoxies posted a video 21 seconds ago",
+      "id": "row_feed_profile_header",
+      "bounds": "[0,354][720,439]",
+      "center": [
+        360,
+        396
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,354][79,439]",
+      "center": [
+        39,
+        396
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile picture of mindsetmoxies",
+      "id": "row_feed_photo_profile_imageview",
+      "bounds": "[24,372][73,421]",
+      "center": [
+        48,
+        396
+      ],
+      "clickable": false
+    },
+    {
+      "text": "mindsetmoxies",
+      "desc": "mindsetmoxies",
+      "id": "row_feed_photo_profile_name",
+      "bounds": "[79,354][649,395]",
+      "center": [
+        364,
+        374
+      ],
+      "clickable": true
+    },
+    {
+      "text": " mindsetmoxies • Original audio",
+      "desc": " mindsetmoxies • Original audio",
+      "id": "secondary_label",
+      "bounds": "[79,395][649,439]",
+      "center": [
+        364,
+        417
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More actions for this post",
+      "id": "media_option_button",
+      "bounds": "[649,357][720,436]",
+      "center": [
+        684,
+        396
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,48][79,139]",
+      "center": [
+        39,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar_title_view",
+      "bounds": "[79,68][641,119]",
+      "center": [
+        360,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Instagram Home Feed",
+      "id": "title_logo",
+      "bounds": "[272,68][448,119]",
+      "center": [
+        360,
+        93
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "notification",
+      "bounds": "[641,48][720,139]",
+      "center": [
+        680,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1266][144,1344]",
+      "center": [
+        72,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1266][288,1344]",
+      "center": [
+        216,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1266][432,1344]",
+      "center": [
+        360,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1266][576,1344]",
+      "center": [
+        504,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1266][720,1344]",
+      "center": [
+        648,
+        1305
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\mindsetmoxies_20251223_111033\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\mindsetmoxies_20251223_111033\\error_001_page_source.xml"
+}

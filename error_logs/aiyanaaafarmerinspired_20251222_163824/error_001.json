@@ -1,0 +1,245 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T16:39:01.407952",
+  "account": "aiyanaaafarmerinspired",
+  "job_id": "DP66V_cAd9p-1.mp4",
+  "phase": "navigation",
+  "error_type": "terminated",
+  "error_class": "Exception",
+  "error_message": "terminated: we disabled your account",
+  "error_repr": "Exception('terminated: we disabled your account')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "step": 0,
+    "caption": "Bob Proctor dropped this truth bomb on @lewishowes: both faith and fear ask us to believe in the inv",
+    "video_path": "C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\campaigns\\podcast\\videos\\chunk_01b\\lewishowes\\DP66V_cAd9p-1.mp4",
+    "video_uploaded": true,
+    "caption_entered": false,
+    "share_clicked": false
+  },
+  "ui_elements_count": 20,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "Menu",
+      "id": "",
+      "bounds": "[636,51][706,116]",
+      "center": [
+        671,
+        83
+      ],
+      "clickable": true
+    },
+    {
+      "text": " ",
+      "desc": "",
+      "id": "",
+      "bounds": "[688,69][693,99]",
+      "center": [
+        690,
+        84
+      ],
+      "clickable": false
+    },
+    {
+      "text": "We disabled your account",
+      "desc": "We disabled your account",
+      "id": "",
+      "bounds": "[156,284][565,331]",
+      "center": [
+        360,
+        307
+      ],
+      "clickable": false
+    },
+    {
+      "text": "You no longer have access to aiyanaaafarmerinspired",
+      "desc": "You no longer have access to aiyanaaafarmerinspired",
+      "id": "",
+      "bounds": "[101,344][619,374]",
+      "center": [
+        360,
+        359
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Account disabled on December 18, 2025",
+      "desc": "Account disabled on December 18, 2025",
+      "id": "",
+      "bounds": "[187,387][533,414]",
+      "center": [
+        360,
+        400
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Why this happened",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,488][250,524]",
+      "center": [
+        138,
+        506
+      ],
+      "clickable": false
+    },
+    {
+      "text": "We reviewed your account and found that it still doesn't follow our Community Standards on account integrity.",
+      "desc": "We reviewed your account and found that it still doesn't follow our Community Standards on account integrity.",
+      "id": "",
+      "bounds": "[26,550][694,605]",
+      "center": [
+        360,
+        577
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,618][694,697]",
+      "center": [
+        360,
+        657
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Read more about this rule",
+      "desc": "Read more about this rule",
+      "id": "",
+      "bounds": "[111,640][668,676]",
+      "center": [
+        389,
+        658
+      ],
+      "clickable": false
+    },
+    {
+      "text": "What this means",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,736][222,772]",
+      "center": [
+        124,
+        754
+      ],
+      "clickable": false
+    },
+    {
+      "text": "No one can see or find your account and you can't use it. All your information will be permanently deleted.",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,798][694,853]",
+      "center": [
+        360,
+        825
+      ],
+      "clickable": false
+    },
+    {
+      "text": "You cannot request another review of this decision.",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,879][694,909]",
+      "center": [
+        360,
+        894
+      ],
+      "clickable": false
+    },
+    {
+      "text": "What you can do",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,948][221,984]",
+      "center": [
+        123,
+        966
+      ],
+      "clickable": false
+    },
+    {
+      "text": "You can download your information so that you have a copy of what you shared on Instagram.",
+      "desc": "You can download your information so that you have a copy of what you shared on Instagram.",
+      "id": "",
+      "bounds": "[26,1010][694,1065]",
+      "center": [
+        360,
+        1037
+      ],
+      "clickable": false
+    },
+    {
+      "text": "download your information",
+      "desc": "",
+      "id": "",
+      "bounds": "[109,1010][370,1039]",
+      "center": [
+        239,
+        1024
+      ],
+      "clickable": true
+    },
+    {
+      "text": "More information",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,1091][233,1127]",
+      "center": [
+        129,
+        1109
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,1140][720,1219]",
+      "center": [
+        360,
+        1179
+      ],
+      "clickable": true
+    },
+    {
+      "text": "How we made this decision",
+      "desc": "How we made this decision",
+      "id": "",
+      "bounds": "[85,1162][694,1198]",
+      "center": [
+        389,
+        1180
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Log out",
+      "id": "",
+      "bounds": "[26,1260][694,1329]",
+      "center": [
+        360,
+        1294
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Log out",
+      "desc": "",
+      "id": "",
+      "bounds": "[324,1280][396,1310]",
+      "center": [
+        360,
+        1295
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\aiyanaaafarmerinspired_20251222_163824\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\aiyanaaafarmerinspired_20251222_163824\\error_001_page_source.xml"
+}

@@ -444,7 +444,7 @@ def close_all_running_phones(account_names: Set[str] = None) -> int:
         phones = result.get('items', [])
 
         # Find running phones (status 1 = running)
-        running = [p for p in phones if p.get('status') == 1]
+        running = [p for p in phones if p.get('status') != 0]  # 0=stopped, 1=starting, 2=running
 
         if not running:
             logger.info("close_all_running_phones: No phones currently running")

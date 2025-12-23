@@ -1,0 +1,341 @@
+{
+  "error_id": "error_002",
+  "timestamp": "2025-12-22T14:01:03.000696",
+  "account": "viralmicstudio",
+  "job_id": "DNoalZ2ynd5-2.mp4",
+  "phase": "ai_analysis",
+  "error_type": "analysis_error",
+  "error_class": "ValueError",
+  "error_message": "JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see that:\n\n1. Video uploaded to phone: True\n2. Caption entered: ",
+  "error_repr": "ValueError('JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see that:\\n\\n1. Video uploaded to phone: True\\n2. Caption entered: ')",
+  "stack_trace": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 213, in parse_response\n    # Generic code block\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\__init__.py\", line 346, in loads\n    return _default_decoder.decode(s)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 345, in decode\n    obj, end = self.raw_decode(s, idx=_w(s, 0).end())\n               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 363, in raw_decode\n    raise JSONDecodeError(\"Expecting value\", s, err.value) from None\njson.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 275, in analyze\n    Action dictionary with action, element_index, text, reason, etc.\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 215, in parse_response\n    if len(parts) >= 3:\nValueError: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see that:\n\n1. Video uploaded to phone: True\n2. Caption entered: \n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 1026, in post\n    action = self.analyze_ui(elements, caption)\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 870, in analyze_ui\n    return self._analyzer.analyze(\n           ~~~~~~~~~~~~~~~~~~~~~~^\n        elements=elements,\n        ^^^^^^^^^^^^^^^^^^\n    ...<3 lines>...\n        share_clicked=self.share_clicked\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 282, in analyze\n    caption=caption,\n            ^^^^^^^^\nValueError: JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see that:\n\n1. Video uploaded to phone: True\n2. Caption entered: \n",
+  "context": {
+    "step": 1,
+    "caption": "The question that shouldn't be controversial yet somehow stumps people every time 🎯 @charliekirk1776",
+    "video_uploaded": true
+  },
+  "ui_elements_count": 29,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[628,942][720,1011]",
+      "center": [
+        674,
+        976
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Turn sound off",
+      "id": "",
+      "bounds": "[651,942][697,988]",
+      "center": [
+        674,
+        965
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "media_group",
+      "bounds": "[0,39][720,1011]",
+      "center": [
+        360,
+        525
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by zach matthews, 268,048 likes, 1,080 comments, December 9",
+      "id": "row_feed_photo_imageview",
+      "bounds": "[0,39][720,1011]",
+      "center": [
+        360,
+        525
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[20,1011][66,1086]",
+      "center": [
+        43,
+        1048
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Like",
+      "id": "row_feed_button_like",
+      "bounds": "[20,1011][59,1086]",
+      "center": [
+        39,
+        1048
+      ],
+      "clickable": false
+    },
+    {
+      "text": "268K",
+      "desc": "",
+      "id": "",
+      "bounds": "[66,1011][123,1086]",
+      "center": [
+        94,
+        1048
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[123,1011][189,1086]",
+      "center": [
+        156,
+        1048
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Comment",
+      "id": "row_feed_button_comment",
+      "bounds": "[143,1011][182,1086]",
+      "center": [
+        162,
+        1048
+      ],
+      "clickable": false
+    },
+    {
+      "text": "1,080",
+      "desc": "",
+      "id": "",
+      "bounds": "[189,1011][246,1086]",
+      "center": [
+        217,
+        1048
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[246,1011][319,1086]",
+      "center": [
+        282,
+        1048
+      ],
+      "clickable": true
+    },
+    {
+      "text": "6,971",
+      "desc": "",
+      "id": "",
+      "bounds": "[319,1011][375,1086]",
+      "center": [
+        347,
+        1048
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[385,1011][441,1086]",
+      "center": [
+        413,
+        1048
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Send post",
+      "id": "row_feed_button_share",
+      "bounds": "[395,1011][434,1086]",
+      "center": [
+        414,
+        1048
+      ],
+      "clickable": false
+    },
+    {
+      "text": "25.2K",
+      "desc": "",
+      "id": "",
+      "bounds": "[441,1011][504,1086]",
+      "center": [
+        472,
+        1048
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Add to Saved",
+      "id": "row_feed_button_save",
+      "bounds": "[645,1011][717,1079]",
+      "center": [
+        681,
+        1045
+      ],
+      "clickable": true
+    },
+    {
+      "text": "zachirific nice guys don’t always finish last 🥱",
+      "desc": "",
+      "id": "",
+      "bounds": "[20,1086][720,1117]",
+      "center": [
+        370,
+        1101
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "zachirific",
+      "id": "",
+      "bounds": "[20,1086][116,1114]",
+      "center": [
+        68,
+        1100
+      ],
+      "clickable": true
+    },
+    {
+      "text": "December 9",
+      "desc": "December 9",
+      "id": "",
+      "bounds": "[0,1124][720,1150]",
+      "center": [
+        360,
+        1137
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Suggested for you",
+      "desc": "Suggested for you",
+      "id": "netego_carousel_title",
+      "bounds": "[23,1182][225,1212]",
+      "center": [
+        124,
+        1197
+      ],
+      "clickable": false
+    },
+    {
+      "text": "See all",
+      "desc": "",
+      "id": "netego_carousel_cta",
+      "bounds": "[603,1182][694,1212]",
+      "center": [
+        648,
+        1197
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "suggested_entity_card_container",
+      "bounds": "[23,1234][469,1284]",
+      "center": [
+        246,
+        1259
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Dismiss",
+      "id": "dismiss_button",
+      "bounds": "[423,1234][469,1280]",
+      "center": [
+        446,
+        1257
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "suggested_entity_card_container",
+      "bounds": "[489,1234][720,1284]",
+      "center": [
+        604,
+        1259
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1284][144,1362]",
+      "center": [
+        72,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1284][288,1362]",
+      "center": [
+        216,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1284][432,1362]",
+      "center": [
+        360,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1284][576,1362]",
+      "center": [
+        504,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1284][720,1362]",
+      "center": [
+        648,
+        1323
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\viralmicstudio_20251222_135904\\error_002_screenshot.png",
+  "page_source_file": "error_logs\\viralmicstudio_20251222_135904\\error_002_page_source.xml"
+}

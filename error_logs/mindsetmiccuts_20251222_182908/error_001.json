@@ -1,0 +1,262 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T18:32:00.526514",
+  "account": "mindsetmiccuts",
+  "job_id": "DQjt90BiaVa-2.mp4",
+  "phase": "navigation",
+  "error_type": "loop_stuck",
+  "error_class": "Exception",
+  "error_message": "Loop stuck on action: tap_360_720",
+  "error_repr": "Exception('Loop stuck on action: tap_360_720')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "step": 25,
+    "recent_actions": [
+      "tap_360_720",
+      "tap_360_720",
+      "tap_360_720",
+      "tap_360_720",
+      "tap_360_720"
+    ],
+    "loop_recovery_count": 3,
+    "video_uploaded": true,
+    "caption_entered": false,
+    "share_clicked": false
+  },
+  "ui_elements_count": 21,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "quick_capture_root_container",
+      "bounds": "[0,0][720,1440]",
+      "center": [
+        360,
+        720
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Back to Home",
+      "id": "gallery_cancel_button",
+      "bounds": "[0,7][85,92]",
+      "center": [
+        42,
+        49
+      ],
+      "clickable": true
+    },
+    {
+      "text": "New reel",
+      "desc": "",
+      "id": "gallery_title_text",
+      "bounds": "[299,31][421,68]",
+      "center": [
+        360,
+        49
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Camera settings",
+      "id": "gallery_settings_gear",
+      "bounds": "[635,7][720,92]",
+      "center": [
+        677,
+        49
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "gallery_destination_item",
+      "bounds": "[23,99][180,178]",
+      "center": [
+        101,
+        138
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Edits",
+      "desc": "",
+      "id": "button_name",
+      "bounds": "[98,122][160,155]",
+      "center": [
+        129,
+        138
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "gallery_destination_item",
+      "bounds": "[194,99][363,178]",
+      "center": [
+        278,
+        138
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Drafts",
+      "desc": "",
+      "id": "button_name",
+      "bounds": "[269,122][343,155]",
+      "center": [
+        306,
+        138
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "gallery_destination_item",
+      "bounds": "[377,99][597,178]",
+      "center": [
+        487,
+        138
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Templates",
+      "desc": "",
+      "id": "button_name",
+      "bounds": "[452,122][577,155]",
+      "center": [
+        514,
+        138
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Select multiple, activate to select multiple photos in your gallery",
+      "id": "gallery_menu_multi_select_button",
+      "bounds": "[644,203][702,261]",
+      "center": [
+        673,
+        232
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Album switcher, Recents, button, double tap to change album",
+      "desc": "",
+      "id": "gallery_folder_menu_tv",
+      "bounds": "[0,209][172,246]",
+      "center": [
+        86,
+        227
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Open camera",
+      "id": "",
+      "bounds": "[3,274][239,693]",
+      "center": [
+        121,
+        483
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Camera",
+      "id": "gallery_grid_camera_item_icon",
+      "bounds": "[102,464][141,503]",
+      "center": [
+        121,
+        483
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[242,274][478,693]",
+      "center": [
+        360,
+        483
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Unselected Video thumbnail created on December 22, 2025 2:29 AM",
+      "id": "gallery_grid_item_thumbnail",
+      "bounds": "[242,274][478,693]",
+      "center": [
+        360,
+        483
+      ],
+      "clickable": true
+    },
+    {
+      "text": "0:46",
+      "desc": "",
+      "id": "gallery_grid_item_label",
+      "bounds": "[420,650][465,682]",
+      "center": [
+        442,
+        666
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[481,274][717,693]",
+      "center": [
+        599,
+        483
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Unselected Photo thumbnail created on December 15, 2025 3:18 AM",
+      "id": "gallery_grid_item_thumbnail",
+      "bounds": "[481,274][717,693]",
+      "center": [
+        599,
+        483
+      ],
+      "clickable": true
+    },
+    {
+      "text": "REEL",
+      "desc": "REEL",
+      "id": "cam_dest_clips",
+      "bounds": "[311,1285][408,1341]",
+      "center": [
+        359,
+        1313
+      ],
+      "clickable": true
+    },
+    {
+      "text": "TEMPLATES",
+      "desc": "TEMPLATES",
+      "id": "cam_dest_template",
+      "bounds": "[408,1285][602,1340]",
+      "center": [
+        505,
+        1312
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\mindsetmiccuts_20251222_182908\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\mindsetmiccuts_20251222_182908\\error_001_page_source.xml"
+}

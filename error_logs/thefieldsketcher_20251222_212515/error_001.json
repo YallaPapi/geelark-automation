@@ -1,0 +1,285 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T21:28:33.494448",
+  "account": "thefieldsketcher",
+  "job_id": "DQ9fKdeESR_-2.mp4",
+  "phase": "navigation",
+  "error_type": "loop_stuck",
+  "error_class": "Exception",
+  "error_message": "Loop stuck on action: wait",
+  "error_repr": "Exception('Loop stuck on action: wait')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "step": 29,
+    "recent_actions": [
+      "wait",
+      "wait",
+      "wait",
+      "wait",
+      "wait"
+    ],
+    "loop_recovery_count": 3,
+    "video_uploaded": true,
+    "video_selected": true,
+    "caption_entered": true,
+    "share_clicked": false
+  },
+  "ui_elements_count": 23,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "Reel by joenilestheroofingguy",
+      "id": "clips_media_component",
+      "bounds": "[0,48][720,1266]",
+      "center": [
+        360,
+        657
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Reel by joenilestheroofingguy. Double tap to play or pause.",
+      "id": "clips_video_container",
+      "bounds": "[0,48][720,1266]",
+      "center": [
+        360,
+        657
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "clips_author_info_component",
+      "bounds": "[26,1117][393,1204]",
+      "center": [
+        209,
+        1160
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile picture of joenilestheroofingguy",
+      "id": "clips_author_profile_pic",
+      "bounds": "[32,1139][91,1198]",
+      "center": [
+        61,
+        1168
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[97,1154][393,1184]",
+      "center": [
+        245,
+        1169
+      ],
+      "clickable": true
+    },
+    {
+      "text": "joenilestheroofingguy  ",
+      "desc": "joenilestheroofingguy  ",
+      "id": "clips_author_username",
+      "bounds": "[97,1154][393,1184]",
+      "center": [
+        245,
+        1169
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[393,1133][538,1204]",
+      "center": [
+        465,
+        1168
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Follow",
+      "desc": "Follow Jam Joseph  Niles",
+      "id": "inline_follow_button",
+      "bounds": "[403,1146][515,1194]",
+      "center": [
+        459,
+        1170
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "See more",
+      "id": "",
+      "bounds": "[26,1204][635,1243]",
+      "center": [
+        330,
+        1223
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Like",
+      "id": "like_button",
+      "bounds": "[635,939][707,1011]",
+      "center": [
+        671,
+        975
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Comment",
+      "id": "comment_button",
+      "bounds": "[635,1024][707,1096]",
+      "center": [
+        671,
+        1060
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Share",
+      "id": "direct_share_button",
+      "bounds": "[635,1109][707,1181]",
+      "center": [
+        671,
+        1145
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More",
+      "id": "clips_ufi_more_button_component",
+      "bounds": "[635,1181][707,1253]",
+      "center": [
+        671,
+        1217
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Create a reel",
+      "id": "",
+      "bounds": "[0,55][77,132]",
+      "center": [
+        38,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Reels",
+      "desc": "",
+      "id": "clips_viewer_action_bar_title",
+      "bounds": "[287,69][433,118]",
+      "center": [
+        360,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1266][144,1344]",
+      "center": [
+        72,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1266][288,1344]",
+      "center": [
+        216,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1266][432,1344]",
+      "center": [
+        360,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1266][576,1344]",
+      "center": [
+        504,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1266][720,1344]",
+      "center": [
+        648,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "upload_snackbar_container",
+      "bounds": "[13,1143][707,1253]",
+      "center": [
+        360,
+        1198
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Sharing to Reels…",
+      "desc": "",
+      "id": "status_text",
+      "bounds": "[107,1176][691,1205]",
+      "center": [
+        399,
+        1190
+      ],
+      "clickable": false
+    },
+    {
+      "text": "90.0",
+      "desc": "",
+      "id": "progress_bar",
+      "bounds": "[107,1218][691,1220]",
+      "center": [
+        399,
+        1219
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\thefieldsketcher_20251222_212515\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\thefieldsketcher_20251222_212515\\error_001_page_source.xml"
+}

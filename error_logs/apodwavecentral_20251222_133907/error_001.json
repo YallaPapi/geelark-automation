@@ -1,0 +1,374 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T13:40:15.221777",
+  "account": "apodwavecentral",
+  "job_id": "DM_OocKBjWp-2.mp4",
+  "phase": "ai_analysis",
+  "error_type": "analysis_error",
+  "error_class": "ValueError",
+  "error_message": "JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current UI, I can see I'm on the Instagram home feed viewing a Reel by Matchroom Boxi",
+  "error_repr": "ValueError(\"JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current UI, I can see I'm on the Instagram home feed viewing a Reel by Matchroom Boxi\")",
+  "stack_trace": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 213, in parse_response\n    # Generic code block\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\__init__.py\", line 346, in loads\n    return _default_decoder.decode(s)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 345, in decode\n    obj, end = self.raw_decode(s, idx=_w(s, 0).end())\n               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 363, in raw_decode\n    raise JSONDecodeError(\"Expecting value\", s, err.value) from None\njson.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 275, in analyze\n    Action dictionary with action, element_index, text, reason, etc.\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 215, in parse_response\n    if len(parts) >= 3:\nValueError: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current UI, I can see I'm on the Instagram home feed viewing a Reel by Matchroom Boxi\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 1026, in post\n    action = self.analyze_ui(elements, caption)\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 870, in analyze_ui\n    return self._analyzer.analyze(\n           ~~~~~~~~~~~~~~~~~~~~~~^\n        elements=elements,\n        ^^^^^^^^^^^^^^^^^^\n    ...<3 lines>...\n        share_clicked=self.share_clicked\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 282, in analyze\n    caption=caption,\n            ^^^^^^^^\nValueError: JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current UI, I can see I'm on the Instagram home feed viewing a Reel by Matchroom Boxi\n",
+  "context": {
+    "step": 0,
+    "caption": "The age-old philosophical truth: evil only has meaning when measured against good. @charliekirk1776 ",
+    "video_uploaded": true
+  },
+  "ui_elements_count": 32,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[628,927][720,996]",
+      "center": [
+        674,
+        961
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Turn sound on",
+      "id": "",
+      "bounds": "[651,927][697,973]",
+      "center": [
+        674,
+        950
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "media_group",
+      "bounds": "[0,39][720,996]",
+      "center": [
+        360,
+        517
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Suggested Reel by Matchroom Boxing, 110,131 likes, 457 comments, November 4",
+      "id": "row_feed_photo_imageview",
+      "bounds": "[0,39][720,996]",
+      "center": [
+        360,
+        517
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[20,996][73,1071]",
+      "center": [
+        46,
+        1033
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Like",
+      "id": "row_feed_button_like",
+      "bounds": "[27,996][66,1071]",
+      "center": [
+        46,
+        1033
+      ],
+      "clickable": false
+    },
+    {
+      "text": "110K",
+      "desc": "",
+      "id": "",
+      "bounds": "[73,996][120,1071]",
+      "center": [
+        96,
+        1033
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[120,996][186,1071]",
+      "center": [
+        153,
+        1033
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Comment",
+      "id": "row_feed_button_comment",
+      "bounds": "[140,996][179,1071]",
+      "center": [
+        159,
+        1033
+      ],
+      "clickable": false
+    },
+    {
+      "text": "457",
+      "desc": "",
+      "id": "",
+      "bounds": "[186,996][227,1071]",
+      "center": [
+        206,
+        1033
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[227,996][300,1071]",
+      "center": [
+        263,
+        1033
+      ],
+      "clickable": true
+    },
+    {
+      "text": "1,279",
+      "desc": "",
+      "id": "",
+      "bounds": "[300,996][356,1071]",
+      "center": [
+        328,
+        1033
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[366,996][422,1071]",
+      "center": [
+        394,
+        1033
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Send post",
+      "id": "row_feed_button_share",
+      "bounds": "[376,996][415,1071]",
+      "center": [
+        395,
+        1033
+      ],
+      "clickable": false
+    },
+    {
+      "text": "3,367",
+      "desc": "",
+      "id": "",
+      "bounds": "[422,996][481,1071]",
+      "center": [
+        451,
+        1033
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Add to Saved",
+      "id": "row_feed_button_save",
+      "bounds": "[638,996][710,1064]",
+      "center": [
+        674,
+        1030
+      ],
+      "clickable": true
+    },
+    {
+      "text": "matchroomboxing Light Heavyweight King Dmitry Bivol… more",
+      "desc": "",
+      "id": "",
+      "bounds": "[23,1071][720,1102]",
+      "center": [
+        371,
+        1086
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "matchroomboxing",
+      "id": "",
+      "bounds": "[23,1071][211,1099]",
+      "center": [
+        117,
+        1085
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Light Heavyweight King Dmitry Bivol",
+      "id": "",
+      "bounds": "[216,1071][585,1099]",
+      "center": [
+        400,
+        1085
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Light Heavyweight King Dmitry Bivol",
+      "id": "",
+      "bounds": "[216,1071][585,1099]",
+      "center": [
+        400,
+        1085
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "more",
+      "id": "",
+      "bounds": "[605,1071][657,1099]",
+      "center": [
+        631,
+        1085
+      ],
+      "clickable": true
+    },
+    {
+      "text": "November 4",
+      "desc": "November 4",
+      "id": "",
+      "bounds": "[0,1109][720,1135]",
+      "center": [
+        360,
+        1122
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Suggested for you",
+      "desc": "Suggested for you",
+      "id": "netego_carousel_title",
+      "bounds": "[23,1167][225,1197]",
+      "center": [
+        124,
+        1182
+      ],
+      "clickable": false
+    },
+    {
+      "text": "See all",
+      "desc": "",
+      "id": "netego_carousel_cta",
+      "bounds": "[603,1167][694,1197]",
+      "center": [
+        648,
+        1182
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "suggested_entity_card_container",
+      "bounds": "[23,1219][469,1284]",
+      "center": [
+        246,
+        1251
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Dismiss",
+      "id": "dismiss_button",
+      "bounds": "[423,1219][469,1265]",
+      "center": [
+        446,
+        1242
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "suggested_entity_card_container",
+      "bounds": "[489,1219][720,1284]",
+      "center": [
+        604,
+        1251
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1284][144,1362]",
+      "center": [
+        72,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1284][288,1362]",
+      "center": [
+        216,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1284][432,1362]",
+      "center": [
+        360,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1284][576,1362]",
+      "center": [
+        504,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1284][720,1362]",
+      "center": [
+        648,
+        1323
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\apodwavecentral_20251222_133907\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\apodwavecentral_20251222_133907\\error_001_page_source.xml"
+}

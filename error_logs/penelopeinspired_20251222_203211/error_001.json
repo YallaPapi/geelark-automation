@@ -1,0 +1,211 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T20:37:58.429606",
+  "account": "penelopeinspired",
+  "job_id": "DQevYfCicuZ-1.mp4",
+  "phase": "navigation",
+  "error_type": "max_steps",
+  "error_class": "Exception",
+  "error_message": "Max steps (30) reached",
+  "error_repr": "Exception('Max steps (30) reached')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "max_steps": 30,
+    "video_uploaded": true,
+    "caption_entered": true,
+    "share_clicked": false,
+    "caption": "Brad's costume dilemma continues – after showing up as himself last Halloween, the search for someth"
+  },
+  "ui_elements_count": 17,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "quick_capture_root_container",
+      "bounds": "[0,0][720,1440]",
+      "center": [
+        360,
+        720
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Double tap for tools that edit your video clips.",
+      "id": "clips_left_action_button",
+      "bounds": "[20,1274][168,1344]",
+      "center": [
+        94,
+        1309
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Edit video",
+      "desc": "",
+      "id": "",
+      "bounds": "[46,1296][142,1322]",
+      "center": [
+        94,
+        1309
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Next",
+      "id": "clips_right_action_button",
+      "bounds": "[579,1274][700,1344]",
+      "center": [
+        639,
+        1309
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Next",
+      "desc": "",
+      "id": "",
+      "bounds": "[605,1296][681,1322]",
+      "center": [
+        643,
+        1309
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Add audio",
+      "id": "clips_action_bar_volume_controls_button",
+      "bounds": "[12,1126][83,1197]",
+      "center": [
+        47,
+        1161
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Add text",
+      "id": "clips_action_bar_add_text_button",
+      "bounds": "[95,1126][166,1197]",
+      "center": [
+        130,
+        1161
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Add sticker",
+      "id": "clips_action_bar_add_sticker_button",
+      "bounds": "[178,1126][249,1197]",
+      "center": [
+        213,
+        1161
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Effects",
+      "id": "clips_action_bar_ar_effects_button",
+      "bounds": "[261,1126][332,1197]",
+      "center": [
+        296,
+        1161
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Voiceover",
+      "id": "clips_action_bar_voiceover_button",
+      "bounds": "[344,1126][415,1197]",
+      "center": [
+        379,
+        1161
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Add clips",
+      "id": "clips_action_bar_add_clips_button",
+      "bounds": "[427,1126][498,1197]",
+      "center": [
+        462,
+        1161
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Captions",
+      "id": "clips_action_bar_captions_button",
+      "bounds": "[510,1126][581,1197]",
+      "center": [
+        545,
+        1161
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Volume",
+      "id": "clips_action_bar_volume_controls_button",
+      "bounds": "[593,1126][664,1197]",
+      "center": [
+        628,
+        1161
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Save",
+      "id": "clips_action_bar_save_button",
+      "bounds": "[676,1126][720,1197]",
+      "center": [
+        698,
+        1161
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Cancel",
+      "id": "cancel_button",
+      "bounds": "[12,26][84,98]",
+      "center": [
+        48,
+        62
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "@2131966362",
+      "id": "overflow_button",
+      "bounds": "[636,26][708,98]",
+      "center": [
+        672,
+        62
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel preview playing",
+      "id": "capture_interactive_drawable_container",
+      "bounds": "[0,0][720,1280]",
+      "center": [
+        360,
+        640
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\penelopeinspired_20251222_203211\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\penelopeinspired_20251222_203211\\error_001_page_source.xml"
+}

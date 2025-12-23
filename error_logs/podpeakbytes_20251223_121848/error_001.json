@@ -1,0 +1,179 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-23T12:20:51.668837",
+  "account": "podpeakbytes",
+  "job_id": "nq6-l7Z0ZsGZ-4.mp4",
+  "phase": "navigation",
+  "error_type": "max_steps",
+  "error_class": "Exception",
+  "error_message": "Max steps (30) reached",
+  "error_repr": "Exception('Max steps (30) reached')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "max_steps": 30,
+    "video_uploaded": true,
+    "video_selected": false,
+    "caption_entered": false,
+    "share_clicked": false,
+    "caption": "Embrace uncertainty. Growth lives beyond your comfort zone."
+  },
+  "ui_elements_count": 14,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "Cancel",
+      "id": "action_bar_cancel",
+      "bounds": "[0,0][91,91]",
+      "center": [
+        45,
+        45
+      ],
+      "clickable": true
+    },
+    {
+      "text": "New post",
+      "desc": "",
+      "id": "new_post_title",
+      "bounds": "[91,0][626,91]",
+      "center": [
+        358,
+        45
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Next",
+      "desc": "Next",
+      "id": "next_button_textview",
+      "bounds": "[626,0][720,91]",
+      "center": [
+        673,
+        45
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Video preview thumbnail",
+      "id": "video_preview_view",
+      "bounds": "[0,91][720,811]",
+      "center": [
+        360,
+        451
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Recents",
+      "desc": "",
+      "id": "gallery_folder_menu_tv",
+      "bounds": "[0,834][191,873]",
+      "center": [
+        95,
+        853
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Select multiple button",
+      "id": "multi_select_slide_button_alt",
+      "bounds": "[481,827][700,879]",
+      "center": [
+        590,
+        853
+      ],
+      "clickable": true
+    },
+    {
+      "text": "SELECT MULTIPLE",
+      "desc": "",
+      "id": "slideout_iconview_text",
+      "bounds": "[520,841][687,864]",
+      "center": [
+        603,
+        852
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "gallery_picker_grid_item_container",
+      "bounds": "[2,898][179,1075]",
+      "center": [
+        90,
+        986
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[182,898][359,1075]",
+      "center": [
+        270,
+        986
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Selected Video thumbnail created on December 22, 2025 8:18 PM",
+      "id": "gallery_grid_item_thumbnail",
+      "bounds": "[182,898][359,1075]",
+      "center": [
+        270,
+        986
+      ],
+      "clickable": true
+    },
+    {
+      "text": "0:08",
+      "desc": "",
+      "id": "gallery_grid_item_label",
+      "bounds": "[312,1040][346,1064]",
+      "center": [
+        329,
+        1052
+      ],
+      "clickable": false
+    },
+    {
+      "text": "POST",
+      "desc": "POST",
+      "id": "cam_dest_feed",
+      "bounds": "[312,1284][408,1342]",
+      "center": [
+        360,
+        1313
+      ],
+      "clickable": true
+    },
+    {
+      "text": "STORY",
+      "desc": "STORY",
+      "id": "cam_dest_story",
+      "bounds": "[408,1284][519,1342]",
+      "center": [
+        463,
+        1313
+      ],
+      "clickable": true
+    },
+    {
+      "text": "REEL",
+      "desc": "REEL",
+      "id": "cam_dest_clips",
+      "bounds": "[519,1284][608,1342]",
+      "center": [
+        563,
+        1313
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\podpeakbytes_20251223_121848\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\podpeakbytes_20251223_121848\\error_001_page_source.xml"
+}

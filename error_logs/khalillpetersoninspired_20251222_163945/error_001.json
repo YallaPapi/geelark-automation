@@ -1,0 +1,212 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T16:40:31.569967",
+  "account": "khalillpetersoninspired",
+  "job_id": "C7Fov65PMmL-2.mp4",
+  "phase": "navigation",
+  "error_type": "terminated",
+  "error_class": "Exception",
+  "error_message": "terminated: we disabled your account",
+  "error_repr": "Exception('terminated: we disabled your account')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "step": 0,
+    "caption": "Looking at what it takes to fuel a growing body, Peter Attia breaks down his teenage years consuming",
+    "video_path": "C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\campaigns\\podcast\\videos\\chunk_01c\\moreplatesmoredates\\C7Fov65PMmL-2.mp4",
+    "video_uploaded": true,
+    "caption_entered": false,
+    "share_clicked": false
+  },
+  "ui_elements_count": 17,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "Menu",
+      "id": "",
+      "bounds": "[636,51][706,116]",
+      "center": [
+        671,
+        83
+      ],
+      "clickable": true
+    },
+    {
+      "text": " ",
+      "desc": "",
+      "id": "",
+      "bounds": "[688,69][693,99]",
+      "center": [
+        690,
+        84
+      ],
+      "clickable": false
+    },
+    {
+      "text": "We disabled your account",
+      "desc": "We disabled your account",
+      "id": "",
+      "bounds": "[156,389][565,436]",
+      "center": [
+        360,
+        412
+      ],
+      "clickable": false
+    },
+    {
+      "text": "You no longer have access to khalillpetersoninspired",
+      "desc": "You no longer have access to khalillpetersoninspired",
+      "id": "",
+      "bounds": "[107,449][614,479]",
+      "center": [
+        360,
+        464
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Account disabled on December 19, 2025",
+      "desc": "Account disabled on December 19, 2025",
+      "id": "",
+      "bounds": "[187,492][533,519]",
+      "center": [
+        360,
+        505
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Why this happened",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,593][250,629]",
+      "center": [
+        138,
+        611
+      ],
+      "clickable": false
+    },
+    {
+      "text": "We reviewed your account and found that it still doesn't follow our Community Standards on account integrity.",
+      "desc": "We reviewed your account and found that it still doesn't follow our Community Standards on account integrity.",
+      "id": "",
+      "bounds": "[26,655][694,710]",
+      "center": [
+        360,
+        682
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,723][694,802]",
+      "center": [
+        360,
+        762
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Read more about this rule",
+      "desc": "Read more about this rule",
+      "id": "",
+      "bounds": "[111,745][668,781]",
+      "center": [
+        389,
+        763
+      ],
+      "clickable": false
+    },
+    {
+      "text": "What this means",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,841][222,877]",
+      "center": [
+        124,
+        859
+      ],
+      "clickable": false
+    },
+    {
+      "text": "No one can see or find your account and you can't use it. All your information will be permanently deleted.",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,903][694,958]",
+      "center": [
+        360,
+        930
+      ],
+      "clickable": false
+    },
+    {
+      "text": "You cannot request another review of this decision.",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,984][694,1014]",
+      "center": [
+        360,
+        999
+      ],
+      "clickable": false
+    },
+    {
+      "text": "More information",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,1040][233,1076]",
+      "center": [
+        129,
+        1058
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,1089][720,1168]",
+      "center": [
+        360,
+        1128
+      ],
+      "clickable": true
+    },
+    {
+      "text": "How we made this decision",
+      "desc": "How we made this decision",
+      "id": "",
+      "bounds": "[85,1111][694,1147]",
+      "center": [
+        389,
+        1129
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Log out",
+      "id": "",
+      "bounds": "[26,1260][694,1329]",
+      "center": [
+        360,
+        1294
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Log out",
+      "desc": "",
+      "id": "",
+      "bounds": "[324,1280][396,1310]",
+      "center": [
+        360,
+        1295
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\khalillpetersoninspired_20251222_163945\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\khalillpetersoninspired_20251222_163945\\error_001_page_source.xml"
+}

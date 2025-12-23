@@ -1,0 +1,726 @@
+{
+  "error_id": "error_002",
+  "timestamp": "2025-12-22T13:33:45.769878",
+  "account": "DarkLichenCoded",
+  "job_id": "CsuLODIgLb9-1.mp4",
+  "phase": "ai_analysis",
+  "error_type": "analysis_error",
+  "error_class": "ValueError",
+  "error_message": "JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see this is a profile page. I need to start the Instagram Reel p",
+  "error_repr": "ValueError('JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see this is a profile page. I need to start the Instagram Reel p')",
+  "stack_trace": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 213, in parse_response\n    # Generic code block\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\__init__.py\", line 346, in loads\n    return _default_decoder.decode(s)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 345, in decode\n    obj, end = self.raw_decode(s, idx=_w(s, 0).end())\n               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 363, in raw_decode\n    raise JSONDecodeError(\"Expecting value\", s, err.value) from None\njson.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 275, in analyze\n    Action dictionary with action, element_index, text, reason, etc.\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 215, in parse_response\n    if len(parts) >= 3:\nValueError: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see this is a profile page. I need to start the Instagram Reel p\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 1026, in post\n    action = self.analyze_ui(elements, caption)\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 870, in analyze_ui\n    return self._analyzer.analyze(\n           ~~~~~~~~~~~~~~~~~~~~~~^\n        elements=elements,\n        ^^^^^^^^^^^^^^^^^^\n    ...<3 lines>...\n        share_clicked=self.share_clicked\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 282, in analyze\n    caption=caption,\n            ^^^^^^^^\nValueError: JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see this is a profile page. I need to start the Instagram Reel p\n",
+  "context": {
+    "step": 2,
+    "caption": "Basketball star Brittney Griner has had a change of heart about standing during the national anthem,",
+    "video_uploaded": true
+  },
+  "ui_elements_count": 64,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "row_profile_header_imageview_frame_layout",
+      "bounds": "[39,173][170,304]",
+      "center": [
+        104,
+        238
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Your profile. No story",
+      "id": "row_profile_header_imageview",
+      "bounds": "[39,173][170,304]",
+      "center": [
+        104,
+        238
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Add to story",
+      "id": "reel_empty_badge",
+      "bounds": "[134,268][170,304]",
+      "center": [
+        152,
+        286
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "pog_note_bubble_view",
+      "bounds": "[32,130][176,215]",
+      "center": [
+        104,
+        172
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Obsessed with...",
+      "desc": "",
+      "id": "pog_bubble_text",
+      "bounds": "[45,149][163,190]",
+      "center": [
+        104,
+        169
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Preston",
+      "desc": "",
+      "id": "profile_header_full_name_above_vanity",
+      "bounds": "[208,173][295,201]",
+      "center": [
+        251,
+        187
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "8posts",
+      "id": "profile_header_post_count_front_familiar",
+      "bounds": "[208,201][344,287]",
+      "center": [
+        276,
+        244
+      ],
+      "clickable": true
+    },
+    {
+      "text": "8",
+      "desc": "",
+      "id": "profile_header_familiar_post_count_value",
+      "bounds": "[208,214][223,247]",
+      "center": [
+        215,
+        230
+      ],
+      "clickable": false
+    },
+    {
+      "text": "posts",
+      "desc": "",
+      "id": "profile_header_familiar_post_count_label",
+      "bounds": "[208,247][265,274]",
+      "center": [
+        236,
+        260
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "2followers",
+      "id": "profile_header_followers_stacked_familiar",
+      "bounds": "[344,201][524,287]",
+      "center": [
+        434,
+        244
+      ],
+      "clickable": true
+    },
+    {
+      "text": "2",
+      "desc": "",
+      "id": "profile_header_familiar_followers_value",
+      "bounds": "[354,214][369,247]",
+      "center": [
+        361,
+        230
+      ],
+      "clickable": false
+    },
+    {
+      "text": "followers",
+      "desc": "",
+      "id": "profile_header_familiar_followers_label",
+      "bounds": "[354,247][445,274]",
+      "center": [
+        399,
+        260
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "28following",
+      "id": "profile_header_following_stacked_familiar",
+      "bounds": "[524,201][694,287]",
+      "center": [
+        609,
+        244
+      ],
+      "clickable": true
+    },
+    {
+      "text": "28",
+      "desc": "",
+      "id": "profile_header_familiar_following_value",
+      "bounds": "[534,214][564,247]",
+      "center": [
+        549,
+        230
+      ],
+      "clickable": false
+    },
+    {
+      "text": "following",
+      "desc": "",
+      "id": "profile_header_familiar_following_label",
+      "bounds": "[534,247][625,274]",
+      "center": [
+        579,
+        260
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,316][694,399]",
+      "center": [
+        360,
+        357
+      ],
+      "clickable": true
+    },
+    {
+      "text": "📌 Latitude & longitude varies\n💎 Value-driven thinking\n🎙️ DM your podcast king",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,316][331,399]",
+      "center": [
+        178,
+        357
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,419][720,525]",
+      "center": [
+        360,
+        472
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Professional dashboard",
+      "desc": "Professional dashboard entry point",
+      "id": "",
+      "bounds": "[43,436][275,466]",
+      "center": [
+        159,
+        451
+      ],
+      "clickable": false
+    },
+    {
+      "text": "2.6K views in the last 30 days.",
+      "desc": "2.6K views in the last 30 days.",
+      "id": "",
+      "bounds": "[70,466][327,493]",
+      "center": [
+        198,
+        479
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Edit profile",
+      "id": "button_container",
+      "bounds": "[20,525][355,577]",
+      "center": [
+        187,
+        551
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Edit profile",
+      "desc": "",
+      "id": "",
+      "bounds": "[127,536][248,566]",
+      "center": [
+        187,
+        551
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Share profile",
+      "id": "button_container",
+      "bounds": "[365,525][700,577]",
+      "center": [
+        532,
+        551
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Share profile",
+      "desc": "",
+      "id": "",
+      "bounds": "[461,536][603,566]",
+      "center": [
+        532,
+        551
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Create highlight",
+      "id": "create_highlight_button_view",
+      "bounds": "[3,597][154,767]",
+      "center": [
+        78,
+        682
+      ],
+      "clickable": true
+    },
+    {
+      "text": "New",
+      "desc": "",
+      "id": "label",
+      "bounds": "[3,731][154,757]",
+      "center": [
+        78,
+        744
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[154,597][305,767]",
+      "center": [
+        229,
+        682
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "darklichencoded's story, 1 of 0, Seen.",
+      "id": "",
+      "bounds": "[154,597][305,731]",
+      "center": [
+        229,
+        664
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "darklichencoded's highlight story at column 1",
+      "id": "avatar_image_view",
+      "bounds": "[179,617][280,718]",
+      "center": [
+        229,
+        667
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Fitness",
+      "desc": "",
+      "id": "username",
+      "bounds": "[196,731][263,757]",
+      "center": [
+        229,
+        744
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[305,597][456,767]",
+      "center": [
+        380,
+        682
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "darklichencoded's story, 2 of 0, Seen.",
+      "id": "",
+      "bounds": "[305,597][456,731]",
+      "center": [
+        380,
+        664
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "darklichencoded's highlight story at column 2",
+      "id": "avatar_image_view",
+      "bounds": "[330,617][431,718]",
+      "center": [
+        380,
+        667
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Drift",
+      "desc": "",
+      "id": "username",
+      "bounds": "[360,731][401,757]",
+      "center": [
+        380,
+        744
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[456,597][607,767]",
+      "center": [
+        531,
+        682
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "darklichencoded's story, 3 of 0, Seen.",
+      "id": "",
+      "bounds": "[456,597][607,731]",
+      "center": [
+        531,
+        664
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "darklichencoded's highlight story at column 3",
+      "id": "avatar_image_view",
+      "bounds": "[481,617][582,718]",
+      "center": [
+        531,
+        667
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Cafecito",
+      "desc": "",
+      "id": "username",
+      "bounds": "[493,731][571,757]",
+      "center": [
+        532,
+        744
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[607,597][720,767]",
+      "center": [
+        663,
+        682
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "darklichencoded's story, 4 of 0, Seen.",
+      "id": "",
+      "bounds": "[607,597][720,731]",
+      "center": [
+        663,
+        664
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "darklichencoded's highlight story at column 4",
+      "id": "avatar_image_view",
+      "bounds": "[632,617][720,718]",
+      "center": [
+        676,
+        667
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Scenes",
+      "desc": "",
+      "id": "username",
+      "bounds": "[649,731][716,757]",
+      "center": [
+        682,
+        744
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Grid view",
+      "id": "profile_tab_icon_view",
+      "bounds": "[0,783][240,861]",
+      "center": [
+        120,
+        822
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[240,783][480,861]",
+      "center": [
+        360,
+        822
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "profile_tab_icon_view",
+      "bounds": "[240,783][480,861]",
+      "center": [
+        360,
+        822
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[480,783][720,861]",
+      "center": [
+        600,
+        822
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[480,783][720,861]",
+      "center": [
+        600,
+        822
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Photos of you",
+      "id": "profile_tab_icon_view",
+      "bounds": "[581,803][620,842]",
+      "center": [
+        600,
+        822
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Reel by Preston at row 1, column 1",
+      "id": "image_button",
+      "bounds": "[0,868][236,1183]",
+      "center": [
+        118,
+        1025
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Preston at row 1, column 2",
+      "id": "image_button",
+      "bounds": "[242,868][478,1183]",
+      "center": [
+        360,
+        1025
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Preston at row 1, column 3",
+      "id": "image_button",
+      "bounds": "[484,868][720,1183]",
+      "center": [
+        602,
+        1025
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Preston at row 2, column 1",
+      "id": "image_button",
+      "bounds": "[0,1189][236,1284]",
+      "center": [
+        118,
+        1236
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Preston at row 2, column 2",
+      "id": "image_button",
+      "bounds": "[242,1189][478,1284]",
+      "center": [
+        360,
+        1236
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Preston at row 2, column 3",
+      "id": "image_button",
+      "bounds": "[484,1189][720,1284]",
+      "center": [
+        602,
+        1236
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Create New",
+      "id": "",
+      "bounds": "[0,39][79,130]",
+      "center": [
+        39,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar_username_container",
+      "bounds": "[105,39][549,130]",
+      "center": [
+        327,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "darklichencoded",
+      "desc": "darklichencoded",
+      "id": "action_bar_title",
+      "bounds": "[208,39][494,130]",
+      "center": [
+        351,
+        84
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "View profile on Threads",
+      "id": "",
+      "bounds": "[549,39][628,130]",
+      "center": [
+        588,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Options",
+      "id": "",
+      "bounds": "[628,39][707,130]",
+      "center": [
+        667,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1284][144,1362]",
+      "center": [
+        72,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1284][288,1362]",
+      "center": [
+        216,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1284][432,1362]",
+      "center": [
+        360,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1284][576,1362]",
+      "center": [
+        504,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1284][720,1362]",
+      "center": [
+        648,
+        1323
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\DarkLichenCoded_20251222_133221\\error_002_screenshot.png",
+  "page_source_file": "error_logs\\DarkLichenCoded_20251222_133221\\error_002_page_source.xml"
+}

@@ -1,0 +1,553 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T22:33:14.749426",
+  "account": "angelapenninspired",
+  "job_id": "DD0X8FCyKdx-1.mp4",
+  "phase": "navigation",
+  "error_type": "max_steps",
+  "error_class": "Exception",
+  "error_message": "Max steps (30) reached",
+  "error_repr": "Exception('Max steps (30) reached')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "max_steps": 30,
+    "video_uploaded": true,
+    "video_selected": true,
+    "caption_entered": true,
+    "share_clicked": false,
+    "caption": "The ripple effect of generosity knows no bounds when compassion meets action 💫 \n\n@tonyrobbins' found"
+  },
+  "ui_elements_count": 48,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "row_profile_header_imageview_frame_layout",
+      "bounds": "[39,182][170,313]",
+      "center": [
+        104,
+        247
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Your profile. No story",
+      "id": "row_profile_header_imageview",
+      "bounds": "[39,182][170,313]",
+      "center": [
+        104,
+        247
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Add to story",
+      "id": "reel_empty_badge",
+      "bounds": "[134,277][170,313]",
+      "center": [
+        152,
+        295
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "pog_note_bubble_view",
+      "bounds": "[26,139][170,224]",
+      "center": [
+        98,
+        181
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Can't decide...",
+      "desc": "",
+      "id": "pog_bubble_text",
+      "bounds": "[39,158][157,199]",
+      "center": [
+        98,
+        178
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Lapenn",
+      "desc": "",
+      "id": "profile_header_full_name_above_vanity",
+      "bounds": "[208,182][290,210]",
+      "center": [
+        249,
+        196
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "17posts",
+      "id": "profile_header_post_count_front_familiar",
+      "bounds": "[208,210][351,296]",
+      "center": [
+        279,
+        253
+      ],
+      "clickable": true
+    },
+    {
+      "text": "17",
+      "desc": "",
+      "id": "profile_header_familiar_post_count_value",
+      "bounds": "[208,223][233,256]",
+      "center": [
+        220,
+        239
+      ],
+      "clickable": false
+    },
+    {
+      "text": "posts",
+      "desc": "",
+      "id": "profile_header_familiar_post_count_label",
+      "bounds": "[208,256][265,283]",
+      "center": [
+        236,
+        269
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "3followers",
+      "id": "profile_header_followers_stacked_familiar",
+      "bounds": "[351,210][538,296]",
+      "center": [
+        444,
+        253
+      ],
+      "clickable": true
+    },
+    {
+      "text": "3",
+      "desc": "",
+      "id": "profile_header_familiar_followers_value",
+      "bounds": "[361,223][376,256]",
+      "center": [
+        368,
+        239
+      ],
+      "clickable": false
+    },
+    {
+      "text": "followers",
+      "desc": "",
+      "id": "profile_header_familiar_followers_label",
+      "bounds": "[361,256][452,283]",
+      "center": [
+        406,
+        269
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "0friends",
+      "id": "profile_header_following_stacked_familiar",
+      "bounds": "[538,210][694,296]",
+      "center": [
+        616,
+        253
+      ],
+      "clickable": true
+    },
+    {
+      "text": "0",
+      "desc": "",
+      "id": "profile_header_familiar_following_value",
+      "bounds": "[548,223][564,256]",
+      "center": [
+        556,
+        239
+      ],
+      "clickable": false
+    },
+    {
+      "text": "friends",
+      "desc": "",
+      "id": "profile_header_familiar_following_label",
+      "bounds": "[548,256][617,283]",
+      "center": [
+        582,
+        269
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,325][694,381]",
+      "center": [
+        360,
+        353
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Building businesses while exploring the world 🗺️\t\t\n🎙️ Podcaster connecting entrepreneurs across continents",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,325][620,381]",
+      "center": [
+        323,
+        353
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,401][720,507]",
+      "center": [
+        360,
+        454
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Professional dashboard",
+      "desc": "Professional dashboard entry point",
+      "id": "",
+      "bounds": "[43,418][275,448]",
+      "center": [
+        159,
+        433
+      ],
+      "clickable": false
+    },
+    {
+      "text": "764 views in the last 30 days.",
+      "desc": "764 views in the last 30 days.",
+      "id": "",
+      "bounds": "[70,448][321,475]",
+      "center": [
+        195,
+        461
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Edit profile",
+      "id": "button_container",
+      "bounds": "[20,507][355,559]",
+      "center": [
+        187,
+        533
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Edit profile",
+      "desc": "",
+      "id": "",
+      "bounds": "[127,518][248,548]",
+      "center": [
+        187,
+        533
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Share profile",
+      "id": "button_container",
+      "bounds": "[365,507][700,559]",
+      "center": [
+        532,
+        533
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Share profile",
+      "desc": "",
+      "id": "",
+      "bounds": "[461,518][603,548]",
+      "center": [
+        532,
+        533
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Create highlight",
+      "id": "create_highlight_button_view",
+      "bounds": "[3,579][154,749]",
+      "center": [
+        78,
+        664
+      ],
+      "clickable": true
+    },
+    {
+      "text": "New",
+      "desc": "",
+      "id": "label",
+      "bounds": "[3,713][154,739]",
+      "center": [
+        78,
+        726
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Grid view",
+      "id": "profile_tab_icon_view",
+      "bounds": "[0,765][240,843]",
+      "center": [
+        120,
+        804
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[240,765][480,843]",
+      "center": [
+        360,
+        804
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "profile_tab_icon_view",
+      "bounds": "[240,765][480,843]",
+      "center": [
+        360,
+        804
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[480,765][720,843]",
+      "center": [
+        600,
+        804
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[480,765][720,843]",
+      "center": [
+        600,
+        804
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Photos of you",
+      "id": "profile_tab_icon_view",
+      "bounds": "[581,785][620,824]",
+      "center": [
+        600,
+        804
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Reel by Lapenn at row 1, column 1",
+      "id": "image_button",
+      "bounds": "[0,850][236,1165]",
+      "center": [
+        118,
+        1007
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Lapenn at row 1, column 2",
+      "id": "image_button",
+      "bounds": "[242,850][478,1165]",
+      "center": [
+        360,
+        1007
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Lapenn at row 1, column 3",
+      "id": "image_button",
+      "bounds": "[484,850][720,1165]",
+      "center": [
+        602,
+        1007
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Lapenn at row 2, column 1",
+      "id": "image_button",
+      "bounds": "[0,1171][236,1266]",
+      "center": [
+        118,
+        1218
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Lapenn at row 2, column 2",
+      "id": "image_button",
+      "bounds": "[242,1171][478,1266]",
+      "center": [
+        360,
+        1218
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Lapenn at row 2, column 3",
+      "id": "image_button",
+      "bounds": "[484,1171][720,1266]",
+      "center": [
+        602,
+        1218
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Create New",
+      "id": "",
+      "bounds": "[0,48][79,139]",
+      "center": [
+        39,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar_username_container",
+      "bounds": "[105,48][549,139]",
+      "center": [
+        327,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "angelapenninspired",
+      "desc": "angelapenninspired",
+      "id": "action_bar_title",
+      "bounds": "[183,48][519,139]",
+      "center": [
+        351,
+        93
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "View profile on Threads",
+      "id": "",
+      "bounds": "[549,48][628,139]",
+      "center": [
+        588,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Options",
+      "id": "",
+      "bounds": "[628,48][707,139]",
+      "center": [
+        667,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1266][144,1344]",
+      "center": [
+        72,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1266][288,1344]",
+      "center": [
+        216,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1266][432,1344]",
+      "center": [
+        360,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1266][576,1344]",
+      "center": [
+        504,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1266][720,1344]",
+      "center": [
+        648,
+        1305
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\angelapenninspired_20251222_222650\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\angelapenninspired_20251222_222650\\error_001_page_source.xml"
+}

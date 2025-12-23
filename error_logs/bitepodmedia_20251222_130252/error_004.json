@@ -1,0 +1,748 @@
+{
+  "error_id": "error_004",
+  "timestamp": "2025-12-22T13:05:44.518630",
+  "account": "bitepodmedia",
+  "job_id": "DPzZGHOEY7S-2.mp4",
+  "phase": "ai_analysis",
+  "error_type": "analysis_error",
+  "error_class": "ValueError",
+  "error_message": "JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state and UI, I can see there's a \"Create\" popup menu open with various optio",
+  "error_repr": "ValueError('JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state and UI, I can see there\\'s a \"Create\" popup menu open with various optio')",
+  "stack_trace": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 213, in parse_response\n    return json.loads(text)\n           ~~~~~~~~~~^^^^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\__init__.py\", line 346, in loads\n    return _default_decoder.decode(s)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 345, in decode\n    obj, end = self.raw_decode(s, idx=_w(s, 0).end())\n               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 363, in raw_decode\n    raise JSONDecodeError(\"Expecting value\", s, err.value) from None\njson.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 275, in analyze\n    return self.parse_response(text)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 215, in parse_response\n    raise ValueError(f\"JSON parse failed: {e}. Response: {text[:100]}\")\nValueError: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state and UI, I can see there's a \"Create\" popup menu open with various optio\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 1026, in post\n    action = self.analyze_ui(elements, caption)\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 870, in analyze_ui\n    return self._analyzer.analyze(\n           ~~~~~~~~~~~~~~~~~~~~~~^\n        elements=elements,\n        ^^^^^^^^^^^^^^^^^^\n    ...<3 lines>...\n        share_clicked=self.share_clicked\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 282, in analyze\n    raise ValueError(f\"JSON parse failed after {retries} attempts: {e}\")\nValueError: JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state and UI, I can see there's a \"Create\" popup menu open with various optio\n",
+  "context": {
+    "step": 5,
+    "caption": "Behind the scenes of a media empire's final chapter—Ed Martin's rescue attempt for INFOWARS hit a wa",
+    "video_uploaded": true
+  },
+  "ui_elements_count": 66,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "pog_note_bubble_view",
+      "bounds": "[26,130][170,215]",
+      "center": [
+        98,
+        172
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Share a note",
+      "desc": "",
+      "id": "pog_bubble_text",
+      "bounds": "[39,149][157,190]",
+      "center": [
+        98,
+        169
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "row_profile_header_imageview_frame_layout",
+      "bounds": "[38,184][159,305]",
+      "center": [
+        98,
+        244
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Your profile. No story",
+      "id": "row_profile_header_imageview",
+      "bounds": "[38,184][159,305]",
+      "center": [
+        98,
+        244
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Add to story",
+      "id": "reel_empty_badge",
+      "bounds": "[123,269][159,305]",
+      "center": [
+        141,
+        287
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Annora",
+      "desc": "",
+      "id": "profile_header_full_name_above_vanity",
+      "bounds": "[196,173][278,201]",
+      "center": [
+        237,
+        187
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "15posts",
+      "id": "profile_header_post_count_front_familiar",
+      "bounds": "[196,201][336,287]",
+      "center": [
+        266,
+        244
+      ],
+      "clickable": true
+    },
+    {
+      "text": "15",
+      "desc": "",
+      "id": "profile_header_familiar_post_count_value",
+      "bounds": "[196,214][224,247]",
+      "center": [
+        210,
+        230
+      ],
+      "clickable": false
+    },
+    {
+      "text": "posts",
+      "desc": "",
+      "id": "profile_header_familiar_post_count_label",
+      "bounds": "[196,247][253,274]",
+      "center": [
+        224,
+        260
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "6followers",
+      "id": "profile_header_followers_stacked_familiar",
+      "bounds": "[336,201][520,287]",
+      "center": [
+        428,
+        244
+      ],
+      "clickable": true
+    },
+    {
+      "text": "6",
+      "desc": "",
+      "id": "profile_header_familiar_followers_value",
+      "bounds": "[346,214][362,247]",
+      "center": [
+        354,
+        230
+      ],
+      "clickable": false
+    },
+    {
+      "text": "followers",
+      "desc": "",
+      "id": "profile_header_familiar_followers_label",
+      "bounds": "[346,247][437,274]",
+      "center": [
+        391,
+        260
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "10following",
+      "id": "profile_header_following_stacked_familiar",
+      "bounds": "[520,201][694,287]",
+      "center": [
+        607,
+        244
+      ],
+      "clickable": true
+    },
+    {
+      "text": "10",
+      "desc": "",
+      "id": "profile_header_familiar_following_value",
+      "bounds": "[530,214][557,247]",
+      "center": [
+        543,
+        230
+      ],
+      "clickable": false
+    },
+    {
+      "text": "following",
+      "desc": "",
+      "id": "profile_header_familiar_following_label",
+      "bounds": "[530,247][621,274]",
+      "center": [
+        575,
+        260
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,316][694,399]",
+      "center": [
+        360,
+        357
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Bite-size conversations\nBig brains, bold opinions\nNew clips every day",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,316][272,399]",
+      "center": [
+        149,
+        357
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,419][720,525]",
+      "center": [
+        360,
+        472
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Professional dashboard",
+      "desc": "Professional dashboard entry point",
+      "id": "",
+      "bounds": "[43,436][275,466]",
+      "center": [
+        159,
+        451
+      ],
+      "clickable": false
+    },
+    {
+      "text": "New tools are now available.",
+      "desc": "New tools are now available.",
+      "id": "",
+      "bounds": "[43,466][286,493]",
+      "center": [
+        164,
+        479
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Edit profile",
+      "id": "button_container",
+      "bounds": "[20,525][355,577]",
+      "center": [
+        187,
+        551
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Edit profile",
+      "desc": "",
+      "id": "",
+      "bounds": "[127,536][248,566]",
+      "center": [
+        187,
+        551
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Share profile",
+      "id": "button_container",
+      "bounds": "[365,525][700,577]",
+      "center": [
+        532,
+        551
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Share profile",
+      "desc": "",
+      "id": "",
+      "bounds": "[461,536][603,566]",
+      "center": [
+        532,
+        551
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Grid view",
+      "id": "profile_tab_icon_view",
+      "bounds": "[0,613][240,691]",
+      "center": [
+        120,
+        652
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[240,613][480,691]",
+      "center": [
+        360,
+        652
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "profile_tab_icon_view",
+      "bounds": "[240,613][480,691]",
+      "center": [
+        360,
+        652
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[480,613][720,691]",
+      "center": [
+        600,
+        652
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[480,613][720,691]",
+      "center": [
+        600,
+        652
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Photos of you",
+      "id": "profile_tab_icon_view",
+      "bounds": "[581,633][620,672]",
+      "center": [
+        600,
+        652
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Reel by Annora at row 1, column 1",
+      "id": "image_button",
+      "bounds": "[0,698][236,1013]",
+      "center": [
+        118,
+        855
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Annora at row 1, column 2",
+      "id": "image_button",
+      "bounds": "[242,698][478,1013]",
+      "center": [
+        360,
+        855
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Annora at row 1, column 3",
+      "id": "image_button",
+      "bounds": "[484,698][720,1013]",
+      "center": [
+        602,
+        855
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Annora at row 2, column 1",
+      "id": "image_button",
+      "bounds": "[0,1019][236,1284]",
+      "center": [
+        118,
+        1151
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Annora at row 2, column 2",
+      "id": "image_button",
+      "bounds": "[242,1019][478,1284]",
+      "center": [
+        360,
+        1151
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Annora at row 2, column 3",
+      "id": "image_button",
+      "bounds": "[484,1019][720,1284]",
+      "center": [
+        602,
+        1151
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,1166][694,1258]",
+      "center": [
+        360,
+        1212
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Level up your videos with Edits",
+      "desc": "",
+      "id": "basel_cta_title_text",
+      "bounds": "[118,1186][628,1214]",
+      "center": [
+        373,
+        1200
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Get the app",
+      "desc": "",
+      "id": "basel_cta_subtitle",
+      "bounds": "[118,1214][628,1238]",
+      "center": [
+        373,
+        1226
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Create New",
+      "id": "",
+      "bounds": "[0,39][79,130]",
+      "center": [
+        39,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar_username_container",
+      "bounds": "[105,39][628,130]",
+      "center": [
+        366,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "bitepodmedia",
+      "desc": "bitepodmedia",
+      "id": "action_bar_title",
+      "bounds": "[233,39][470,130]",
+      "center": [
+        351,
+        84
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Options",
+      "id": "",
+      "bounds": "[628,39][707,130]",
+      "center": [
+        667,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1284][144,1362]",
+      "center": [
+        72,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1284][288,1362]",
+      "center": [
+        216,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1284][432,1362]",
+      "center": [
+        360,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1284][576,1362]",
+      "center": [
+        504,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1284][720,1362]",
+      "center": [
+        648,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "@2131954894",
+      "id": "background_dimmer",
+      "bounds": "[0,39][720,1362]",
+      "center": [
+        360,
+        700
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "layout_container_bottom_sheet",
+      "bounds": "[0,540][720,1362]",
+      "center": [
+        360,
+        951
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Create",
+      "desc": "",
+      "id": "title_text_view",
+      "bounds": "[163,586][557,657]",
+      "center": [
+        360,
+        621
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Create new reel",
+      "id": "",
+      "bounds": "[0,658][720,746]",
+      "center": [
+        360,
+        702
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Reel",
+      "desc": "",
+      "id": "label",
+      "bounds": "[91,685][144,718]",
+      "center": [
+        117,
+        701
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Edits",
+      "id": "",
+      "bounds": "[0,746][720,834]",
+      "center": [
+        360,
+        790
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Edits",
+      "desc": "",
+      "id": "label",
+      "bounds": "[91,773][153,806]",
+      "center": [
+        122,
+        789
+      ],
+      "clickable": false
+    },
+    {
+      "text": "New",
+      "desc": "",
+      "id": "pill_new_badge",
+      "bounds": "[640,773][694,808]",
+      "center": [
+        667,
+        790
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Create new post",
+      "id": "",
+      "bounds": "[0,834][720,922]",
+      "center": [
+        360,
+        878
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Post",
+      "desc": "",
+      "id": "label",
+      "bounds": "[91,861][147,894]",
+      "center": [
+        119,
+        877
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Create new story",
+      "id": "",
+      "bounds": "[0,922][720,1010]",
+      "center": [
+        360,
+        966
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Story",
+      "desc": "",
+      "id": "label",
+      "bounds": "[91,949][159,982]",
+      "center": [
+        125,
+        965
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Highlight",
+      "id": "",
+      "bounds": "[0,1010][720,1098]",
+      "center": [
+        360,
+        1054
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Highlight",
+      "desc": "",
+      "id": "label",
+      "bounds": "[91,1037][201,1070]",
+      "center": [
+        146,
+        1053
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Ad",
+      "id": "",
+      "bounds": "[0,1098][720,1186]",
+      "center": [
+        360,
+        1142
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Ad",
+      "desc": "",
+      "id": "label",
+      "bounds": "[91,1125][126,1158]",
+      "center": [
+        108,
+        1141
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Create new fundraiser",
+      "id": "",
+      "bounds": "[0,1186][720,1274]",
+      "center": [
+        360,
+        1230
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Fundraiser",
+      "desc": "",
+      "id": "label",
+      "bounds": "[91,1213][219,1246]",
+      "center": [
+        155,
+        1229
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\bitepodmedia_20251222_130252\\error_004_screenshot.png",
+  "page_source_file": "error_logs\\bitepodmedia_20251222_130252\\error_004_page_source.xml"
+}

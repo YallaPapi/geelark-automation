@@ -1,0 +1,363 @@
+{
+  "error_id": "error_006",
+  "timestamp": "2025-12-22T13:50:02.721871",
+  "account": "micdropchannel",
+  "job_id": "DO37nBZj9HC-1.mp4",
+  "phase": "ai_analysis",
+  "error_type": "analysis_error",
+  "error_class": "ValueError",
+  "error_message": "JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see:\n- Video uploaded: True\n- Caption entered: True  \n- Share bu",
+  "error_repr": "ValueError('JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see:\\n- Video uploaded: True\\n- Caption entered: True  \\n- Share bu')",
+  "stack_trace": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 213, in parse_response\n    # Generic code block\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\__init__.py\", line 346, in loads\n    return _default_decoder.decode(s)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 345, in decode\n    obj, end = self.raw_decode(s, idx=_w(s, 0).end())\n               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 363, in raw_decode\n    raise JSONDecodeError(\"Expecting value\", s, err.value) from None\njson.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 275, in analyze\n    Action dictionary with action, element_index, text, reason, etc.\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 215, in parse_response\n    if len(parts) >= 3:\nValueError: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see:\n- Video uploaded: True\n- Caption entered: True  \n- Share bu\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 1026, in post\n    action = self.analyze_ui(elements, caption)\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 870, in analyze_ui\n    return self._analyzer.analyze(\n           ~~~~~~~~~~~~~~~~~~~~~~^\n        elements=elements,\n        ^^^^^^^^^^^^^^^^^^\n    ...<3 lines>...\n        share_clicked=self.share_clicked\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 282, in analyze\n    caption=caption,\n            ^^^^^^^^\nValueError: JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see:\n- Video uploaded: True\n- Caption entered: True  \n- Share bu\n",
+  "context": {
+    "step": 15,
+    "caption": "The moment you realize someone's speaking nothing but facts 💯 @charliekirk1776 breaks it down in a w",
+    "video_uploaded": true
+  },
+  "ui_elements_count": 31,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "Reel by nba. Double tap to play or pause.",
+      "id": "clips_media_component",
+      "bounds": "[0,39][720,1284]",
+      "center": [
+        360,
+        661
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Reel by nba. Double tap to play or pause.",
+      "id": "clips_video_container",
+      "bounds": "[0,39][720,1284]",
+      "center": [
+        360,
+        661
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "clips_author_info_component",
+      "bounds": "[26,1067][365,1154]",
+      "center": [
+        195,
+        1110
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile picture of nba and houstonrockets",
+      "id": "clips_author_profile_pic",
+      "bounds": "[26,1089][85,1148]",
+      "center": [
+        55,
+        1118
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[85,1104][365,1133]",
+      "center": [
+        225,
+        1118
+      ],
+      "clickable": true
+    },
+    {
+      "text": "nba and houstonrockets",
+      "desc": "nba and houstonrockets",
+      "id": "clips_author_username",
+      "bounds": "[85,1104][365,1133]",
+      "center": [
+        225,
+        1118
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[365,1083][510,1154]",
+      "center": [
+        437,
+        1118
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Follow",
+      "desc": "Follow NBA",
+      "id": "inline_follow_button",
+      "bounds": "[375,1096][487,1144]",
+      "center": [
+        431,
+        1120
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "@amen.thompson spins through the lane for the …",
+      "id": "",
+      "bounds": "[26,1161][635,1200]",
+      "center": [
+        330,
+        1180
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,1213][90,1242]",
+      "center": [
+        58,
+        1227
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Followed by zacefron and 5 others",
+      "desc": "Followed by zacefron and 5 others",
+      "id": "",
+      "bounds": "[90,1213][635,1241]",
+      "center": [
+        362,
+        1227
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Like",
+      "id": "like_button",
+      "bounds": "[635,703][707,775]",
+      "center": [
+        671,
+        739
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Like number is4081. View likes",
+      "desc": "Like number is4081. View likes",
+      "id": "like_count",
+      "bounds": "[635,775][707,814]",
+      "center": [
+        671,
+        794
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Comment",
+      "id": "comment_button",
+      "bounds": "[635,814][707,886]",
+      "center": [
+        671,
+        850
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Comment number is62. View comments",
+      "desc": "Comment number is62. View comments",
+      "id": "comment_count",
+      "bounds": "[635,886][707,925]",
+      "center": [
+        671,
+        905
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Repost",
+      "id": "",
+      "bounds": "[635,925][707,997]",
+      "center": [
+        671,
+        961
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Reposted 63 times",
+      "desc": "Reposted 63 times",
+      "id": "repost_count",
+      "bounds": "[635,997][707,1036]",
+      "center": [
+        671,
+        1016
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Share",
+      "id": "direct_share_button",
+      "bounds": "[635,1036][707,1108]",
+      "center": [
+        671,
+        1072
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More",
+      "id": "clips_ufi_more_button_component",
+      "bounds": "[635,1108][707,1180]",
+      "center": [
+        671,
+        1144
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Audio",
+      "id": "media_album_art_button",
+      "bounds": "[647,1193][696,1242]",
+      "center": [
+        671,
+        1217
+      ],
+      "clickable": true
+    },
+    {
+      "text": "0.0",
+      "desc": "@2131976834",
+      "id": "scrubber",
+      "bounds": "[0,1267][720,1284]",
+      "center": [
+        360,
+        1275
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Create a reel",
+      "id": "",
+      "bounds": "[0,46][77,123]",
+      "center": [
+        38,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Reels",
+      "desc": "",
+      "id": "clips_viewer_action_bar_title",
+      "bounds": "[287,60][433,109]",
+      "center": [
+        360,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1284][144,1362]",
+      "center": [
+        72,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1284][288,1362]",
+      "center": [
+        216,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1284][432,1362]",
+      "center": [
+        360,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1284][576,1362]",
+      "center": [
+        504,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1284][720,1362]",
+      "center": [
+        648,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "upload_snackbar_container",
+      "bounds": "[13,1161][707,1271]",
+      "center": [
+        360,
+        1216
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Sharing to Reels…",
+      "desc": "",
+      "id": "status_text",
+      "bounds": "[107,1194][691,1223]",
+      "center": [
+        399,
+        1208
+      ],
+      "clickable": false
+    },
+    {
+      "text": "90.0",
+      "desc": "",
+      "id": "progress_bar",
+      "bounds": "[107,1236][691,1238]",
+      "center": [
+        399,
+        1237
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\micdropchannel_20251222_134426\\error_006_screenshot.png",
+  "page_source_file": "error_logs\\micdropchannel_20251222_134426\\error_006_page_source.xml"
+}

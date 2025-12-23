@@ -1,0 +1,410 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T22:14:31.794687",
+  "account": "BrokenRockPace",
+  "job_id": "DLuvIJaRmFf-1.mp4",
+  "phase": "navigation",
+  "error_type": "max_steps",
+  "error_class": "Exception",
+  "error_message": "Max steps (30) reached",
+  "error_repr": "Exception('Max steps (30) reached')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "max_steps": 30,
+    "video_uploaded": true,
+    "video_selected": true,
+    "caption_entered": true,
+    "share_clicked": false,
+    "caption": "Watch @tuckercarlson sit down with Iran's president in this unprecedented conversation.\n\nStream the "
+  },
+  "ui_elements_count": 35,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "Reel by vindiesel. Double tap to play or pause.",
+      "id": "clips_media_component",
+      "bounds": "[0,48][720,1266]",
+      "center": [
+        360,
+        657
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Reel by vindiesel. Double tap to play or pause.",
+      "id": "clips_video_container",
+      "bounds": "[0,48][720,1266]",
+      "center": [
+        360,
+        657
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "clips_author_info_component",
+      "bounds": "[26,1052][237,1139]",
+      "center": [
+        131,
+        1095
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile picture of vindiesel",
+      "id": "clips_author_profile_pic",
+      "bounds": "[26,1074][85,1133]",
+      "center": [
+        55,
+        1103
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[85,1089][237,1119]",
+      "center": [
+        161,
+        1104
+      ],
+      "clickable": true
+    },
+    {
+      "text": "vindiesel  ",
+      "desc": "vindiesel  ",
+      "id": "clips_author_username",
+      "bounds": "[85,1089][237,1119]",
+      "center": [
+        161,
+        1104
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[237,1068][382,1139]",
+      "center": [
+        309,
+        1103
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Follow",
+      "desc": "Follow Vin Diesel",
+      "id": "inline_follow_button",
+      "bounds": "[247,1081][359,1129]",
+      "center": [
+        303,
+        1105
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Europe in December… …",
+      "id": "",
+      "bounds": "[26,1146][635,1185]",
+      "center": [
+        330,
+        1165
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,1199][49,1222]",
+      "center": [
+        37,
+        1210
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Followed by corybooker",
+      "desc": "Followed by corybooker",
+      "id": "",
+      "bounds": "[49,1198][635,1224]",
+      "center": [
+        342,
+        1211
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Like",
+      "id": "like_button",
+      "bounds": "[635,646][707,718]",
+      "center": [
+        671,
+        682
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Like number is465065. View likes",
+      "desc": "Like number is465065. View likes",
+      "id": "like_count",
+      "bounds": "[635,718][707,757]",
+      "center": [
+        671,
+        737
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Comment",
+      "id": "comment_button",
+      "bounds": "[635,757][707,829]",
+      "center": [
+        671,
+        793
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Comment number is7151. View comments",
+      "desc": "Comment number is7151. View comments",
+      "id": "comment_count",
+      "bounds": "[635,829][707,868]",
+      "center": [
+        671,
+        848
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Repost",
+      "id": "",
+      "bounds": "[635,868][707,940]",
+      "center": [
+        671,
+        904
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Reposted 5119 times",
+      "desc": "Reposted 5119 times",
+      "id": "repost_count",
+      "bounds": "[635,940][707,979]",
+      "center": [
+        671,
+        959
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Share",
+      "id": "direct_share_button",
+      "bounds": "[635,979][707,1051]",
+      "center": [
+        671,
+        1015
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Reshare number is9605",
+      "desc": "Reshare number is9605",
+      "id": "ufi_text_component",
+      "bounds": "[635,1051][707,1090]",
+      "center": [
+        671,
+        1070
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More",
+      "id": "clips_ufi_more_button_component",
+      "bounds": "[635,1090][707,1162]",
+      "center": [
+        671,
+        1126
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Audio",
+      "id": "media_album_art_button",
+      "bounds": "[647,1175][696,1224]",
+      "center": [
+        671,
+        1199
+      ],
+      "clickable": true
+    },
+    {
+      "text": "26035.0",
+      "desc": "@2131976834",
+      "id": "scrubber",
+      "bounds": "[0,1249][720,1266]",
+      "center": [
+        360,
+        1257
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Create a reel",
+      "id": "",
+      "bounds": "[0,62][77,139]",
+      "center": [
+        38,
+        100
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "",
+      "bounds": "[172,69][327,131]",
+      "center": [
+        249,
+        100
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Reels",
+      "desc": "",
+      "id": "text1",
+      "bounds": "[175,69][294,131]",
+      "center": [
+        234,
+        100
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Friends",
+      "id": "",
+      "bounds": "[327,69][576,131]",
+      "center": [
+        451,
+        100
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Friends",
+      "desc": "",
+      "id": "text1",
+      "bounds": "[330,69][486,131]",
+      "center": [
+        408,
+        100
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1266][144,1344]",
+      "center": [
+        72,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1266][288,1344]",
+      "center": [
+        216,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1266][432,1344]",
+      "center": [
+        360,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1266][576,1344]",
+      "center": [
+        504,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1266][720,1344]",
+      "center": [
+        648,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "upload_snackbar_container",
+      "bounds": "[13,1143][707,1253]",
+      "center": [
+        360,
+        1198
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Sharing to Reels…",
+      "desc": "",
+      "id": "status_text",
+      "bounds": "[107,1176][691,1205]",
+      "center": [
+        399,
+        1190
+      ],
+      "clickable": false
+    },
+    {
+      "text": "90.0",
+      "desc": "",
+      "id": "progress_bar",
+      "bounds": "[107,1218][691,1220]",
+      "center": [
+        399,
+        1219
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\BrokenRockPace_20251222_221053\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\BrokenRockPace_20251222_221053\\error_001_page_source.xml"
+}

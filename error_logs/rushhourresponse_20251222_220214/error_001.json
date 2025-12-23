@@ -1,0 +1,47 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T22:05:43.810990",
+  "account": "rushhourresponse",
+  "job_id": "DPPFF6mCHBt-2.mp4",
+  "phase": "navigation",
+  "error_type": "max_steps",
+  "error_class": "Exception",
+  "error_message": "Max steps (30) reached",
+  "error_repr": "Exception('Max steps (30) reached')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "max_steps": 30,
+    "video_uploaded": true,
+    "video_selected": true,
+    "caption_entered": true,
+    "share_clicked": false,
+    "caption": "James Gunn breaks down exactly what makes David Corenswet the perfect Superman — it all comes down t"
+  },
+  "ui_elements_count": 2,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "search_src_text",
+      "bounds": "[0,51][642,120]",
+      "center": [
+        321,
+        85
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "search_voice_btn",
+      "bounds": "[642,41][720,130]",
+      "center": [
+        681,
+        85
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\rushhourresponse_20251222_220214\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\rushhourresponse_20251222_220214\\error_001_page_source.xml"
+}

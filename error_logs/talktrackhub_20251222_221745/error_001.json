@@ -1,0 +1,450 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T22:21:43.736655",
+  "account": "talktrackhub",
+  "job_id": "DQmapWSkgy7-1.mp4",
+  "phase": "navigation",
+  "error_type": "loop_stuck",
+  "error_class": "Exception",
+  "error_message": "Loop stuck on action: wait",
+  "error_repr": "Exception('Loop stuck on action: wait')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "step": 26,
+    "recent_actions": [
+      "wait",
+      "wait",
+      "wait",
+      "wait",
+      "wait"
+    ],
+    "loop_recovery_count": 3,
+    "video_uploaded": true,
+    "video_selected": true,
+    "caption_entered": true,
+    "share_clicked": false
+  },
+  "ui_elements_count": 38,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "reels tray container",
+      "id": "",
+      "bounds": "[0,130][720,345]",
+      "center": [
+        360,
+        237
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[0,130][183,345]",
+      "center": [
+        91,
+        237
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "talktrackhub's story, 0 of 18, Unseen.",
+      "id": "",
+      "bounds": "[0,130][183,306]",
+      "center": [
+        91,
+        218
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "talktrackhub's story, 0 of 18, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[22,152][160,290]",
+      "center": [
+        91,
+        221
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Add to story",
+      "id": "reel_empty_badge",
+      "bounds": "[121,251][170,300]",
+      "center": [
+        145,
+        275
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Your story",
+      "desc": "",
+      "id": "username",
+      "bounds": "[44,306][140,332]",
+      "center": [
+        92,
+        319
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[183,130][366,345]",
+      "center": [
+        274,
+        237
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "dennison.blackett's story, 1 of 18, Unseen.",
+      "id": "",
+      "bounds": "[183,130][366,306]",
+      "center": [
+        274,
+        218
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "dennison.blackett's story, 1 of 18, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[205,152][343,290]",
+      "center": [
+        274,
+        221
+      ],
+      "clickable": false
+    },
+    {
+      "text": "dennison.blackett",
+      "desc": "",
+      "id": "username",
+      "bounds": "[193,306][356,332]",
+      "center": [
+        274,
+        319
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[366,130][549,345]",
+      "center": [
+        457,
+        237
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "theovon's story, 2 of 18, Unseen.",
+      "id": "",
+      "bounds": "[366,130][549,306]",
+      "center": [
+        457,
+        218
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "theovon's story, 2 of 18, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[388,152][526,290]",
+      "center": [
+        457,
+        221
+      ],
+      "clickable": false
+    },
+    {
+      "text": "theovon",
+      "desc": "",
+      "id": "username",
+      "bounds": "[419,306][496,332]",
+      "center": [
+        457,
+        319
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[549,130][720,345]",
+      "center": [
+        634,
+        237
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "barstoolsports's story, 3 of 18, Unseen.",
+      "id": "",
+      "bounds": "[549,130][720,306]",
+      "center": [
+        634,
+        218
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "barstoolsports's story, 3 of 18, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[571,152][709,290]",
+      "center": [
+        640,
+        221
+      ],
+      "clickable": false
+    },
+    {
+      "text": "barstoolsports",
+      "desc": "",
+      "id": "username",
+      "bounds": "[572,306][710,332]",
+      "center": [
+        641,
+        319
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "row_pending_container",
+      "bounds": "[0,345][720,475]",
+      "center": [
+        360,
+        410
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Keep Instagram open to finish posting…",
+      "desc": "",
+      "id": "row_pending_media_sub_status_textview",
+      "bounds": "[111,382][472,408]",
+      "center": [
+        291,
+        395
+      ],
+      "clickable": false
+    },
+    {
+      "text": "90.0",
+      "desc": "",
+      "id": "row_pending_media_progress_bar",
+      "bounds": "[111,421][691,424]",
+      "center": [
+        401,
+        422
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "media_group",
+      "bounds": "[0,476][720,1284]",
+      "center": [
+        360,
+        880
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Robert F. Kennedy Jr., 3,945 likes, 316 comments, 5 days ago",
+      "id": "row_feed_photo_imageview",
+      "bounds": "[0,476][720,1284]",
+      "center": [
+        360,
+        880
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "seckennedy posted a video 5 days ago",
+      "id": "row_feed_profile_header",
+      "bounds": "[0,476][720,561]",
+      "center": [
+        360,
+        518
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,476][79,561]",
+      "center": [
+        39,
+        518
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile picture of seckennedy",
+      "id": "row_feed_photo_profile_imageview",
+      "bounds": "[24,494][73,543]",
+      "center": [
+        48,
+        518
+      ],
+      "clickable": false
+    },
+    {
+      "text": "seckennedy  ",
+      "desc": "seckennedy  ",
+      "id": "row_feed_photo_profile_name",
+      "bounds": "[79,476][649,517]",
+      "center": [
+        364,
+        496
+      ],
+      "clickable": true
+    },
+    {
+      "text": " seckennedy • Original audio",
+      "desc": " seckennedy • Original audio",
+      "id": "secondary_label",
+      "bounds": "[79,517][649,561]",
+      "center": [
+        364,
+        539
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More actions for this post",
+      "id": "media_option_button",
+      "bounds": "[649,479][720,558]",
+      "center": [
+        684,
+        518
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,39][79,130]",
+      "center": [
+        39,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar_title_view",
+      "bounds": "[79,59][641,110]",
+      "center": [
+        360,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Instagram Home Feed",
+      "id": "title_logo",
+      "bounds": "[272,59][448,110]",
+      "center": [
+        360,
+        84
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "notification",
+      "bounds": "[641,39][720,130]",
+      "center": [
+        680,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1284][144,1362]",
+      "center": [
+        72,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1284][288,1362]",
+      "center": [
+        216,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1284][432,1362]",
+      "center": [
+        360,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1284][576,1362]",
+      "center": [
+        504,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1284][720,1362]",
+      "center": [
+        648,
+        1323
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\talktrackhub_20251222_221745\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\talktrackhub_20251222_221745\\error_001_page_source.xml"
+}

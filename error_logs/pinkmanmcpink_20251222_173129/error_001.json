@@ -1,0 +1,22 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T17:31:31.196328",
+  "account": "pinkmanmcpink",
+  "job_id": "C6l1TKnOPWj-1.mp4_podcast",
+  "phase": "execute_job",
+  "error_type": "Exception",
+  "error_class": "Exception",
+  "error_message": "Phone not found: pinkmanmcpink",
+  "error_repr": "Exception('Phone not found: pinkmanmcpink')",
+  "stack_trace": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\parallel_worker.py\", line 226, in execute_posting_job\n    poster.connect()\n    ~~~~~~~~~~~~~~^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 883, in connect\n    return self._conn.connect()\n           ~~~~~~~~~~~~~~~~~~^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\device_connection.py\", line 463, in connect\n    phone = self.find_phone()\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\device_connection.py\", line 187, in find_phone\n    raise Exception(f\"Phone not found: {self.phone_name}\")\nException: Phone not found: pinkmanmcpink\n",
+  "context": {
+    "video_path": "C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\campaigns\\podcast\\videos\\chunk_01a\\chriswillx\\C6l1TKnOPWj-1.mp4",
+    "caption": "A Navy SEAL walks into a first date... and the story gets darker than any crime documentary 🎭\n\n@chri",
+    "worker_id": 3,
+    "appium_url": "http://127.0.0.1:4729",
+    "full_traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\parallel_worker.py\", line 226, in execute_posting_job\n    poster.connect()\n    ~~~~~~~~~~~~~~^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 883, in connect\n    return self._conn.connect()\n           ~~~~~~~~~~~~~~~~~~^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\device_connection.py\", line 463, in connect\n    phone = self.find_phone()\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\device_connection.py\", line 187, in find_phone\n    raise Exception(f\"Phone not found: {self.phone_name}\")\nException: Phone not found: pinkmanmcpink\n"
+  },
+  "ui_elements_count": 0,
+  "ui_elements": null,
+  "screenshot_file": null
+}

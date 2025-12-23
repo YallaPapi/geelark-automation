@@ -1,0 +1,418 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T13:12:02.522769",
+  "account": "empirestrongofmind",
+  "job_id": "DJ_8G5XymVs-2.mp4",
+  "phase": "ai_analysis",
+  "error_type": "analysis_error",
+  "error_class": "ValueError",
+  "error_message": "JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see this is Instagram's home feed showing a post from ashleytisd",
+  "error_repr": "ValueError(\"JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see this is Instagram's home feed showing a post from ashleytisd\")",
+  "stack_trace": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 213, in parse_response\n    # Generic code block\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\__init__.py\", line 346, in loads\n    return _default_decoder.decode(s)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 345, in decode\n    obj, end = self.raw_decode(s, idx=_w(s, 0).end())\n               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 363, in raw_decode\n    raise JSONDecodeError(\"Expecting value\", s, err.value) from None\njson.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 275, in analyze\n    Action dictionary with action, element_index, text, reason, etc.\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 215, in parse_response\n    if len(parts) >= 3:\nValueError: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see this is Instagram's home feed showing a post from ashleytisd\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 1026, in post\n    action = self.analyze_ui(elements, caption)\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 870, in analyze_ui\n    return self._analyzer.analyze(\n           ~~~~~~~~~~~~~~~~~~~~~~^\n        elements=elements,\n        ^^^^^^^^^^^^^^^^^^\n    ...<3 lines>...\n        share_clicked=self.share_clicked\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 282, in analyze\n    caption=caption,\n            ^^^^^^^^\nValueError: JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see this is Instagram's home feed showing a post from ashleytisd\n",
+  "context": {
+    "step": 0,
+    "caption": "Communication happens whether you're aware of it or not—and @askvinh breaks down exactly how to mast",
+    "video_uploaded": true
+  },
+  "ui_elements_count": 36,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "carousel_media_group",
+      "bounds": "[0,48][720,939]",
+      "center": [
+        360,
+        493
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Photo 1 of 9 by Ashley French, Liked by wendy.galicia_r and others, 70 comments",
+      "id": "carousel_video_media_group",
+      "bounds": "[0,48][720,939]",
+      "center": [
+        360,
+        493
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "indicator_background_view",
+      "bounds": "[23,871][68,916]",
+      "center": [
+        45,
+        893
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "View tagged people",
+      "id": "indicator_icon_view",
+      "bounds": "[34,882][57,905]",
+      "center": [
+        45,
+        893
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Turn sound on",
+      "id": "indicator_container",
+      "bounds": "[628,870][720,939]",
+      "center": [
+        674,
+        904
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[20,972][66,1047]",
+      "center": [
+        43,
+        1009
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Like",
+      "id": "row_feed_button_like",
+      "bounds": "[20,972][59,1047]",
+      "center": [
+        39,
+        1009
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[66,972][132,1047]",
+      "center": [
+        99,
+        1009
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Comment",
+      "id": "row_feed_button_comment",
+      "bounds": "[86,972][125,1047]",
+      "center": [
+        105,
+        1009
+      ],
+      "clickable": false
+    },
+    {
+      "text": "70",
+      "desc": "",
+      "id": "",
+      "bounds": "[132,972][159,1047]",
+      "center": [
+        145,
+        1009
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[159,972][232,1047]",
+      "center": [
+        195,
+        1009
+      ],
+      "clickable": true
+    },
+    {
+      "text": "26",
+      "desc": "",
+      "id": "",
+      "bounds": "[232,972][260,1047]",
+      "center": [
+        246,
+        1009
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[270,972][326,1047]",
+      "center": [
+        298,
+        1009
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Send post",
+      "id": "row_feed_button_share",
+      "bounds": "[280,972][319,1047]",
+      "center": [
+        299,
+        1009
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Add to Saved",
+      "id": "row_feed_button_save",
+      "bounds": "[645,972][717,1040]",
+      "center": [
+        681,
+        1006
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Liked by wendy.galicia_r and others",
+      "desc": "",
+      "id": "",
+      "bounds": "[20,1047][421,1075]",
+      "center": [
+        220,
+        1061
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "wendy.galicia_r",
+      "id": "",
+      "bounds": "[115,1047][285,1075]",
+      "center": [
+        200,
+        1061
+      ],
+      "clickable": true
+    },
+    {
+      "text": "ashleytisdalefrench A little holiday magic ✨",
+      "desc": "",
+      "id": "",
+      "bounds": "[20,1082][720,1113]",
+      "center": [
+        370,
+        1097
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "ashleytisdalefrench",
+      "id": "",
+      "bounds": "[20,1082][225,1110]",
+      "center": [
+        122,
+        1096
+      ],
+      "clickable": true
+    },
+    {
+      "text": "13 hours ago",
+      "desc": "13 hours ago",
+      "id": "",
+      "bounds": "[0,1120][720,1146]",
+      "center": [
+        360,
+        1133
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Suggested reels",
+      "desc": "Title of suggested content",
+      "id": "clips_header_title",
+      "bounds": "[23,1162][645,1232]",
+      "center": [
+        334,
+        1197
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "preview_container",
+      "bounds": "[19,1232][312,1266]",
+      "center": [
+        165,
+        1249
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More",
+      "id": "three_dot_menu",
+      "bounds": "[266,1232][312,1266]",
+      "center": [
+        289,
+        1249
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "preview_container",
+      "bounds": "[331,1232][624,1266]",
+      "center": [
+        477,
+        1249
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More",
+      "id": "three_dot_menu",
+      "bounds": "[578,1232][624,1266]",
+      "center": [
+        601,
+        1249
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "preview_container",
+      "bounds": "[643,1232][720,1266]",
+      "center": [
+        681,
+        1249
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Dismiss",
+      "id": "clips_dismiss_button",
+      "bounds": "[645,1162][720,1237]",
+      "center": [
+        682,
+        1199
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,48][79,139]",
+      "center": [
+        39,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar_title_view",
+      "bounds": "[79,68][641,119]",
+      "center": [
+        360,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Instagram Home Feed",
+      "id": "title_logo",
+      "bounds": "[256,68][432,119]",
+      "center": [
+        344,
+        93
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "notification",
+      "bounds": "[641,48][720,139]",
+      "center": [
+        680,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1266][144,1344]",
+      "center": [
+        72,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1266][288,1344]",
+      "center": [
+        216,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1266][432,1344]",
+      "center": [
+        360,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1266][576,1344]",
+      "center": [
+        504,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1266][720,1344]",
+      "center": [
+        648,
+        1305
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\empirestrongofmind_20251222_131109\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\empirestrongofmind_20251222_131109\\error_001_page_source.xml"
+}

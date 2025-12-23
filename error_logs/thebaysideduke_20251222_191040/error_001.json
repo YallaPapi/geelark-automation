@@ -1,0 +1,530 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T19:13:50.243199",
+  "account": "thebaysideduke",
+  "job_id": "DOZymTNlAoN-2.mp4",
+  "phase": "navigation",
+  "error_type": "max_steps",
+  "error_class": "Exception",
+  "error_message": "Max steps (30) reached",
+  "error_repr": "Exception('Max steps (30) reached')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "max_steps": 30,
+    "video_uploaded": true,
+    "caption_entered": false,
+    "share_clicked": false,
+    "caption": "@podsaveamerica breaks down why Democratic leadership's hesitation to back Zohran Mamdani could crea"
+  },
+  "ui_elements_count": 46,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "reels tray container",
+      "id": "",
+      "bounds": "[0,139][720,354]",
+      "center": [
+        360,
+        246
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[0,139][183,354]",
+      "center": [
+        91,
+        246
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "thebaysideduke's story, 0 of 20, Unseen.",
+      "id": "",
+      "bounds": "[0,139][183,315]",
+      "center": [
+        91,
+        227
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "thebaysideduke's story, 0 of 20, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[22,161][160,299]",
+      "center": [
+        91,
+        230
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Add to story",
+      "id": "reel_empty_badge",
+      "bounds": "[121,260][170,309]",
+      "center": [
+        145,
+        284
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Your story",
+      "desc": "",
+      "id": "username",
+      "bounds": "[44,315][140,341]",
+      "center": [
+        92,
+        328
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[183,139][366,354]",
+      "center": [
+        274,
+        246
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "niaanxtdoor__'s story, 1 of 20, Unseen.",
+      "id": "",
+      "bounds": "[183,139][366,315]",
+      "center": [
+        274,
+        227
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "niaanxtdoor__'s story, 1 of 20, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[205,161][343,299]",
+      "center": [
+        274,
+        230
+      ],
+      "clickable": false
+    },
+    {
+      "text": "niaanxtdoor__",
+      "desc": "",
+      "id": "username",
+      "bounds": "[211,315][338,341]",
+      "center": [
+        274,
+        328
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[366,139][549,354]",
+      "center": [
+        457,
+        246
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "lennys__spa's story, 2 of 20, Unseen.",
+      "id": "",
+      "bounds": "[366,139][549,315]",
+      "center": [
+        457,
+        227
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "lennys__spa's story, 2 of 20, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[388,161][526,299]",
+      "center": [
+        457,
+        230
+      ],
+      "clickable": false
+    },
+    {
+      "text": "lennys__spa",
+      "desc": "",
+      "id": "username",
+      "bounds": "[403,315][512,341]",
+      "center": [
+        457,
+        328
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[549,139][720,354]",
+      "center": [
+        634,
+        246
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "itzherstory's story, 3 of 20, Unseen.",
+      "id": "",
+      "bounds": "[549,139][720,315]",
+      "center": [
+        634,
+        227
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "itzherstory's story, 3 of 20, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[571,161][709,299]",
+      "center": [
+        640,
+        230
+      ],
+      "clickable": false
+    },
+    {
+      "text": "itzherstory",
+      "desc": "",
+      "id": "username",
+      "bounds": "[589,315][693,341]",
+      "center": [
+        641,
+        328
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Suggested for you",
+      "desc": "Suggested for you",
+      "id": "netego_carousel_title",
+      "bounds": "[23,367][225,397]",
+      "center": [
+        124,
+        382
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "suggested_entity_card_container",
+      "bounds": "[23,419][469,864]",
+      "center": [
+        246,
+        641
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Marri Youngblood",
+      "desc": "",
+      "id": "suggested_entity_card_name",
+      "bounds": "[147,708][344,736]",
+      "center": [
+        245,
+        722
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Followed by niaanxtdoor__",
+      "desc": "",
+      "id": "suggested_entity_card_context",
+      "bounds": "[124,739][368,763]",
+      "center": [
+        246,
+        751
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Follow",
+      "desc": "Follow Marri Youngblood",
+      "id": "suggested_user_card_follow_button",
+      "bounds": "[43,792][449,844]",
+      "center": [
+        246,
+        818
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Dismiss",
+      "id": "dismiss_button",
+      "bounds": "[423,419][469,465]",
+      "center": [
+        446,
+        442
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "suggested_entity_card_container",
+      "bounds": "[489,419][720,864]",
+      "center": [
+        604,
+        641
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Catalina Catalina",
+      "desc": "",
+      "id": "suggested_entity_card_name",
+      "bounds": "[619,708][720,736]",
+      "center": [
+        669,
+        722
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Suggested for you",
+      "desc": "",
+      "id": "suggested_entity_card_context",
+      "bounds": "[627,739][720,763]",
+      "center": [
+        673,
+        751
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Follow",
+      "desc": "Follow Catalina Catalina",
+      "id": "suggested_user_card_follow_button",
+      "bounds": "[509,792][720,844]",
+      "center": [
+        614,
+        818
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "media_group",
+      "bounds": "[0,909][720,1266]",
+      "center": [
+        360,
+        1087
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "facebook posted a video 4 days ago",
+      "id": "row_feed_profile_header",
+      "bounds": "[0,909][720,994]",
+      "center": [
+        360,
+        951
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,909][83,994]",
+      "center": [
+        41,
+        951
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "User avatars",
+      "id": "",
+      "bounds": "[18,909][83,994]",
+      "center": [
+        50,
+        951
+      ],
+      "clickable": false
+    },
+    {
+      "text": "facebook and 2 others ",
+      "desc": "facebook and 2 others ",
+      "id": "row_feed_photo_profile_name",
+      "bounds": "[83,909][525,950]",
+      "center": [
+        304,
+        929
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[83,950][525,994]",
+      "center": [
+        304,
+        972
+      ],
+      "clickable": true
+    },
+    {
+      "text": " facebook • Original audio",
+      "desc": " facebook • Original audio",
+      "id": "secondary_label",
+      "bounds": "[83,950][525,994]",
+      "center": [
+        304,
+        972
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Follow",
+      "desc": "Follow Facebook",
+      "id": "inline_follow_button",
+      "bounds": "[525,925][649,977]",
+      "center": [
+        587,
+        951
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More actions for this post",
+      "id": "media_option_button",
+      "bounds": "[649,912][720,991]",
+      "center": [
+        684,
+        951
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,48][79,139]",
+      "center": [
+        39,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar_title_view",
+      "bounds": "[79,68][641,119]",
+      "center": [
+        360,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Instagram Home Feed",
+      "id": "title_logo",
+      "bounds": "[272,68][448,119]",
+      "center": [
+        360,
+        93
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "notification",
+      "bounds": "[641,48][720,139]",
+      "center": [
+        680,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1266][144,1344]",
+      "center": [
+        72,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1266][288,1344]",
+      "center": [
+        216,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1266][432,1344]",
+      "center": [
+        360,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1266][576,1344]",
+      "center": [
+        504,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1266][720,1344]",
+      "center": [
+        648,
+        1305
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\thebaysideduke_20251222_191040\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\thebaysideduke_20251222_191040\\error_001_page_source.xml"
+}

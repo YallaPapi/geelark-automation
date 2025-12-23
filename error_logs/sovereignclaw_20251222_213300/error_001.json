@@ -1,0 +1,377 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T21:36:40.537572",
+  "account": "sovereignclaw",
+  "job_id": "DJ2GSHPSQbq-2.mp4",
+  "phase": "navigation",
+  "error_type": "max_steps",
+  "error_class": "Exception",
+  "error_message": "Max steps (30) reached",
+  "error_repr": "Exception('Max steps (30) reached')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "max_steps": 30,
+    "video_uploaded": true,
+    "video_selected": true,
+    "caption_entered": true,
+    "share_clicked": false,
+    "caption": "When Benny Blanco gets called out by @teamcocopodcasts, the clock starts ticking—and the internet is"
+  },
+  "ui_elements_count": 32,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "Reel by lisamking_official. Double tap to play or pause.",
+      "id": "clips_media_component",
+      "bounds": "[0,48][720,1266]",
+      "center": [
+        360,
+        657
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Reel by lisamking_official. Double tap to play or pause.",
+      "id": "clips_video_container",
+      "bounds": "[0,48][720,1266]",
+      "center": [
+        360,
+        657
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "clips_author_info_component",
+      "bounds": "[26,1080][311,1167]",
+      "center": [
+        168,
+        1123
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile picture of lisamking_official",
+      "id": "clips_author_profile_pic",
+      "bounds": "[32,1102][91,1161]",
+      "center": [
+        61,
+        1131
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[97,1117][311,1147]",
+      "center": [
+        204,
+        1132
+      ],
+      "clickable": true
+    },
+    {
+      "text": "lisamking_official",
+      "desc": "lisamking_official",
+      "id": "clips_author_username",
+      "bounds": "[97,1117][311,1147]",
+      "center": [
+        204,
+        1132
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[311,1096][456,1167]",
+      "center": [
+        383,
+        1131
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Follow",
+      "desc": "Follow Lisa King",
+      "id": "inline_follow_button",
+      "bounds": "[321,1109][433,1157]",
+      "center": [
+        377,
+        1133
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Her little snort 🤣🥹 Darcy Lou loves the snow! ❄️ #snowda …",
+      "id": "",
+      "bounds": "[26,1174][635,1243]",
+      "center": [
+        330,
+        1208
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Like",
+      "id": "like_button",
+      "bounds": "[635,662][707,734]",
+      "center": [
+        671,
+        698
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Like number is7082924. View likes",
+      "desc": "Like number is7082924. View likes",
+      "id": "like_count",
+      "bounds": "[635,734][707,773]",
+      "center": [
+        671,
+        753
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Comment",
+      "id": "comment_button",
+      "bounds": "[635,773][707,845]",
+      "center": [
+        671,
+        809
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Comment number is22628. View comments",
+      "desc": "Comment number is22628. View comments",
+      "id": "comment_count",
+      "bounds": "[635,845][707,884]",
+      "center": [
+        671,
+        864
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Repost",
+      "id": "",
+      "bounds": "[635,884][707,956]",
+      "center": [
+        671,
+        920
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Reposted 127328 times",
+      "desc": "Reposted 127328 times",
+      "id": "repost_count",
+      "bounds": "[635,956][707,995]",
+      "center": [
+        671,
+        975
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Share",
+      "id": "direct_share_button",
+      "bounds": "[635,995][707,1067]",
+      "center": [
+        671,
+        1031
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Reshare number is2438364",
+      "desc": "Reshare number is2438364",
+      "id": "ufi_text_component",
+      "bounds": "[635,1067][707,1106]",
+      "center": [
+        671,
+        1086
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More",
+      "id": "clips_ufi_more_button_component",
+      "bounds": "[635,1106][707,1178]",
+      "center": [
+        671,
+        1142
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Audio",
+      "id": "media_album_art_button",
+      "bounds": "[647,1191][696,1240]",
+      "center": [
+        671,
+        1215
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Create a reel",
+      "id": "",
+      "bounds": "[0,62][77,139]",
+      "center": [
+        38,
+        100
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "",
+      "bounds": "[192,73][330,128]",
+      "center": [
+        261,
+        100
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Reels",
+      "desc": "",
+      "id": "text1",
+      "bounds": "[195,73][297,128]",
+      "center": [
+        246,
+        100
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Friends",
+      "id": "",
+      "bounds": "[330,73][556,128]",
+      "center": [
+        443,
+        100
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Friends",
+      "desc": "",
+      "id": "text1",
+      "bounds": "[333,73][466,128]",
+      "center": [
+        399,
+        100
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1266][144,1344]",
+      "center": [
+        72,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1266][288,1344]",
+      "center": [
+        216,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1266][432,1344]",
+      "center": [
+        360,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1266][576,1344]",
+      "center": [
+        504,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1266][720,1344]",
+      "center": [
+        648,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "upload_snackbar_container",
+      "bounds": "[13,1143][707,1253]",
+      "center": [
+        360,
+        1198
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Sharing to Reels…",
+      "desc": "",
+      "id": "status_text",
+      "bounds": "[107,1176][691,1205]",
+      "center": [
+        399,
+        1190
+      ],
+      "clickable": false
+    },
+    {
+      "text": "90.0",
+      "desc": "",
+      "id": "progress_bar",
+      "bounds": "[107,1218][691,1220]",
+      "center": [
+        399,
+        1219
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\sovereignclaw_20251222_213300\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\sovereignclaw_20251222_213300\\error_001_page_source.xml"
+}

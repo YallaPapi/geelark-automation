@@ -1,0 +1,466 @@
+job_id,account,video_path,caption,status,worker_id,claimed_at,completed_at,error,attempts,max_attempts,retry_at,error_type,error_category,pass_number,run_id,video_id
+DRiHpn0DDKp-2.mp4_podcast,quickcutspod,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\pbd.podcast\DRiHpn0DDKp-2.mp4,"Charlie drops wisdom that hits different 💯
+
+Via @pbd.podcast
+
+#podcast #podcasts #podcastclips #valuetainment #patrickbetdavid #business #entrepreneur",failed,0,2025-12-22T21:14:55.965722,2025-12-22T21:16:13.304053,Exception: Device 98.98.125.32:20654 never appeared in ADB devices list after 60s,3,3,2025-12-22T21:19:47.631723,adb_timeout,infrastructure,,,
+DQsKmMOEuGO-1.mp4_podcast,podsnipline,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\icedcoffeehour\DQsKmMOEuGO-1.mp4,"The $37 trillion question everyone's avoiding: how does America actually settle this tab? @icedcoffeehour breaks down the economic reality behind the nation's mounting debt crisis and what it means for the future.
+
+#economy #economics #debt #nationaldebt #money #finance #investing #stockmarket #stocks #business #entrepreneur #wealth #success #motivation #financialfreedom #financialliteracy #personalfinance #moneymanagement #investingtips #financetips #businessnews #marketanalysis #economicnews",success,2,2025-12-22T21:08:48.553588,2025-12-22T21:13:14.817094,,0,3,,,,,,
+DLIksPRp881-1.mp4_podcast,podreelsector,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\simonsinek\DLIksPRp881-1.mp4,"The perfect description of @phil.rosenthal doesn't exi— 😂
+
+According to @simonsinek, Phil Rosenthal brings all the Bourdain energy...just with a healthy dose of fear mixed in. And honestly? That's what makes him so relatable.
+
+Catch the full conversation on A Bit of Optimism wherever you stream podcasts.
+
+#SimonSinek #PhilRosenthal #AnthonyBourdain #ABitOfOptimism #Podcast #PodcastClips #Leadership #Storytelling #FoodTV #TravelShow",failed,1,2025-12-22T21:17:42.962892,2025-12-22T21:22:36.052410,"Exception: Appium connection failed after 3 attempts: Message: The instrumentation process cannot be initialized within 10000ms timeout. Make sure the application under test does not crash and investigate the logcat output. You could also try to increase the value of 'uiautomator2ServerLaunchTimeout' capability
+Stacktrace:
+UnknownError: The instrumentation process cannot be initialized within 10000ms timeout. Make sure the application under test does not crash and investigate the logcat output. ",3,3,2025-12-22T21:22:32.907418,appium_crash,infrastructure,,,
+DQ7vt8XjbMv-2.mp4_podcast,podpunchdaily,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\michaeljknowles\DQ7vt8XjbMv-2.mp4,".@michaeljknowles is bringing Bar Fight back to Nashville this Thursday 🎙️ He's linking up with @berecker and @ryanbasham for what's bound to be an unforgettable night. RSVP link is waiting in his bio and story — don't miss it!
+
+#BarFight #Nashville #LiveShow #PodcastLive #Conservative #PoliticalCommentary #LivePodcast #NashvilleEvents #ThursdayNight #MichaelKnowles",success,3,2025-12-22T21:14:16.795318,2025-12-22T21:16:49.689924,,1,3,2025-12-22T21:19:06.752733,,,,,
+DQODQ-jkcnf-2.mp4_podcast,podpeakstudio,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\alexjones.tv\DQODQ-jkcnf-2.mp4,"The moment Shawn Johnson revealed how Obama's administration labeled INFOWARS a terrorist organization left everyone speechless. This October 2025 conversation proves some stories never make mainstream headlines. @alexjones.tv brings the receipts.
+
+#infowars #trumpwon #maganews",success,2,2025-12-22T21:10:11.502115,2025-12-22T21:14:31.974708,,0,3,,,,,,
+DHSwFxjvAVe-1.mp4_podcast,podcutstories,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\foundr\DHSwFxjvAVe-1.mp4,"Tom Blomfield didn't chase trends—he chased problems worth solving. The GoCardless and Monzo co-founder built billion-dollar fintech companies by obsessing over what frustrated people, not what looked good on paper. His formula? Find the friction, fix it, then scale it.
+
+📹 via @foundr
+
+#entrepreneurship #business #startups #businesstips #entrepreneur #entrepreneurmindset #startup #foundrstory #businessgrowth #startuptips #entrepreneurlife #mindset #motivation",failed,0,2025-12-22T21:23:21.807553,2025-12-22T21:33:46.299455,"Exception: Appium connection failed after 3 attempts: Message: The instrumentation process cannot be initialized within 10000ms timeout. Make sure the application under test does not crash and investigate the logcat output. You could also try to increase the value of 'uiautomator2ServerLaunchTimeout' capability
+Stacktrace:
+UnknownError: The instrumentation process cannot be initialized within 10000ms timeout. Make sure the application under test does not crash and investigate the logcat output. ",4,3,2025-12-22T21:28:11.751921,appium_crash,infrastructure,,,
+C7DR2cDrvNH-2.mp4_podcast,mindsetmiccuts,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\theproblemdavesmith\C7DR2cDrvNH-2.mp4,"Looking back at the COVID era, @theproblemdavesmith and Tucker Carlson aren't holding back their criticism of Republicans and Libertarians who stayed silent during lockdowns. ""That is totalitarianism,"" they argue. Full episode available at TuckerCarlson.com.
+
+#DaveSmith #TuckerCarlson #COVID #Lockdowns #Republicans #Libertarians #Totalitarianism #Politics #Freedom #Liberty #PoliticalDiscussion",success,3,2025-12-22T21:11:11.524027,2025-12-22T21:18:18.698568,,0,3,,,,,,
+DO056Oaiamu-2.mp4_podcast,micwisdomdaily,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\mattwalshblog\DO056Oaiamu-2.mp4,"The legacy of truth stands eternal, long after we're gone. @mattwalshblog reminds us what really matters in the end.
+
+#Truth #Legacy #Perspective #Reality #WisdomWednesday #ThinkAboutIt #Philosophy #LifeLessons #Eternal #MattWalsh",success,2,2025-12-22T21:13:24.882486,2025-12-22T21:17:52.469183,,1,3,2025-12-22T21:18:16.832617,,,,,
+DRmrpsOEcT4-1.mp4_podcast,micnotesarchive,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\therealbradlea\DRmrpsOEcT4-1.mp4,"When people take care of their health and build real wealth, they become impossible to manipulate. @therealbradlea breaks down why those in power prefer you sick and broke.
+
+#health #wealth #freedom #mindset #motivation #truth #awareness #control #power #independent #selfimprovement #success #healthy #wealthy #wise",success,4,2025-12-22T21:13:26.892235,2025-12-22T21:18:14.135880,,0,3,,,,,,
+DEFMDzBOJPg-2.mp4_podcast,micmindvault,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\thejrecompanion\DEFMDzBOJPg-2.mp4,"Seven years and one Christmas greeting changed everything. In 2017, Senator Kamala Harris questioned how anyone could say ""Merry Christmas"" while DACA recipients faced deportation uncertainty. Fast forward to 2020—Harris herself posted a festive holiday message with Doug Emhoff, wishing everyone a Merry Christmas. The contrast between her 2017 press conference and 2020 video caught attention during Duncan Trussell's conversation on The Joe Rogan Experience. Some called the shift hypocritical, others saw it as politicians being politicians. Either way, the receipts tell an interesting story about messaging and moments. @thejrecompanion breaks it all down.
+
+Episode 2247 - Duncan Trussell
+
+Link to Listen/Watch in Episode Links Highlight and Links in Bio
+
+Follow @duncantrussell
+Follow @joerogan
+
+#duncantrussell #joerogan #jrec2247 #jre #thejrecompanion #jreduncantrussell #joeroganpodcast #joeroganexperience",success,2,2025-12-22T21:14:42.039874,2025-12-22T21:18:56.192421,,0,3,,,,,,
+DP4bXqYkZwO-1.mp4_podcast,castcoremedia,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\dave.asprey\DP4bXqYkZwO-1.mp4,"The real secrets to making it past 100? @dave.asprey breaks down exactly what matters most when it comes to extreme longevity. 💯
+
+Drop a number (1, 2, or 3) for the one you're already doing!
+
+#daveasprey #biohacking #biohacker #healthydiet #wellness",success,1,2025-12-22T21:14:57.697226,2025-12-22T21:19:44.225255,,0,3,,,,,,
+DPwVUTbFLNE-1.mp4_podcast,bitepodmedia,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\hormozi\DPwVUTbFLNE-1.mp4,"Alex Hormozi breaks down the counterintuitive truth about achievement: subtraction beats addition. Most people keep piling on goals, commitments, and distractions—but the real winners? They ruthlessly eliminate everything that doesn't serve their main objective.
+
+It's not about doing more. It's about doing less of what doesn't count.
+
+Credit: @hormozi
+
+#alexhormozi #focus #priorities #entrepreneurmindset #successmindset #personalgrowth #selfimprovement #motivationmonday #businessstrategy #goaldigger #timemanagement #productivityhacks #entrepreneurlife #growthmindset #hustleculture",success,0,2025-12-22T21:16:23.352722,2025-12-22T21:21:46.481995,,0,3,,,,,,
+DQj_AmPj1uG-2.mp4_podcast,bitecastclips,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\hubermanlab\DQj_AmPj1uG-2.mp4,"Your body has a hidden drainage system that most people ignore, and @hubermanlab breaks down exactly how to activate it. The cisterna chyli—a lymph reservoir in your abdomen—acts as a collection point for fluid that needs to move through your system. When diaphragmatic breathing is performed correctly, it creates pressure differences that essentially pump lymph from this reservoir up to the vessels below your clavicles, where it re-enters your bloodstream. This isn't just about reducing facial puffiness or leg swelling; it's critical for immune function and clearing inflammation from organs and brain tissue. While walking and lymphatic massage help, strategic breathing sessions throughout your day can drive significant lymphatic flow, especially during periods of low physical activity. Full protocols and the complete biology breakdown are available on the Huberman Lab podcast at hubermanlab.com with timestamps for easy navigation.
+
+@stanford.med @stanford
+
+#neuroscience #science #ciencia #neurociencia #lymphatic #diaphragm #breathe #cisternachyli #movement #appearance #swell",failed,3,2025-12-22T21:24:36.531186,2025-12-22T21:27:38.995487,Exception: UI dump failed (WebDriverException): Message: Could not proxy command to the remote server. Original error: connect ECONNREFUSED 127.0.0.,3,3,2025-12-22T21:29:26.474982,appium_crash,infrastructure,,,
+DNL3lfxueiO-2.mp4_podcast,clipsonairwave,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\officialbenshapiro\DNL3lfxueiO-2.mp4,"The economic patterns that led to history's biggest financial disasters aren't as distant as we'd like to think. @officialbenshapiro breaks down the warning signs that appeared before major market collapses and why they matter for today's economy.
+
+#economy #economics #finance #markets #investing #stockmarket #recession #inflation #federalreserve #monetary #fiscal #debt #crisis #history #education",failed,2,2025-12-22T21:28:32.272701,2025-12-22T21:29:48.091642,Exception: Device 98.98.125.32:20604 never appeared in ADB devices list after 60s,3,3,2025-12-22T21:33:22.220628,adb_timeout,infrastructure,,,
+DPkNM_zkm-9-1.mp4_podcast,archipelago_one,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\megynkellyshow\DPkNM_zkm-9-1.mp4,"The cat's out of the bag. @kennethpvogel from the New York Times isn't holding back—Joe Biden ""CLEARLY did know"" about Hunter's dealings. @megynkellyshow gets the full story. Catch the complete episode on YouTube.com/MegynKelly
+
+#megynkellyshow",failed,4,2025-12-22T21:29:01.737349,2025-12-22T21:38:11.205997,"Exception: Appium connection failed after 3 attempts: Message: The instrumentation process cannot be initialized within 10000ms timeout. Make sure the application under test does not crash and investigate the logcat output. You could also try to increase the value of 'uiautomator2ServerLaunchTimeout' capability
+Stacktrace:
+UnknownError: The instrumentation process cannot be initialized within 10000ms timeout. Make sure the application under test does not crash and investigate the logcat output. ",3,3,2025-12-22T21:33:51.687287,appium_crash,infrastructure,,,
+DGyM3aFRll5-1.mp4_podcast,warlordregent,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\tonyrobbins\DGyM3aFRll5-1.mp4,"The human spirit's capacity to rewrite reality gets captured in @siritrimefilm - a documentary @tonyrobbins describes as proof that our greatest battles reveal our true essence. 💥
+
+Siri Lindley went from non-swimmer to 2x World Champion triathlete, then faced an even bigger fight. Tony and his wife Sage joined this powerful film project that chronicles what happens when someone refuses to accept impossible as an answer.
+
+TRI ME: The Siri Lindley Story drops this year and has already earned selections at Durango Film Festival and Boulder International Film Festival. According to Tony, if you've been to his events lately, you know Siri's name - now the world gets to witness why her story moves people beyond words. 🙏
+
+Follow @siritrimefilm for release updates.
+
+#TonyRobbins #SiriLindley #Documentary #HumanSpirit #Triathlon #Inspiration #NeverGiveUp #WorldChampion #FilmFestival #TriMeFilm #Courage #Resilience #TransformYourLife",success,3,2025-12-22T21:18:28.744571,2025-12-22T21:22:46.175891,,0,3,,,,,,
+DRP2wpzkth8-2.mp4_podcast,thequietbaron,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\officialbenshapiro\DRP2wpzkth8-2.mp4,"The Daily Wire just dropped their biggest deal of the year 🎁 @officialbenshapiro and the team are offering half off memberships this holiday season. While everyone else is fighting over discounted TVs, smart shoppers are locking in 50% off premium content. Link in bio to claim it.
+
+#DailyWire #BenShapiro #HolidayDeals #LimitedTimeOffer #PodcastCommunity #ConservativeMedia #HolidayShopping #MembershipDeals",failed,2,2025-12-22T21:29:27.407465,2025-12-22T21:38:49.433575,"Exception: Appium connection failed after 3 attempts: Message: The instrumentation process cannot be initialized within 10000ms timeout. Make sure the application under test does not crash and investigate the logcat output. You could also try to increase the value of 'uiautomator2ServerLaunchTimeout' capability
+Stacktrace:
+UnknownError: The instrumentation process cannot be initialized within 10000ms timeout. Make sure the application under test does not crash and investigate the logcat output. ",3,3,2025-12-22T21:34:17.342249,appium_crash,infrastructure,,,
+DQ9fKdeESR_-2.mp4_podcast,thefieldsketcher,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\dave.asprey\DQ9fKdeESR_-2.mp4,"The cellular transformation zone hits different on day three—@dave.asprey breaks down what's actually happening inside your body when old cells get cleared and new ones take over. This is fasting's sweet spot, minus the usual struggle.
+
+#daveasprey #biohacking #fasting #prolon #wellness",failed,1,2025-12-22T21:24:55.466670,2025-12-22T21:28:57.009394,"Loop stuck - Vision analysis: This screenshot shows Instagram's Reels feed displaying a video post from an account called ""GarikWeir"". The user appears to be successfully viewing content in the main feed interface, with typical Instagram elements visible including the heart, comment, share buttons, and navigation bar at the bottom.
+
+There are no visible error messages, login screens, verification prompts, or ""action blocked"" notifications on this screen. The loop recovery failure likely occurred",3,3,2025-12-22T21:29:45.413406,action_blocked,account,,,
+DLVzRYtPhEY-1.mp4_podcast,thebaysideduke,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\timferriss\DLVzRYtPhEY-1.mp4,"Charlie Houpert drops a truth bomb that every entrepreneur needs to hear: conviction is everything. When you're uncertain about what you're offering, people feel it instantly. @timferriss captures this powerful moment reminding us that hesitation kills deals faster than any objection ever could. Your belief becomes their belief—or your doubt becomes their exit.
+
+#timferriss #charliehoupert #salespsychology #entrepreneurmindset #businesstips #confidenceiskey #salesadvice #believeinyourself #entrepreneurship #businessmindset #mindsetmatters #successmindset",success,1,2025-12-22T21:22:46.117737,2025-12-22T21:25:22.816340,,0,3,,,,,,
+DQScT2xk9lz-1.mp4_podcast,thebackroadman,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\pbd.podcast\DQScT2xk9lz-1.mp4,"Tom Ellsworth breaks down why being selective with your information diet matters more than ever 🎯
+
+Via @pbd.podcast
+
+#podcast #valuetainment #business #entrepreneur #motivation #success #inspiration #mindset #growth #leadership",success,3,2025-12-22T21:22:56.244841,2025-12-22T21:25:33.008493,,0,3,,,,,,
+DILxxqfpZO6-1.mp4_podcast,stone_mason_live,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\foundr\DILxxqfpZO6-1.mp4,"When Scooter Braun asked Jeff Bezos what someone with limitless wealth and power could possibly want next, the Amazon founder's answer changed everything.
+
+""I just want to evolve.""
+
+No mention of more companies. No talk of bigger rockets. Just pure, relentless growth.
+
+@scooterbraun shared this conversation with @foundr, and it reveals something powerful: the most successful people alive aren't chasing destinations. They're chasing transformation.
+
+Bezos has everything most people dream about their entire lives, yet his focus remains on becoming better, not having more.
+
+The mountain peak isn't the end goal. Evolution is.
+
+What's one way you're evolving right now?
+
+#entrepreneurship #mindset #jeffbezos #scooterbraun #personalgrowth #success #businessmindset #motivation #growthmindset #entrepreneur",success,4,2025-12-22T21:26:07.770580,2025-12-22T21:30:26.272993,,1,3,2025-12-22T21:30:57.696163,,,,,
+DJ2GSHPSQbq-2.mp4_podcast,sovereignclaw,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\teamcocopodcasts\DJ2GSHPSQbq-2.mp4,"When Benny Blanco gets called out by @teamcocopodcasts, the clock starts ticking—and the internet is watching. Time's up in 24 hours. #CONAF",failed,3,2025-12-22T21:32:36.223326,2025-12-22T21:36:50.989049,"Max steps reached - Vision analysis: This appears to be a normal Instagram Reels feed screen showing a video of a child in winter clothing in the snow. There are no visible error messages, popups, warnings, or ""action blocked"" notifications on the screen. The interface shows typical engagement metrics (7M likes, 22.6K comments, 127K shares, 2.4M views) and the user appears to be logged in and browsing content normally.
+
+The post failure likely occurred during an earlier step in the posting proce",3,3,2025-12-22T21:37:26.151075,action_blocked,account,,,
+DPo7OcdkXmv-1.mp4_podcast,silverscribewindow,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\shawnryanclipped\DPo7OcdkXmv-1.mp4,"Anna Jacobsen breaks down the engineering marvel behind Israel's Iron Dome defense system in this clip from @shawnryanclipped. The technology that's intercepting threats in real-time is more sophisticated than most people realize.
+
+#shawnryanshow #annajacoobsen #irondome #defensetechnology #military #militarytechnology #israel #missildefense #engineering #podcast #defense",success,3,2025-12-22T21:28:40.534715,2025-12-22T21:30:59.738704,,2,3,2025-12-22T21:33:30.475624,,,,,
+DN3DlKX3MDR-1.mp4_podcast,seegloryvault,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\themelrobbinspodcast\DN3DlKX3MDR-1.mp4,"Here's the shocking truth about metabolism that Dr. William Li reveals on @themelrobbinspodcast – your grocery store has more power over fat burning than most people realize.
+
+Mel Robbins sits down with Dr. William Li to break down breakthrough research that destroys common metabolism myths. He's sharing the exact science behind which foods actually work, plus a practical shopping list to transform energy levels and help anyone feel better in their body.
+
+The episode delivers real strategies backed by cutting-edge research. 🎧 ""Do THIS to Boost Your Metabolism, Lose Fat, & Feel Better Now With Dr. William Li.""
+
+#melrobbins #melrobbinspodcast #metabolism #healthtips #wellness #weightloss #nutrition #healthylifestyle #podcast #motivational",success,3,2025-12-22T21:27:49.037626,2025-12-22T21:30:39.457383,,0,3,,,,,,
+DGtor0KtGn4-1.mp4_podcast,orbmasterstrike,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\2bears.1cave\DGtor0KtGn4-1.mp4,The pig sounds are taking over 😂 Episode 181 brings the chaos you didn't know you needed from @2bears.1cave 🐻🐻 #2Bears1Cave #2bears1cavepodcast,success,1,2025-12-22T21:38:43.639568,2025-12-22T21:42:14.940240,,2,3,2025-12-22T21:43:33.589231,,,,,
+DQ_4w75ju7M-1.mp4_podcast,kingmakerpulse,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\jayshetty\DQ_4w75ju7M-1.mp4,"@jayshetty reminds us that the destination stays the same—it's just the journey that surprises you 💫 Life has a way of getting you there through unexpected detours and plot twists you never saw coming.
+
+Drop a ""YES"" if this resonates 👇
+
+#jayshetty #lifelessons #mindsetshift #personalgrowth #motivationmonday #wisdomwednesday #inspirationalquotes #mindfulness #selfgrowth #dailyinspiration #positivevibes #personaldevelopment #growthmindset #successmindset #lifequotes",failed,2,2025-12-22T21:34:49.144004,2025-12-22T21:41:51.466752,"Max steps reached - Vision analysis: This shows Instagram's story creation/editing interface with a video of someone being interviewed. The user has reached the maximum 30 steps in the posting process without completing it, likely due to spending too much time editing or getting stuck in the editing flow. To fix this, the user should quickly finalize their edits and tap the ""Next"" button to complete the posting process, or start over if the session has timed out.",3,3,2025-12-22T21:39:39.096137,claude_stuck,infrastructure,,,
+CyHU-mlMTsV-2.mp4_podcast,itsunpluggedlife,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\candaceshow\CyHU-mlMTsV-2.mp4,The Brendan Dassey interrogation tapes raise serious questions about coercion and false confessions. @realcandaceowens weighs in on one of the most controversial cases in recent history. Stream episode 7 of #ConvictingAMurderer exclusively on DailyWire+.,success,4,2025-12-22T21:35:22.987603,2025-12-22T21:39:28.869222,,2,3,2025-12-22T21:40:12.941871,,,,,
+DRBBfGPkWYh-1.mp4_podcast,ironwillascendant,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\tuckercarlson\DRBBfGPkWYh-1.mp4,"The principle is simple: individual responsibility over collective blame. @tuckercarlson draws the line against inherited guilt.
+
+#tucker #tuckercarlson #news #politics #media #truth #america #conservative #fyp #viral #trending",failed,4,2025-12-22T21:38:21.283722,2025-12-22T21:43:07.521211,"Max steps reached - Vision analysis: This shows the Instagram main feed/home screen with stories at the top and a video post from ""ironwillascendant"" playing. The screen appears normal with no visible error messages, popups, or ""action blocked"" warnings.
+
+Since the context indicates 30 max steps were reached without completing the post, this suggests the posting process may have timed out or gotten stuck in a loop rather than encountering a specific error. The user would likely need to restart t",3,3,2025-12-22T21:43:17.560733,action_blocked,account,,,
+DE4lSzOugu2-1.mp4_podcast,inreallifemaxx,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\thejrecompanion\DE4lSzOugu2-1.mp4,"When a presidential exchange became must-see viewing...
+
+Donald Trump and Barack Obama's conversation at President Jimmy Carter's funeral didn't go unnoticed by everyone in attendance. Kamala Harris responded with an unmistakable huff, then locked eyes with her husband, Doug Emhoff—a silent moment that spoke volumes.
+
+Shane Gillis, Mark Normand, and Ari Shaffir break it down on The Joe Rogan Experience Episode 2256 - Protect our Parks 14.
+
+Link to Listen/Watch in Episode Links Highlight and Bio.
+
+Credit: @thejrecompanion
+
+Follow @shanemgillis
+Follow @marknormand
+Follow @arishaffir
+Follow @joerogan
+Follow @jamievernon
+
+#joerogan #joeroganexperience #jrec2256 #jreshanegillis #jremarknormand #jrearishaffir #shanegillis #marknormand #arishaffir #protectourparks #jreprotectourparks #jrepodcast #thejrecompanion",success,1,2025-12-22T21:31:10.346658,2025-12-22T21:34:39.693668,,0,3,,,,,,
+DQjt90BiaVa-2.mp4_podcast,empirestrongofmind,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\pbd.podcast\DQjt90BiaVa-2.mp4,"The vision for the future? Completely different paths.
+
+Via @pbd.podcast
+
+#podcast #podcasts #podcastclips #valuetainment #patrickbetdavid #business #entrepreneur",failed,0,2025-12-22T21:41:34.176908,2025-12-22T21:45:34.823666,"Max steps reached - Vision analysis: This screenshot shows Instagram's ""Create"" menu overlay on top of a user profile page. The interface displays various content creation options (Reel, Edits, Post, Story, Highlight, Ad) with no visible error messages or blocking notifications.
+
+The post likely failed because the user reached the maximum automation steps (30) while navigating through the posting flow rather than encountering a specific Instagram restriction. To fix this, the user should manuall",3,3,2025-12-22T21:46:24.113745,claude_stuck,infrastructure,,,
+DNn-gylJT2X-2.mp4_podcast,crimsonlegionshort,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\teamcocopodcasts\DNn-gylJT2X-2.mp4,"Dr. Arroyo's bringing the heat with an unforgettable house call moment featured on this year's Summer S'Mores via @teamcocopodcasts 🔥
+
+#TeamCoco #Podcast #SummerSMores #Comedy #Funny #Clips #Viral",success,1,2025-12-22T21:43:39.494956,2025-12-22T21:49:46.050537,,2,3,2025-12-22T21:48:29.421614,,,,,
+DRF_hV8iVJ4-2.mp4_podcast,bentzenithruler,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\mattwalshblog\DRF_hV8iVJ4-2.mp4,"@mattwalshblog caught this absolutely unhinged moment on camera 😳
+
+The way some people act when they think they're making a point never fails to shock. This interaction proves that reality really is stranger than fiction sometimes.
+
+#bizarre #crazy #unhinged #viral #trending #reaction #publicfreakout #caught #cringe #shocking",success,3,2025-12-22T21:37:01.061056,2025-12-22T21:40:48.795403,,0,3,,,,,,
+DPsJA8iD2sm-1.mp4_podcast,tjmexicosfinest,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\therealbradlea\DPsJA8iD2sm-1.mp4,"A question that's dividing the internet right now – and @therealbradlea wants to hear where YOU stand on Digital ID. Drop your thoughts below. 👇
+
+#digitalid #digitalidentity #privacy #freedomofspeech #australia #australiantiktok #fyp #foryou #viral",success,3,2025-12-22T21:38:27.602707,2025-12-22T21:44:34.516306,,0,3,,,,,,
+DQcT6EhkYG9-1.mp4_podcast,rustywatermeal,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\profgalloway\DQcT6EhkYG9-1.mp4,"According to @profgalloway, this pod episode features @kylascan breaking down how money and markets actually function. She's an economic commentator, educator, and the author behind ""In This Economy? How Money and Markets Really Work.""
+
+#Economics #Money #Markets #Podcast #Finance #Economy #Business #Investing #FinancialEducation #MoneyTalk",success,2,2025-12-22T21:38:59.491840,2025-12-22T21:45:43.765090,,0,3,,,,,,
+DBb_zDzSebb-2.mp4_podcast,RoughConcreteShifter,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\foundmyfitness\DBb_zDzSebb-2.mp4,"A five-day experiment with canned soup revealed urinary BPA levels skyrocketing to 20.8 µg/L—among the highest recorded outside factory workers, according to @foundmyfitness. The same plastic lining found in soup cans exists in most aluminum beverage and food containers, from sodas to sparkling water. Research shows drinking from BPA-lined cans can spike blood pressure 16-fold versus glass bottles, with urinary concentrations at these levels correlating to hormonal disruptions. The solution isn't complicated: swapping canned products for alternatives in glass, cartons, or fresh options significantly cuts BPA exposure and its associated long-term health risks.
+
+#microplastics #bpa #endocrinedisruptors #bloodpressure #hormones",success,4,2025-12-22T21:39:38.952306,2025-12-22T21:46:46.035870,,0,3,,,,,,
+DPpX1kYiSW1-1.mp4_podcast,reddyplayerwonton,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\codiesanchez\DPpX1kYiSW1-1.mp4,"The family dynamics hit different when you're the ""weird one"" 😅 @codiesanchez keeping it real this Friday with the relatability we didn't know we needed. Plus that Tylenol revelation? A whole childhood memory unlocked 🫣
+
+#FridayVibes #RelatableContent #FamilyDynamics #ChildhoodMemories #EntrepreneursOfInstagram #RealTalk #FridayFeeling #WeekendMood",success,3,2025-12-22T21:40:58.870557,2025-12-22T21:42:45.518899,,0,3,,,,,,
+DPuaQQHjJsu-2.mp4_podcast,lucysplainyoself,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\officialbenshapiro\DPuaQQHjJsu-2.mp4,"The roadmap to sustainable peace isn't what most people think. @officialbenshapiro breaks down the strategic approach that could actually work for lasting stability in the region.
+
+#peace #israel #gaza #hamas #ceasefire #middleeast #benshapiro #politics #news #currentevents #geopolitics #conflict #solution #strategy",failed,2,2025-12-22T21:47:41.262483,2025-12-22T21:50:22.021073,"Loop stuck - Vision analysis: This appears to be Instagram's main feed screen showing stories at the top and a Ghirardelli post below. There's a ""Video can't be posted"" error message displayed prominently at the top of the screen, which likely explains why the loop recovery failed - the app encountered an issue while trying to post a video. To fix this, the user should dismiss this error message (using the X button) and try reposting the video, possibly checking their internet connection or vide",3,3,2025-12-22T21:52:31.209459,claude_stuck,infrastructure,,,
+DOZPjMXgYZf-2.mp4_podcast,LoomedTwillHook,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\tuckercarlson\DOZPjMXgYZf-2.mp4,"When government mandates replace genuine compassion, @tuckercarlson argues we've lost the plot entirely. Real charity flows from the heart, not from bureaucratic decree. Compassion can't be legislated—it has to be lived.
+
+#TuckerCarlson #Charity #Compassion #Freedom #Truth #Politics #Conservative #FreedomOfChoice #PersonalResponsibility #RealTalk",failed,1,2025-12-22T21:48:40.564265,2025-12-22T21:52:09.565380,"Loop stuck - Vision analysis: This screenshot shows a Google search page with an active keyboard, not Instagram. The user appears to have been redirected away from Instagram entirely, likely due to the loop recovery failure. The keyboard shows predictive text suggestions (""thanks"", ""I"", ""we"") indicating the user was in the middle of typing something.
+
+This suggests the Instagram session may have crashed or been terminated, forcing the user to a different app or browser. To fix this, the user sho",3,3,2025-12-22T21:53:30.507494,claude_stuck,infrastructure,,,
+DFDM1VHNfHi-2.mp4_podcast,LockedVaultDuster,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\tonyrobbins\DFDM1VHNfHi-2.mp4,"The wisdom drop everyone's been waiting for just landed 🎯 @tonyrobbins brought the heat and this episode is absolutely packed with game-changing insights you won't want to miss. Drop 'TONY' in the comments to catch the full conversation!
+
+#TonyRobbins #Podcast #Motivation #SelfDevelopment #PersonalGrowth #Mindset #Success #Inspiration #PodcastEpisode #MustWatch",success,3,2025-12-22T21:48:49.565233,2025-12-22T21:50:56.612122,,2,3,2025-12-22T21:53:39.507154,,,,,
+DPXUiWlExg7-1.mp4_podcast,HollowedBoneVessels,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\russellbrand\DPXUiWlExg7-1.mp4,"Russell Brand (@russellbrand) finds this discussion particularly compelling
+
+#russellbrand #podcast #podcastclips #interesting #discussion #commentary #culture #media #politics #truth #awareness #conscious #awakening #community",failed,3,2025-12-22T21:49:08.037493,2025-12-22T21:54:12.152641,"Max steps reached - Vision analysis: This shows Instagram's ""New reel"" creation screen with a selected video (1:19 duration) of someone laughing wearing a white hoodie. The user is in the posting flow with ""POST STORY REEL"" options visible at the bottom, but hasn't completed sharing the reel yet. Since the caption was entered but share wasn't clicked after 30 steps, the user likely got stuck in the creation process or experienced a technical issue - they should try tapping ""REEL"" to complete the",3,3,2025-12-22T21:54:00.397018,claude_stuck,infrastructure,,,
+CgHkoIbj-84-2.mp4_podcast,FrozenGearSmoker,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\impacttheory\CgHkoIbj-84-2.mp4,"@fastingmd breaks down the science of syncing fasting with your menstrual cycle in this week's Women of Impact episode with @lisabilyeu. Learn how working with your body's natural rhythms—instead of against them—can optimize energy, sleep quality, and hormone balance. Full conversation available now on @impacttheory 👆
+
+#WomenOfImpact #IntermittentFasting #HormonalHealth #MenstrualCycle #WomensHealth #FastingForWomen #HormoneBalance #CycleSyncing #HealthOptimization #WellnessJourney #BioHacking #WomensWellness",failed,0,2025-12-22T21:50:41.835400,2025-12-22T21:54:10.904508,"Loop stuck - Vision analysis: The screen shows the Instagram home feed with stories at the top and a post from ""pbd.podcast"" featuring someone named ""TO SIR JOHN"" in what appears to be a podcast recording setup. There's a progress bar visible under one of the stories indicating an ongoing upload, with text ""Keep Instagram open to finish posting..."" which suggests a story or post is still being uploaded. The loop recovery failure is likely due to a network connectivity issue or the app being back",3,3,2025-12-22T21:55:34.104097,claude_stuck,infrastructure,,,
+DQC2OhHEqDh-1.mp4_podcast,filbertthesmasher,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\jayshetty\DQC2OhHEqDh-1.mp4,"Emma Watson drops wisdom that hits different 💭
+
+@jayshetty sits down with Emma Watson in his latest episode and this moment right here? Pure perspective.
+
+Full conversation available now on all podcast platforms + YouTube. Link in bio to tune in.
+
+#emmawatson #quote #inspiration #motivation",success,2,2025-12-22T21:52:03.205673,2025-12-22T21:56:37.341870,,2,3,2025-12-22T21:56:53.149332,,,,,
+DPKChnfjwbO-1.mp4_podcast,FallenBarkSwitch,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\officialbenshapiro\DPKChnfjwbO-1.mp4,"Ben Shapiro (@officialbenshapiro) cuts straight to the heart of modern masculinity with a question that challenges conventional thinking.
+
+#benshapiro #conservative #masculinity #whatmakesaman #modernman #traditionalism #values #culture #debate #manhood #identity #responsibility",failed,2,2025-12-22T21:45:53.852217,2025-12-22T21:50:12.627219,"Loop stuck - Vision analysis: This shows a normal Instagram feed home screen with stories at the top and a post from the ""wasted"" account visible. There are no error messages, login prompts, or ""action blocked"" notifications visible on screen. The loop recovery failure likely occurred during an automated action that has already completed or timed out, as the app appears to be functioning normally and displaying content.",1,3,,action_blocked,account,,,
+DJXQN1dOc59-1.mp4_podcast,EmptyFuelMatrix,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\michaeljknowles\DJXQN1dOc59-1.mp4,"@michaeljknowles thinks someone needs a history lesson – and a one-way ticket on the Mayflowers 📦⛴️
+
+#MichaelKnowles #Conservative #Politics #PoliticalHumor #DailyWire #America #Mayflower #History #PoliticalCommentary #RightWing #ConservativeMedia",failed,4,2025-12-22T21:53:42.410109,2025-12-22T21:57:46.201276,"Max steps reached - Vision analysis: This shows the main Instagram feed/home screen, indicating the user is logged in and browsing normally. The post attempt appears to have failed silently without any visible error messages or blocking notifications. The user should try initiating the posting process again by tapping the ""+"" button, as the previous attempt seems to have been interrupted or timed out without completing.",3,3,2025-12-22T21:58:32.353952,claude_stuck,infrastructure,,,
+DJsYxpvzPea-1.mp4_podcast,daisochunks,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\jordanbpetersonfans\DJsYxpvzPea-1.mp4,"The question on everyone's mind after watching this thought-provoking moment from jordan.b.peterson. What's your take on his perspective here? 
+
+Credit to @jordanbpetersonfans for sharing this powerful content 🔥🔥
+
+#jordanpeterson #jordanpetersonquotes #jordanbpeterson #jordanbpetersonquotes #psychology #lifelessons #tellthetruth #tellthetruthtuesday #speaktruth #speaktruthtopower #12rulesforlife #12morerulesforlife #societyfeelings #jordanpetersononsociety #bookstagram #googleads #marketingdigital #personality",failed,1,2025-12-22T21:55:07.964584,2025-12-22T21:59:01.060193,"Loop stuck - Vision analysis: This appears to be Instagram's main feed screen showing stories at the top and a video post from user ""daisochunks"" below. There are no visible error messages, login screens, or ""action blocked"" warnings on the interface. The screen looks normal and functional, so the loop recovery failure may be related to background network connectivity or data loading issues rather than any obvious user-facing problem.",2,3,2025-12-22T21:59:57.906695,action_blocked,account,,,
+DRKmOdZjyVZ-1.mp4_podcast,contibonit,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\lewishowes\DRKmOdZjyVZ-1.mp4,"@lewishowes reminds us that releasing what no longer serves us opens the door to instant peace and healing. The transformative power of boundaries becomes clear when we have the courage to walk away from what isn't aligned with our highest good. 
+
+What did letting go feel like for you? Drop your experience below to inspire someone who needs to hear this today 🙏
+
+#boundaries #lettinggo #innerpeace #healing #personalgrowth #selfcare #mentalhealth #emotionalhealing #peacefulmind #growthmindset #selfimprovement #motivation #inspiration",failed,2,2025-12-22T21:56:47.390403,2025-12-22T22:01:02.253142,"Loop stuck - Vision analysis: This screenshot shows Instagram's main feed with several stories at the top and a Marvel post visible. There's a notification banner that says ""Keep Instagram open to finish posting..."" with a progress bar, indicating a post upload is currently in progress or stalled.
+
+The loop recovery likely failed because the posting process got interrupted or stuck - possibly due to network issues or the app being backgrounded. The user should keep Instagram open and wait for th",3,3,2025-12-22T22:01:39.788376,claude_stuck,infrastructure,,,
+DQrAgahDS9S-1.mp4_podcast,ClosedCircuitMute,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\restispolitics\DQrAgahDS9S-1.mp4,"The media empire series everyone's talking about 📺 @restispolitics dives deep into Rupert Murdoch's extraordinary story across their must-watch mini-series. First four episodes available exclusively for TRIP+ members right now.
+
+#RestIsPolitics #RupertMurdoch #MediaMogul #PodcastSeries #TRIPPlus #BritishPolitics #MediaEmpire #PoliticalPodcast #MustWatch #Documentary",success,4,2025-12-22T21:50:44.148199,2025-12-22T21:53:54.409547,,0,3,,,,,,
+DRdO39kkpxr-2.mp4_podcast,bondsgoldengun,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\megynkellyshow\DRdO39kkpxr-2.mp4,"The truth might be closer than we think 👁️ @walterkirn joins @megynkellyshow to discuss UFOs, non-human intelligence, and the revelations that could be coming our way. Full conversation available now on YouTube.com/MegynKelly
+
+#megynkellyshow #ufo #aliens #nonhumanintelligence #disclosure #ufonews #interview #podcast",failed,1,2025-12-22T21:57:06.310838,2025-12-22T21:59:31.336837,"Max steps reached - Vision analysis: This shows the Instagram story creation screen in the ""Add to story"" flow. The user is in the ""Recents"" section viewing media files, with a video selected (2:49 duration, appears to be from SiriusXM). The post likely failed because the user reached the 30-step limit while navigating through the story creation interface without actually completing the posting process - they would need to add the selected media to their story and tap ""Share"" to complete the pos",3,3,2025-12-22T22:01:56.245292,claude_stuck,infrastructure,,,
+DFyi96YycmQ-1.mp4_podcast,blackietheblackest,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\tigerbelly\DFyi96YycmQ-1.mp4,"Brad Williams and Bobby dive into a surprisingly deep conversation about dwarfism and life expectancy statistics that you didn't know you needed to hear 👀
+
+Via @tigerbelly
+
+#tigerbelly #dwarfism #littlepeople",failed,3,2025-12-22T21:57:11.158837,2025-12-22T21:59:30.356583,"Loop stuck - Vision analysis: This appears to be a Google search page with an active keyboard, not the Instagram app. The screen shows a Google search bar at the top and a QWERTY keyboard at the bottom with predictive text suggestions (""thanks"", ""I"", ""we""). 
+
+This suggests the loop recovery failed because the automation navigated away from Instagram entirely, possibly due to a redirect or app crash. To fix this, the automation would need to navigate back to the Instagram app and restart the post",3,3,2025-12-22T22:02:01.107673,claude_stuck,infrastructure,,,
+DLs6WTXhYTW-2.mp4_podcast,basilthymeoregano,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\charliekirk1776\DLs6WTXhYTW-2.mp4,"A powerful reflection on patriotism and partnership from @charliekirk1776's wife as she shares what makes this Independence Day deeply personal for their family.
+
+She expresses profound gratitude for a husband whose dedication to America goes beyond celebration—it's a daily commitment to defending the freedoms written into our Constitution. His passion for this country, she notes, reminds us all why the right to speak freely matters, even when we disagree.
+
+The imperfections don't cancel the beauty of a nation built on protected liberties: voice, worship, home, and hope. That's the real reason to celebrate.
+
+Her message closes with gratitude to God for freedom, for America, and for a partner who gives everything to preserve both.
+
+#america #fourthofjuly #independenceday #freedom #constitution #patriotism #usa #marriagegoals #redwhiteandblue #gratitude",success,4,2025-12-22T21:54:04.489899,2025-12-22T21:59:55.508460,,0,3,,,,,,
+DI114VkPww8-2.mp4_podcast,AgedWalnutThrones,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\russellbrand\DI114VkPww8-2.mp4,"Through fame came access, but not fulfillment. @russellbrand reflects on how external transformation and celebrity status brought an abundance of physical intimacy that ultimately left his spirit empty—a powerful reminder that sacred connections can't be replaced by mere availability, no matter how the world perceives you.
+
+#RussellBrand #SpiritualJourney #InnerPeace #Authenticity #SelfReflection #Consciousness #PersonalGrowth #SacredLiving #DeepThoughts #Wisdom #SpiritualAwakening #MentalHealth #SelfAwareness #Mindfulness #RealTalk",success,4,2025-12-22T22:01:34.294527,2025-12-22T22:04:50.544593,,2,3,2025-12-22T22:06:24.214218,,,,,
+DOfxA-hkfM_-1.mp4_podcast,speckles_is_here,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\dave.asprey\DOfxA-hkfM_-1.mp4,"Dave Asprey (@dave.asprey) sat down with Dr. Phil and dropped some serious wisdom about meditation practices that actually work. The biohacking pioneer breaks down why traditional approaches miss the mark and what high-performers do differently. This conversation challenges everything you thought you knew about mental training.
+
+#drphil #podcast #daveasprey #heavilymeditated #biohacking #meditation #mentalhealth #selfimprovement #mindset #wellness #performance #podcasting",failed,3,2025-12-22T22:02:21.024628,2025-12-22T22:08:37.755396,"Max steps reached - Vision analysis: This shows a normal Instagram feed/home screen with stories at the top and a post from @kingryan visible. There are no error messages, popups, or ""action blocked"" warnings visible on the screen.
+
+The post likely failed because the automated process reached its maximum step limit (30 steps) before completing the posting workflow. The user would need to manually navigate to the posting interface and complete the share action that was left incomplete.",3,3,2025-12-22T22:07:10.975927,action_blocked,account,,,
+DPPFF6mCHBt-2.mp4_podcast,rushhourresponse,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\2bears.1cave\DPPFF6mCHBt-2.mp4,"James Gunn breaks down exactly what makes David Corenswet the perfect Superman — it all comes down to that authentic farm boy energy. Full episode with @2bears.1cave
+
+#2Bears1Cave #2Bears #superman #jamesgunn",failed,2,2025-12-22T22:06:02.309481,2025-12-22T22:07:18.342438,Exception: Device 98.98.125.37:21301 never appeared in ADB devices list after 60s,3,3,2025-12-22T22:10:52.243532,adb_timeout,infrastructure,,,
+DFrLXKgO8NX-2.mp4_podcast,redcarelesscrocs,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\thejrecompanion\DFrLXKgO8NX-2.mp4,"The controversy surrounding Joe Rogan's side of the Kamala Harris interview story gets addressed head-on as he clarifies what actually happened during negotiations detailed in a recent campaign book.
+
+""They keep pretending I lied... They NEVER agreed to do the show""
+
+Discussed with Dan Richards on The Joe Rogan Experience Episode 2267
+
+Link to full episode in bio and episode links highlight
+
+Credit: @thejrecompanion
+
+Follow @dedunking
+Follow @joerogan
+
+#danrichards #joerogan #jre2267 #thejrecompanion #jre #jredanrichards #joeroganpodcast #joeroganexperience",failed,4,2025-12-22T22:05:14.213812,2025-12-22T22:06:32.915068,Exception: Device 98.98.125.37:21156 never appeared in ADB devices list after 60s,3,3,2025-12-22T22:10:04.171975,adb_timeout,infrastructure,,,
+DPXKpoZAQ7b-1.mp4_podcast,ogtylerguy,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\tuckercarlson\DPXKpoZAQ7b-1.mp4,"Tucker Carlson (@tuckercarlson) raises a question that blurs the line between technology and theology: could artificial intelligence be something beyond circuits and code? He explores whether we're dealing with forces that transcend the material world.
+
+#ai #artificialintelligence #technology #spirituality #consciousness #future #philosophy #tech #deepthoughts #existential #humanity #digital #metaphysical #tuckercarlson",success,1,2025-12-22T21:59:11.119297,2025-12-22T22:04:27.672429,,0,3,,,,,,
+DRunuAqEf3r-1.mp4_podcast,milkyjersey.trainer,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\ultimatehumanpod\DRunuAqEf3r-1.mp4,"@dj_shipley85 reveals the raw truth about building unbreakable mental fortitude through deliberate discomfort. 
+
+In this powerful conversation with @ultimatehumanpod, he explains why cold exposure and pushing beyond perceived limits creates a type of strength most people never access.
+
+The difference between average and elite isn't genetics:
+✔️ It's willpower.
+✔️ It's resilience.
+✔️ It's refusing to stop when your mind is screaming to.
+
+Real transformation happens in the moments when everyone around you keeps going while their minds beg them to quit—that's where internal strength is forged.
+
+👇🏻Comment ""DJ"" and we'll send you the link to watch the full episode.
+
+#mentaltoughness #discipline #resilience #mindset #nevergiveup #pushyourlimits #eliteperformance #operator #specialforces #navyseal #coldplunge #motivation",failed,3,2025-12-22T21:59:40.421030,2025-12-22T22:03:23.941028,"Max steps reached - Vision analysis: This screenshot shows the Instagram home feed with stories at the top and a video post from ""milkyjersey.trainer"" currently playing. There are no visible error messages, popups, or ""action blocked"" warnings on the screen.
+
+The post likely failed because Instagram detected automated behavior after 30 steps were reached, triggering an internal limit rather than showing a user-facing error. To fix this, the user would need to wait some time before attempting to ",1,3,,action_blocked,account,,,
+DFCjmuGqhFW-1.mp4_podcast,markatetwobananas,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\foundr\DFCjmuGqhFW-1.mp4,"Tom Bilyeu spent years grinding behind the scenes before making his mark. That relentless drive? It's what separates dreamers from doers. @foundr breaks down how staying in the game long enough changes everything.
+
+#entrepreneur #entrepreneurship #success #motivation #business #inspiration #mindset #goals #motivationalquotes #successquotes #entrepreneurlife #businessmindset #hustlehard #foundrmag",success,1,2025-12-22T21:59:41.379993,2025-12-22T22:02:33.497172,,0,3,,,,,,
+DKas1AStxPB-2.mp4_podcast,marblebasecase,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\shawnryanclipped\DKas1AStxPB-2.mp4,"The future of warfare isn't what you think—and Steve Kwast breaks down exactly why in this mind-bending conversation. When a retired Lieutenant General starts talking about weapons that transcend conventional thinking, you listen. This clip captures the moment that changes everything.
+
+Via @shawnryanclipped
+
+#ShawnRyanShow #SRS #SteveKwast #MilitaryStrategy #NationalSecurity #DefenseTechnology #FutureWarfare #Leadership #Military #Podcast #Veterans #SpaceForce #Innovation #StrategicThinking",success,0,2025-12-22T22:06:19.782909,2025-12-22T22:12:43.772464,,2,3,2025-12-22T22:11:09.738712,,,,,
+DRMpEs3jA-8-2.mp4_podcast,lupethelooper,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\askvinh\DRMpEs3jA-8-2.mp4,"The gap between your expertise and how others see you? That's determined by how well you communicate.
+
+Technical brilliance means nothing if you can't articulate your value. @askvinh breaks down why strong communication skills are the bridge between what you know and what people actually recognize in you.
+
+Want to close that gap? Drop CHAT below for access to a free 2-hour training that'll transform how you express your expertise.
+
+@jayshetty
+
+#communication #communicationskills #communicationtips #personaldevelopment #selfimprovement #publicspeaking #confidence #socialskills #careergrowth #professionaldevelopment #leadership #success",success,2,2025-12-22T22:01:12.303068,2025-12-22T22:08:14.032245,,0,3,,,,,,
+DHq8QA6vobX-1.mp4_podcast,FusedMercurySpike,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\timferriss\DHq8QA6vobX-1.mp4,"What separates the truly immortal from everyone else? According to Richard Taylor of @wetaworkshop, it's the ones who create and teach—passing knowledge forward so the next generation can carry it further.
+
+The craft itself doesn't matter. Just start building. Start teaching. Leave something behind.
+
+@timferriss dives deep into this philosophy in his full interview with Taylor—available now on Apple Podcasts, Spotify, YouTube, and everywhere you listen.
+
+#TimFerriss #RichardTaylor #WetaWorkshop #CreativeProcess #Legacy #Teaching #Creativity #PodcastClips #Immortality #Knowledge #NextGeneration #MakeSomething #Artists #Craftsmen #Wisdom",success,1,2025-12-22T22:05:48.338287,2025-12-22T22:09:49.629713,,1,3,2025-12-22T22:10:38.294409,,,,,
+DRx1vnMD4vh-2.mp4_podcast,DarkLichenCoded,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\lewishowes\DRx1vnMD4vh-2.mp4,"A daily dose of self-worth wisdom from @lewishowes ✨
+
+""I deserve everything I could possibly want.""
+
+Tag someone who's ready to claim what's theirs ⭐️🙏
+
+#affirmations #dailyaffirmation #positivity #selflove #selfworth #mindset #manifestation #goodvibes #motivation #inspiration #personalgrowth #believeinyourself #youdeserveit #positivevibes #mindsetmatters",failed,3,2025-12-22T22:09:44.283217,2025-12-22T22:12:41.588257,"Loop stuck - Vision analysis: The screen shows Instagram's main feed with stories at the top and a post about ""The power of composition"" featuring the golden ratio. There's an error popup stating ""Video can't be posted"" with an X to close it. This indicates a failed video upload attempt, likely due to file format issues, size limits, or network connectivity problems - tapping the X to dismiss the error and retrying the upload would be the next logical step.",3,3,2025-12-22T22:14:34.211672,claude_stuck,infrastructure,,,
+DKSoQ_bR_0u-1.mp4_podcast,choice.jonestown,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\tuckercarlson\DKSoQ_bR_0u-1.mp4,"Glenn Greenwald calls out the irony of Jake Tapper suddenly ""revealing"" what he'd been helping to hide all along. @tuckercarlson breaks down the contradiction.
+
+#GlennGreenwald #JakeTapper #MediaHypocrisy #TuckerCarlson #PoliticalCommentary #NewsAnalysis #MediaBias #Journalism",failed,1,2025-12-22T22:04:37.744843,2025-12-22T22:09:19.289858,"Loop stuck - Vision analysis: This shows a normal Instagram feed/home screen with stories at the top and a post from ""oldmemesarchive"" visible. There are no error messages, popups, or ""action blocked"" warnings displayed on screen. The loop recovery failure likely occurred during a background process or automated action that isn't reflected in the current UI state - the user would need to retry their intended action or check their internet connection.",1,3,,action_blocked,account,,,
+DLuvIJaRmFf-1.mp4_podcast,BrokenRockPace,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\tuckercarlson\DLuvIJaRmFf-1.mp4,"Watch @tuckercarlson sit down with Iran's president in this unprecedented conversation.
+
+Stream the full interview exclusively at TuckerCarlson.com
+
+#TuckerCarlson #Iran #President #Interview #News #Politics #WorldLeaders #Journalism #Breaking #Exclusive",failed,4,2025-12-22T22:10:33.555368,2025-12-22T22:14:42.611220,"Max steps reached - Vision analysis: This screen shows the Instagram Reels feed with a video playing from user ""vindiesel"". At the bottom, there's a ""Sharing to Reels..."" progress indicator, suggesting an upload is in progress or has stalled. The post likely failed because the upload process got stuck or timed out after reaching the maximum retry attempts - the user should try canceling the current upload and restarting the sharing process.",3,3,2025-12-22T22:15:23.493349,claude_stuck,infrastructure,,,
+DRLEC9Djm0H-2.mp4_podcast,ApexStratagem,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\thediaryofaceopodcast\DRLEC9Djm0H-2.mp4,"What if the supplement industry's favorite sleep solution doesn't actually work the way you think?
+
+Matthew Walker breaks down the uncomfortable truth about magnesium and sleep that most people don't know—the majority of magnesium forms can't even penetrate the blood-brain barrier to impact your sleep centers.
+
+This changes everything about how we approach natural sleep remedies.
+
+Via @thediaryofaceopodcast
+
+#sleep #sleeptips #magnesium #supplements #sleepscience #matthewwalker #sleephealth #biohacking #wellness #healthtips #sleephygiene #neuroscience #optimization #podcasts",success,4,2025-12-22T22:06:42.961362,2025-12-22T22:11:20.539781,,0,3,,,,,,
+DIkfI3sJ3NV-2.mp4_podcast,clipsonpodcast,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\theovon\DIkfI3sJ3NV-2.mp4,"Lane Kiffin dropping gems with @theovon 🎯
+
+The Ole Miss coach knows how to keep it real both on and off the field. This conversation hit different.
+
+Credit: @theovon
+
+#theovon #lanekiffin #olemiss #collegefootball #football #podcast #coach #sports #cfb #rebels #hottytoddy",success,2,2025-12-22T22:12:21.487070,2025-12-22T22:14:33.264617,,2,3,2025-12-22T22:17:11.417593,,,,,
+DKSE3Zsomw8-2.mp4_podcast,podsnipworks,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\restispolitics\DKSE3Zsomw8-2.mp4,"The fossil fuel industry's PR playbook exposed – @restispolitics breaks down the real numbers behind your energy bills and reveals how Net Zero has been weaponised as a scapegoat. Alastair & Rory cut through the noise to show where your costs are actually coming from.
+
+#NetZero #EnergyBills #FossilFuels #ClimateAction #UKPolitics #PoliticalPodcast #EnergyPolicy #ClimatePolicy #RestIsPolitics #AlastairCampbell #RoryStewart",failed,2,2025-12-22T22:14:43.316693,2025-12-22T22:16:08.253859,Exception: Device 199.190.44.226:24843 never appeared in ADB devices list after 60s,3,3,2025-12-22T22:19:40.170026,adb_timeout,infrastructure,,,
+DOlv77PjYEH-1.mp4_podcast,talkgembytes,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\ryanholiday\DOlv77PjYEH-1.mp4,"A chance encounter with ancient philosophy changed everything for Ryan Holiday (@ryanholiday). What started as research for a book became a lifelong practice—Stoicism wasn't just something to write about, it became the framework for how he lives. Sometimes the subjects we study end up studying us back.
+
+#stoicism #stoicphilosophy #philosophy #ancientwisdom #personalgrowth #lifelessons #mindset #selfimprovement #dailystoic #stoic #philosophyoflife #wisdom #mentalhealth #mindfulness",success,3,2025-12-22T22:15:23.775479,2025-12-22T22:17:33.522250,,2,3,2025-12-22T22:20:13.731535,,,,,
+CtrtuyWtSrp-1.mp4_podcast,castreelworks,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\moreplatesmoredates\CtrtuyWtSrp-1.mp4,"@moreplatesmoredates breaks down how your brain manufactures dopamine and norepinephrine in under a minute. These chemical pathways are exactly what the @gorillamindenergy formula targets—amplifying dopaminergic and adrenergic neurotransmission for sharper focus, sustained energy, and better stress management.
+
+#dopamine #norepinephrine #neurotransmitters #neuroscience #brainhealth #focus #energy #mentalperformance #biohacking #supplements #nootropics #gorillamindenergy #moreplatesmoredates",success,1,2025-12-22T22:09:29.352409,2025-12-22T22:13:47.897179,,0,3,,,,,,
+DROCCvVD3Q7-1.mp4_podcast,viraltalkfeed,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\drmikeclips\DROCCvVD3Q7-1.mp4,"The preacher curl station debate: finally settled 💪 @drmikeclips breaks down why lengthened tension makes this bench worth your time at the gym
+
+#preachercurls #benchpress #armworkout #gymequipment #fitnesstips #workouttips #trainingtips #musclegrowth #armsworkout #bicepworkout #gymmotivation #fitnessmotivation #workoutmotivation #gymtips #exercisetips",failed,4,2025-12-22T22:16:30.946007,2025-12-22T22:19:33.110373,"Max steps reached - Vision analysis: The screen shows Instagram Reels with a ""Sharing to Reels..."" progress indicator at the bottom, suggesting the post is still in the process of uploading. There are no visible error messages, blocks, or login prompts - the account appears to be logged in and functioning normally. The post likely failed due to a network timeout or connection issue during the upload process, and retrying the share or checking the internet connection would likely resolve it.",3,3,2025-12-22T22:21:20.886054,claude_stuck,infrastructure,,,
+DNGza9aycdY-1.mp4_podcast,reelpodsector,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\joeroganexperience\DNGza9aycdY-1.mp4,"Ralph Barbosa sits down with Joe Rogan (@joeroganexperience) to talk comedy, life, and everything in between. The rising comic is taking over with his new special ""Ralph Barbosa: Planet Bosa"" dropping August 8th on Hulu. Catch him bringing the heat on his ""Bean Without A Cause"" theater tour. 🎤 @ralphbarbosa03
+
+Tour dates: www.barbosacomedy.com
+
+#JoeRogan #JRE #RalphBarbosa #Podcast #Comedy #StandUpComedy #Comedian #PlanetBosa #Hulu #JoeRoganExperience",failed,1,2025-12-22T22:16:35.996310,2025-12-22T22:18:48.765073,"Loop stuck - Vision analysis: This appears to be a Google search page with the keyboard open, not the Instagram app. The screen shows a Google search bar at the top and a QWERTY keyboard at the bottom with predictive text suggestions (""thanks"", ""I"", ""we"").
+
+This suggests the loop recovery failed because the automation navigated away from Instagram entirely, possibly due to a redirect or app switching issue. To fix this, the automation would need to return to the Instagram app and restart the pos",3,3,2025-12-22T22:21:25.951716,claude_stuck,infrastructure,,,
+DEd2Hjdu_f9-2.mp4_podcast,apodwavecentral,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\tigerbelly\DEd2Hjdu_f9-2.mp4,"Michael Bay's name keeps popping up and @tigerbelly isn't letting it go 👀 Episode 483 dives right back into the saga
+
+#tigerbelly ep. 483 #michaelbay #moviestars #standupcomedy",failed,3,2025-12-22T22:12:51.634015,2025-12-22T22:19:16.792608,"Max steps reached - Vision analysis: This shows a normal Instagram feed screen with stories at the top and a post from k.mbappe visible. There are no error messages, popups, or ""action blocked"" warnings displayed on the screen.
+
+The post likely failed because Instagram detected automated behavior after 30 steps were reached, triggering their anti-spam measures even though no visible error is shown. The user would need to wait and try posting manually later, or check if there are any hidden restr",1,3,,action_blocked,account,,,
+DHllITcuVy1-2.mp4_podcast,micdropchannel,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\michaeljknowles\DHllITcuVy1-2.mp4,"Michael J. Knowles (@michaeljknowles) proves why dialogue matters more than monologue 🎯
+
+The back-and-forth is where the magic happens. When two minds engage instead of just one person talking at you, that's when real insight breaks through. This is exactly what separates compelling content from background noise.
+
+#MichaelJKnowles #Conversation #Dialogue #Podcast #PodcastClips #Discussion #DeepTalk #RealTalk #Engagement #ContentCreation",success,0,2025-12-22T22:12:53.851271,2025-12-22T22:16:47.419041,,0,3,,,,,,
+C-BRJM_ynX--2.mp4_podcast,viralmicstudio,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\theproblemdavesmith\C-BRJM_ynX--2.mp4,"The Bitcoin Conference just dropped a clip that's getting everyone talking 👀
+
+@theproblemdavesmith breaks down why most people completely miss the point about Bitcoin's real value proposition. It's not what you think.
+
+Worth the watch if you've ever wondered what separates believers from skeptics.
+
+🎥 @theproblemdavesmith
+
+#Bitcoin #BitcoinConference #Crypto #Cryptocurrency #BTC #BitcoinNews #CryptoNews #DigitalCurrency #BlockchainTechnology #CryptoEducation #BitcoinEducation",failed,3,2025-12-22T22:20:53.498519,2025-12-22T22:24:36.257262,"Max steps reached - Vision analysis: The screen shows Instagram's Reels interface with a Bears football victory video being shared. At the bottom, there's a ""Sharing to Reels..."" progress indicator that appears to be stuck or loading indefinitely. The post likely failed due to a network connectivity issue or Instagram server problem - the user should try canceling and re-attempting the share, or check their internet connection.",3,3,2025-12-22T22:25:43.450667,claude_stuck,infrastructure,,,
+DP14rUcj_5x-1.mp4_podcast,quickpodsnaps,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\hormozi\DP14rUcj_5x-1.mp4,"Logan Paul's wrestling empire didn't happen by accident. The calculated business moves behind his WWE dominance get broken down by @hormozi, and the strategy is next level 🎯
+
+#loganpaul #alexhormozi #wwe #podcast",success,2,2025-12-22T22:23:29.776837,2025-12-22T22:30:03.426594,,1,3,2025-12-22T22:28:19.713889,,,,,
+DNq5l1HS48Z-2.mp4_podcast,podmindstudio,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\markmanson\DNq5l1HS48Z-2.mp4,"@markmanson breaks down the psychology behind our tendency to blame everything but ourselves—and why it's sabotaging our growth. He's not holding back on what actually keeps people stuck versus what moves them forward.
+
+Playing the victim might feel justified, but it's a trap that prevents real progress. These lessons cut through the excuses and deliver the accountability check most people need to hear.
+
+#MarkManson #SelfImprovement #PersonalDevelopment #MentalHealth #SelfAwareness #Motivation #Accountability #GrowthMindset #LifeLessons #Mindset #SelfHelp #Psychology #PersonalGrowth #Inspiration",success,4,2025-12-22T22:14:52.654978,2025-12-22T22:19:02.001079,,0,3,,,,,,
+DQmapWSkgy7-1.mp4_podcast,talktrackhub,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\theadamcarollashow\DQmapWSkgy7-1.mp4,"Tom Hanks just spilled some unexpected tea about a certain politician, and Adam Carolla caught every second of it 👀 When Hollywood's nicest guy has THIS to say, you know it's worth the listen.
+
+Credit: @theadamcarollashow
+
+#AdamCarolla #TomHanks #PodcastClips #HollywoodTalk #CelebrityInterview #RealTalk #PodcastCommunity #UnfilteredConversation",failed,2,2025-12-22T22:23:31.255846,2025-12-22T22:26:54.750487,"Loop stuck - Vision analysis: The screen shows the main Instagram feed with stories at the top and a Barstool Sports post visible. There's a notification bar saying ""Keep Instagram open to finish posting..."" which indicates a post is currently in progress or stuck in the posting process. The loop recovery failure likely occurred because the posting process got interrupted or stalled - keeping the app open and waiting for it to complete, or force-closing and reopening Instagram might resolve the ",3,3,2025-12-22T22:28:21.196740,claude_stuck,infrastructure,,,
+DOjBKZhESVX-2.mp4_podcast,kianinspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\shawnryanclipped\DOjBKZhESVX-2.mp4,"---
+
+The battlefield most people don't see—spiritual warfare gets real in this one. @shawnryanclipped pulls a powerful moment where Shawn opens up about the unseen forces at play in our lives. This perspective hits different when you understand what's really at stake.
+
+#shawnryanshow #shawnryan #spiritualwarfare #faith #warfare #christianity #god #jesus #spiritual #truth #awareness #mindset #consciousness #protection #prayer #belief #strength #warrior #battle #podcasts #viral",success,0,2025-12-22T22:16:57.481591,2025-12-22T22:21:16.736478,,0,3,,,,,,
+DMUEf4dt7Ly-1.mp4_podcast,sonbankinspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\theovon\DMUEf4dt7Ly-1.mp4,"Jimmy Crute getting the recognition he deserves from @theovon 🥬
+
+#UFC #MMA #TheoVon #JimmyCrute #PastTimesPodcast #Comedy #Podcast",success,3,2025-12-22T22:17:43.576199,2025-12-22T22:21:08.279892,,0,3,,,,,,
+DQpoXCTDoNJ-1.mp4_podcast,walinspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\chriswillx\DQpoXCTDoNJ-1.mp4,"Women have become increasingly unapproachable, and the data backs it up. @chriswillx breaks down why modern dating dynamics have shifted so dramatically and what it means for male-female interactions today.
+
+#dating #datingadvice #menshealth #mensmentalhealth #masculinity #relationships #relationshipadvice #datingtips #moderndating #menspsychology #chriswilliamson #podcast",failed,1,2025-12-22T22:30:40.520310,2025-12-22T22:31:56.582968,Exception: Device 128.14.109.187:20755 never appeared in ADB devices list after 60s,3,3,2025-12-22T22:35:30.455232,adb_timeout,infrastructure,,,
+DQ49_Pakz4--2.mp4_podcast,emersoninspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\megynkellyshow\DQ49_Pakz4--2.mp4,"The music industry's power players just got called out—and @johnrichofficial isn't holding back. He sits down with @megynkellyshow to expose the ""whack job communists"" controlling record labels from the top down. This is the raw conversation you won't hear anywhere else. Full episode available now through the link in bio.
+
+#megynkellyshow",failed,4,2025-12-22T22:26:11.681169,2025-12-22T22:30:37.148335,"Loop stuck - Vision analysis: This screenshot shows the Instagram feed with a post from @wendimclendoncovey visible, and there's a notification at the top indicating ""Keep Instagram open to finish posting..."" with a progress bar. The user appears to be in the middle of posting content (likely a story or post) that hasn't completed yet.
+
+The loop recovery likely failed because the posting process was interrupted or the app lost connection while uploading content. The user should keep the app open",3,3,2025-12-22T22:31:01.628989,claude_stuck,infrastructure,,,
+C9an2v2St0e-1.mp4_podcast,dennwilsoninspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\hubermanlab\C9an2v2St0e-1.mp4,"Science Q&A session happening live! @hubermanlab teams up with @doctor.brein on July 15 at 4PM PST to tackle viewer questions about health and scientific research. Drop questions in the comments now for a chance to get them answered during the broadcast, or join the live stream tomorrow to ask in real-time. The focus: making science accessible and addressing what the community wants to know most.
+
+@hubermanlab @stanford.med @stanford @simonandschuster @doctor.brein
+
+#neuroscience #science #ciencia #neurociencia",failed,1,2025-12-22T22:19:32.142777,2025-12-22T22:22:52.258347,"Loop stuck - Vision analysis: The screen shows a normal Instagram feed with stories at the top and a Netflix post visible. There are no error messages, popups, or ""action blocked"" warnings displayed. However, there's a notification at the top saying ""Keep Instagram open to finish posting..."" with a progress bar, indicating a post is currently being uploaded but may be stalled or slow to complete.
+
+The loop recovery failure likely occurred during the posting process shown in that notification bar",1,3,,action_blocked,account,,,
+DObewNqifao-2.mp4_podcast,neilinspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\codiesanchez\DObewNqifao-2.mp4,"The camera-shy boyfriend vs. the content creator girlfriend – a tale as old as Instagram itself 📸 @codiesanchez caught this rare moment with her social-media-averse partner who makes the exception for love ❤️
+
+#couplegoals #relationships #contentcreator #behindthescenes #relationshiphumor #couplelife #instagram #socialmedia",failed,1,2025-12-22T22:23:02.329989,2025-12-22T22:26:26.042333,"Loop stuck - Vision analysis: This shows Instagram's ""New reel"" creation screen in the Recents section, displaying a 15-second video ready to be posted. There are no visible error messages, warnings, or account issues on the screen. The failure likely occurred during the actual posting process rather than in the creation interface - the user should try tapping the post/share button again or check their internet connection.",3,3,2025-12-22T22:27:54.365210,claude_stuck,infrastructure,,,
+DD0X8FCyKdx-1.mp4_podcast,angelapenninspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\tonyrobbins\DD0X8FCyKdx-1.mp4,"The ripple effect of generosity knows no bounds when compassion meets action 💫 
+
+@tonyrobbins' foundation just wrapped three decades of transforming lives worldwide—from nurturing emerging leaders across continents to rallying volunteers in the fight against hunger. Every person touched, every community uplifted, every barrier broken represents the power of collective giving 🌎
+
+The momentum isn't slowing down. Their vision? Reach further, serve deeper, change more lives.
+
+Three ways to be part of this movement:
+🩵 Contribute to the cause
+🙌 Give your time as a volunteer  
+📚 Explore their programs
+
+Because as Tony says, The Secret to Living is Giving ✨
+
+Ready to create change? Head to @thetonyrobbinsfoundation (link in bio) or thetonyrobbinsfoundation.org
+
+#secrettolivingisgiving #forceforgood",failed,3,2025-12-22T22:33:28.122470,2025-12-22T22:34:43.954254,Exception: Device 128.14.109.187:20087 never appeared in ADB devices list after 60s,3,3,2025-12-22T22:38:27.943509,adb_timeout,infrastructure,,,
+DBG9CGpplDm-1.mp4_podcast,carlooinspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\simonsinek\DBG9CGpplDm-1.mp4,"The friendship between President Biden and Senator John McCain proves something powerful: real progress happens when we can look past our differences. @simonsinek sat down with Joe Biden to uncover the wisdom from five decades in public service—lessons that transcend politics and speak to how we all navigate relationships, disagreement, and getting meaningful work done.
+
+#leadership #friendship #respect #joebiden #johnmccain #publicservice #bipartisanship #unity #politics #wisdom #leadershiplessons #collaboration #civildiscourse #relationships",success,0,2025-12-22T22:21:26.802151,2025-12-22T22:25:28.348824,,0,3,,,,,,
+DKex-zUMVGu-2.mp4_podcast,penelopeinspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\russellbrand\DKex-zUMVGu-2.mp4,".@russellbrand hits the big five-oh and the love from around the world keeps pouring in 🎂✨ Half a century of impact, inspiration, and keeping it real. Here's to the next chapter 🙌
+
+#RussellBrand #Birthday #50thBirthday #HalfCentury #BirthdayVibes #Celebration #Milestone #Legend #Icon #BirthdayLove #Gratitude #ThankYou #BirthdayCelebration",failed,1,2025-12-22T22:28:02.267707,2025-12-22T22:32:32.684463,"Max steps reached - Vision analysis: This shows the Instagram Reels feed displaying a meme post about university friends. The screen appears to be functioning normally with standard engagement metrics (385K likes, 178 comments) and sharing options visible at the bottom. There are no visible error messages, blocks, or login prompts - the failure to complete posting likely occurred in a different part of the app flow that isn't shown in this screenshot of the main feed.",3,3,2025-12-22T22:32:52.203418,claude_stuck,infrastructure,,,
+DKzqcHoxT5b-2.mp4_podcast,yourmindfuelpod,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\theadamcarollashow\DKzqcHoxT5b-2.mp4,"When nature's most elegant bird faces off against a half-dozen apex predators, the outcome might surprise you 🏆 Watch this incredible standoff play out! via @theadamcarollashow
+
+#crane #tigers #nature #wildlife #animalfight #survival #naturevideo #wildlifevideo #animalvideo #viralanimals #naturelovers #wildlifeplanet",success,3,2025-12-22T22:26:14.105432,2025-12-22T22:30:31.012197,,1,3,2025-12-22T22:31:04.064018,,,,,
+DLcpJEXAfNA-2.mp4_podcast,weriseandruminate,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\legionofskanks\DLcpJEXAfNA-2.mp4,"Mark Normand and Tristan absolutely delivered on this one 🔥 Catch the full conversation with @legionofskanks – new episode streaming everywhere now! Link in bio‼️
+
+@marknormand @tristanisacomedian #LegionOfSkanks #comedy #podcast #standupcomedy #comedian",success,0,2025-12-22T22:25:38.418576,2025-12-22T22:29:51.477456,,0,3,,,,,,
+DQ7Kab0AQZl-1.mp4_podcast,madalynnnaustininspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\podsaveamerica\DQ7Kab0AQZl-1.mp4,"Chuck Schumer's got everyone on a very familiar hunt, according to @podsaveamerica's latest take on the situation.
+
+#PodSaveAmerica #CrookedMedia #ChuckSchumer #GovernmentShutdown",failed,2,2025-12-22T22:34:06.006352,2025-12-22T22:35:22.010773,Exception: Device 128.14.109.187:21270 never appeared in ADB devices list after 60s,3,3,2025-12-22T22:39:05.067896,adb_timeout,infrastructure,,,
+DRfqqCiDqI5-1.mp4_podcast,itsempoweringhour,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\legionofskanks\DRfqqCiDqI5-1.mp4,"When Tony Yayo pulls up to help break down the wildest male obsessions, @legionofskanks delivers exactly what you'd expect 🎯 @tonyyayo @ciphasounds @_hunter_s_thompson brought the energy to this one - catch the full chaos exclusively on @gasdigital (use code LOS for that discount 👀) #LegionOfSkanks #GaSDigital",failed,2,2025-12-22T22:27:04.824366,2025-12-22T22:31:39.152767,"Loop stuck - Vision analysis: This shows a normal Instagram feed displaying stories at the top and a video post from ""itsempoweringhour"" about the Legion of Skanks podcast. There are no visible error messages, login screens, or action blocked warnings on the current screen.
+
+The loop recovery failure likely occurred during a previous posting attempt that isn't visible in this current feed view. To diagnose the issue, you'd need to navigate to the posting flow or check for any pending uploads in ",1,3,,action_blocked,account,,,
+DRhqnJjgBi--1.mp4_podcast,theheartandhustles,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\podsaveamerica\DRhqnJjgBi--1.mp4,"Representative Summer Lee weighs in on the congressional shake-up as Marjorie Taylor Greene steps down—@podsaveamerica catches her unfiltered take on what this means for Capitol Hill.
+
+#PodSaveAmerica #CrookedMedia #MarjorieTaylorGreene",success,1,2025-12-22T22:37:23.822888,2025-12-22T22:41:05.379336,,2,3,2025-12-22T22:42:23.663635,,,,,
+DDODleIvFBG-1.mp4_podcast,mysparkedthoughts,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\realalexclark\DDODleIvFBG-1.mp4,"The man who sculpted the most iconic Victoria's Secret Angels just dropped knowledge on @realalexclark's Culture Apothecary podcast 🔥 @justin_gelband—the legendary trainer behind 16 years of Candice Swanepoel's VS runway dominance, plus sessions with Alessandra Ambrosio and Adriana Lima—reveals his definitive top 5 VS Angels list: Gisele, Adriana, Alessandra, Doutzen, and Candice. Plot twist? He's only personally trained 3 of them. The JG Method creator (who also whips Taylor Swift into shape) breaks down what actually goes into Angel-level fitness, the mind-body connection secrets, and why his holistic approach gets results that last. Comment 'BODY' for the full episode link!
+
+#VictoriasSecret #VSAngels #FitnessTrainer #CandiceSwanepoel #AlessandraAmbrosio #AdrianaLima #GiseleBundchen #DoutzenKroes #TaylorSwift #WorkoutMotivation #FitnessPodcast #CultureApothecary #JGMethod #ModelFitness #AngelTraining",success,2,2025-12-22T22:30:13.493457,2025-12-22T22:36:34.466908,,0,3,,,,,,

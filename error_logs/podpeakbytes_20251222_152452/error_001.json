@@ -1,0 +1,23 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T15:25:48.533901",
+  "account": "podpeakbytes",
+  "job_id": "DHcZBHVA0yfi-3.mp4_viral",
+  "phase": "execute_job",
+  "error_type": "Exception",
+  "error_class": "Exception",
+  "error_message": "API error: 524 - ",
+  "error_repr": "Exception('API error: 524 - ')",
+  "stack_trace": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\parallel_worker.py\", line 230, in execute_posting_job\n    success = poster.post(video_path, caption, humanize=True)\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 944, in post\n    self.upload_video(video_path)\n    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 901, in upload_video\n    upload_result = self.client.upload_file_to_phone(self.phone_id, resource_url)\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\geelark_client.py\", line 211, in upload_file_to_phone\n    return self._request(\"/open/v1/phone/uploadFile\", {\n           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n        \"id\": phone_id,\n        ^^^^^^^^^^^^^^^\n        \"fileUrl\": file_url\n        ^^^^^^^^^^^^^^^^^^^\n    })\n    ^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\geelark_client.py\", line 102, in _request\n    raise Exception(f\"API error: {resp.status_code} - {resp.text}\")\nException: API error: 524 - \n",
+  "context": {
+    "video_path": "C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\campaigns\\viral\\grq\\DHcZBHVA0yfi-3.mp4",
+    "caption": "Prove the saying: How will you make money work for you today?",
+    "worker_id": 3,
+    "appium_url": "http://127.0.0.1:4729",
+    "full_traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\parallel_worker.py\", line 230, in execute_posting_job\n    success = poster.post(video_path, caption, humanize=True)\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 944, in post\n    self.upload_video(video_path)\n    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 901, in upload_video\n    upload_result = self.client.upload_file_to_phone(self.phone_id, resource_url)\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\geelark_client.py\", line 211, in upload_file_to_phone\n    return self._request(\"/open/v1/phone/uploadFile\", {\n           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n        \"id\": phone_id,\n        ^^^^^^^^^^^^^^^\n        \"fileUrl\": file_url\n        ^^^^^^^^^^^^^^^^^^^\n    })\n    ^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\geelark_client.py\", line 102, in _request\n    raise Exception(f\"API error: {resp.status_code} - {resp.text}\")\nException: API error: 524 - \n"
+  },
+  "ui_elements_count": 0,
+  "ui_elements": null,
+  "screenshot_file": "error_logs\\podpeakbytes_20251222_152452\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\podpeakbytes_20251222_152452\\error_001_page_source.xml"
+}

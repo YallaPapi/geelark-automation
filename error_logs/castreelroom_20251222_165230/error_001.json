@@ -1,0 +1,223 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T16:53:13.758278",
+  "account": "castreelroom",
+  "job_id": "h7rcWIl8GLiA-1.mp4",
+  "phase": "navigation",
+  "error_type": "terminated",
+  "error_class": "Exception",
+  "error_message": "terminated: we disabled your account",
+  "error_repr": "Exception('terminated: we disabled your account')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "step": 0,
+    "caption": "capitalism brain worms rotting my skull while i chase the bag in my dreams 24/7 help",
+    "video_path": "C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\campaigns\\viral\\grq\\h7rcWIl8GLiA-1.mp4",
+    "video_uploaded": true,
+    "caption_entered": false,
+    "share_clicked": false
+  },
+  "ui_elements_count": 18,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "Menu",
+      "id": "",
+      "bounds": "[636,42][706,107]",
+      "center": [
+        671,
+        74
+      ],
+      "clickable": true
+    },
+    {
+      "text": " ",
+      "desc": "",
+      "id": "",
+      "bounds": "[688,60][693,90]",
+      "center": [
+        690,
+        75
+      ],
+      "clickable": false
+    },
+    {
+      "text": "We disabled your account",
+      "desc": "We disabled your account",
+      "id": "",
+      "bounds": "[156,380][565,427]",
+      "center": [
+        360,
+        403
+      ],
+      "clickable": false
+    },
+    {
+      "text": "You no longer have access to castreelroom",
+      "desc": "You no longer have access to castreelroom",
+      "id": "",
+      "bounds": "[150,440][570,470]",
+      "center": [
+        360,
+        455
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Account disabled on December 18, 2025",
+      "desc": "Account disabled on December 18, 2025",
+      "id": "",
+      "bounds": "[187,483][533,510]",
+      "center": [
+        360,
+        496
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Why this happened",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,584][250,620]",
+      "center": [
+        138,
+        602
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Your account, or activity on it, doesn’t follow our Community Standards.",
+      "desc": "Your account, or activity on it, doesn’t follow our Community Standards.",
+      "id": "",
+      "bounds": "[26,646][694,701]",
+      "center": [
+        360,
+        673
+      ],
+      "clickable": false
+    },
+    {
+      "text": "What this means",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,740][222,776]",
+      "center": [
+        124,
+        758
+      ],
+      "clickable": false
+    },
+    {
+      "text": "No one can see or find your account and you can't use it. All your information will be permanently deleted.",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,802][694,857]",
+      "center": [
+        360,
+        829
+      ],
+      "clickable": false
+    },
+    {
+      "text": "You cannot request another review of this decision.",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,883][694,913]",
+      "center": [
+        360,
+        898
+      ],
+      "clickable": false
+    },
+    {
+      "text": "What you can do",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,952][221,988]",
+      "center": [
+        123,
+        970
+      ],
+      "clickable": false
+    },
+    {
+      "text": "You can download your information so that you have a copy of what you shared on Instagram.",
+      "desc": "You can download your information so that you have a copy of what you shared on Instagram.",
+      "id": "",
+      "bounds": "[26,1014][694,1069]",
+      "center": [
+        360,
+        1041
+      ],
+      "clickable": false
+    },
+    {
+      "text": "download your information",
+      "desc": "",
+      "id": "",
+      "bounds": "[109,1014][370,1043]",
+      "center": [
+        239,
+        1028
+      ],
+      "clickable": true
+    },
+    {
+      "text": "More information",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,1095][233,1131]",
+      "center": [
+        129,
+        1113
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,1144][720,1223]",
+      "center": [
+        360,
+        1183
+      ],
+      "clickable": true
+    },
+    {
+      "text": "How we made this decision",
+      "desc": "How we made this decision",
+      "id": "",
+      "bounds": "[85,1166][694,1202]",
+      "center": [
+        389,
+        1184
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Log out",
+      "id": "",
+      "bounds": "[26,1278][694,1347]",
+      "center": [
+        360,
+        1312
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Log out",
+      "desc": "",
+      "id": "",
+      "bounds": "[324,1298][396,1328]",
+      "center": [
+        360,
+        1313
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\castreelroom_20251222_165230\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\castreelroom_20251222_165230\\error_001_page_source.xml"
+}

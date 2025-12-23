@@ -1,0 +1,22 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T15:15:39.367223",
+  "account": "noellekellyinspired",
+  "job_id": "KUjMY58YfSxi-1.mp4_viral",
+  "phase": "execute_job",
+  "error_type": "Exception",
+  "error_class": "Exception",
+  "error_message": "Appium connection failed after 3 attempts: ADB connection lost and reconnect failed",
+  "error_repr": "Exception('Appium connection failed after 3 attempts: ADB connection lost and reconnect failed')",
+  "stack_trace": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\parallel_worker.py\", line 226, in execute_posting_job\n    poster.connect()\n    ~~~~~~~~~~~~~~^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 880, in connect\n    return self._conn.connect()\n           ~~~~~~~~~~~~~~~~~~^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\device_connection.py\", line 472, in connect\n    self.connect_appium()\n    ~~~~~~~~~~~~~~~~~~~^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\device_connection.py\", line 440, in connect_appium\n    raise Exception(f\"Appium connection failed after {retries} attempts: {last_error}\")\nException: Appium connection failed after 3 attempts: ADB connection lost and reconnect failed\n",
+  "context": {
+    "video_path": "C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\campaigns\\viral\\grq\\KUjMY58YfSxi-1.mp4",
+    "caption": "When your personality is as flat as the cash you're flaunting.",
+    "worker_id": 4,
+    "appium_url": "http://127.0.0.1:4731",
+    "full_traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\parallel_worker.py\", line 226, in execute_posting_job\n    poster.connect()\n    ~~~~~~~~~~~~~~^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 880, in connect\n    return self._conn.connect()\n           ~~~~~~~~~~~~~~~~~~^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\device_connection.py\", line 472, in connect\n    self.connect_appium()\n    ~~~~~~~~~~~~~~~~~~~^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\device_connection.py\", line 440, in connect_appium\n    raise Exception(f\"Appium connection failed after {retries} attempts: {last_error}\")\nException: Appium connection failed after 3 attempts: ADB connection lost and reconnect failed\n"
+  },
+  "ui_elements_count": 0,
+  "ui_elements": null,
+  "screenshot_file": null
+}

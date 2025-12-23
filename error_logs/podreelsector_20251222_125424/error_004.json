@@ -1,0 +1,539 @@
+{
+  "error_id": "error_004",
+  "timestamp": "2025-12-22T12:58:18.950872",
+  "account": "podreelsector",
+  "job_id": "DI6mE7PtOhc-1.mp4",
+  "phase": "ai_analysis",
+  "error_type": "analysis_error",
+  "error_class": "ValueError",
+  "error_message": "JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see:\n- Video uploaded: True\n- Caption entered: True \n- Share but",
+  "error_repr": "ValueError('JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see:\\n- Video uploaded: True\\n- Caption entered: True \\n- Share but')",
+  "stack_trace": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 213, in parse_response\n    return json.loads(text)\n           ~~~~~~~~~~^^^^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\__init__.py\", line 346, in loads\n    return _default_decoder.decode(s)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 345, in decode\n    obj, end = self.raw_decode(s, idx=_w(s, 0).end())\n               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 363, in raw_decode\n    raise JSONDecodeError(\"Expecting value\", s, err.value) from None\njson.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 275, in analyze\n    return self.parse_response(text)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 215, in parse_response\n    raise ValueError(f\"JSON parse failed: {e}. Response: {text[:100]}\")\nValueError: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see:\n- Video uploaded: True\n- Caption entered: True \n- Share but\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 1026, in post\n    action = self.analyze_ui(elements, caption)\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 870, in analyze_ui\n    return self._analyzer.analyze(\n           ~~~~~~~~~~~~~~~~~~~~~~^\n        elements=elements,\n        ^^^^^^^^^^^^^^^^^^\n    ...<3 lines>...\n        share_clicked=self.share_clicked\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 282, in analyze\n    raise ValueError(f\"JSON parse failed after {retries} attempts: {e}\")\nValueError: JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see:\n- Video uploaded: True\n- Caption entered: True \n- Share but\n",
+  "context": {
+    "step": 10,
+    "caption": "The secret weapon elite athletes don't talk about? It's hiding in plain sight on your face. @2bears.",
+    "video_uploaded": true
+  },
+  "ui_elements_count": 47,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "content_view",
+      "bounds": "[0,130][720,1233]",
+      "center": [
+        360,
+        681
+      ],
+      "clickable": true
+    },
+    {
+      "text": "The secret weapon elite athletes don't talk about? It's hiding in plain sight on your face. @2bears.1cave reveals how a simple Nasal Dilator Kit is transforming workout performance for thousands across the country—better oxygen flow means pushing past old limits and bouncing back quicker than ever. Link in bio to level up. 📌\n\n#nasalbreathing #nasaldialator #trending",
+      "desc": "",
+      "id": "caption_input_text_view",
+      "bounds": "[26,130][694,348]",
+      "center": [
+        360,
+        239
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,361][166,429]",
+      "center": [
+        96,
+        395
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Hashtags",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[66,390][153,416]",
+      "center": [
+        109,
+        403
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[179,361][267,429]",
+      "center": [
+        223,
+        395
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Poll",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[219,390][254,416]",
+      "center": [
+        236,
+        403
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[280,361][403,429]",
+      "center": [
+        341,
+        395
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Prompt",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[320,390][390,416]",
+      "center": [
+        355,
+        403
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,442][720,521]",
+      "center": [
+        360,
+        481
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Tag people",
+      "desc": "",
+      "id": "title",
+      "bounds": "[85,465][239,498]",
+      "center": [
+        162,
+        481
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,521][720,687]",
+      "center": [
+        360,
+        604
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Add location",
+      "id": "metadata_location_row",
+      "bounds": "[0,521][720,687]",
+      "center": [
+        360,
+        604
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "metadata_location_first_row",
+      "bounds": "[0,521][720,599]",
+      "center": [
+        360,
+        560
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Add location",
+      "desc": "",
+      "id": "location_label",
+      "bounds": "[85,521][655,599]",
+      "center": [
+        370,
+        560
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,612][209,674]",
+      "center": [
+        117,
+        643
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Metro Cafe",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[79,638][183,664]",
+      "center": [
+        131,
+        651
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[222,612][405,674]",
+      "center": [
+        313,
+        643
+      ],
+      "clickable": true
+    },
+    {
+      "text": "El Segundo",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[275,638][379,664]",
+      "center": [
+        327,
+        651
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[418,612][536,674]",
+      "center": [
+        477,
+        643
+      ],
+      "clickable": true
+    },
+    {
+      "text": "LAX",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[471,638][510,664]",
+      "center": [
+        490,
+        651
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[549,612][720,674]",
+      "center": [
+        634,
+        643
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Downtown, El Segundo",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[602,638][720,664]",
+      "center": [
+        661,
+        651
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,687][720,766]",
+      "center": [
+        360,
+        726
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Rename audio",
+      "desc": "",
+      "id": "title",
+      "bounds": "[85,710][276,743]",
+      "center": [
+        180,
+        726
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Original Audio",
+      "desc": "",
+      "id": "inline_subtitle",
+      "bounds": "[276,712][642,741]",
+      "center": [
+        459,
+        726
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,766][720,902]",
+      "center": [
+        360,
+        834
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Add AI label",
+      "desc": "",
+      "id": "title",
+      "bounds": "[85,786][231,819]",
+      "center": [
+        158,
+        802
+      ],
+      "clickable": false
+    },
+    {
+      "text": "We require you to label certain realistic content that's made with AI. Learn more",
+      "desc": "We require you to label certain realistic content that's made with AI. Learn more",
+      "id": "subtitle",
+      "bounds": "[85,819][583,882]",
+      "center": [
+        334,
+        850
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "toggle",
+      "bounds": "[609,793][694,845]",
+      "center": [
+        651,
+        819
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,912][720,991]",
+      "center": [
+        360,
+        951
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Audience",
+      "desc": "",
+      "id": "title",
+      "bounds": "[85,935][220,968]",
+      "center": [
+        152,
+        951
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Everyone",
+      "desc": "",
+      "id": "inline_subtitle",
+      "bounds": "[220,937][642,966]",
+      "center": [
+        431,
+        951
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Also share on…",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,991][720,1035]",
+      "center": [
+        360,
+        1013
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Threads",
+      "desc": "",
+      "id": "title",
+      "bounds": "[99,1055][425,1127]",
+      "center": [
+        262,
+        1091
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "toggle",
+      "bounds": "[609,1065][694,1117]",
+      "center": [
+        651,
+        1091
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,1147][720,1233]",
+      "center": [
+        360,
+        1190
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Facebook",
+      "desc": "",
+      "id": "title",
+      "bounds": "[99,1167][425,1233]",
+      "center": [
+        262,
+        1200
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "toggle",
+      "bounds": "[609,1177][694,1229]",
+      "center": [
+        651,
+        1203
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "share_button_container",
+      "bounds": "[0,1233][720,1362]",
+      "center": [
+        360,
+        1297
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Save draft",
+      "id": "save_draft_button",
+      "bounds": "[26,1257][347,1329]",
+      "center": [
+        186,
+        1293
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Save draft",
+      "desc": "",
+      "id": "",
+      "bounds": "[129,1278][243,1308]",
+      "center": [
+        186,
+        1293
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Share",
+      "id": "share_button",
+      "bounds": "[373,1257][694,1329]",
+      "center": [
+        533,
+        1293
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Share",
+      "desc": "",
+      "id": "",
+      "bounds": "[501,1278][566,1308]",
+      "center": [
+        533,
+        1293
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar",
+      "bounds": "[0,39][720,130]",
+      "center": [
+        360,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar_new_title_container",
+      "bounds": "[0,39][707,130]",
+      "center": [
+        353,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Back",
+      "id": "action_bar_button_back",
+      "bounds": "[0,39][91,130]",
+      "center": [
+        45,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "New reel",
+      "desc": "New reel",
+      "id": "action_bar_title",
+      "bounds": "[117,65][255,104]",
+      "center": [
+        186,
+        84
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\podreelsector_20251222_125424\\error_004_screenshot.png",
+  "page_source_file": "error_logs\\podreelsector_20251222_125424\\error_004_page_source.xml"
+}

@@ -1,0 +1,528 @@
+{
+  "error_id": "error_009",
+  "timestamp": "2025-12-22T13:37:39.807168",
+  "account": "DarkLichenCoded",
+  "job_id": "CsuLODIgLb9-1.mp4",
+  "phase": "ai_analysis",
+  "error_type": "analysis_error",
+  "error_class": "ValueError",
+  "error_message": "JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see:\n- Video uploaded: True\n- Caption entered: True\n- Share butt",
+  "error_repr": "ValueError('JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see:\\n- Video uploaded: True\\n- Caption entered: True\\n- Share butt')",
+  "stack_trace": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 213, in parse_response\n    # Generic code block\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\__init__.py\", line 346, in loads\n    return _default_decoder.decode(s)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 345, in decode\n    obj, end = self.raw_decode(s, idx=_w(s, 0).end())\n               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 363, in raw_decode\n    raise JSONDecodeError(\"Expecting value\", s, err.value) from None\njson.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 275, in analyze\n    Action dictionary with action, element_index, text, reason, etc.\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 215, in parse_response\n    if len(parts) >= 3:\nValueError: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see:\n- Video uploaded: True\n- Caption entered: True\n- Share butt\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 1026, in post\n    action = self.analyze_ui(elements, caption)\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 870, in analyze_ui\n    return self._analyzer.analyze(\n           ~~~~~~~~~~~~~~~~~~~~~~^\n        elements=elements,\n        ^^^^^^^^^^^^^^^^^^\n    ...<3 lines>...\n        share_clicked=self.share_clicked\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 282, in analyze\n    caption=caption,\n            ^^^^^^^^\nValueError: JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see:\n- Video uploaded: True\n- Caption entered: True\n- Share butt\n",
+  "context": {
+    "step": 14,
+    "caption": "Basketball star Brittney Griner has had a change of heart about standing during the national anthem,",
+    "video_uploaded": true
+  },
+  "ui_elements_count": 46,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "content_view",
+      "bounds": "[0,130][720,1233]",
+      "center": [
+        360,
+        681
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Basketball star Brittney Griner has had a change of heart about standing during the national anthem, according to @candaceshow 👀\n\n#BrittneyGriner #NationalAnthem #WNBA #Sports #Basketball #Patriotism #America #Conservative #Politics",
+      "desc": "",
+      "id": "caption_input_text_view",
+      "bounds": "[26,141][694,305]",
+      "center": [
+        360,
+        223
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,318][166,386]",
+      "center": [
+        96,
+        352
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Hashtags",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[66,347][153,373]",
+      "center": [
+        109,
+        360
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[179,318][326,386]",
+      "center": [
+        252,
+        352
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Link a reel",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[219,347][313,373]",
+      "center": [
+        266,
+        360
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[339,318][427,386]",
+      "center": [
+        383,
+        352
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Poll",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[379,347][414,373]",
+      "center": [
+        396,
+        360
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[440,318][563,386]",
+      "center": [
+        501,
+        352
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Prompt",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[480,347][550,373]",
+      "center": [
+        515,
+        360
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[576,318][701,386]",
+      "center": [
+        638,
+        352
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Rewrite",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[616,347][688,373]",
+      "center": [
+        652,
+        360
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,399][720,478]",
+      "center": [
+        360,
+        438
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Tag people",
+      "desc": "",
+      "id": "title",
+      "bounds": "[85,422][239,455]",
+      "center": [
+        162,
+        438
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,478][720,632]",
+      "center": [
+        360,
+        555
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Add location",
+      "id": "metadata_location_row",
+      "bounds": "[0,478][720,632]",
+      "center": [
+        360,
+        555
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "metadata_location_first_row",
+      "bounds": "[0,478][720,556]",
+      "center": [
+        360,
+        517
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Add location",
+      "desc": "",
+      "id": "location_label",
+      "bounds": "[85,478][655,556]",
+      "center": [
+        370,
+        517
+      ],
+      "clickable": false
+    },
+    {
+      "text": "People you share this content with can see the location you tag and view this content on the map.",
+      "desc": "",
+      "id": "map_content_education",
+      "bounds": "[0,556][720,612]",
+      "center": [
+        360,
+        584
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,632][720,711]",
+      "center": [
+        360,
+        671
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Rename audio",
+      "desc": "",
+      "id": "title",
+      "bounds": "[85,655][276,688]",
+      "center": [
+        180,
+        671
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Original Audio",
+      "desc": "",
+      "id": "inline_subtitle",
+      "bounds": "[276,657][642,686]",
+      "center": [
+        459,
+        671
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,711][720,847]",
+      "center": [
+        360,
+        779
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Add AI label",
+      "desc": "",
+      "id": "title",
+      "bounds": "[85,731][231,764]",
+      "center": [
+        158,
+        747
+      ],
+      "clickable": false
+    },
+    {
+      "text": "We require you to label certain realistic content that's made with AI. Learn more",
+      "desc": "We require you to label certain realistic content that's made with AI. Learn more",
+      "id": "subtitle",
+      "bounds": "[85,764][583,827]",
+      "center": [
+        334,
+        795
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "toggle",
+      "bounds": "[609,738][694,790]",
+      "center": [
+        651,
+        764
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,857][720,936]",
+      "center": [
+        360,
+        896
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Audience",
+      "desc": "",
+      "id": "title",
+      "bounds": "[85,880][220,913]",
+      "center": [
+        152,
+        896
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Everyone",
+      "desc": "",
+      "id": "inline_subtitle",
+      "bounds": "[220,882][642,911]",
+      "center": [
+        431,
+        896
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Also share on…",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,936][720,980]",
+      "center": [
+        360,
+        958
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Threads",
+      "desc": "",
+      "id": "title",
+      "bounds": "[99,1000][425,1072]",
+      "center": [
+        262,
+        1036
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "toggle",
+      "bounds": "[609,1010][694,1062]",
+      "center": [
+        651,
+        1036
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,1092][720,1204]",
+      "center": [
+        360,
+        1148
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Facebook",
+      "desc": "",
+      "id": "title",
+      "bounds": "[99,1112][425,1184]",
+      "center": [
+        262,
+        1148
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "toggle",
+      "bounds": "[609,1122][694,1174]",
+      "center": [
+        651,
+        1148
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,1214][720,1233]",
+      "center": [
+        360,
+        1223
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "share_button_container",
+      "bounds": "[0,1233][720,1362]",
+      "center": [
+        360,
+        1297
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Save draft",
+      "id": "save_draft_button",
+      "bounds": "[26,1257][347,1329]",
+      "center": [
+        186,
+        1293
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Save draft",
+      "desc": "",
+      "id": "",
+      "bounds": "[129,1278][243,1308]",
+      "center": [
+        186,
+        1293
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Share",
+      "id": "share_button",
+      "bounds": "[373,1257][694,1329]",
+      "center": [
+        533,
+        1293
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Share",
+      "desc": "",
+      "id": "",
+      "bounds": "[501,1278][566,1308]",
+      "center": [
+        533,
+        1293
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar",
+      "bounds": "[0,39][720,130]",
+      "center": [
+        360,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar_new_title_container",
+      "bounds": "[0,39][634,130]",
+      "center": [
+        317,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Back",
+      "id": "action_bar_button_back",
+      "bounds": "[0,39][91,130]",
+      "center": [
+        45,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "New reel",
+      "desc": "New reel",
+      "id": "action_bar_title",
+      "bounds": "[117,65][255,104]",
+      "center": [
+        186,
+        84
+      ],
+      "clickable": false
+    },
+    {
+      "text": "OK",
+      "desc": "OK",
+      "id": "action_bar_button_text",
+      "bounds": "[634,52][707,130]",
+      "center": [
+        670,
+        91
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\DarkLichenCoded_20251222_133221\\error_009_screenshot.png",
+  "page_source_file": "error_logs\\DarkLichenCoded_20251222_133221\\error_009_page_source.xml"
+}

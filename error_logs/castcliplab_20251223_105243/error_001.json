@@ -1,0 +1,23 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-23T10:53:54.116968",
+  "account": "castcliplab",
+  "job_id": "VFrHww8j9sgv-2.mp4_viral",
+  "phase": "execute_job",
+  "error_type": "AttributeError",
+  "error_class": "AttributeError",
+  "error_message": "'SmartInstagramPoster' object has no attribute 'driver'",
+  "error_repr": "AttributeError(\"'SmartInstagramPoster' object has no attribute 'driver'\")",
+  "stack_trace": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\parallel_worker.py\", line 232, in execute_posting_job\n    success = poster.post(\n        video_path, caption, humanize=True,\n        use_hybrid=config.use_hybrid,\n        ai_fallback=config.ai_fallback\n    )\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 1245, in post\n    action_handlers[action_name](action, elements)\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 688, in _action_open_instagram\n    if self.driver:\n       ^^^^^^^^^^^\nAttributeError: 'SmartInstagramPoster' object has no attribute 'driver'\n",
+  "context": {
+    "video_path": "C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\campaigns\\viral\\grq\\VFrHww8j9sgv-2.mp4",
+    "caption": "She dared to dream differently, and everything changedone bold choice at a time.",
+    "worker_id": 0,
+    "appium_url": "http://127.0.0.1:4723",
+    "full_traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\parallel_worker.py\", line 232, in execute_posting_job\n    success = poster.post(\n        video_path, caption, humanize=True,\n        use_hybrid=config.use_hybrid,\n        ai_fallback=config.ai_fallback\n    )\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 1245, in post\n    action_handlers[action_name](action, elements)\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 688, in _action_open_instagram\n    if self.driver:\n       ^^^^^^^^^^^\nAttributeError: 'SmartInstagramPoster' object has no attribute 'driver'\n"
+  },
+  "ui_elements_count": 0,
+  "ui_elements": null,
+  "screenshot_file": "error_logs\\castcliplab_20251223_105243\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\castcliplab_20251223_105243\\error_001_page_source.xml"
+}

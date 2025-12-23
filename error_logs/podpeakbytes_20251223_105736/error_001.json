@@ -1,0 +1,674 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-23T10:59:51.054320",
+  "account": "podpeakbytes",
+  "job_id": "nq6-l7Z0ZsGZ-4.mp4",
+  "phase": "navigation",
+  "error_type": "max_steps",
+  "error_class": "Exception",
+  "error_message": "Max steps (30) reached",
+  "error_repr": "Exception('Max steps (30) reached')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "max_steps": 30,
+    "video_uploaded": true,
+    "video_selected": false,
+    "caption_entered": false,
+    "share_clicked": false,
+    "caption": "Embrace uncertainty. Growth lives beyond your comfort zone."
+  },
+  "ui_elements_count": 59,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "pog_note_bubble_view",
+      "bounds": "[26,130][170,233]",
+      "center": [
+        98,
+        181
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Make this space yours...",
+      "desc": "",
+      "id": "pog_bubble_text",
+      "bounds": "[39,147][157,210]",
+      "center": [
+        98,
+        178
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "row_profile_header_imageview_frame_layout",
+      "bounds": "[38,184][159,305]",
+      "center": [
+        98,
+        244
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Your profile. No story",
+      "id": "row_profile_header_imageview",
+      "bounds": "[38,184][159,305]",
+      "center": [
+        98,
+        244
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Add to story",
+      "id": "reel_empty_badge",
+      "bounds": "[123,269][159,305]",
+      "center": [
+        141,
+        287
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Gibson",
+      "desc": "",
+      "id": "profile_header_full_name_above_vanity",
+      "bounds": "[196,171][269,198]",
+      "center": [
+        232,
+        184
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "20posts",
+      "id": "profile_header_post_count_front_familiar",
+      "bounds": "[196,198][336,289]",
+      "center": [
+        266,
+        243
+      ],
+      "clickable": true
+    },
+    {
+      "text": "20",
+      "desc": "",
+      "id": "profile_header_familiar_post_count_value",
+      "bounds": "[196,211][226,247]",
+      "center": [
+        211,
+        229
+      ],
+      "clickable": false
+    },
+    {
+      "text": "posts",
+      "desc": "",
+      "id": "profile_header_familiar_post_count_label",
+      "bounds": "[196,247][249,276]",
+      "center": [
+        222,
+        261
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "2followers",
+      "id": "profile_header_followers_stacked_familiar",
+      "bounds": "[336,198][520,289]",
+      "center": [
+        428,
+        243
+      ],
+      "clickable": true
+    },
+    {
+      "text": "2",
+      "desc": "",
+      "id": "profile_header_familiar_followers_value",
+      "bounds": "[346,211][361,247]",
+      "center": [
+        353,
+        229
+      ],
+      "clickable": false
+    },
+    {
+      "text": "followers",
+      "desc": "",
+      "id": "profile_header_familiar_followers_label",
+      "bounds": "[346,247][432,276]",
+      "center": [
+        389,
+        261
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "22following",
+      "id": "profile_header_following_stacked_familiar",
+      "bounds": "[520,198][694,289]",
+      "center": [
+        607,
+        243
+      ],
+      "clickable": true
+    },
+    {
+      "text": "22",
+      "desc": "",
+      "id": "profile_header_familiar_following_value",
+      "bounds": "[530,211][560,247]",
+      "center": [
+        545,
+        229
+      ],
+      "clickable": false
+    },
+    {
+      "text": "following",
+      "desc": "",
+      "id": "profile_header_familiar_following_label",
+      "bounds": "[530,247][616,276]",
+      "center": [
+        573,
+        261
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Ideas in under 10 seconds\nFollow for more",
+      "desc": "",
+      "id": "profile_header_bio_text",
+      "bounds": "[26,316][694,380]",
+      "center": [
+        360,
+        348
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,400][720,506]",
+      "center": [
+        360,
+        453
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Professional dashboard",
+      "desc": "Professional dashboard entry point",
+      "id": "",
+      "bounds": "[43,417][275,447]",
+      "center": [
+        159,
+        432
+      ],
+      "clickable": false
+    },
+    {
+      "text": "New tools are now available.",
+      "desc": "New tools are now available.",
+      "id": "",
+      "bounds": "[43,447][286,474]",
+      "center": [
+        164,
+        460
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Edit profile",
+      "id": "button_container",
+      "bounds": "[20,506][355,560]",
+      "center": [
+        187,
+        533
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Edit profile",
+      "desc": "",
+      "id": "",
+      "bounds": "[132,517][243,549]",
+      "center": [
+        187,
+        533
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Share profile",
+      "id": "button_container",
+      "bounds": "[365,506][700,560]",
+      "center": [
+        532,
+        533
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Share profile",
+      "desc": "",
+      "id": "",
+      "bounds": "[467,517][597,549]",
+      "center": [
+        532,
+        533
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Create highlight",
+      "id": "create_highlight_button_view",
+      "bounds": "[3,580][154,752]",
+      "center": [
+        78,
+        666
+      ],
+      "clickable": true
+    },
+    {
+      "text": "New",
+      "desc": "",
+      "id": "label",
+      "bounds": "[3,714][154,742]",
+      "center": [
+        78,
+        728
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[154,580][307,755]",
+      "center": [
+        230,
+        667
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "podpeakbytes's story, 1 of 0, Seen.",
+      "id": "",
+      "bounds": "[156,583][307,717]",
+      "center": [
+        231,
+        650
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "podpeakbytes's highlight story at column 1",
+      "id": "avatar_image_view",
+      "bounds": "[181,603][282,704]",
+      "center": [
+        231,
+        653
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Caution",
+      "desc": "",
+      "id": "username",
+      "bounds": "[196,717][265,745]",
+      "center": [
+        230,
+        731
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[307,580][460,755]",
+      "center": [
+        383,
+        667
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "podpeakbytes's story, 2 of 0, Seen.",
+      "id": "",
+      "bounds": "[309,583][460,717]",
+      "center": [
+        384,
+        650
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "podpeakbytes's highlight story at column 2",
+      "id": "avatar_image_view",
+      "bounds": "[334,603][435,704]",
+      "center": [
+        384,
+        653
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Pool",
+      "desc": "",
+      "id": "username",
+      "bounds": "[364,717][404,745]",
+      "center": [
+        384,
+        731
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[460,580][613,755]",
+      "center": [
+        536,
+        667
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "podpeakbytes's story, 3 of 0, Seen.",
+      "id": "",
+      "bounds": "[462,583][613,717]",
+      "center": [
+        537,
+        650
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "podpeakbytes's highlight story at column 3",
+      "id": "avatar_image_view",
+      "bounds": "[487,603][588,704]",
+      "center": [
+        537,
+        653
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Sea Side",
+      "desc": "",
+      "id": "username",
+      "bounds": "[498,717][576,745]",
+      "center": [
+        537,
+        731
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[613,580][720,755]",
+      "center": [
+        666,
+        667
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "podpeakbytes's story, 4 of 0, Seen.",
+      "id": "",
+      "bounds": "[615,583][720,717]",
+      "center": [
+        667,
+        650
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "podpeakbytes's highlight story at column 4",
+      "id": "avatar_image_view",
+      "bounds": "[640,603][720,704]",
+      "center": [
+        680,
+        653
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Lifting",
+      "desc": "",
+      "id": "username",
+      "bounds": "[661,717][718,745]",
+      "center": [
+        689,
+        731
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Grid view",
+      "id": "profile_tab_icon_view",
+      "bounds": "[0,771][360,849]",
+      "center": [
+        180,
+        810
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[360,771][720,849]",
+      "center": [
+        540,
+        810
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "profile_tab_icon_view",
+      "bounds": "[360,771][720,849]",
+      "center": [
+        540,
+        810
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Gibson at row 1, column 1",
+      "id": "image_button",
+      "bounds": "[0,856][236,1171]",
+      "center": [
+        118,
+        1013
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Gibson at row 1, column 2",
+      "id": "image_button",
+      "bounds": "[242,856][478,1171]",
+      "center": [
+        360,
+        1013
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Gibson at row 1, column 3",
+      "id": "image_button",
+      "bounds": "[484,856][720,1171]",
+      "center": [
+        602,
+        1013
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Gibson at row 2, column 1",
+      "id": "image_button",
+      "bounds": "[0,1177][236,1362]",
+      "center": [
+        118,
+        1269
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Gibson at row 2, column 2",
+      "id": "image_button",
+      "bounds": "[242,1177][478,1362]",
+      "center": [
+        360,
+        1269
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Gibson at row 2, column 3",
+      "id": "image_button",
+      "bounds": "[484,1177][720,1362]",
+      "center": [
+        602,
+        1269
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar",
+      "bounds": "[0,39][720,130]",
+      "center": [
+        360,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar_new_title_container",
+      "bounds": "[0,63][549,105]",
+      "center": [
+        274,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "podpeakbytes",
+      "desc": "podpeakbytes",
+      "id": "action_bar_large_title_auto_size",
+      "bounds": "[26,63][251,105]",
+      "center": [
+        138,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar_title_chevron",
+      "bounds": "[261,66][289,102]",
+      "center": [
+        275,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1284][144,1362]",
+      "center": [
+        72,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[144,1284][288,1362]",
+      "center": [
+        216,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Create",
+      "id": "creation_tab",
+      "bounds": "[288,1284][432,1362]",
+      "center": [
+        360,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[432,1284][576,1362]",
+      "center": [
+        504,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1284][720,1362]",
+      "center": [
+        648,
+        1323
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\podpeakbytes_20251223_105736\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\podpeakbytes_20251223_105736\\error_001_page_source.xml"
+}

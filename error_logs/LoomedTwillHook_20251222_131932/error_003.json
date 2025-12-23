@@ -1,0 +1,550 @@
+{
+  "error_id": "error_003",
+  "timestamp": "2025-12-22T13:21:19.219619",
+  "account": "LoomedTwillHook",
+  "job_id": "DG3fNL5SfUl-2.mp4",
+  "phase": "ai_analysis",
+  "error_type": "analysis_error",
+  "error_class": "ValueError",
+  "error_message": "JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see this is the Instagram home feed with stories at the top and ",
+  "error_repr": "ValueError('JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see this is the Instagram home feed with stories at the top and ')",
+  "stack_trace": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 213, in parse_response\n    # Generic code block\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\__init__.py\", line 346, in loads\n    return _default_decoder.decode(s)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 345, in decode\n    obj, end = self.raw_decode(s, idx=_w(s, 0).end())\n               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 363, in raw_decode\n    raise JSONDecodeError(\"Expecting value\", s, err.value) from None\njson.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 275, in analyze\n    Action dictionary with action, element_index, text, reason, etc.\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 215, in parse_response\n    if len(parts) >= 3:\nValueError: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see this is the Instagram home feed with stories at the top and \n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 1026, in post\n    action = self.analyze_ui(elements, caption)\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 870, in analyze_ui\n    return self._analyzer.analyze(\n           ~~~~~~~~~~~~~~~~~~~~~~^\n        elements=elements,\n        ^^^^^^^^^^^^^^^^^^\n    ...<3 lines>...\n        share_clicked=self.share_clicked\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 282, in analyze\n    caption=caption,\n            ^^^^^^^^\nValueError: JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see this is the Instagram home feed with stories at the top and \n",
+  "context": {
+    "step": 2,
+    "caption": "Bobby Lee's got Hollywood gold with this pitch: a revenge thriller about tracking down his stepdad w",
+    "video_uploaded": true
+  },
+  "ui_elements_count": 48,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "reels tray container",
+      "id": "",
+      "bounds": "[0,116][720,331]",
+      "center": [
+        360,
+        223
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[0,116][183,331]",
+      "center": [
+        91,
+        223
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "loomedtwillhook's story, 0 of 16, Unseen.",
+      "id": "",
+      "bounds": "[0,116][183,292]",
+      "center": [
+        91,
+        204
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "loomedtwillhook's story, 0 of 16, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[22,138][160,276]",
+      "center": [
+        91,
+        207
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Add to story",
+      "id": "reel_empty_badge",
+      "bounds": "[121,237][170,286]",
+      "center": [
+        145,
+        261
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Your story",
+      "desc": "",
+      "id": "username",
+      "bounds": "[44,292][140,318]",
+      "center": [
+        92,
+        305
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[183,116][366,331]",
+      "center": [
+        274,
+        223
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "legacy555321's story, 1 of 16, Seen.",
+      "id": "",
+      "bounds": "[183,116][366,292]",
+      "center": [
+        274,
+        204
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "legacy555321's story, 1 of 16, Seen.",
+      "id": "avatar_image_view",
+      "bounds": "[205,138][343,276]",
+      "center": [
+        274,
+        207
+      ],
+      "clickable": false
+    },
+    {
+      "text": "legacy555321",
+      "desc": "",
+      "id": "username",
+      "bounds": "[210,292][339,318]",
+      "center": [
+        274,
+        305
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[366,116][549,331]",
+      "center": [
+        457,
+        223
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "erinclarke908's story, 2 of 16, Unseen.",
+      "id": "",
+      "bounds": "[366,116][549,292]",
+      "center": [
+        457,
+        204
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "erinclarke908's story, 2 of 16, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[388,138][526,276]",
+      "center": [
+        457,
+        207
+      ],
+      "clickable": false
+    },
+    {
+      "text": "erinclarke908",
+      "desc": "",
+      "id": "username",
+      "bounds": "[394,292][521,318]",
+      "center": [
+        457,
+        305
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[549,116][720,331]",
+      "center": [
+        634,
+        223
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "_guerasexi's story, 3 of 16, Unseen.",
+      "id": "",
+      "bounds": "[549,116][720,292]",
+      "center": [
+        634,
+        204
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "_guerasexi's story, 3 of 16, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[571,138][709,276]",
+      "center": [
+        640,
+        207
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[590,230][691,289]",
+      "center": [
+        640,
+        259
+      ],
+      "clickable": true
+    },
+    {
+      "text": "_guerasexi",
+      "desc": "",
+      "id": "username",
+      "bounds": "[592,292][689,318]",
+      "center": [
+        640,
+        305
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Suggested for you",
+      "desc": "Suggested for you",
+      "id": "netego_carousel_title",
+      "bounds": "[23,344][225,374]",
+      "center": [
+        124,
+        359
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "suggested_entity_card_container",
+      "bounds": "[23,396][469,841]",
+      "center": [
+        246,
+        618
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Stewie",
+      "desc": "",
+      "id": "suggested_entity_card_name",
+      "bounds": "[208,685][284,713]",
+      "center": [
+        246,
+        699
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Followed by swami_gi_baba_gi",
+      "desc": "",
+      "id": "suggested_entity_card_context",
+      "bounds": "[104,716][387,740]",
+      "center": [
+        245,
+        728
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Follow",
+      "desc": "Follow Stewie",
+      "id": "suggested_user_card_follow_button",
+      "bounds": "[43,769][449,821]",
+      "center": [
+        246,
+        795
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Dismiss",
+      "id": "dismiss_button",
+      "bounds": "[423,396][469,442]",
+      "center": [
+        446,
+        419
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "suggested_entity_card_container",
+      "bounds": "[489,396][720,841]",
+      "center": [
+        604,
+        618
+      ],
+      "clickable": true
+    },
+    {
+      "text": "_guerasexi",
+      "desc": "",
+      "id": "suggested_entity_card_name",
+      "bounds": "[652,685][720,713]",
+      "center": [
+        686,
+        699
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Followed by swami_gi_baba_gi + 2 more",
+      "desc": "",
+      "id": "suggested_entity_card_context",
+      "bounds": "[528,716][720,740]",
+      "center": [
+        624,
+        728
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Follow",
+      "desc": "Follow _guerasexi",
+      "id": "suggested_user_card_follow_button",
+      "bounds": "[509,769][720,821]",
+      "center": [
+        614,
+        795
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "shikhardofficial posted a photo 22 hours ago",
+      "id": "row_feed_profile_header",
+      "bounds": "[0,867][720,952]",
+      "center": [
+        360,
+        909
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,867][79,952]",
+      "center": [
+        39,
+        909
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile picture of shikhardofficial",
+      "id": "row_feed_photo_profile_imageview",
+      "bounds": "[24,885][73,934]",
+      "center": [
+        48,
+        909
+      ],
+      "clickable": false
+    },
+    {
+      "text": "shikhardofficial  ",
+      "desc": "shikhardofficial  ",
+      "id": "row_feed_photo_profile_name",
+      "bounds": "[79,867][525,908]",
+      "center": [
+        302,
+        887
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[79,908][525,952]",
+      "center": [
+        302,
+        930
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Suggested for you",
+      "desc": "Suggested for you",
+      "id": "secondary_label",
+      "bounds": "[79,908][525,952]",
+      "center": [
+        302,
+        930
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Follow",
+      "desc": "Follow Shikhar Dhawan",
+      "id": "inline_follow_button",
+      "bounds": "[525,883][649,935]",
+      "center": [
+        587,
+        909
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More actions for this post",
+      "id": "media_option_button",
+      "bounds": "[649,870][720,949]",
+      "center": [
+        684,
+        909
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "media_group",
+      "bounds": "[0,952][720,1266]",
+      "center": [
+        360,
+        1109
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Suggested Photo by Shikhar Dhawan, 0 likes, 307 comments",
+      "id": "row_feed_photo_imageview",
+      "bounds": "[0,952][720,1266]",
+      "center": [
+        360,
+        1109
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,39][79,130]",
+      "center": [
+        39,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar_title_view",
+      "bounds": "[79,59][641,110]",
+      "center": [
+        360,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Instagram Home Feed",
+      "id": "title_logo",
+      "bounds": "[256,59][432,110]",
+      "center": [
+        344,
+        84
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "notification",
+      "bounds": "[641,39][720,130]",
+      "center": [
+        680,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1266][144,1344]",
+      "center": [
+        72,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1266][288,1344]",
+      "center": [
+        216,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1266][432,1344]",
+      "center": [
+        360,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1266][576,1344]",
+      "center": [
+        504,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1266][720,1344]",
+      "center": [
+        648,
+        1305
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\LoomedTwillHook_20251222_131932\\error_003_screenshot.png",
+  "page_source_file": "error_logs\\LoomedTwillHook_20251222_131932\\error_003_page_source.xml"
+}

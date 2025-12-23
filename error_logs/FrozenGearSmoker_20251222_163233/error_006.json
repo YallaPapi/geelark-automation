@@ -1,0 +1,451 @@
+{
+  "error_id": "error_006",
+  "timestamp": "2025-12-22T16:40:09.550589",
+  "account": "FrozenGearSmoker",
+  "job_id": "DP3GfMxDIyR-1.mp4",
+  "phase": "ai_analysis",
+  "error_type": "analysis_error",
+  "error_class": "ValueError",
+  "error_message": "JSON parse failed after 3 attempts: JSON parse failed: Could not extract valid JSON. Response: Looking at the current state, I can see:\n- Video uploaded: True\n- Caption entered: False\n- Share but",
+  "error_repr": "ValueError('JSON parse failed after 3 attempts: JSON parse failed: Could not extract valid JSON. Response: Looking at the current state, I can see:\\n- Video uploaded: True\\n- Caption entered: False\\n- Share but')",
+  "stack_trace": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 313, in analyze\n    return self.parse_response(text)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 253, in parse_response\n    raise ValueError(f\"JSON parse failed: Could not extract valid JSON. Response: {text[:100]}\")\nValueError: JSON parse failed: Could not extract valid JSON. Response: Looking at the current state, I can see:\n- Video uploaded: True\n- Caption entered: False\n- Share but\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 1026, in post\n    action = self.analyze_ui(elements, caption)\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 870, in analyze_ui\n    return self._analyzer.analyze(\n           ~~~~~~~~~~~~~~~~~~~~~~^\n        elements=elements,\n        ^^^^^^^^^^^^^^^^^^\n    ...<3 lines>...\n        share_clicked=self.share_clicked\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 320, in analyze\n    raise ValueError(f\"JSON parse failed after {retries} attempts: {e}\")\nValueError: JSON parse failed after 3 attempts: JSON parse failed: Could not extract valid JSON. Response: Looking at the current state, I can see:\n- Video uploaded: True\n- Caption entered: False\n- Share but\n",
+  "context": {
+    "step": 12,
+    "caption": "Medical research has a massive blind spot—and it's costing women their health.\n\nLess than 2% of rese",
+    "video_uploaded": true
+  },
+  "ui_elements_count": 39,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "content_view",
+      "bounds": "[0,139][720,1215]",
+      "center": [
+        360,
+        677
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "cover_photo_preview",
+      "bounds": "[239,162][480,593]",
+      "center": [
+        359,
+        377
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Double tap to edit cover photo",
+      "id": "clip_thumbnail_image",
+      "bounds": "[239,162][480,593]",
+      "center": [
+        359,
+        377
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "clip_thumbnail_layout",
+      "bounds": "[254,531][392,577]",
+      "center": [
+        323,
+        554
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Edit cover",
+      "desc": "",
+      "id": "clip_thumbnail_text",
+      "bounds": "[274,541][372,567]",
+      "center": [
+        323,
+        554
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Write a caption and add hashtags…",
+      "desc": "",
+      "id": "caption_input_text_view",
+      "bounds": "[26,646][694,724]",
+      "center": [
+        360,
+        685
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,737][166,805]",
+      "center": [
+        96,
+        771
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Hashtags",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[66,766][153,792]",
+      "center": [
+        109,
+        779
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[179,737][267,805]",
+      "center": [
+        223,
+        771
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Poll",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[219,766][254,792]",
+      "center": [
+        236,
+        779
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[280,737][403,805]",
+      "center": [
+        341,
+        771
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Prompt",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[320,766][390,792]",
+      "center": [
+        355,
+        779
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,818][720,897]",
+      "center": [
+        360,
+        857
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Tag people",
+      "desc": "",
+      "id": "title",
+      "bounds": "[85,841][239,874]",
+      "center": [
+        162,
+        857
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,897][720,1139]",
+      "center": [
+        360,
+        1018
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Add location",
+      "id": "metadata_location_row",
+      "bounds": "[0,897][720,1139]",
+      "center": [
+        360,
+        1018
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "metadata_location_first_row",
+      "bounds": "[0,897][720,975]",
+      "center": [
+        360,
+        936
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Add location",
+      "desc": "",
+      "id": "location_label",
+      "bounds": "[85,897][655,975]",
+      "center": [
+        370,
+        936
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,988][209,1050]",
+      "center": [
+        117,
+        1019
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Metro Cafe",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[79,1014][183,1040]",
+      "center": [
+        131,
+        1027
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[222,988][405,1050]",
+      "center": [
+        313,
+        1019
+      ],
+      "clickable": true
+    },
+    {
+      "text": "El Segundo",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[275,1014][379,1040]",
+      "center": [
+        327,
+        1027
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[418,988][536,1050]",
+      "center": [
+        477,
+        1019
+      ],
+      "clickable": true
+    },
+    {
+      "text": "LAX",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[471,1014][510,1040]",
+      "center": [
+        490,
+        1027
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[549,988][720,1050]",
+      "center": [
+        634,
+        1019
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Downtown, El Segundo",
+      "desc": "",
+      "id": "suggestion_text",
+      "bounds": "[602,1014][720,1040]",
+      "center": [
+        661,
+        1027
+      ],
+      "clickable": false
+    },
+    {
+      "text": "People you share this content with can see the location you tag and view this content on the map.",
+      "desc": "",
+      "id": "map_content_education",
+      "bounds": "[0,1063][720,1119]",
+      "center": [
+        360,
+        1091
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,1139][720,1215]",
+      "center": [
+        360,
+        1177
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Rename audio",
+      "desc": "",
+      "id": "title",
+      "bounds": "[85,1162][276,1195]",
+      "center": [
+        180,
+        1178
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Original Audio",
+      "desc": "",
+      "id": "inline_subtitle",
+      "bounds": "[276,1164][642,1193]",
+      "center": [
+        459,
+        1178
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "share_button_container",
+      "bounds": "[0,1215][720,1344]",
+      "center": [
+        360,
+        1279
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Save draft",
+      "id": "save_draft_button",
+      "bounds": "[26,1239][347,1311]",
+      "center": [
+        186,
+        1275
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Save draft",
+      "desc": "",
+      "id": "",
+      "bounds": "[129,1260][243,1290]",
+      "center": [
+        186,
+        1275
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Share",
+      "id": "share_button",
+      "bounds": "[373,1239][694,1311]",
+      "center": [
+        533,
+        1275
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Share",
+      "desc": "",
+      "id": "",
+      "bounds": "[501,1260][566,1290]",
+      "center": [
+        533,
+        1275
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar",
+      "bounds": "[0,48][720,139]",
+      "center": [
+        360,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar_new_title_container",
+      "bounds": "[0,48][707,139]",
+      "center": [
+        353,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Back",
+      "id": "action_bar_button_back",
+      "bounds": "[0,48][91,139]",
+      "center": [
+        45,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "New reel",
+      "desc": "New reel",
+      "id": "action_bar_title",
+      "bounds": "[117,74][255,113]",
+      "center": [
+        186,
+        93
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\FrozenGearSmoker_20251222_163233\\error_006_screenshot.png",
+  "page_source_file": "error_logs\\FrozenGearSmoker_20251222_163233\\error_006_page_source.xml"
+}

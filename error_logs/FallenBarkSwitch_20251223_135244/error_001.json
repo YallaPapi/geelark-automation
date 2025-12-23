@@ -1,0 +1,344 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-23T13:55:40.471952",
+  "account": "FallenBarkSwitch",
+  "job_id": "DL41CvvBJ-i-1.mp4",
+  "phase": "navigation",
+  "error_type": "max_steps",
+  "error_class": "Exception",
+  "error_message": "Max steps (30) reached",
+  "error_repr": "Exception('Max steps (30) reached')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "max_steps": 30,
+    "video_uploaded": true,
+    "video_selected": true,
+    "caption_entered": true,
+    "share_clicked": false,
+    "caption": "The human body wasn't designed to process 30 pounds of industrial seed oils annually — yet that's ex"
+  },
+  "ui_elements_count": 29,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "Reel by fallenbarkswitch. Double tap to play or pause.",
+      "id": "clips_media_component",
+      "bounds": "[0,48][720,1266]",
+      "center": [
+        360,
+        657
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Reel by fallenbarkswitch. Double tap to play or pause.",
+      "id": "clips_video_container",
+      "bounds": "[0,48][720,1266]",
+      "center": [
+        360,
+        657
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "clips_author_info_component",
+      "bounds": "[26,1001][292,1076]",
+      "center": [
+        159,
+        1038
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile picture of fallenbarkswitch",
+      "id": "clips_author_profile_pic",
+      "bounds": "[26,1017][85,1076]",
+      "center": [
+        55,
+        1046
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[85,1032][292,1062]",
+      "center": [
+        188,
+        1047
+      ],
+      "clickable": true
+    },
+    {
+      "text": "fallenbarkswitch",
+      "desc": "fallenbarkswitch",
+      "id": "clips_author_username",
+      "bounds": "[85,1032][292,1062]",
+      "center": [
+        188,
+        1047
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "The human body wasn't designed to process 30 pounds of …",
+      "id": "",
+      "bounds": "[26,1083][635,1150]",
+      "center": [
+        330,
+        1116
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Like",
+      "id": "like_button",
+      "bounds": "[635,686][707,758]",
+      "center": [
+        671,
+        722
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Comment",
+      "id": "comment_button",
+      "bounds": "[635,771][707,843]",
+      "center": [
+        671,
+        807
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Repost",
+      "id": "",
+      "bounds": "[635,856][707,928]",
+      "center": [
+        671,
+        892
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Share",
+      "id": "direct_share_button",
+      "bounds": "[635,941][707,1013]",
+      "center": [
+        671,
+        977
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More",
+      "id": "clips_ufi_more_button_component",
+      "bounds": "[635,1013][707,1085]",
+      "center": [
+        671,
+        1049
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Audio",
+      "id": "media_album_art_button",
+      "bounds": "[647,1098][696,1147]",
+      "center": [
+        671,
+        1122
+      ],
+      "clickable": true
+    },
+    {
+      "text": "View insights",
+      "desc": "View insights",
+      "id": "",
+      "bounds": "[26,1175][360,1224]",
+      "center": [
+        193,
+        1199
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Boost reel",
+      "desc": "Boost reel",
+      "id": "",
+      "bounds": "[360,1175][694,1224]",
+      "center": [
+        527,
+        1199
+      ],
+      "clickable": true
+    },
+    {
+      "text": "2558.0",
+      "desc": "@2131976834",
+      "id": "scrubber",
+      "bounds": "[0,1249][720,1266]",
+      "center": [
+        360,
+        1257
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Create a reel",
+      "id": "",
+      "bounds": "[0,62][77,139]",
+      "center": [
+        38,
+        100
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "",
+      "bounds": "[192,73][330,128]",
+      "center": [
+        261,
+        100
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Reels",
+      "desc": "",
+      "id": "text1",
+      "bounds": "[195,73][297,128]",
+      "center": [
+        246,
+        100
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Friends",
+      "id": "",
+      "bounds": "[330,73][556,128]",
+      "center": [
+        443,
+        100
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Friends",
+      "desc": "",
+      "id": "text1",
+      "bounds": "[333,73][466,128]",
+      "center": [
+        399,
+        100
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1266][144,1344]",
+      "center": [
+        72,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1266][288,1344]",
+      "center": [
+        216,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1266][432,1344]",
+      "center": [
+        360,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1266][576,1344]",
+      "center": [
+        504,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1266][720,1344]",
+      "center": [
+        648,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "upload_snackbar_container",
+      "bounds": "[13,1139][707,1253]",
+      "center": [
+        360,
+        1196
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Done posting. Want to send it directly to friends?",
+      "desc": "",
+      "id": "status_text",
+      "bounds": "[107,1168][588,1224]",
+      "center": [
+        347,
+        1196
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Send",
+      "desc": "",
+      "id": "upload_snackbar_button",
+      "bounds": "[604,1152][700,1240]",
+      "center": [
+        652,
+        1196
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\FallenBarkSwitch_20251223_135244\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\FallenBarkSwitch_20251223_135244\\error_001_page_source.xml"
+}

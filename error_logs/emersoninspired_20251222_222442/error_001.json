@@ -1,0 +1,22 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T22:25:59.316795",
+  "account": "emersoninspired",
+  "job_id": "DQ49_Pakz4--2.mp4_podcast",
+  "phase": "execute_job",
+  "error_type": "Exception",
+  "error_class": "Exception",
+  "error_message": "Device 128.14.109.187:20108 never appeared in ADB devices list after 60s",
+  "error_repr": "Exception('Device 128.14.109.187:20108 never appeared in ADB devices list after 60s')",
+  "stack_trace": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\parallel_worker.py\", line 228, in execute_posting_job\n    poster.connect()\n    ~~~~~~~~~~~~~~^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 884, in connect\n    return self._conn.connect()\n           ~~~~~~~~~~~~~~~~~~^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\device_connection.py\", line 470, in connect\n    self.connect_adb(adb_info)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\device_connection.py\", line 296, in connect_adb\n    self._wait_for_device_ready()\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\device_connection.py\", line 321, in _wait_for_device_ready\n    raise Exception(f\"Device {self.device} never appeared in ADB devices list after {max_attempts * 2}s\")\nException: Device 128.14.109.187:20108 never appeared in ADB devices list after 60s\n",
+  "context": {
+    "video_path": "C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\campaigns\\podcast\\videos\\chunk_01c\\megynkellyshow\\DQ49_Pakz4--2.mp4",
+    "caption": "The music industry's power players just got called out—and @johnrichofficial isn't holding back. He ",
+    "worker_id": 4,
+    "appium_url": "http://127.0.0.1:4731",
+    "full_traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\parallel_worker.py\", line 228, in execute_posting_job\n    poster.connect()\n    ~~~~~~~~~~~~~~^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 884, in connect\n    return self._conn.connect()\n           ~~~~~~~~~~~~~~~~~~^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\device_connection.py\", line 470, in connect\n    self.connect_adb(adb_info)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\device_connection.py\", line 296, in connect_adb\n    self._wait_for_device_ready()\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\device_connection.py\", line 321, in _wait_for_device_ready\n    raise Exception(f\"Device {self.device} never appeared in ADB devices list after {max_attempts * 2}s\")\nException: Device 128.14.109.187:20108 never appeared in ADB devices list after 60s\n"
+  },
+  "ui_elements_count": 0,
+  "ui_elements": null,
+  "screenshot_file": null
+}

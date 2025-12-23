@@ -1,0 +1,80 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T21:59:52.308739",
+  "account": "AgedWalnutThrones",
+  "job_id": "DI114VkPww8-2.mp4",
+  "phase": "navigation",
+  "error_type": "max_steps",
+  "error_class": "Exception",
+  "error_message": "Max steps (30) reached",
+  "error_repr": "Exception('Max steps (30) reached')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "max_steps": 30,
+    "video_uploaded": true,
+    "video_selected": true,
+    "caption_entered": true,
+    "share_clicked": false,
+    "caption": "Through fame came access, but not fulfillment. @russellbrand reflects on how external transformation"
+  },
+  "ui_elements_count": 5,
+  "ui_elements": [
+    {
+      "text": "Rate Instagram",
+      "desc": "",
+      "id": "appirater_title_area",
+      "bounds": "[99,501][348,556]",
+      "center": [
+        223,
+        528
+      ],
+      "clickable": false
+    },
+    {
+      "text": "If you enjoy using Instagram, would you mind taking a moment to rate it? It won't take more than a minute. Thanks for your support!",
+      "desc": "",
+      "id": "appirater_message_area",
+      "bounds": "[99,569][621,692]",
+      "center": [
+        360,
+        630
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Rate Instagram",
+      "desc": "",
+      "id": "appirater_rate_button",
+      "bounds": "[99,692][621,770]",
+      "center": [
+        360,
+        731
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Remind me later",
+      "desc": "",
+      "id": "appirater_rate_later_button",
+      "bounds": "[99,770][621,848]",
+      "center": [
+        360,
+        809
+      ],
+      "clickable": true
+    },
+    {
+      "text": "No, thanks",
+      "desc": "",
+      "id": "appirater_cancel_button",
+      "bounds": "[99,848][621,926]",
+      "center": [
+        360,
+        887
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\AgedWalnutThrones_20251222_215608\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\AgedWalnutThrones_20251222_215608\\error_001_page_source.xml"
+}

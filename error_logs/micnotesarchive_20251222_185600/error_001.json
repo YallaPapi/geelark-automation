@@ -1,0 +1,915 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T18:59:04.091145",
+  "account": "micnotesarchive",
+  "job_id": "DQwvLkEk0cC-2.mp4",
+  "phase": "navigation",
+  "error_type": "max_steps",
+  "error_class": "Exception",
+  "error_message": "Max steps (30) reached",
+  "error_repr": "Exception('Max steps (30) reached')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "max_steps": 30,
+    "video_uploaded": true,
+    "caption_entered": false,
+    "share_clicked": false,
+    "caption": "The mask slips and the truth comes out – this is what real communism looks like, and it should alarm"
+  },
+  "ui_elements_count": 81,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "pog_note_bubble_view",
+      "bounds": "[26,139][170,224]",
+      "center": [
+        98,
+        181
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Try sharing a song...",
+      "desc": "",
+      "id": "pog_bubble_text",
+      "bounds": "[39,158][157,199]",
+      "center": [
+        98,
+        178
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "row_profile_header_imageview_frame_layout",
+      "bounds": "[38,193][159,314]",
+      "center": [
+        98,
+        253
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Your profile. No story",
+      "id": "row_profile_header_imageview",
+      "bounds": "[38,193][159,314]",
+      "center": [
+        98,
+        253
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Add to story",
+      "id": "reel_empty_badge",
+      "bounds": "[123,278][159,314]",
+      "center": [
+        141,
+        296
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Kennedy",
+      "desc": "",
+      "id": "profile_header_full_name_above_vanity",
+      "bounds": "[196,182][292,210]",
+      "center": [
+        244,
+        196
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "17posts",
+      "id": "profile_header_post_count_front_familiar",
+      "bounds": "[196,210][336,296]",
+      "center": [
+        266,
+        253
+      ],
+      "clickable": true
+    },
+    {
+      "text": "17",
+      "desc": "",
+      "id": "profile_header_familiar_post_count_value",
+      "bounds": "[196,223][221,256]",
+      "center": [
+        208,
+        239
+      ],
+      "clickable": false
+    },
+    {
+      "text": "posts",
+      "desc": "",
+      "id": "profile_header_familiar_post_count_label",
+      "bounds": "[196,256][253,283]",
+      "center": [
+        224,
+        269
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "123followers",
+      "id": "profile_header_followers_stacked_familiar",
+      "bounds": "[336,210][520,296]",
+      "center": [
+        428,
+        253
+      ],
+      "clickable": true
+    },
+    {
+      "text": "123",
+      "desc": "",
+      "id": "profile_header_familiar_followers_value",
+      "bounds": "[346,223][387,256]",
+      "center": [
+        366,
+        239
+      ],
+      "clickable": false
+    },
+    {
+      "text": "followers",
+      "desc": "",
+      "id": "profile_header_familiar_followers_label",
+      "bounds": "[346,256][437,283]",
+      "center": [
+        391,
+        269
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "21following",
+      "id": "profile_header_following_stacked_familiar",
+      "bounds": "[520,210][694,296]",
+      "center": [
+        607,
+        253
+      ],
+      "clickable": true
+    },
+    {
+      "text": "21",
+      "desc": "",
+      "id": "profile_header_familiar_following_value",
+      "bounds": "[530,223][556,256]",
+      "center": [
+        543,
+        239
+      ],
+      "clickable": false
+    },
+    {
+      "text": "following",
+      "desc": "",
+      "id": "profile_header_familiar_following_label",
+      "bounds": "[530,256][621,283]",
+      "center": [
+        575,
+        269
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Podcast",
+      "desc": "Podcast",
+      "id": "profile_header_business_category",
+      "bounds": "[26,325][694,354]",
+      "center": [
+        360,
+        339
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,354][694,437]",
+      "center": [
+        360,
+        395
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Lean clips. Strong ideas.\nPulling the cream moments\nFrom industry giants.",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,354][301,437]",
+      "center": [
+        163,
+        395
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "profile_header_banner_item_layout",
+      "bounds": "[26,441][241,496]",
+      "center": [
+        133,
+        468
+      ],
+      "clickable": true
+    },
+    {
+      "text": "micnotesarchive",
+      "desc": "",
+      "id": "profile_header_banner_item_title",
+      "bounds": "[57,441][241,496]",
+      "center": [
+        149,
+        468
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,516][720,622]",
+      "center": [
+        360,
+        569
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Professional dashboard",
+      "desc": "Professional dashboard entry point",
+      "id": "",
+      "bounds": "[43,533][275,563]",
+      "center": [
+        159,
+        548
+      ],
+      "clickable": false
+    },
+    {
+      "text": "1.3K views in the last 30 days.",
+      "desc": "1.3K views in the last 30 days.",
+      "id": "",
+      "bounds": "[70,563][327,590]",
+      "center": [
+        198,
+        576
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Edit profile",
+      "id": "button_container",
+      "bounds": "[20,622][355,674]",
+      "center": [
+        187,
+        648
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Edit profile",
+      "desc": "",
+      "id": "",
+      "bounds": "[127,633][248,663]",
+      "center": [
+        187,
+        648
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Share profile",
+      "id": "button_container",
+      "bounds": "[365,622][700,674]",
+      "center": [
+        532,
+        648
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Share profile",
+      "desc": "",
+      "id": "",
+      "bounds": "[461,633][603,663]",
+      "center": [
+        532,
+        648
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Create highlight",
+      "id": "create_highlight_button_view",
+      "bounds": "[3,694][154,864]",
+      "center": [
+        78,
+        779
+      ],
+      "clickable": true
+    },
+    {
+      "text": "New",
+      "desc": "",
+      "id": "label",
+      "bounds": "[3,828][154,854]",
+      "center": [
+        78,
+        841
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[154,694][305,864]",
+      "center": [
+        229,
+        779
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "micnotesarchive's story, 1 of 0, Seen.",
+      "id": "",
+      "bounds": "[154,694][305,828]",
+      "center": [
+        229,
+        761
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "micnotesarchive's highlight story at column 1",
+      "id": "avatar_image_view",
+      "bounds": "[179,714][280,815]",
+      "center": [
+        229,
+        764
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Proper",
+      "desc": "",
+      "id": "username",
+      "bounds": "[198,828][262,854]",
+      "center": [
+        230,
+        841
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[305,694][456,864]",
+      "center": [
+        380,
+        779
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "micnotesarchive's story, 2 of 0, Seen.",
+      "id": "",
+      "bounds": "[305,694][456,828]",
+      "center": [
+        380,
+        761
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "micnotesarchive's highlight story at column 2",
+      "id": "avatar_image_view",
+      "bounds": "[330,714][431,815]",
+      "center": [
+        380,
+        764
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Amore",
+      "desc": "",
+      "id": "username",
+      "bounds": "[350,828][412,854]",
+      "center": [
+        381,
+        841
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[456,694][607,864]",
+      "center": [
+        531,
+        779
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "micnotesarchive's story, 3 of 0, Seen.",
+      "id": "",
+      "bounds": "[456,694][607,828]",
+      "center": [
+        531,
+        761
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "micnotesarchive's highlight story at column 3",
+      "id": "avatar_image_view",
+      "bounds": "[481,714][582,815]",
+      "center": [
+        531,
+        764
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Walking Through",
+      "desc": "",
+      "id": "username",
+      "bounds": "[459,828][604,854]",
+      "center": [
+        531,
+        841
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[607,694][720,864]",
+      "center": [
+        663,
+        779
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "micnotesarchive's story, 4 of 0, Seen.",
+      "id": "",
+      "bounds": "[607,694][720,828]",
+      "center": [
+        663,
+        761
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "micnotesarchive's highlight story at column 4",
+      "id": "avatar_image_view",
+      "bounds": "[632,714][720,815]",
+      "center": [
+        676,
+        764
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Millions",
+      "desc": "",
+      "id": "username",
+      "bounds": "[647,828][718,854]",
+      "center": [
+        682,
+        841
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Grid view",
+      "id": "profile_tab_icon_view",
+      "bounds": "[0,880][240,958]",
+      "center": [
+        120,
+        919
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[240,880][480,958]",
+      "center": [
+        360,
+        919
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "profile_tab_icon_view",
+      "bounds": "[240,880][480,958]",
+      "center": [
+        360,
+        919
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[480,880][720,958]",
+      "center": [
+        600,
+        919
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[480,880][720,958]",
+      "center": [
+        600,
+        919
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Photos of you",
+      "id": "profile_tab_icon_view",
+      "bounds": "[581,900][620,939]",
+      "center": [
+        600,
+        919
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Reel by Kennedy at row 1, column 1",
+      "id": "image_button",
+      "bounds": "[0,965][236,1266]",
+      "center": [
+        118,
+        1115
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Kennedy at row 1, column 2",
+      "id": "image_button",
+      "bounds": "[242,965][478,1266]",
+      "center": [
+        360,
+        1115
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Kennedy at row 1, column 3",
+      "id": "image_button",
+      "bounds": "[484,965][720,1266]",
+      "center": [
+        602,
+        1115
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Create New",
+      "id": "",
+      "bounds": "[0,48][79,139]",
+      "center": [
+        39,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar_username_container",
+      "bounds": "[105,48][549,139]",
+      "center": [
+        327,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "micnotesarchive",
+      "desc": "micnotesarchive",
+      "id": "action_bar_title",
+      "bounds": "[208,48][493,139]",
+      "center": [
+        350,
+        93
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "View profile on Threads",
+      "id": "",
+      "bounds": "[549,48][628,139]",
+      "center": [
+        588,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Options",
+      "id": "",
+      "bounds": "[628,48][707,139]",
+      "center": [
+        667,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1266][144,1344]",
+      "center": [
+        72,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1266][288,1344]",
+      "center": [
+        216,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1266][432,1344]",
+      "center": [
+        360,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1266][576,1344]",
+      "center": [
+        504,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1266][720,1344]",
+      "center": [
+        648,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "@2131954894",
+      "id": "background_dimmer",
+      "bounds": "[0,48][720,1344]",
+      "center": [
+        360,
+        696
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "layout_container_bottom_sheet",
+      "bounds": "[0,610][720,1344]",
+      "center": [
+        360,
+        977
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "bottom_sheet_drag_handle_prism",
+      "bounds": "[334,610][386,656]",
+      "center": [
+        360,
+        633
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Create",
+      "desc": "",
+      "id": "title_text_view",
+      "bounds": "[163,656][557,727]",
+      "center": [
+        360,
+        691
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Create new reel",
+      "id": "",
+      "bounds": "[0,728][720,816]",
+      "center": [
+        360,
+        772
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Reel",
+      "desc": "",
+      "id": "label",
+      "bounds": "[91,755][144,788]",
+      "center": [
+        117,
+        771
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Edits",
+      "id": "",
+      "bounds": "[0,816][720,904]",
+      "center": [
+        360,
+        860
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Edits",
+      "desc": "",
+      "id": "label",
+      "bounds": "[91,843][153,876]",
+      "center": [
+        122,
+        859
+      ],
+      "clickable": false
+    },
+    {
+      "text": "New",
+      "desc": "",
+      "id": "pill_new_badge",
+      "bounds": "[640,843][694,878]",
+      "center": [
+        667,
+        860
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Create new post",
+      "id": "",
+      "bounds": "[0,904][720,992]",
+      "center": [
+        360,
+        948
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Post",
+      "desc": "",
+      "id": "label",
+      "bounds": "[91,931][147,964]",
+      "center": [
+        119,
+        947
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Create new story",
+      "id": "",
+      "bounds": "[0,992][720,1080]",
+      "center": [
+        360,
+        1036
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Story",
+      "desc": "",
+      "id": "label",
+      "bounds": "[91,1019][159,1052]",
+      "center": [
+        125,
+        1035
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Highlight",
+      "id": "",
+      "bounds": "[0,1080][720,1168]",
+      "center": [
+        360,
+        1124
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Highlight",
+      "desc": "",
+      "id": "label",
+      "bounds": "[91,1107][201,1140]",
+      "center": [
+        146,
+        1123
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Ad",
+      "id": "",
+      "bounds": "[0,1168][720,1256]",
+      "center": [
+        360,
+        1212
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Ad",
+      "desc": "",
+      "id": "label",
+      "bounds": "[91,1195][126,1228]",
+      "center": [
+        108,
+        1211
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\micnotesarchive_20251222_185600\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\micnotesarchive_20251222_185600\\error_001_page_source.xml"
+}

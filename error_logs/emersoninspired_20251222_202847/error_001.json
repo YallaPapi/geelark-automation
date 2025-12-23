@@ -1,0 +1,310 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T20:31:33.723665",
+  "account": "emersoninspired",
+  "job_id": "DLkdevKuAXo-1.mp4",
+  "phase": "navigation",
+  "error_type": "max_steps",
+  "error_class": "Exception",
+  "error_message": "Max steps (30) reached",
+  "error_repr": "Exception('Max steps (30) reached')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "max_steps": 30,
+    "video_uploaded": true,
+    "caption_entered": true,
+    "share_clicked": false,
+    "caption": "Curious what keeps @foundmyfitness balanced when summer heat turns up? She's asking her community to"
+  },
+  "ui_elements_count": 26,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "Reel by 3k.daylow",
+      "id": "clips_media_component",
+      "bounds": "[0,48][720,1266]",
+      "center": [
+        360,
+        657
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Reel by 3k.daylow. Double tap to play or pause.",
+      "id": "clips_video_container",
+      "bounds": "[0,48][720,1266]",
+      "center": [
+        360,
+        657
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "clips_author_info_component",
+      "bounds": "[26,1117][219,1204]",
+      "center": [
+        122,
+        1160
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile picture of 3k.daylow",
+      "id": "clips_author_profile_pic",
+      "bounds": "[26,1139][85,1198]",
+      "center": [
+        55,
+        1168
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[85,1154][219,1184]",
+      "center": [
+        152,
+        1169
+      ],
+      "clickable": true
+    },
+    {
+      "text": "3k.daylow",
+      "desc": "3k.daylow",
+      "id": "clips_author_username",
+      "bounds": "[85,1154][219,1184]",
+      "center": [
+        152,
+        1169
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[219,1133][364,1204]",
+      "center": [
+        291,
+        1168
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Follow",
+      "desc": "Follow Daylow🦅",
+      "id": "inline_follow_button",
+      "bounds": "[229,1146][341,1194]",
+      "center": [
+        285,
+        1170
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "See more",
+      "id": "",
+      "bounds": "[26,1204][635,1243]",
+      "center": [
+        330,
+        1223
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Like",
+      "id": "like_button",
+      "bounds": "[635,939][707,1011]",
+      "center": [
+        671,
+        975
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Comment",
+      "id": "comment_button",
+      "bounds": "[635,1024][707,1096]",
+      "center": [
+        671,
+        1060
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Share",
+      "id": "direct_share_button",
+      "bounds": "[635,1109][707,1181]",
+      "center": [
+        671,
+        1145
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More",
+      "id": "clips_ufi_more_button_component",
+      "bounds": "[635,1181][707,1253]",
+      "center": [
+        671,
+        1217
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Create a reel",
+      "id": "",
+      "bounds": "[0,62][77,139]",
+      "center": [
+        38,
+        100
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "",
+      "bounds": "[192,73][330,128]",
+      "center": [
+        261,
+        100
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Reels",
+      "desc": "",
+      "id": "text1",
+      "bounds": "[195,73][297,128]",
+      "center": [
+        246,
+        100
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Friends",
+      "id": "",
+      "bounds": "[330,73][556,128]",
+      "center": [
+        443,
+        100
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Friends",
+      "desc": "",
+      "id": "text1",
+      "bounds": "[333,73][466,128]",
+      "center": [
+        399,
+        100
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1266][144,1344]",
+      "center": [
+        72,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1266][288,1344]",
+      "center": [
+        216,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1266][432,1344]",
+      "center": [
+        360,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1266][576,1344]",
+      "center": [
+        504,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1266][720,1344]",
+      "center": [
+        648,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "upload_snackbar_container",
+      "bounds": "[13,1143][707,1253]",
+      "center": [
+        360,
+        1198
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Sharing to Reels…",
+      "desc": "",
+      "id": "status_text",
+      "bounds": "[107,1176][691,1205]",
+      "center": [
+        399,
+        1190
+      ],
+      "clickable": false
+    },
+    {
+      "text": "0.0",
+      "desc": "",
+      "id": "progress_bar",
+      "bounds": "[107,1218][691,1220]",
+      "center": [
+        399,
+        1219
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\emersoninspired_20251222_202847\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\emersoninspired_20251222_202847\\error_001_page_source.xml"
+}

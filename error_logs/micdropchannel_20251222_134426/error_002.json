@@ -1,0 +1,440 @@
+{
+  "error_id": "error_002",
+  "timestamp": "2025-12-22T13:45:32.777031",
+  "account": "micdropchannel",
+  "job_id": "DO37nBZj9HC-1.mp4",
+  "phase": "ai_analysis",
+  "error_type": "analysis_error",
+  "error_class": "ValueError",
+  "error_message": "JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current UI, I can see this is the Instagram home feed with posts and the bottom navig",
+  "error_repr": "ValueError('JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current UI, I can see this is the Instagram home feed with posts and the bottom navig')",
+  "stack_trace": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 213, in parse_response\n    # Generic code block\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\__init__.py\", line 346, in loads\n    return _default_decoder.decode(s)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 345, in decode\n    obj, end = self.raw_decode(s, idx=_w(s, 0).end())\n               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 363, in raw_decode\n    raise JSONDecodeError(\"Expecting value\", s, err.value) from None\njson.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 275, in analyze\n    Action dictionary with action, element_index, text, reason, etc.\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 215, in parse_response\n    if len(parts) >= 3:\nValueError: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current UI, I can see this is the Instagram home feed with posts and the bottom navig\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 1026, in post\n    action = self.analyze_ui(elements, caption)\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 870, in analyze_ui\n    return self._analyzer.analyze(\n           ~~~~~~~~~~~~~~~~~~~~~~^\n        elements=elements,\n        ^^^^^^^^^^^^^^^^^^\n    ...<3 lines>...\n        share_clicked=self.share_clicked\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 282, in analyze\n    caption=caption,\n            ^^^^^^^^\nValueError: JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current UI, I can see this is the Instagram home feed with posts and the bottom navig\n",
+  "context": {
+    "step": 1,
+    "caption": "The moment you realize someone's speaking nothing but facts 💯 @charliekirk1776 breaks it down in a w",
+    "video_uploaded": true
+  },
+  "ui_elements_count": 38,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[628,732][720,801]",
+      "center": [
+        674,
+        766
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Turn sound on",
+      "id": "",
+      "bounds": "[651,732][697,778]",
+      "center": [
+        674,
+        755
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "media_group",
+      "bounds": "[0,39][720,801]",
+      "center": [
+        360,
+        420
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Sponsored Video by Excel Home Improvement, 43 likes, 6 days ago",
+      "id": "row_feed_photo_imageview",
+      "bounds": "[0,39][720,801]",
+      "center": [
+        360,
+        420
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Visit Instagram profile",
+      "desc": "Visit Instagram profile",
+      "id": "",
+      "bounds": "[0,801][720,873]",
+      "center": [
+        360,
+        837
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[20,873][66,948]",
+      "center": [
+        43,
+        910
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Like",
+      "id": "row_feed_button_like",
+      "bounds": "[20,873][59,948]",
+      "center": [
+        39,
+        910
+      ],
+      "clickable": false
+    },
+    {
+      "text": "43",
+      "desc": "",
+      "id": "",
+      "bounds": "[66,873][93,948]",
+      "center": [
+        79,
+        910
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[93,873][159,948]",
+      "center": [
+        126,
+        910
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Comment",
+      "id": "row_feed_button_comment",
+      "bounds": "[113,873][152,948]",
+      "center": [
+        132,
+        910
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[169,873][225,948]",
+      "center": [
+        197,
+        910
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Send post",
+      "id": "row_feed_button_share",
+      "bounds": "[179,873][218,948]",
+      "center": [
+        198,
+        910
+      ],
+      "clickable": false
+    },
+    {
+      "text": "1",
+      "desc": "",
+      "id": "",
+      "bounds": "[225,873][234,948]",
+      "center": [
+        229,
+        910
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Add to Saved",
+      "id": "row_feed_button_save",
+      "bounds": "[645,873][717,945]",
+      "center": [
+        681,
+        909
+      ],
+      "clickable": true
+    },
+    {
+      "text": "excel.homeimprovement Do you know what window flashing is, and why it's so important to have done right when you're ge… more",
+      "desc": "",
+      "id": "",
+      "bounds": "[20,948][720,1017]",
+      "center": [
+        370,
+        982
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "excel.homeimprovement",
+      "id": "",
+      "bounds": "[20,948][278,976]",
+      "center": [
+        149,
+        962
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Do you know what window flashing is, and why it's so important to have done right when you're ge",
+      "id": "",
+      "bounds": "[283,948][667,976]",
+      "center": [
+        475,
+        962
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Do you know what window flashing is, and why it's so important to have done right when you're ge",
+      "id": "",
+      "bounds": "[283,948][667,976]",
+      "center": [
+        475,
+        962
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "more",
+      "id": "",
+      "bounds": "[643,979][694,1007]",
+      "center": [
+        668,
+        993
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,1043][720,1248]",
+      "center": [
+        360,
+        1145
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Are you interested in this ad?",
+      "desc": "",
+      "id": "afi_view_question",
+      "bounds": "[52,1078][629,1108]",
+      "center": [
+        340,
+        1093
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Help us show the ads that are right for you.",
+      "desc": "",
+      "id": "afi_view_question_description",
+      "bounds": "[52,1115][629,1141]",
+      "center": [
+        340,
+        1128
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "afi_view_close_button",
+      "bounds": "[622,1058][694,1130]",
+      "center": [
+        658,
+        1094
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[54,1161][352,1215]",
+      "center": [
+        203,
+        1188
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Not interested",
+      "desc": "",
+      "id": "igds_pill_label",
+      "bounds": "[122,1174][284,1202]",
+      "center": [
+        203,
+        1188
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[369,1161][667,1215]",
+      "center": [
+        518,
+        1188
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Interested",
+      "desc": "",
+      "id": "igds_pill_label",
+      "bounds": "[455,1174][581,1202]",
+      "center": [
+        518,
+        1188
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "media_group",
+      "bounds": "[0,1267][720,1284]",
+      "center": [
+        360,
+        1275
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Dwayne Johnson, 150,313 likes, 1,075 comments, 1 day ago",
+      "id": "row_feed_photo_imageview",
+      "bounds": "[0,1267][720,1284]",
+      "center": [
+        360,
+        1275
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "therock posted a video 1 day ago",
+      "id": "row_feed_profile_header",
+      "bounds": "[0,1267][720,1284]",
+      "center": [
+        360,
+        1275
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,1267][79,1284]",
+      "center": [
+        39,
+        1275
+      ],
+      "clickable": true
+    },
+    {
+      "text": "therock  ",
+      "desc": "therock  ",
+      "id": "row_feed_photo_profile_name",
+      "bounds": "[79,1267][649,1284]",
+      "center": [
+        364,
+        1275
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More actions for this post",
+      "id": "media_option_button",
+      "bounds": "[649,1270][720,1284]",
+      "center": [
+        684,
+        1277
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1284][144,1362]",
+      "center": [
+        72,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1284][288,1362]",
+      "center": [
+        216,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1284][432,1362]",
+      "center": [
+        360,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1284][576,1362]",
+      "center": [
+        504,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1284][720,1362]",
+      "center": [
+        648,
+        1323
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\micdropchannel_20251222_134426\\error_002_screenshot.png",
+  "page_source_file": "error_logs\\micdropchannel_20251222_134426\\error_002_page_source.xml"
+}

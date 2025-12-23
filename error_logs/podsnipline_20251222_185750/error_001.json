@@ -1,0 +1,398 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T19:00:59.612256",
+  "account": "podsnipline",
+  "job_id": "DMmGkyTsJbf-1.mp4",
+  "phase": "navigation",
+  "error_type": "max_steps",
+  "error_class": "Exception",
+  "error_message": "Max steps (30) reached",
+  "error_repr": "Exception('Max steps (30) reached')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "max_steps": 30,
+    "video_uploaded": true,
+    "caption_entered": false,
+    "share_clicked": false,
+    "caption": ".@williamh.mcraven, a four-star Navy admiral, stopped by for a personal tour of the bookstore owned "
+  },
+  "ui_elements_count": 34,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "reels tray container",
+      "id": "",
+      "bounds": "[0,130][720,345]",
+      "center": [
+        360,
+        237
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[0,130][183,345]",
+      "center": [
+        91,
+        237
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "podsnipline's story, 0 of 18, Unseen.",
+      "id": "",
+      "bounds": "[0,130][183,306]",
+      "center": [
+        91,
+        218
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "podsnipline's story, 0 of 18, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[22,152][160,290]",
+      "center": [
+        91,
+        221
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Add to story",
+      "id": "reel_empty_badge",
+      "bounds": "[121,251][170,300]",
+      "center": [
+        145,
+        275
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Your story",
+      "desc": "",
+      "id": "username",
+      "bounds": "[44,306][140,332]",
+      "center": [
+        92,
+        319
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[183,130][366,345]",
+      "center": [
+        274,
+        237
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "2xrakai's story, 1 of 18, Unseen.",
+      "id": "",
+      "bounds": "[183,130][366,306]",
+      "center": [
+        274,
+        218
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "2xrakai's story, 1 of 18, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[205,152][343,290]",
+      "center": [
+        274,
+        221
+      ],
+      "clickable": false
+    },
+    {
+      "text": "2xrakai",
+      "desc": "",
+      "id": "username",
+      "bounds": "[241,306][308,332]",
+      "center": [
+        274,
+        319
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[366,130][549,345]",
+      "center": [
+        457,
+        237
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "stuart_knechtle's story, 2 of 18, Unseen.",
+      "id": "",
+      "bounds": "[366,130][549,306]",
+      "center": [
+        457,
+        218
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "stuart_knechtle's story, 2 of 18, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[388,152][526,290]",
+      "center": [
+        457,
+        221
+      ],
+      "clickable": false
+    },
+    {
+      "text": "stuart_knechtle",
+      "desc": "",
+      "id": "username",
+      "bounds": "[386,306][530,332]",
+      "center": [
+        458,
+        319
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[549,130][720,345]",
+      "center": [
+        634,
+        237
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "hormozi's story, 3 of 18, Unseen.",
+      "id": "",
+      "bounds": "[549,130][720,306]",
+      "center": [
+        634,
+        218
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "hormozi's story, 3 of 18, Unseen.",
+      "id": "avatar_image_view",
+      "bounds": "[571,152][709,290]",
+      "center": [
+        640,
+        221
+      ],
+      "clickable": false
+    },
+    {
+      "text": "hormozi",
+      "desc": "",
+      "id": "username",
+      "bounds": "[602,306][679,332]",
+      "center": [
+        640,
+        319
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "media_group",
+      "bounds": "[0,345][720,1284]",
+      "center": [
+        360,
+        814
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "mrsantizap_ posted a video December 14",
+      "id": "row_feed_profile_header",
+      "bounds": "[0,345][720,430]",
+      "center": [
+        360,
+        387
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,345][79,430]",
+      "center": [
+        39,
+        387
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile picture of mrsantizap_",
+      "id": "row_feed_photo_profile_imageview",
+      "bounds": "[24,363][73,412]",
+      "center": [
+        48,
+        387
+      ],
+      "clickable": false
+    },
+    {
+      "text": "mrsantizap_  ",
+      "desc": "mrsantizap_  ",
+      "id": "row_feed_photo_profile_name",
+      "bounds": "[79,345][649,386]",
+      "center": [
+        364,
+        365
+      ],
+      "clickable": true
+    },
+    {
+      "text": " Evanescence • Bring Me To Life",
+      "desc": " Evanescence • Bring Me To Life",
+      "id": "secondary_label",
+      "bounds": "[79,386][649,430]",
+      "center": [
+        364,
+        408
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More actions for this post",
+      "id": "media_option_button",
+      "bounds": "[649,348][720,427]",
+      "center": [
+        684,
+        387
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,39][79,130]",
+      "center": [
+        39,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar_title_view",
+      "bounds": "[79,59][641,110]",
+      "center": [
+        360,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Instagram Home Feed",
+      "id": "title_logo",
+      "bounds": "[272,59][448,110]",
+      "center": [
+        360,
+        84
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "notification",
+      "bounds": "[641,39][720,130]",
+      "center": [
+        680,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1284][144,1362]",
+      "center": [
+        72,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1284][288,1362]",
+      "center": [
+        216,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1284][432,1362]",
+      "center": [
+        360,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1284][576,1362]",
+      "center": [
+        504,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1284][720,1362]",
+      "center": [
+        648,
+        1323
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\podsnipline_20251222_185750\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\podsnipline_20251222_185750\\error_001_page_source.xml"
+}

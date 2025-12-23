@@ -1,0 +1,124 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T12:50:46.968624",
+  "account": "chance_of_rain_tomorrow",
+  "job_id": "Ctwa94qv1_b-2.mp4",
+  "phase": "navigation",
+  "error_type": "id_verification",
+  "error_class": "Exception",
+  "error_message": "id_verification: confirm your identity",
+  "error_repr": "Exception('id_verification: confirm your identity')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "step": 0,
+    "caption": "Candace (@candaceshow) isn't holding back on this one 😬\n\n#candaceowens #candace #politics #conservat",
+    "video_path": "campaigns/podcast/videos/chunk_01c/candaceshow/Ctwa94qv1_b-2.mp4",
+    "video_uploaded": true,
+    "caption_entered": false,
+    "share_clicked": false
+  },
+  "ui_elements_count": 9,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "Menu",
+      "id": "",
+      "bounds": "[636,51][706,116]",
+      "center": [
+        671,
+        83
+      ],
+      "clickable": true
+    },
+    {
+      "text": " ",
+      "desc": "",
+      "id": "",
+      "bounds": "[688,69][693,99]",
+      "center": [
+        690,
+        84
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Confirm you're a real person with a video selfie",
+      "desc": "Confirm you're a real person with a video selfie",
+      "id": "",
+      "bounds": "[52,523][668,611]",
+      "center": [
+        360,
+        567
+      ],
+      "clickable": false
+    },
+    {
+      "text": "We need more info to make sure you're human.",
+      "desc": "We need more info to make sure you're human.",
+      "id": "",
+      "bounds": "[52,624][507,654]",
+      "center": [
+        279,
+        639
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Your selfie will only be used to confirm your identity and to keep our community safe.",
+      "desc": "Your selfie will only be used to confirm your identity and to keep our community safe.",
+      "id": "",
+      "bounds": "[98,720][681,786]",
+      "center": [
+        389,
+        753
+      ],
+      "clickable": false
+    },
+    {
+      "text": "It will be deleted within 30 days.",
+      "desc": "It will be deleted within 30 days.",
+      "id": "",
+      "bounds": "[98,828][681,864]",
+      "center": [
+        389,
+        846
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Make sure your face can be clearly seen. Read tips",
+      "desc": "Make sure your face can be clearly seen. Read tips",
+      "id": "",
+      "bounds": "[98,909][681,941]",
+      "center": [
+        389,
+        925
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Start video selfie",
+      "id": "",
+      "bounds": "[26,1223][694,1292]",
+      "center": [
+        360,
+        1257
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Start video selfie",
+      "desc": "",
+      "id": "",
+      "bounds": "[278,1243][443,1273]",
+      "center": [
+        360,
+        1258
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\chance_of_rain_tomorrow_20251222_125022\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\chance_of_rain_tomorrow_20251222_125022\\error_001_page_source.xml"
+}

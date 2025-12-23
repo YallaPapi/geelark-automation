@@ -1,0 +1,913 @@
+{
+  "error_id": "error_006",
+  "timestamp": "2025-12-22T14:05:39.840161",
+  "account": "quickpodsnaps",
+  "job_id": "DOhk5yXiYJ_-2.mp4",
+  "phase": "ai_analysis",
+  "error_type": "analysis_error",
+  "error_class": "ValueError",
+  "error_message": "JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see that:\n- Video is uploaded: True\n- Caption entered: False\n- S",
+  "error_repr": "ValueError('JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see that:\\n- Video is uploaded: True\\n- Caption entered: False\\n- S')",
+  "stack_trace": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 213, in parse_response\n    # Generic code block\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\__init__.py\", line 346, in loads\n    return _default_decoder.decode(s)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 345, in decode\n    obj, end = self.raw_decode(s, idx=_w(s, 0).end())\n               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\decoder.py\", line 363, in raw_decode\n    raise JSONDecodeError(\"Expecting value\", s, err.value) from None\njson.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 275, in analyze\n    Action dictionary with action, element_index, text, reason, etc.\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 215, in parse_response\n    if len(parts) >= 3:\nValueError: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see that:\n- Video is uploaded: True\n- Caption entered: False\n- S\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 1026, in post\n    action = self.analyze_ui(elements, caption)\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 870, in analyze_ui\n    return self._analyzer.analyze(\n           ~~~~~~~~~~~~~~~~~~~~~~^\n        elements=elements,\n        ^^^^^^^^^^^^^^^^^^\n    ...<3 lines>...\n        share_clicked=self.share_clicked\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\claude_analyzer.py\", line 282, in analyze\n    caption=caption,\n            ^^^^^^^^\nValueError: JSON parse failed after 3 attempts: JSON parse failed: Expecting value: line 1 column 1 (char 0). Response: Looking at the current state, I can see that:\n- Video is uploaded: True\n- Caption entered: False\n- S\n",
+  "context": {
+    "step": 7,
+    "caption": "Following the unimaginable tragedy, Mrs. Erika Kirk steps forward with a message for America. Her co",
+    "video_uploaded": true
+  },
+  "ui_elements_count": 81,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "row_profile_header_imageview_frame_layout",
+      "bounds": "[39,173][170,304]",
+      "center": [
+        104,
+        238
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Your profile. No story",
+      "id": "row_profile_header_imageview",
+      "bounds": "[39,173][170,304]",
+      "center": [
+        104,
+        238
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Add to story",
+      "id": "reel_empty_badge",
+      "bounds": "[134,268][170,304]",
+      "center": [
+        152,
+        286
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "pog_note_bubble_view",
+      "bounds": "[32,130][176,215]",
+      "center": [
+        104,
+        172
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Inspo needed...",
+      "desc": "",
+      "id": "pog_bubble_text",
+      "bounds": "[45,149][163,190]",
+      "center": [
+        104,
+        169
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Cyrus Circus",
+      "desc": "",
+      "id": "profile_header_full_name_above_vanity",
+      "bounds": "[208,173][349,201]",
+      "center": [
+        278,
+        187
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "0friends",
+      "id": "profile_header_post_count_front_familiar",
+      "bounds": "[208,201][352,287]",
+      "center": [
+        280,
+        244
+      ],
+      "clickable": true
+    },
+    {
+      "text": "0",
+      "desc": "",
+      "id": "profile_header_familiar_post_count_value",
+      "bounds": "[208,214][224,247]",
+      "center": [
+        216,
+        230
+      ],
+      "clickable": false
+    },
+    {
+      "text": "friends",
+      "desc": "",
+      "id": "profile_header_familiar_post_count_label",
+      "bounds": "[208,247][277,274]",
+      "center": [
+        242,
+        260
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "113followers",
+      "id": "profile_header_followers_stacked_familiar",
+      "bounds": "[352,201][528,287]",
+      "center": [
+        440,
+        244
+      ],
+      "clickable": true
+    },
+    {
+      "text": "113",
+      "desc": "",
+      "id": "profile_header_familiar_followers_value",
+      "bounds": "[362,214][399,247]",
+      "center": [
+        380,
+        230
+      ],
+      "clickable": false
+    },
+    {
+      "text": "followers",
+      "desc": "",
+      "id": "profile_header_familiar_followers_label",
+      "bounds": "[362,247][453,274]",
+      "center": [
+        407,
+        260
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "25following",
+      "id": "profile_header_following_stacked_familiar",
+      "bounds": "[528,201][694,287]",
+      "center": [
+        611,
+        244
+      ],
+      "clickable": true
+    },
+    {
+      "text": "25",
+      "desc": "",
+      "id": "profile_header_familiar_following_value",
+      "bounds": "[538,214][569,247]",
+      "center": [
+        553,
+        230
+      ],
+      "clickable": false
+    },
+    {
+      "text": "following",
+      "desc": "",
+      "id": "profile_header_familiar_following_label",
+      "bounds": "[538,247][629,274]",
+      "center": [
+        583,
+        260
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Podcast",
+      "desc": "Podcast",
+      "id": "profile_header_business_category",
+      "bounds": "[26,316][694,345]",
+      "center": [
+        360,
+        330
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,345][694,428]",
+      "center": [
+        360,
+        386
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Handpicked podcast wins\nInvesting, habits, branding\nFast clips — fresh ideas",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,345][294,428]",
+      "center": [
+        160,
+        386
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,448][720,554]",
+      "center": [
+        360,
+        501
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Professional dashboard",
+      "desc": "Professional dashboard entry point",
+      "id": "",
+      "bounds": "[43,465][275,495]",
+      "center": [
+        159,
+        480
+      ],
+      "clickable": false
+    },
+    {
+      "text": "9.4K views in the last 30 days.",
+      "desc": "9.4K views in the last 30 days.",
+      "id": "",
+      "bounds": "[70,495][327,522]",
+      "center": [
+        198,
+        508
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Edit profile",
+      "id": "button_container",
+      "bounds": "[20,554][355,606]",
+      "center": [
+        187,
+        580
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Edit profile",
+      "desc": "",
+      "id": "",
+      "bounds": "[127,565][248,595]",
+      "center": [
+        187,
+        580
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Share profile",
+      "id": "button_container",
+      "bounds": "[365,554][700,606]",
+      "center": [
+        532,
+        580
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Share profile",
+      "desc": "",
+      "id": "",
+      "bounds": "[461,565][603,595]",
+      "center": [
+        532,
+        580
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Create highlight",
+      "id": "create_highlight_button_view",
+      "bounds": "[3,626][154,796]",
+      "center": [
+        78,
+        711
+      ],
+      "clickable": true
+    },
+    {
+      "text": "New",
+      "desc": "",
+      "id": "label",
+      "bounds": "[3,760][154,786]",
+      "center": [
+        78,
+        773
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[154,626][305,796]",
+      "center": [
+        229,
+        711
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "quickpodsnaps's story, 1 of 0, Seen.",
+      "id": "",
+      "bounds": "[154,626][305,760]",
+      "center": [
+        229,
+        693
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "quickpodsnaps's highlight story at column 1",
+      "id": "avatar_image_view",
+      "bounds": "[179,646][280,747]",
+      "center": [
+        229,
+        696
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Paint",
+      "desc": "",
+      "id": "username",
+      "bounds": "[206,760][253,786]",
+      "center": [
+        229,
+        773
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[305,626][456,796]",
+      "center": [
+        380,
+        711
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "quickpodsnaps's story, 2 of 0, Seen.",
+      "id": "",
+      "bounds": "[305,626][456,760]",
+      "center": [
+        380,
+        693
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "quickpodsnaps's highlight story at column 2",
+      "id": "avatar_image_view",
+      "bounds": "[330,646][431,747]",
+      "center": [
+        380,
+        696
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Fish and flag",
+      "desc": "",
+      "id": "username",
+      "bounds": "[322,760][440,786]",
+      "center": [
+        381,
+        773
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[456,626][607,796]",
+      "center": [
+        531,
+        711
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "quickpodsnaps's story, 3 of 0, Seen.",
+      "id": "",
+      "bounds": "[456,626][607,760]",
+      "center": [
+        531,
+        693
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "quickpodsnaps's highlight story at column 3",
+      "id": "avatar_image_view",
+      "bounds": "[481,646][582,747]",
+      "center": [
+        531,
+        696
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Path",
+      "desc": "",
+      "id": "username",
+      "bounds": "[510,760][553,786]",
+      "center": [
+        531,
+        773
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "outer_container",
+      "bounds": "[607,626][720,796]",
+      "center": [
+        663,
+        711
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "quickpodsnaps's story, 4 of 0, Seen.",
+      "id": "",
+      "bounds": "[607,626][720,760]",
+      "center": [
+        663,
+        693
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "quickpodsnaps's highlight story at column 4",
+      "id": "avatar_image_view",
+      "bounds": "[632,646][720,747]",
+      "center": [
+        676,
+        696
+      ],
+      "clickable": false
+    },
+    {
+      "text": "On time",
+      "desc": "",
+      "id": "username",
+      "bounds": "[647,760][718,786]",
+      "center": [
+        682,
+        773
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Grid view",
+      "id": "profile_tab_icon_view",
+      "bounds": "[0,812][240,890]",
+      "center": [
+        120,
+        851
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[240,812][480,890]",
+      "center": [
+        360,
+        851
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "profile_tab_icon_view",
+      "bounds": "[240,812][480,890]",
+      "center": [
+        360,
+        851
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[480,812][720,890]",
+      "center": [
+        600,
+        851
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[480,812][720,890]",
+      "center": [
+        600,
+        851
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Photos of you",
+      "id": "profile_tab_icon_view",
+      "bounds": "[581,832][620,871]",
+      "center": [
+        600,
+        851
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Reel by Cyrus Circus at row 1, column 1",
+      "id": "image_button",
+      "bounds": "[0,897][236,1212]",
+      "center": [
+        118,
+        1054
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Cyrus Circus at row 1, column 2",
+      "id": "image_button",
+      "bounds": "[242,897][478,1212]",
+      "center": [
+        360,
+        1054
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Cyrus Circus at row 1, column 3",
+      "id": "image_button",
+      "bounds": "[484,897][720,1212]",
+      "center": [
+        602,
+        1054
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Cyrus Circus at row 2, column 1",
+      "id": "image_button",
+      "bounds": "[0,1218][236,1284]",
+      "center": [
+        118,
+        1251
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Cyrus Circus at row 2, column 2",
+      "id": "image_button",
+      "bounds": "[242,1218][478,1284]",
+      "center": [
+        360,
+        1251
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by Cyrus Circus at row 2, column 3",
+      "id": "image_button",
+      "bounds": "[484,1218][720,1284]",
+      "center": [
+        602,
+        1251
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Create New",
+      "id": "",
+      "bounds": "[0,39][79,130]",
+      "center": [
+        39,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar_username_container",
+      "bounds": "[105,39][549,130]",
+      "center": [
+        327,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "quickpodsnaps",
+      "desc": "quickpodsnaps",
+      "id": "action_bar_title",
+      "bounds": "[221,39][480,130]",
+      "center": [
+        350,
+        84
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "View profile on Threads",
+      "id": "",
+      "bounds": "[549,39][628,130]",
+      "center": [
+        588,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Options",
+      "id": "",
+      "bounds": "[628,39][707,130]",
+      "center": [
+        667,
+        84
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1284][144,1362]",
+      "center": [
+        72,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1284][288,1362]",
+      "center": [
+        216,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1284][432,1362]",
+      "center": [
+        360,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "1",
+      "desc": "",
+      "id": "notification",
+      "bounds": "[371,1327][387,1343]",
+      "center": [
+        379,
+        1335
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1284][576,1362]",
+      "center": [
+        504,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1284][720,1362]",
+      "center": [
+        648,
+        1323
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "@2131954894",
+      "id": "background_dimmer",
+      "bounds": "[0,39][720,1362]",
+      "center": [
+        360,
+        700
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "layout_container_bottom_sheet",
+      "bounds": "[0,628][720,1362]",
+      "center": [
+        360,
+        995
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Create",
+      "desc": "",
+      "id": "title_text_view",
+      "bounds": "[163,674][557,745]",
+      "center": [
+        360,
+        709
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Create new reel",
+      "id": "",
+      "bounds": "[0,746][720,834]",
+      "center": [
+        360,
+        790
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Reel",
+      "desc": "",
+      "id": "label",
+      "bounds": "[91,773][144,806]",
+      "center": [
+        117,
+        789
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Create new post",
+      "id": "",
+      "bounds": "[0,834][720,922]",
+      "center": [
+        360,
+        878
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Post",
+      "desc": "",
+      "id": "label",
+      "bounds": "[91,861][147,894]",
+      "center": [
+        119,
+        877
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Create new story",
+      "id": "",
+      "bounds": "[0,922][720,1010]",
+      "center": [
+        360,
+        966
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Story",
+      "desc": "",
+      "id": "label",
+      "bounds": "[91,949][159,982]",
+      "center": [
+        125,
+        965
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Highlight",
+      "id": "",
+      "bounds": "[0,1010][720,1098]",
+      "center": [
+        360,
+        1054
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Highlight",
+      "desc": "",
+      "id": "label",
+      "bounds": "[91,1037][201,1070]",
+      "center": [
+        146,
+        1053
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Ad",
+      "id": "",
+      "bounds": "[0,1098][720,1186]",
+      "center": [
+        360,
+        1142
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Ad",
+      "desc": "",
+      "id": "label",
+      "bounds": "[91,1125][126,1158]",
+      "center": [
+        108,
+        1141
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Create new fundraiser",
+      "id": "",
+      "bounds": "[0,1186][720,1274]",
+      "center": [
+        360,
+        1230
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Fundraiser",
+      "desc": "",
+      "id": "label",
+      "bounds": "[91,1213][219,1246]",
+      "center": [
+        155,
+        1229
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\quickpodsnaps_20251222_140200\\error_006_screenshot.png",
+  "page_source_file": "error_logs\\quickpodsnaps_20251222_140200\\error_006_page_source.xml"
+}

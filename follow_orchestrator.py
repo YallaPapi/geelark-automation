@@ -93,7 +93,7 @@ def stop_all_phones():
         for page in range(1, 20):
             result = client.list_phones(page=page, page_size=100)
             for phone in result.get('items', []):
-                if phone.get('status') == 1:  # Running
+                if phone.get('status') != 0:  # 0=stopped, 1=starting, 2=running  # Running
                     try:
                         client.stop_phone(phone['id'])
                         stopped += 1

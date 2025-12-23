@@ -1,0 +1,190 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-23T14:16:21.304793",
+  "account": "BrokenRockPace",
+  "job_id": "DLVoz2Yhq3g-1.mp4",
+  "phase": "navigation",
+  "error_type": "max_steps",
+  "error_class": "Exception",
+  "error_message": "Max steps (30) reached",
+  "error_repr": "Exception('Max steps (30) reached')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "max_steps": 30,
+    "video_uploaded": true,
+    "video_selected": true,
+    "caption_entered": true,
+    "share_clicked": false,
+    "caption": "When the threat of nuclear war becomes background noise to the culture wars. @charliekirk1776 highli"
+  },
+  "ui_elements_count": 15,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "Reel by . Double tap to play or pause.",
+      "id": "clips_media_component",
+      "bounds": "[0,48][720,1266]",
+      "center": [
+        360,
+        657
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Reel by null. Double tap to play or pause.",
+      "id": "clips_video_container",
+      "bounds": "[0,297][720,1017]",
+      "center": [
+        360,
+        657
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Create a reel",
+      "id": "",
+      "bounds": "[0,62][77,139]",
+      "center": [
+        38,
+        100
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "",
+      "bounds": "[172,69][327,131]",
+      "center": [
+        249,
+        100
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Reels",
+      "desc": "",
+      "id": "text1",
+      "bounds": "[175,69][294,131]",
+      "center": [
+        234,
+        100
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Friends",
+      "id": "",
+      "bounds": "[327,69][576,131]",
+      "center": [
+        451,
+        100
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Friends",
+      "desc": "",
+      "id": "text1",
+      "bounds": "[330,69][486,131]",
+      "center": [
+        408,
+        100
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "feed_tab",
+      "bounds": "[0,1266][144,1344]",
+      "center": [
+        72,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reels",
+      "id": "clips_tab",
+      "bounds": "[144,1266][288,1344]",
+      "center": [
+        216,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Message",
+      "id": "direct_tab",
+      "bounds": "[288,1266][432,1344]",
+      "center": [
+        360,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Search and explore",
+      "id": "search_tab",
+      "bounds": "[432,1266][576,1344]",
+      "center": [
+        504,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile",
+      "id": "profile_tab",
+      "bounds": "[576,1266][720,1344]",
+      "center": [
+        648,
+        1305
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "upload_snackbar_container",
+      "bounds": "[13,1139][707,1253]",
+      "center": [
+        360,
+        1196
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Done posting. Want to send it directly to friends?",
+      "desc": "",
+      "id": "status_text",
+      "bounds": "[107,1168][588,1224]",
+      "center": [
+        347,
+        1196
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Send",
+      "desc": "",
+      "id": "upload_snackbar_button",
+      "bounds": "[604,1152][700,1240]",
+      "center": [
+        652,
+        1196
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\BrokenRockPace_20251223_141250\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\BrokenRockPace_20251223_141250\\error_001_page_source.xml"
+}

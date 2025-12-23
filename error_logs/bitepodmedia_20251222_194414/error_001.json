@@ -1,0 +1,53 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T19:46:36.721282",
+  "account": "bitepodmedia",
+  "job_id": "DFDM1VHNfHi-2.mp4",
+  "phase": "navigation",
+  "error_type": "loop_stuck",
+  "error_class": "Exception",
+  "error_message": "Loop stuck on action: wait",
+  "error_repr": "Exception('Loop stuck on action: wait')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "step": 21,
+    "recent_actions": [
+      "wait",
+      "wait",
+      "wait",
+      "wait",
+      "wait"
+    ],
+    "loop_recovery_count": 3,
+    "video_uploaded": true,
+    "caption_entered": false,
+    "share_clicked": false
+  },
+  "ui_elements_count": 2,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "search_src_text",
+      "bounds": "[0,50][638,121]",
+      "center": [
+        319,
+        85
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "search_voice_btn",
+      "bounds": "[638,40][720,131]",
+      "center": [
+        679,
+        85
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\bitepodmedia_20251222_194414\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\bitepodmedia_20251222_194414\\error_001_page_source.xml"
+}

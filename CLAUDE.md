@@ -6,8 +6,12 @@
 - Use `Read` tool WITHOUT offset/limit to get the whole file
 - Scripts with 1000+ lines need FULL review to understand the logic
 - NEVER read just 50-80 lines - that leads to wrong conclusions
-- Be thorough, not lazy
+- Be thorough, not lazy. Do not cut corners, do not skip anything
+- Do not read temp files, read the actual file and read MORE than you think you need to so you have sufficient context
 
+# Posting reminder
+
+ALWAYS RUN WITH 5 WORKERS. NOT 3, NOT 2, NOT 1. 5 FUCKING WORKERS. 
 ---
 
 ## CRITICAL: LIVE TESTS OVER TEST SCRIPTS

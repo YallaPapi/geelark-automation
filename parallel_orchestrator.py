@@ -418,7 +418,7 @@ def stop_all_phones() -> int:
         for page in range(1, 20):
             result = client.list_phones(page=page, page_size=100)
             for phone in result.get('items', []):
-                if phone.get('status') == 1:
+                if phone.get('status') != 0:  # 0=stopped, 1=starting, 2=running
                     client.stop_phone(phone['id'])
                     logger.info(f"  Stopped: {phone.get('serialName', 'unknown')}")
                     stopped += 1
@@ -461,7 +461,7 @@ def stop_campaign_phones(campaign_accounts: List[str]) -> int:
             result = client.list_phones(page=page, page_size=100)
             for phone in result.get('items', []):
                 phone_name = phone.get('serialName', '')
-                if phone.get('status') == 1:  # Running
+                if phone.get('status') != 0:  # 0=stopped, 1=starting, 2=running  # Running
                     if phone_name in campaign_accounts_set:
                         client.stop_phone(phone['id'])
                         logger.info(f"  Stopped: {phone_name}")
@@ -1005,7 +1005,7 @@ def show_status_ctx(ctx: PostingContext, parallel_config: ParallelConfig) -> Non
     try:
         client = GeelarkClient()
         result = client.list_phones(page_size=100)
-        running = [p for p in result.get('items', []) if p.get('status') == 1]
+        running = [p for p in result.get('items', []) if p.get('status') != 0]  # 0=stopped, 1=starting, 2=running
 
         # If campaign mode, highlight which phones are in the campaign
         if ctx.is_campaign_mode():

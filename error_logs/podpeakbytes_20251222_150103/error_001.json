@@ -1,0 +1,141 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-22T15:05:10.364380",
+  "account": "podpeakbytes",
+  "job_id": "DHcZBHVA0yfi-3.mp4",
+  "phase": "navigation",
+  "error_type": "loop_stuck",
+  "error_class": "Exception",
+  "error_message": "Loop stuck on action: open_instagram",
+  "error_repr": "Exception('Loop stuck on action: open_instagram')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "step": 14,
+    "recent_actions": [
+      "open_instagram",
+      "open_instagram",
+      "open_instagram",
+      "open_instagram",
+      "open_instagram"
+    ],
+    "loop_recovery_count": 3,
+    "video_uploaded": true,
+    "caption_entered": false,
+    "share_clicked": false
+  },
+  "ui_elements_count": 10,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "Search",
+      "id": "qsb_widget",
+      "bounds": "[14,57][706,345]",
+      "center": [
+        360,
+        201
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "search_icon",
+      "bounds": "[29,161][107,239]",
+      "center": [
+        68,
+        200
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "search_widget_text",
+      "bounds": "[107,166][683,235]",
+      "center": [
+        395,
+        200
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Gallery",
+      "desc": "Gallery",
+      "id": "",
+      "bounds": "[187,921][360,1209]",
+      "center": [
+        273,
+        1065
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Play Store",
+      "desc": "Play Store",
+      "id": "",
+      "bounds": "[533,921][706,1209]",
+      "center": [
+        619,
+        1065
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Home",
+      "id": "",
+      "bounds": "[0,39][720,1362]",
+      "center": [
+        360,
+        700
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Phone",
+      "desc": "Phone",
+      "id": "",
+      "bounds": "[14,1251][187,1362]",
+      "center": [
+        100,
+        1306
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Messaging",
+      "desc": "Messaging",
+      "id": "",
+      "bounds": "[187,1251][360,1362]",
+      "center": [
+        273,
+        1306
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Chrome",
+      "desc": "Chrome",
+      "id": "",
+      "bounds": "[360,1251][533,1362]",
+      "center": [
+        446,
+        1306
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Open Camera",
+      "desc": "Open Camera",
+      "id": "",
+      "bounds": "[533,1251][706,1362]",
+      "center": [
+        619,
+        1306
+      ],
+      "clickable": true
+    }
+  ],
+  "screenshot_file": "error_logs\\podpeakbytes_20251222_150103\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\podpeakbytes_20251222_150103\\error_001_page_source.xml"
+}
