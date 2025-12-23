@@ -674,10 +674,17 @@ class ScreenDetector:
         # Check for Google/Chrome by text (case insensitive)
         has_google_text = any(gt in all_text for gt in google_text_indicators)
 
+        # IMPORTANT: Check for Instagram elements to avoid false positives
+        # from hashtags like #googleads in captions
+        instagram_ids = ['caption_input_text_view', 'share_button', 'action_bar_title',
+            'clips_tab', 'feed_tab', 'profile_tab', 'save_draft_button']
+        has_ig_elements = any(ig_id in all_ids for ig_id in instagram_ids)
+
         # If we're in Google search or Chrome, return high confidence
-        if has_google_id:
+        # But NOT if we see Instagram elements
+        if has_google_id and not has_ig_elements:
             return 0.95, ['google_search_id']
-        if has_google_text and 'instagram' not in all_text.lower():
+        if has_google_text and 'instagram' not in all_text.lower() and not has_ig_elements:
             return 0.90, ['google_search_text']
 
         # Android home screen detection (original logic)
