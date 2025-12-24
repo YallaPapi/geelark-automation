@@ -1,6 +1,6 @@
 # Geelark Automation Documentation
 
-Automated Instagram Reels posting system using Geelark cloud phones, Appium, and Claude AI.
+Automated Instagram posting and follow campaigns using Geelark cloud phones, Appium, and hybrid AI+rule-based navigation.
 
 ## Table of Contents
 
@@ -11,21 +11,27 @@ Automated Instagram Reels posting system using Geelark cloud phones, Appium, and
 
 ## Overview
 
-This system automates posting videos to Instagram Reels through Geelark cloud Android phones. It uses:
+This system automates Instagram actions through Geelark cloud Android phones. It supports:
+
+- **Reel Posting** - Automated video posting with captions
+- **Follow Campaigns** - Automated following of target accounts
+
+### Technology Stack
 
 - **Geelark API** - Cloud phone management (start/stop phones, ADB access, file uploads)
 - **Appium** - Android UI automation via UiAutomator2
-- **Claude AI** - Intelligent UI analysis and navigation decisions
-- **Parallel Workers** - Multi-phone concurrent posting with file-locked job tracking
+- **Hybrid Navigation** - Rule-based screen detection with optional Claude AI fallback
+- **Parallel Workers** - Multi-phone concurrent execution with file-locked job tracking
 
 ### Key Features
 
-- **Smart Navigation**: Claude AI analyzes UI screenshots to determine next actions
-- **Parallel Execution**: Run multiple workers posting to different phones simultaneously
+- **Hybrid Navigation**: Rule-based detection eliminates AI API costs for most screens
+- **Parallel Execution**: Run multiple workers on different phones simultaneously
 - **Retry Logic**: Automatic retry with configurable attempts and delays
-- **Error Classification**: Distinguishes retryable errors from permanent failures (suspended, banned)
-- **Progress Tracking**: File-locked CSV ensures no duplicate posts across workers
-- **Humanization**: Optional random actions before posting to appear more natural
+- **Error Classification**: Distinguishes retryable errors from permanent failures
+- **Progress Tracking**: File-locked CSV ensures no duplicate actions across workers
+- **Flow Logging**: JSONL logs for debugging navigation decisions
+- **Global Deduplication**: Prevents duplicate follows across campaigns
 
 ## Architecture
 
@@ -56,18 +62,41 @@ This system automates posting videos to Instagram Reels through Geelark cloud An
 
 ```
 geelark-automation/
-├── config.py                 # Centralized configuration
-├── geelark_client.py         # Geelark API client
-├── device_connection.py      # Device connection lifecycle
-├── post_reel_smart.py        # Core posting logic + Claude AI
-├── claude_analyzer.py        # Claude UI analysis
-├── appium_ui_controller.py   # Appium UI interactions
-├── progress_tracker.py       # File-locked job tracking
-├── parallel_orchestrator.py  # Multi-worker orchestration
-├── parallel_worker.py        # Individual worker process
-├── parallel_config.py        # Parallel execution config
-├── posting_scheduler.py      # Alternative single-threaded scheduler
-└── docs/                     # Documentation
+├── config.py                    # Centralized configuration
+├── geelark_client.py            # Geelark API client
+├── device_connection.py         # Device connection lifecycle
+├── appium_ui_controller.py      # Appium UI interactions
+│
+├── # Posting System
+├── parallel_orchestrator.py     # Multi-worker posting orchestration
+├── parallel_worker.py           # Posting worker process
+├── post_reel_smart.py           # Core posting logic
+├── progress_tracker.py          # Posting job tracking
+│
+├── # Follow System
+├── follow_orchestrator.py       # Multi-worker follow orchestration
+├── follow_worker.py             # Follow worker process
+├── follow_single.py             # Core follow logic
+├── follow_tracker.py            # Follow job tracking
+│
+├── # Hybrid Navigation (Posting)
+├── screen_detector.py           # Posting screen detection
+├── action_engine.py             # Posting action rules
+├── hybrid_navigator.py          # Posting hybrid coordinator
+│
+├── # Hybrid Navigation (Follow)
+├── follow_screen_detector.py    # Follow screen detection
+├── follow_action_engine.py      # Follow action rules
+├── hybrid_follow_navigator.py   # Follow hybrid coordinator
+│
+├── # AI & Logging
+├── claude_analyzer.py           # Claude AI fallback
+├── flow_logger.py               # JSONL flow logging
+│
+├── # Infrastructure
+├── parallel_config.py           # Parallel execution config
+├── appium_server_manager.py     # Appium server lifecycle
+└── docs/                        # Documentation
 ```
 
 ## Quick Start
@@ -138,7 +167,9 @@ python parallel_orchestrator.py --stop-all
 | [API Reference](api-reference.md) | GeelarkClient API documentation |
 | [Core Modules](modules.md) | SmartInstagramPoster, DeviceConnectionManager, etc. |
 | [Configuration](configuration.md) | Config class reference |
-| [Parallel Execution](parallel-execution.md) | Multi-worker setup and usage |
+| [Parallel Execution](parallel-execution.md) | Multi-worker posting setup |
+| [Follow System](follow-system.md) | Follow campaign orchestration |
+| [Hybrid Navigation](hybrid-navigation.md) | Rule-based screen detection |
 
 ## Support
 

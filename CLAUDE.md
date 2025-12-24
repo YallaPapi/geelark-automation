@@ -264,6 +264,114 @@ python posting_scheduler.py --retry-all
 
 ---
 
+## Follow Orchestrator (follow_orchestrator.py)
+
+**Run follow campaigns across multiple accounts in parallel.**
+
+### Entry Points:
+```bash
+# Run follow campaign with 5 workers
+python follow_orchestrator.py --workers 5 --run
+
+# Check follow campaign status
+python follow_orchestrator.py --status
+
+# Stop all follow workers
+python follow_orchestrator.py --stop-all
+```
+
+### Architecture:
+```
+follow_orchestrator.py (main process)
+    ├── Worker 0 ──► Appium:4723 ──► Phone ──► Follow targets
+    ├── Worker 1 ──► Appium:4725 ──► Phone ──► Follow targets
+    └── Worker N ──► Appium:472X ──► Phone ──► Follow targets
+```
+
+### Key Features:
+- **Hybrid Navigation**: 100% rule-based screen detection (NO AI calls for navigation)
+- **Parallel Execution**: Multiple workers following targets simultaneously
+- **Deduplication**: `all_followed_accounts.txt` tracks globally followed accounts
+- **Campaign Progress**: `campaigns/<campaign>/follow_progress.csv` tracks per-campaign state
+
+### Campaign Structure:
+```
+campaigns/
+└── podcast/
+    ├── follow_progress.csv    # Campaign progress tracking
+    ├── targets.txt            # Target accounts to follow (one per line)
+    └── accounts.txt           # Source accounts for this campaign
+```
+
+### Follow System Files:
+| File | Purpose |
+|------|---------|
+| `follow_orchestrator.py` | Main orchestrator - spawns workers |
+| `follow_worker.py` | Worker process - claims jobs, executes follows |
+| `follow_single.py` | Single follow execution logic |
+| `follow_tracker.py` | Campaign progress tracking (CSV-based) |
+| `hybrid_follow_navigator.py` | Hybrid rule-based navigation |
+| `follow_screen_detector.py` | Screen type detection for follow flow |
+| `follow_action_engine.py` | Rule-based actions for follow flow |
+
+---
+
+## Hybrid Navigation System
+
+**Rule-based screen detection + action engine that eliminates AI API calls for navigation.**
+
+### How It Works:
+1. **Screen Detection**: Analyzes UI elements to determine current screen type
+2. **Action Engine**: Returns the appropriate action based on screen type + state
+3. **AI Fallback**: Only used when rules can't determine action (optional)
+
+### Screen Types (Posting):
+```python
+class ScreenType(Enum):
+    HOME_FEED = "home_feed"
+    REELS_TAB = "reels_tab"
+    CREATE_MENU = "create_menu"
+    GALLERY_PICKER = "gallery_picker"
+    VIDEO_EDITOR = "video_editor"
+    CAPTION_SCREEN = "caption_screen"
+    SHARING_SCREEN = "sharing_screen"
+    POST_COMPLETE = "post_complete"
+    POPUP_DISMISSIBLE = "popup_dismissible"
+    UNKNOWN = "unknown"
+```
+
+### Screen Types (Follow):
+```python
+class FollowScreenType(Enum):
+    HOME_FEED = "home_feed"
+    EXPLORE_PAGE = "explore_page"
+    SEARCH_INPUT = "search_input"
+    SEARCH_RESULTS = "search_results"
+    TARGET_PROFILE = "target_profile"
+    FOLLOW_SUCCESS = "follow_success"
+    POPUP_DISMISSIBLE = "popup_dismissible"
+    UNKNOWN = "unknown"
+```
+
+### Hybrid Navigation Files:
+| File | Purpose |
+|------|---------|
+| `screen_detector.py` | Posting flow screen detection |
+| `action_engine.py` | Posting flow rule-based actions |
+| `hybrid_navigator.py` | Posting hybrid AI+rules navigation |
+| `follow_screen_detector.py` | Follow flow screen detection |
+| `follow_action_engine.py` | Follow flow rule-based actions |
+| `hybrid_follow_navigator.py` | Follow hybrid navigation |
+| `flow_logger.py` | JSONL logging for debugging flows |
+
+### Benefits:
+- **Zero AI costs** for navigation when rules work
+- **Faster execution** - no API round-trips
+- **Deterministic** - same UI = same action
+- **Debuggable** - flow logs show exact detection + actions
+
+---
+
 ## Key Files
 
 ### Core Parallel Posting System
@@ -288,6 +396,25 @@ python posting_scheduler.py --retry-all
 | `parallel_progress.csv` | Daily job ledger (file-locked, NEVER delete) |
 | `scheduler_state.json` | Account history, job source |
 | `accounts.txt` | 82 approved posting accounts |
+
+### Hybrid Navigation System
+| File | Purpose |
+|------|---------|
+| `screen_detector.py` | Screen type detection for posting flow |
+| `action_engine.py` | Rule-based actions for posting flow |
+| `hybrid_navigator.py` | Hybrid AI+rules navigation for posting |
+| `flow_logger.py` | JSONL flow logging for debugging |
+
+### Follow Campaign System
+| File | Purpose |
+|------|---------|
+| `follow_orchestrator.py` | Main follow orchestrator |
+| `follow_worker.py` | Parallel follow worker process |
+| `follow_single.py` | Single follow execution |
+| `follow_tracker.py` | CSV-based follow progress tracking |
+| `follow_screen_detector.py` | Screen detection for follow flow |
+| `follow_action_engine.py` | Rule-based actions for follow flow |
+| `hybrid_follow_navigator.py` | Hybrid navigation for follow flow |
 
 ### Legacy (Use Orchestrator Instead)
 | File | Purpose |

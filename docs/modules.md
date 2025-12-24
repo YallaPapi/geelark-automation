@@ -1,10 +1,26 @@
 # Core Modules Reference
 
+## Table of Contents
+
+- [SmartInstagramPoster](#smartinstagramposter) - Core posting logic
+- [DeviceConnectionManager](#deviceconnectionmanager) - Phone connection lifecycle
+- [ProgressTracker](#progresstracker) - Job tracking for posting
+- [ScreenDetector](#screendetector) - Screen type detection
+- [ActionEngine](#actionengine) - Rule-based action decisions
+- [HybridNavigator](#hybridnavigator) - Hybrid AI+rules navigation
+- [FollowScreenDetector](#followscreendetector) - Follow flow screen detection
+- [FollowActionEngine](#followactionengine) - Follow flow actions
+- [FlowLogger](#flowlogger) - Navigation debugging logs
+- [ClaudeUIAnalyzer](#claudeuianalyzer) - AI fallback
+- [AppiumUIController](#appiumuicontroller) - Low-level UI control
+
+---
+
 ## SmartInstagramPoster
 
 **File:** `post_reel_smart.py`
 
-The main class for posting videos to Instagram Reels using Claude AI for navigation.
+The main class for posting videos to Instagram Reels using hybrid navigation.
 
 ### Initialization
 
@@ -361,3 +377,211 @@ elements = ui.dump_ui()  # Parse UI hierarchy
 | `type_text(text)` | Type text (supports Unicode) |
 | `dump_ui()` | Parse UI XML to element list |
 | `scroll_down()` / `scroll_up()` | Scroll the screen |
+
+---
+
+## ScreenDetector
+
+**File:** `screen_detector.py`
+
+Rule-based screen type detection for posting flow.
+
+```python
+from screen_detector import ScreenDetector, ScreenType
+
+detector = ScreenDetector()
+screen_type, confidence, details = detector.detect(elements)
+
+# Returns:
+# screen_type: ScreenType.HOME_FEED
+# confidence: 0.95
+# details: {"markers": ["feed_tab", "clips_tab"], "element_index": None}
+```
+
+### ScreenType Enum
+
+| Value | Description |
+|-------|-------------|
+| `HOME_FEED` | Main Instagram feed |
+| `REELS_TAB` | Reels viewing tab |
+| `CREATE_MENU` | Create content menu |
+| `GALLERY_PICKER` | Photo/video picker |
+| `VIDEO_EDITOR` | Video editing screen |
+| `CAPTION_SCREEN` | Add caption screen |
+| `SHARING_SCREEN` | Share options |
+| `POST_COMPLETE` | Post success |
+| `POPUP_DISMISSIBLE` | Dismissible popup |
+| `UNKNOWN` | Unrecognized screen |
+
+---
+
+## ActionEngine
+
+**File:** `action_engine.py`
+
+Rule-based action decisions for posting flow.
+
+```python
+from action_engine import ActionEngine
+
+engine = ActionEngine()
+action = engine.get_action(
+    screen_type=ScreenType.HOME_FEED,
+    elements=elements,
+    state={"video_uploaded": False, "caption_entered": False}
+)
+
+# Returns:
+# {"action": "tap", "element_index": 5, "reason": "Tap + button"}
+```
+
+### Action Types
+
+| Action | Description |
+|--------|-------------|
+| `tap` | Tap element at index |
+| `type` | Type text into focused field |
+| `swipe` | Swipe gesture |
+| `press_back` | Press back button |
+| `wait` | Wait before next action |
+| `success` | Flow complete |
+| `error` | Unrecoverable error |
+
+---
+
+## HybridNavigator
+
+**File:** `hybrid_navigator.py`
+
+Coordinates screen detection and action execution with optional AI fallback.
+
+```python
+from hybrid_navigator import HybridNavigator
+
+navigator = HybridNavigator(
+    ui_controller=appium_controller,
+    ai_analyzer=claude_analyzer,  # Optional, pass None to disable
+    flow_logger=logger
+)
+
+action = navigator.get_next_action(
+    state={"video_uploaded": True, "caption_entered": False}
+)
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `ui_controller` | AppiumUIController | UI interaction handler |
+| `ai_analyzer` | ClaudeUIAnalyzer | AI fallback (optional) |
+| `flow_logger` | FlowLogger | JSONL logging (optional) |
+
+---
+
+## FollowScreenDetector
+
+**File:** `follow_screen_detector.py`
+
+Screen type detection for follow flow.
+
+```python
+from follow_screen_detector import FollowScreenDetector, FollowScreenType
+
+detector = FollowScreenDetector()
+screen_type, confidence, details = detector.detect(elements, target="username")
+```
+
+### FollowScreenType Enum
+
+| Value | Description |
+|-------|-------------|
+| `HOME_FEED` | Instagram home feed |
+| `EXPLORE_PAGE` | Search/explore grid |
+| `SEARCH_INPUT` | Search bar focused |
+| `SEARCH_RESULTS` | Search results showing |
+| `TARGET_PROFILE` | User profile page |
+| `FOLLOW_SUCCESS` | Following confirmed |
+| `ABOUT_ACCOUNT_PAGE` | Account info page |
+| `REELS_SCREEN` | Reels viewing |
+| `POPUP_DISMISSIBLE` | Dismissible popup |
+| `UNKNOWN` | Unrecognized |
+
+---
+
+## FollowActionEngine
+
+**File:** `follow_action_engine.py`
+
+Rule-based actions for follow flow.
+
+```python
+from follow_action_engine import FollowActionEngine
+
+engine = FollowActionEngine()
+action = engine.get_action(
+    screen_type=FollowScreenType.SEARCH_INPUT,
+    elements=elements,
+    state={"target": "username", "search_opened": True}
+)
+```
+
+---
+
+## FlowLogger
+
+**File:** `flow_logger.py`
+
+JSONL logging for debugging navigation flows.
+
+```python
+from flow_logger import FlowLogger
+
+logger = FlowLogger("account_name")
+
+# Log navigation step
+logger.log_step(
+    step=1,
+    elements=elements,
+    screen_type=ScreenType.HOME_FEED,
+    action={"action": "tap", "element_index": 5},
+    ai_called=False
+)
+
+# End session
+logger.end_session(success=True, total_steps=5)
+```
+
+### Log Output
+
+Logs written to `flow_analysis/<account>_<timestamp>.jsonl`:
+
+```json
+{"event": "session_start", "account": "myaccount", "timestamp": "..."}
+{"event": "step", "step": 1, "screen_type": "home_feed", "action": {...}}
+{"event": "success", "total_steps": 5, "duration_seconds": 12.5}
+```
+
+---
+
+## FollowTracker
+
+**File:** `follow_tracker.py`
+
+Process-safe job tracking for follow campaigns.
+
+```python
+from follow_tracker import FollowTracker
+
+tracker = FollowTracker("campaigns/mycampaign")
+
+# Claim next job
+job = tracker.claim_next_job(worker_id=0)
+
+# Update status
+tracker.update_job_status(job["job_id"], "success", worker_id=0)
+
+# Get stats
+stats = tracker.get_stats()
+# {"pending": 50, "claimed": 2, "success": 45, "failed": 3}
+```

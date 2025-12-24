@@ -17,7 +17,14 @@ client = GeelarkClient(token="your_token_here")
 ```
 
 **Environment Variables:**
-- `GEELARK_TOKEN` (required) - API bearer token
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `GEELARK_TOKEN` | Yes | API bearer token for authentication |
+| `GEELARK_APP_ID` | No | App ID (alternative auth method) |
+| `GEELARK_API_KEY` | No | API key (alternative auth method) |
+
+**Note:** The primary authentication method uses `GEELARK_TOKEN` (Bearer token). Set this in your `.env` file.
 
 **Raises:**
 - `GeelarkCredentialError` - If GEELARK_TOKEN is missing
