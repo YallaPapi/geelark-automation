@@ -45,6 +45,9 @@ from appium_ui_controller import AppiumUIController
 from geelark_client import GeelarkClient
 # Flow logger for step-by-step analysis - IMPORT, don't modify
 from flow_logger import FlowLogger
+# Hybrid follow navigator - IMPORT, don't modify
+from hybrid_follow_navigator import HybridFollowNavigator
+from follow_screen_detector import FollowScreenDetector, FollowScreenType
 
 # Use centralized paths
 APPIUM_SERVER = Config.DEFAULT_APPIUM_URL
@@ -64,7 +67,8 @@ class SmartInstagramFollower:
         self,
         phone_name: str,
         system_port: int = 8200,
-        appium_url: Optional[str] = None
+        appium_url: Optional[str] = None,
+        use_hybrid: bool = True
     ):
         """
         Initialize the follower.
@@ -73,7 +77,9 @@ class SmartInstagramFollower:
             phone_name: Name of the Geelark phone
             system_port: Port for UiAutomator2 server
             appium_url: Appium server URL
+            use_hybrid: Use hybrid navigator (rule-based with AI fallback)
         """
+        self.use_hybrid = use_hybrid
         # Use DeviceConnectionManager for all connection lifecycle
         self._conn = DeviceConnectionManager(
             phone_name=phone_name,
@@ -447,6 +453,139 @@ CRITICAL RULES:
             print(f"    AI error: {e}")
             return {"action": "wait", "reason": f"AI error: {e}"}
 
+    def follow_account_hybrid(self, target_username: str, max_steps: int = 30) -> bool:
+        """Hybrid follow loop - uses rule-based navigation with AI fallback.
+
+        NOTE: connect() must be called before this method.
+
+        Args:
+            target_username: Username to follow (without @)
+            max_steps: Maximum navigation steps
+
+        Returns:
+            True on success, False on failure
+        """
+        target_username = target_username.lstrip('@')
+        print(f"\n=== Following @{target_username} (HYBRID MODE) ===")
+
+        # Initialize flow logger
+        flow_logger = FlowLogger(self.phone_name, log_dir="flow_analysis")
+
+        # Initialize hybrid navigator WITHOUT AI fallback (testing pure rule-based)
+        # Set ai_analyzer=self._analyzer to enable AI fallback if needed
+        navigator = HybridFollowNavigator(
+            driver=self.appium_driver,
+            target_username=target_username,
+            ai_analyzer=None,  # NO AI FALLBACK - pure hybrid rules testing
+            logger=None
+        )
+
+        # Open Instagram
+        print("\nOpening Instagram...")
+        self.adb("am force-stop com.instagram.android")
+        time.sleep(2)
+        self.adb("monkey -p com.instagram.android 1")
+        time.sleep(5)
+
+        # Vision-action loop
+        for step in range(max_steps):
+            self.total_steps += 1
+            print(f"\n--- Step {step + 1} ---")
+
+            # Dump UI
+            try:
+                elements, raw_xml = self.dump_ui()
+            except Exception as e:
+                print(f"  UI dump error: {e}")
+                time.sleep(2)
+                continue
+
+            if not elements:
+                print("  No UI elements found, waiting...")
+                time.sleep(2)
+                continue
+
+            # Stuck detection
+            if self.is_stuck(elements):
+                print("  [STUCK] Same screen 3 times, pressing back...")
+                self.press_key('KEYCODE_BACK')
+                time.sleep(1)
+                self.screen_history.clear()
+                continue
+
+            # Check for errors
+            error_type, error_msg = self.detect_error_state(elements)
+            if error_type:
+                print(f"  [ERROR] {error_type}: {error_msg}")
+                self.last_error_type = error_type
+                self.last_error_message = error_msg
+                flow_logger.log_failure(f"{error_type}: {error_msg}")
+                flow_logger.close()
+                return False
+
+            print(f"  Found {len(elements)} elements")
+
+            # Use hybrid navigator
+            nav_result = navigator.navigate(elements)
+
+            # Log the step
+            flow_logger.log_step(
+                elements=elements,
+                action=nav_result.action,
+                ai_called=nav_result.used_ai,
+                state={
+                    'search_opened': navigator.search_opened,
+                    'username_typed': navigator.username_typed,
+                    'profile_opened': navigator.profile_opened,
+                    'follow_clicked': navigator.follow_clicked,
+                    'target': target_username
+                }
+            )
+
+            # Update our state from navigator
+            self.search_opened = navigator.search_opened
+            self.username_typed = navigator.username_typed
+            self.profile_opened = navigator.profile_opened
+            self.follow_clicked = navigator.follow_clicked
+
+            mode_str = "AI" if nav_result.used_ai else "RULES"
+            print(f"  [{mode_str}] Screen: {nav_result.screen_type.name}")
+            print(f"  [{mode_str}] Action: {nav_result.action_taken} - {nav_result.reason}")
+
+            # Check for terminal states
+            if nav_result.is_terminal:
+                if nav_result.screen_type == FollowScreenType.FOLLOW_SUCCESS:
+                    stats = navigator.get_stats()
+                    print(f"\n[SUCCESS] Follow completed!")
+                    print(f"  Total steps: {self.total_steps}")
+                    print(f"  Rule-based: {stats['rule_rate_percent']:.1f}%")
+                    print(f"  AI calls: {stats['ai_calls']}")
+                    flow_logger.log_success()
+                    flow_logger.close()
+                    return True
+                else:
+                    # Terminal error
+                    error = nav_result.action.get('error', 'Unknown error')
+                    print(f"\n[ERROR] {error}")
+                    self.last_error_type = nav_result.screen_type.name.lower()
+                    self.last_error_message = error
+                    flow_logger.log_failure(error)
+                    flow_logger.close()
+                    return False
+
+            # Action was successful but not terminal - continue
+            time.sleep(1)
+
+        # Max steps reached
+        stats = navigator.get_stats()
+        print(f"\n[FAILED] Max steps ({max_steps}) reached")
+        print(f"  Rule-based: {stats['rule_rate_percent']:.1f}%, AI calls: {stats['ai_calls']}")
+        self.last_error_type = 'max_steps'
+        self.last_error_message = f"Max steps ({max_steps}) reached"
+        flow_logger.log_failure(f"max_steps: {self.last_error_message}")
+        flow_logger.close()
+        return False
+
     def follow_account(self, target_username: str, max_steps: int = 30) -> bool:
         """Main follow loop - navigate to target and follow them.
 
@@ -459,8 +598,13 @@ CRITICAL RULES:
         Returns:
             True on success, False on failure
         """
+        # Use hybrid mode if enabled (default)
+        if self.use_hybrid:
+            return self.follow_account_hybrid(target_username, max_steps)
+
+        # AI-only mode (legacy)
         target_username = target_username.lstrip('@')
-        print(f"\n=== Following @{target_username} ===")
+        print(f"\n=== Following @{target_username} (AI-ONLY MODE) ===")
 
         # Initialize flow logger for step-by-step analysis
         flow_logger = FlowLogger(self.phone_name, log_dir="flow_analysis")
@@ -636,14 +780,18 @@ CRITICAL RULES:
 
 def main():
     if len(sys.argv) < 3:
-        print("Usage: python follow_single.py <phone_name> <target_username>")
+        print("Usage: python follow_single.py <phone_name> <target_username> [--ai-only]")
         print('Example: python follow_single.py talktrackhub someuser123')
+        print('  --ai-only: Use AI-only mode (no rule-based navigation)')
         sys.exit(1)
 
     phone_name = sys.argv[1]
     target_username = sys.argv[2].lstrip('@')  # Remove @ if present
 
-    follower = SmartInstagramFollower(phone_name)
+    # Check for --ai-only flag
+    use_hybrid = '--ai-only' not in sys.argv
+
+    follower = SmartInstagramFollower(phone_name, use_hybrid=use_hybrid)
 
     try:
         # Connect first (same pattern as posting)

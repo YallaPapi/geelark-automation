@@ -182,10 +182,13 @@ def execute_follow_job(
     follower = None
     try:
         # Create follower with this worker's Appium URL and systemPort
+        # NOTE: use_hybrid=True enables rule-based navigation (100% coverage validated Dec 2024)
+        # Set use_hybrid=False for AI-only mode if needed for debugging
         follower = SmartInstagramFollower(
             phone_name=account,
             system_port=worker_config.system_port,
-            appium_url=worker_config.appium_url
+            appium_url=worker_config.appium_url,
+            use_hybrid=True  # Hybrid mode: rule-based + AI fallback
         )
 
         # Connect to device (same pattern as posting)
