@@ -474,12 +474,15 @@ class ActionEngine:
         )
 
     def _handle_sharing_progress(self, elements: List[Dict]) -> Action:
-        """Handle sharing in progress - wait for completion."""
+        """Handle sharing in progress - treat as success.
+
+        Instagram uploads in background once 'Sharing to Reels...' appears.
+        No need to wait - the post is effectively submitted.
+        """
         return Action(
-            action_type=ActionType.WAIT,
-            wait_seconds=3.0,
-            reason="Waiting for upload to complete",
-            confidence=0.9
+            action_type=ActionType.SUCCESS,
+            reason="Sharing to Reels detected - post submitted successfully (background upload)",
+            confidence=0.95
         )
 
     def _handle_success(self, elements: List[Dict]) -> Action:

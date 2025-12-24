@@ -115,6 +115,10 @@ class ProgressTracker:
             'action_blocked': ['action blocked', 'try again later', 'temporarily blocked'],
             'banned': ['banned', 'permanently banned', 'violating our terms'],
         },
+        'content': {  # Non-retryable - video/content file issues (can't fix by retrying)
+            'corrupted_video': ['video corrupted', 'moov atom', 'invalid data',
+                               'no duration', 'zero duration', 'file not found'],
+        },
         'infrastructure': {  # Retryable - transient infrastructure issues
             'adb_timeout': ['adb timeout', 'adb connection', 'connection timed out',
                            'device offline', 'device not found', 'adb server',
@@ -132,12 +136,12 @@ class ProgressTracker:
     }
 
     # Non-retryable categories (for backward compatibility and quick lookup)
-    NON_RETRYABLE_CATEGORIES = {'account'}
+    NON_RETRYABLE_CATEGORIES = {'account', 'content'}
 
     # Legacy NON_RETRYABLE_ERRORS set (for backward compatibility)
-    # All error types under 'account' category are non-retryable
+    # All error types under 'account' and 'content' categories are non-retryable
     NON_RETRYABLE_ERRORS = {'terminated', 'suspended', 'disabled', 'verification', 'logged_out',
-                            'action_blocked', 'banned'}
+                            'action_blocked', 'banned', 'corrupted_video'}
 
     # Default retry settings
     DEFAULT_MAX_ATTEMPTS = 3

@@ -23,6 +23,7 @@ import time
 import re
 import json
 import random
+import subprocess
 import xml.etree.ElementTree as ET
 import anthropic
 from geelark_client import GeelarkClient
@@ -685,9 +686,9 @@ Be concise and direct."""
         time.sleep(1)
 
         # Method 1: Try Appium activate_app() (most reliable)
-        if self.driver:
+        if self.appium_driver:
             try:
-                self.driver.activate_app('com.instagram.android')
+                self.appium_driver.activate_app('com.instagram.android')
                 print("  [OPEN] Launched via Appium activate_app()")
                 time.sleep(4)
                 return
@@ -949,6 +950,54 @@ Be concise and direct."""
         """Connect Appium driver - REQUIRED for automation to work"""
         return self._conn.connect_appium(retries=retries)
 
+    def validate_video(self, video_path):
+        """Check if video file is valid (not corrupted).
+
+        Returns:
+            tuple: (is_valid, duration_or_error_message)
+        """
+        if not os.path.exists(video_path):
+            return False, f"File not found: {video_path}"
+
+        try:
+            # Use ffprobe to check video metadata
+            result = subprocess.run(
+                ['ffprobe', '-v', 'error', '-show_entries', 'format=duration',
+                 '-of', 'default=noprint_wrappers=1:nokey=1', video_path],
+                capture_output=True,
+                text=True,
+                timeout=30
+            )
+
+            if result.returncode != 0:
+                error_msg = result.stderr.strip()
+                if 'moov atom not found' in error_msg:
+                    return False, "Video corrupted: missing moov atom (metadata)"
+                elif 'Invalid data' in error_msg:
+                    return False, "Video corrupted: invalid data"
+                else:
+                    return False, f"Video error: {error_msg[:100]}"
+
+            # Parse duration
+            duration_str = result.stdout.strip()
+            if not duration_str:
+                return False, "Video has no duration metadata"
+
+            duration = float(duration_str)
+            if duration <= 0:
+                return False, "Video has zero or negative duration"
+
+            return True, duration
+
+        except subprocess.TimeoutExpired:
+            return False, "Video validation timed out"
+        except FileNotFoundError:
+            # ffprobe not installed - skip validation
+            print("  [WARN] ffprobe not found, skipping video validation")
+            return True, "skipped"
+        except Exception as e:
+            return False, f"Validation error: {str(e)}"
+
     def upload_video(self, video_path):
         """Upload video to phone"""
         print(f"\nUploading video: {video_path}")
@@ -1018,6 +1067,21 @@ Be concise and direct."""
         else:
             self._hybrid_navigator = None
             print(f"[AI-ONLY MODE] Using Claude for every navigation decision (flow mapping)")
+
+        # Validate video before upload (detect corrupted files)
+        print(f"\nValidating video: {video_path}")
+        is_valid, result = self.validate_video(video_path)
+        if not is_valid:
+            self.last_error_type = "corrupted_video"
+            self.last_error_message = result
+            print(f"  [ERROR] {result}")
+            print(f"  Skipping this video - file is corrupted or invalid")
+            flow_logger.end_session(success=False, total_steps=0,
+                                    error_type="corrupted_video", error_message=result)
+            return False
+        else:
+            if result != "skipped":
+                print(f"  Video valid: {result:.1f}s duration")
 
         # Upload video first
         self.upload_video(video_path)
