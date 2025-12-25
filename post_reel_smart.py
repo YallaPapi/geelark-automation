@@ -885,9 +885,14 @@ Be concise and direct."""
                 else:
                     raise Exception("Appium reconnect failed")
             else:
-                # Capture full error details for debugging
+                # Capture full error details for debugging (safely for Windows console)
                 import traceback
-                print(f"  [FULL ERROR]\n{traceback.format_exc()}")
+                try:
+                    tb_str = traceback.format_exc()
+                    safe_tb = tb_str.encode('ascii', 'replace').decode('ascii')
+                    print(f"  [FULL ERROR]\n{safe_tb}")
+                except (OSError, UnicodeEncodeError):
+                    pass  # Can't print - just continue with the exception
                 raise Exception(f"UI dump failed ({error_type}): {error_str[:100]}")
 
         if '<?xml' not in xml_str:
@@ -1076,8 +1081,7 @@ Be concise and direct."""
             self.last_error_message = result
             print(f"  [ERROR] {result}")
             print(f"  Skipping this video - file is corrupted or invalid")
-            flow_logger.end_session(success=False, total_steps=0,
-                                    error_type="corrupted_video", error_message=result)
+            flow_logger.log_error(error_type="corrupted_video", error_message=result)
             return False
         else:
             if result != "skipped":
@@ -1153,16 +1157,25 @@ Be concise and direct."""
                 flow_logger.close()
                 return False
 
-            # Show what we see (all elements)
-            print(f"  Found {len(elements)} elements")
-            for elem in elements:
-                parts = []
-                if elem['text']:
-                    parts.append(f"'{elem['text']}'")
-                if elem['desc']:
-                    parts.append(f"desc='{elem['desc']}'")
-                if parts:
-                    print(f"    {elem['bounds']} {' | '.join(parts)}")
+            # Show what we see (all elements) - wrapped in try/except for Windows console safety
+            try:
+                print(f"  Found {len(elements)} elements")
+                for elem in elements:
+                    parts = []
+                    text = elem.get('text') or ''
+                    desc = elem.get('desc') or ''
+                    if text:
+                        # Sanitize text for Windows console (remove unprintable chars)
+                        safe_text = str(text).encode('ascii', 'replace').decode('ascii')
+                        parts.append(f"'{safe_text}'")
+                    if desc:
+                        safe_desc = str(desc).encode('ascii', 'replace').decode('ascii')
+                        parts.append(f"desc='{safe_desc}'")
+                    if parts:
+                        print(f"    {elem.get('bounds', '?')} {' | '.join(parts)}")
+            except (OSError, UnicodeEncodeError):
+                # Windows console can't handle some chars - skip debug output
+                pass
 
             # Navigation: Hybrid (rule-based + AI fallback) or AI-only
             ai_called = False

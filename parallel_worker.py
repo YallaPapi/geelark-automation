@@ -461,8 +461,10 @@ def run_worker(
                     logger.info(f"Job {job_id} classified as: {error_category}/{error_type}")
 
             except Exception as e:
+                import traceback
                 error_msg = f"{type(e).__name__}: {str(e)}"
                 logger.error(f"Unhandled exception processing job {job_id}: {error_msg}")
+                logger.error(f"Full traceback:\n{traceback.format_exc()}")
                 # Classify the exception
                 cat, etype = tracker._classify_error(error_msg)
                 tracker.update_job_status(
