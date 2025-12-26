@@ -1,0 +1,213 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-26T11:18:43.697481",
+  "account": "podsnipworks",
+  "job_id": "DPBty5HEUID-2.mp4",
+  "phase": "navigation",
+  "error_type": "logged_out",
+  "error_class": "Exception",
+  "error_message": "logged_out: create new account",
+  "error_repr": "Exception('logged_out: create new account')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "step": 0,
+    "caption": "When the smartest person in the room suddenly can't string two sentences together... 😅\n\nThat freeze-",
+    "video_path": "C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\campaigns\\podcast\\videos\\chunk_01b\\askvinh\\DPBty5HEUID-2.mp4",
+    "video_uploaded": true,
+    "video_selected": false,
+    "caption_entered": false,
+    "share_clicked": false
+  },
+  "ui_elements_count": 17,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[48,108][1032,2226]",
+      "center": [
+        540,
+        1167
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "English (US)",
+      "id": "",
+      "bounds": "[48,108][1032,173]",
+      "center": [
+        540,
+        140
+      ],
+      "clickable": true
+    },
+    {
+      "text": "English (US)",
+      "desc": "English (US)",
+      "id": "",
+      "bounds": "[398,108][625,173]",
+      "center": [
+        511,
+        140
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Instagram from Meta",
+      "id": "",
+      "bounds": "[48,381][1032,561]",
+      "center": [
+        540,
+        471
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[48,829][1032,1008]",
+      "center": [
+        540,
+        918
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Username, email or mobile number",
+      "desc": "Username, email or mobile number",
+      "id": "",
+      "bounds": "[96,891][814,947]",
+      "center": [
+        455,
+        919
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Username, email or mobile number,",
+      "id": "",
+      "bounds": "[96,912][876,971]",
+      "center": [
+        486,
+        941
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[48,1044][1032,1223]",
+      "center": [
+        540,
+        1133
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Password",
+      "desc": "Password",
+      "id": "",
+      "bounds": "[96,1106][299,1162]",
+      "center": [
+        197,
+        1134
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Password,",
+      "id": "",
+      "bounds": "[96,1127][876,1186]",
+      "center": [
+        486,
+        1156
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Log in",
+      "id": "",
+      "bounds": "[48,1259][1032,1391]",
+      "center": [
+        540,
+        1325
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Log in",
+      "desc": "Log in",
+      "id": "",
+      "bounds": "[474,1294][607,1356]",
+      "center": [
+        540,
+        1325
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Forgot password?",
+      "id": "",
+      "bounds": "[298,1427][782,1535]",
+      "center": [
+        540,
+        1481
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Forgot password?",
+      "desc": "Forgot password?",
+      "id": "",
+      "bounds": "[346,1444][734,1518]",
+      "center": [
+        540,
+        1481
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Create new account",
+      "id": "",
+      "bounds": "[48,1951][1032,2083]",
+      "center": [
+        540,
+        2017
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Create new account",
+      "desc": "Create new account",
+      "id": "",
+      "bounds": "[324,1986][756,2048]",
+      "center": [
+        540,
+        2017
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Meta logo",
+      "id": "",
+      "bounds": "[450,2143][630,2179]",
+      "center": [
+        540,
+        2161
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\podsnipworks_20251226_111816\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\podsnipworks_20251226_111816\\error_001_page_source.xml"
+}

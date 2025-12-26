@@ -8,15 +8,18 @@ This module encapsulates the logic for:
 - Reconnecting on failures
 
 Extracted from SmartInstagramPoster to improve separation of concerns.
+
+Implements the DeviceManager interface for Geelark cloud phones.
 """
 import subprocess
 import time
-from typing import Optional, Tuple
+from typing import Dict, Optional, Tuple
 
 from appium import webdriver
 from appium.options.android import UiAutomator2Options
 
 from config import Config
+from device_manager_base import DeviceManager
 from geelark_client import GeelarkClient
 
 
@@ -126,8 +129,12 @@ def reconnect_adb_device(device_id: str, logger=None) -> bool:
         return False
 
 
-class DeviceConnectionManager:
-    """Manages device connection lifecycle for Geelark cloud phones."""
+class DeviceConnectionManager(DeviceManager):
+    """Manages device connection lifecycle for Geelark cloud phones.
+
+    Implements the DeviceManager interface for use with SmartInstagramPoster,
+    TikTokPoster, and parallel workers.
+    """
 
     def __init__(
         self,
@@ -502,3 +509,116 @@ class DeviceConnectionManager:
             'cannot be proxied',
             'probably crashed',
         ])
+
+    # =========================================================================
+    # DeviceManager Interface Implementation
+    # =========================================================================
+
+    @property
+    def device_type(self) -> str:
+        """Return device type identifier."""
+        return "geelark"
+
+    def ensure_connected(self, account_name: str) -> bool:
+        """
+        Ensure Geelark device is connected and ready.
+
+        This performs the full Geelark connection flow:
+        1. Find phone by name in Geelark
+        2. Start phone if not running
+        3. Enable ADB with retry logic
+        4. Connect ADB and authenticate
+
+        Args:
+            account_name: The account name (same as phone_name for Geelark)
+
+        Returns:
+            True if device is ready
+
+        Raises:
+            Exception: If connection fails
+        """
+        # For Geelark, phone_name IS the account identifier
+        # (each phone = one account)
+        phone = self.find_phone()
+        self.phone_id = phone["id"]
+
+        self.start_phone_if_needed(phone)
+
+        adb_info = self.enable_adb_with_retry()
+
+        self.connect_adb(adb_info)
+
+        return True
+
+    def get_adb_address(self) -> str:
+        """
+        Get ADB connection address for Appium.
+
+        Returns:
+            ADB address in "ip:port" format
+        """
+        if not self.device:
+            raise Exception("Device not connected - call ensure_connected() first")
+        return self.device
+
+    def upload_video(self, local_path: str) -> str:
+        """
+        Upload video to Geelark cloud phone.
+
+        Uses Geelark's file upload API to transfer video to device.
+
+        Args:
+            local_path: Local path to video file
+
+        Returns:
+            Remote path on device where video was uploaded
+
+        Raises:
+            Exception: If upload fails
+        """
+        import os
+        if not os.path.exists(local_path):
+            raise Exception(f"Video file not found: {local_path}")
+
+        if not self.phone_id:
+            raise Exception("Phone ID not set - call ensure_connected() first")
+
+        # Step 1: Upload local file to Geelark cloud CDN
+        resource_url = self.client.upload_file_to_geelark(local_path)
+
+        # Step 2: Upload from cloud CDN to phone's Downloads folder
+        upload_result = self.client.upload_file_to_phone(self.phone_id, resource_url)
+        task_id = upload_result.get("taskId")
+
+        # Step 3: Wait for upload to complete
+        self.client.wait_for_upload(task_id)
+
+        # Construct remote path (Geelark uploads to /sdcard/Download/)
+        filename = os.path.basename(local_path)
+        return f"/sdcard/Download/{filename}"
+
+    def get_appium_caps(self) -> Dict:
+        """
+        Get Appium desired capabilities for Geelark device.
+
+        Returns:
+            Dictionary of Appium capabilities
+        """
+        return {
+            'platformName': 'Android',
+            'automationName': 'UiAutomator2',
+            'deviceName': self.phone_name,
+            'udid': self.device or f"pending:{self.phone_name}",
+            'noReset': True,
+            'newCommandTimeout': 120,
+            'systemPort': self.system_port,
+        }
+
+    def cleanup(self) -> None:
+        """
+        Cleanup Geelark device after posting.
+
+        Stops the cloud phone to save billing minutes.
+        """
+        self.disconnect()

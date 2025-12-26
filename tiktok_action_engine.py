@@ -101,19 +101,21 @@ class TikTokActionEngine:
         """Handle TikTok home feed - tap Create button.
 
         Key elements from flow logs:
-        - id='lxd' with desc='Create' - Create button in bottom nav
+        Geelark: id='lxd' with desc='Create' - Create button in bottom nav
+        GrapheneOS v43.1.4: id='mkn' with desc='Create' - Create button in bottom nav
         """
-        # Primary: Find Create button by ID (lxd)
-        for i, el in enumerate(elements):
-            if el.get('id', '') == 'lxd':
-                desc = el.get('desc', '').lower()
-                if 'create' in desc:
-                    return Action(
-                        action_type=ActionType.TAP,
-                        target_element=i,
-                        reason="Tap Create button (id='lxd', desc='Create')",
-                        confidence=0.98
-                    )
+        # Primary: Find Create button by ID (lxd for Geelark, mkn for GrapheneOS v43.1.4)
+        for create_id in ['lxd', 'mkn']:
+            for i, el in enumerate(elements):
+                if el.get('id', '') == create_id:
+                    desc = el.get('desc', '').lower()
+                    if 'create' in desc:
+                        return Action(
+                            action_type=ActionType.TAP,
+                            target_element=i,
+                            reason=f"Tap Create button (id='{create_id}', desc='Create')",
+                            confidence=0.98
+                        )
 
         # Secondary: Find by desc only
         for i, el in enumerate(elements):
@@ -138,21 +140,39 @@ class TikTokActionEngine:
         """Handle camera/create menu - tap gallery to upload video.
 
         Key elements from flow logs:
+        Geelark:
         - id='c_u' - Gallery thumbnail (tap to open gallery)
         - id='q76' with desc='Record video' - Record button (not what we want)
-        """
-        # Primary: Find gallery thumbnail by ID (c_u)
-        for i, el in enumerate(elements):
-            if el.get('id', '') == 'c_u':
-                return Action(
-                    action_type=ActionType.TAP,
-                    target_element=i,
-                    reason="Tap gallery thumbnail (id='c_u') to select video",
-                    confidence=0.95
-                )
 
-        # Secondary: Find gallery by looking at bottom-left corner elements
-        # Gallery thumbnails appear as a grid in the bottom part of the screen
+        GrapheneOS v43.1.4:
+        - id='r3r' - Gallery thumbnail (center bottom, clickable)
+        - id='ymg' - Gallery preview (bottom left)
+        """
+        # Primary: Find gallery thumbnail by ID
+        # Geelark: c_u, GrapheneOS: r3r, ymg
+        gallery_ids = ['c_u', 'r3r', 'ymg']
+        for gallery_id in gallery_ids:
+            for i, el in enumerate(elements):
+                if el.get('id', '') == gallery_id and el.get('clickable', False):
+                    return Action(
+                        action_type=ActionType.TAP,
+                        target_element=i,
+                        reason=f"Tap gallery thumbnail (id='{gallery_id}') to select video",
+                        confidence=0.95
+                    )
+
+        # Secondary: Find gallery by ID without clickable check
+        for gallery_id in gallery_ids:
+            for i, el in enumerate(elements):
+                if el.get('id', '') == gallery_id:
+                    return Action(
+                        action_type=ActionType.TAP,
+                        target_element=i,
+                        reason=f"Tap gallery thumbnail (id='{gallery_id}')",
+                        confidence=0.9
+                    )
+
+        # Tertiary: Find gallery by looking at bottom-left corner elements
         for i, el in enumerate(elements):
             if el.get('id', '') == 'frz':  # Gallery thumbnail containers
                 return Action(
@@ -162,10 +182,12 @@ class TikTokActionEngine:
                     confidence=0.85
                 )
 
-        # Tertiary: Coordinate fallback (gallery thumbnail position)
+        # Quaternary: Coordinate fallback (gallery thumbnail position)
+        # GrapheneOS: gallery is at center-bottom around (540, 1900)
+        # Geelark: gallery is at (580, 1165)
         return Action(
             action_type=ActionType.TAP_COORDINATE,
-            coordinates=(580, 1165),  # Gallery thumbnail position from flow logs
+            coordinates=(540, 1900),  # GrapheneOS gallery position from flow logs
             reason="Tap gallery area (coordinate fallback)",
             confidence=0.7
         )
@@ -286,8 +308,23 @@ class TikTokActionEngine:
 
         This screen appears after video selection with options for
         sounds, effects, text, etc. We want to skip and proceed.
+
+        GrapheneOS: Next button at bottom-right (796, 2181)
+        Geelark: Next button at top-right
         """
-        # Primary: Find Next button
+        # Primary: Find Next button by id (GrapheneOS: ntn or ntq)
+        for i, el in enumerate(elements):
+            el_id = el.get('id', '')
+            text = el.get('text', '').lower()
+            if el_id in ['ntn', 'ntq'] and (text == 'next' or el.get('clickable', False)):
+                return Action(
+                    action_type=ActionType.TAP,
+                    target_element=i,
+                    reason=f"Tap Next button (id='{el_id}') to proceed to caption",
+                    confidence=0.98
+                )
+
+        # Secondary: Find Next button by text
         for i, el in enumerate(elements):
             text = el.get('text', '').lower()
             desc = el.get('desc', '').lower()
@@ -299,7 +336,7 @@ class TikTokActionEngine:
                     confidence=0.95
                 )
 
-        # Secondary: Find skip/done button
+        # Tertiary: Find skip/done button
         for i, el in enumerate(elements):
             text = el.get('text', '').lower()
             if text in ['skip', 'done', 'continue']:
@@ -310,12 +347,15 @@ class TikTokActionEngine:
                     confidence=0.85
                 )
 
-        # Tertiary: Tap top-right area where Next usually is
+        # Quaternary: Coordinate fallback
+        # GrapheneOS: Next button at bottom-right (796, 2181)
+        # Geelark: Next button at top-right (650, 100)
+        # Use GrapheneOS position as it's more common now
         return Action(
             action_type=ActionType.TAP_COORDINATE,
-            coordinates=(650, 100),  # Top-right corner
+            coordinates=(796, 2181),  # GrapheneOS bottom-right Next button
             reason="Tap Next button area (coordinate fallback)",
-            confidence=0.6
+            confidence=0.7
         )
 
     def _handle_caption_screen(self, elements: List[Dict]) -> Action:

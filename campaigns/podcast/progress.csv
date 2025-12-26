@@ -1,475 +1,469 @@
 job_id,account,video_path,caption,status,worker_id,claimed_at,completed_at,error,attempts,max_attempts,retry_at,error_type,error_category,pass_number,run_id,video_id
-DQby1k7Dn-E-1.mp4_podcast,quickcutspod,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\restispolitics\DQby1k7Dn-E-1.mp4,"The hypnotic rhythm of a book tour in full swing 📚✍️
+DRAykP2Eku_-1.mp4_podcast,quickcutspod,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\icedcoffeehour\DRAykP2Eku_-1.mp4,"The rent freeze debate is heating up as Mamdani's proposal shakes NYC's housing landscape 🏙️
 
-400 signatures deep and @restispolitics caught Rory locked in the zone, one autograph after another in this mesmerizing cycle.
+via @icedcoffeehour
 
-#TheRestIsPolitics #RoryStewart #BookTour #AuthorLife #BookSigning #PoliticsUK #BritishPolitics #Podcast",success,0,2025-12-23T13:03:03.013918,2025-12-23T13:07:23.738972,,0,3,,,,,,
-DNgfaftBJ3x-1.mp4_podcast,podsnipline,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\ryanholiday\DNgfaftBJ3x-1.mp4,"The question everyone's asking right now gets explored in Austin this September 17. @ryanholiday goes live with Daily Stoic to tackle the AI conversation head-on. This is your chance to be in the room where it happens.
+#nyc #newyork #newyorkcity #nycrent #rentcontrol #manhattan #brooklyn #queens #bronx #statenisland #housing #politics",failed,0,2025-12-26T10:30:50.103163,2025-12-26T10:32:38.226395,"WebDriverException: Message: 'POST /actions' cannot be proxied to UiAutomator2 server because the instrumentation process is not running (probably crashed). Check the server log and/or the logcat output for more details
+Stacktrace:
+UnknownError: 'POST /actions' cannot be proxied to UiAutomator2 server because the instrumentation process is not running (probably crashed). Check the server log and/or the logcat output for more details
+    at UIA2Proxy.command (C:\Users\asus\AppData\Roaming\npm\nod",3,3,2025-12-26T10:37:29.670563,appium_crash,infrastructure,,,
+DJuQGECygve-2.mp4_podcast,podsnipline,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\jordanbpetersonfans\DJuQGECygve-2.mp4,"The perspective shared here by jordan.b.peterson challenges conventional thinking in ways that demand reflection. Whether one stands with or against these views, the conversation itself holds value—and that's precisely what @jordanbpetersonfans brings to the table with content like this. Where do you land on this?
 
-Tickets and full details at dailystoiclive.com
+#jordanpeterson #jordanpetersonquotes #jordanbpeterson #jordanbpetersonquotes #psychology #lifelessons #tellthetruth #tellthetruthtuesday #speaktruth #speaktruthtopower #12rulesforlife #12morerulesforlife #societyfeelings #jordanpetersononsociety #bookstagram #googleads #marketingdigital #personality",failed,4,2025-12-26T10:37:36.236402,2025-12-26T10:38:50.179372,Exception: Device 98.98.125.32:20068 never appeared in ADB devices list after 60s,3,3,2025-12-26T10:42:26.170874,adb_timeout,infrastructure,,,
+DRu8qprkRJ--2.mp4_podcast,podreelsector,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\tonyrobbins\DRu8qprkRJ--2.mp4,"When every dollar turns into 30 meals for hungry families, the power of community becomes undeniable. @tonyrobbins is challenging us all through his Giving Tuesday partnership with @feedingamerica, and the opportunity to triple your impact ends December 5. 🍽️❤️
 
-#DailyStoic #Stoicism #ArtificialIntelligence #AI #AustinTexas #LiveEvent #Philosophy #ModernStoicism #StoicPhilosophy #RyanHoliday",success,1,2025-12-23T13:04:02.926579,2025-12-23T13:11:46.771278,,0,3,,,,,,
-DPcelqTiUGo-2.mp4_podcast,podreelsector,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\codiesanchez\DPcelqTiUGo-2.mp4,"@codiesanchez spotted a TikTok trend that had her laughing a little too hard… then casually dropped that she might need to hire an HR director 👀
+Drop ""GIVE"" in the comments for the donation link, or head to FeedingAmerica.org/TonyRobbins directly.
 
-She's challenging her followers to share their most unfiltered work jokes, with the winner scoring a gift. The comment section is about to get wild 😂
+Here's how the double-match works: Your $1 donation provides 10 meals through Feeding America. With the match active now through December 5, that same dollar delivers 30 meals to families facing hunger—up to $100,000 in total matching.
 
-What's your best totally un-PC office story? 👇
+This isn't just about food. It's about becoming a force for good and proving what happens when people choose compassion over complacency. 🙏
 
-#WorkHumor #EntrepreneurLife #SmallBusinessOwner #BusinessOwner #Entrepreneur #WorkLife #OfficeHumor #BossLife #HRNightmare",success,2,2025-12-23T13:05:02.941467,2025-12-23T13:10:09.653309,,0,3,,,,,,
-DKu-ZkPRAzL-2.mp4_podcast,podpunchdaily,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\tonyrobbins\DKu-ZkPRAzL-2.mp4,"You can always find something to complain about if you look hard enough. The real power move? Training yourself to spot what's working just as quickly. @tonyrobbins reminds us that both perspectives exist simultaneously—we just get to choose which lens we look through.
+#GivingTuesday #FeedingAmerica #ForceForGood #EndHunger #GiveBack #Compassion #Community #MakeADifference #TonyRobbins #CharityWork #Philanthropy #ActOfKindness #FeedTheHungry",success,1,2025-12-26T10:31:17.336824,2025-12-26T10:36:02.018188,,0,3,,,,,,
+DOlv77PjYEH-1.mp4_podcast,podpunchdaily,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\ryanholiday\DOlv77PjYEH-1.mp4,"A chance encounter with ancient philosophy changed everything for Ryan Holiday (@ryanholiday). What started as research for a book became a lifelong practice—Stoicism wasn't just something to write about, it became the framework for how he lives. Sometimes the subjects we study end up studying us back.
 
-#TonyRobbins #Perspective #Mindset #ChooseYourFocus #PersonalDevelopment #SelfImprovement #MindsetShift #PositiveThinking #GrowthMindset #Motivation #SelfGrowth #MindsetMatters #LifeLessons",success,3,2025-12-23T13:06:02.933844,2025-12-23T13:11:17.708747,,0,3,,,,,,
-DMJqVvWtHfC-2.mp4_podcast,podpeakstudio,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\shawnryanclipped\DMJqVvWtHfC-2.mp4,"@shawnryanclipped captures the moment Shawn Ryan breaks down his philosophy on identifying quality individuals worth having in your corner. In a world full of surface-level connections, he shares what truly separates genuine people from the rest. The kind of insight that changes how you view your inner circle.
+#stoicism #stoicphilosophy #philosophy #ancientwisdom #personalgrowth #lifelessons #mindset #selfimprovement #dailystoic #stoic #philosophyoflife #wisdom #mentalhealth #mindfulness",success,2,2025-12-26T10:32:16.759436,2025-12-26T10:36:08.502187,,0,3,,,,,,
+DQes0xxCZDB-1.mp4_podcast,podpeakstudio,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\theovon\DQes0xxCZDB-1.mp4,"@theovon and @postmalone celebrating Halloween together 🎃👻
 
-#shawnryan #shawnryanshow #shawnryanpodcast #srs #vigilanceelite #podcast #podcasting #podcastclips #leadership #trust #relationships #character #peopleandculture",success,4,2025-12-23T13:07:02.929200,2025-12-23T13:11:13.826722,,0,3,,,,,,
-DOLx2rNjuCD-1.mp4_podcast,podcutstories,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\daveramsey\DOLx2rNjuCD-1.mp4,"Dave Ramsey's framework isn't complicated—7 Steps, straightforward execution. The challenge? It demands unwavering commitment. Most people know what to do; they just won't stay consistent long enough to see results. He emphasizes that crossing the finish line requires eliminating excuses and reversing the money dynamic so your finances serve you instead of controlling you. The methodology succeeds every time when people actually follow through without backtracking. @daveramsey
+#happyhalloween #postmalone #theovon #halloween #spooky #trickortreat #halloweenvibes #costume #october #scary #fall",success,3,2025-12-26T10:32:47.885270,2025-12-26T10:36:39.673373,,0,3,,,,,,
+DRSnmU8khFR-2.mp4_podcast,podcutstories,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\codiesanchez\DRSnmU8khFR-2.mp4,"@codiesanchez breaks down why the wealthiest woman in America got there by mastering something completely ordinary—a product sitting in your house right now.
 
-#BabySteps #DebtFreeJourney #FinancialFreedom #MoneyGoals #DebtFreeCommunity #FinancialPeace #BudgetingTips #DebtFree #PersonalFinance #FinancialPlanning",success,0,2025-12-23T13:18:02.644338,2025-12-23T13:20:19.515117,,2,3,2025-12-23T13:22:52.595546,,,,,
-DMvxFBJBhyq-2.mp4_podcast,mindsetmiccuts,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\charliekirk1776\DMvxFBJBhyq-2.mp4,"Tucker Carlson just dropped some hard truths that'll make you think twice 👁️
+The takeaway? Unglamorous industries print money while everyone chases the next shiny thing.
 
-@charliekirk1776 shared this moment with Tucker speaking straight facts. Where do you stand on this?
+#boringbusinesses #wealthbuilding #businessstrategy #entrepreneurmindset #makemoney #businessowner #smallbusiness #sidehustle #businesstips #millionairemindset #passiveincome #financialfreedom #entrepreneur",success,3,2025-12-26T10:36:49.735165,2025-12-26T10:38:42.569423,,2,3,2025-12-26T10:41:44.797591,,,,,
+DQWqb-ljQnn-1.mp4_podcast,mindsetmiccuts,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\drmikeclips\DQWqb-ljQnn-1.mp4,"Looking to maximize hamstring gains? @drmikeclips breaks down the exact technique that separates average leg curls from growth-inducing reps. The secret lies in three critical adjustments: maximizing stretch at the bottom (extra padding helps), controlling that eccentric phase—especially the final third of the movement—and implementing a strategic pause-and-explode pattern without stopping at contraction. His training protocols are available through the @rpstrength RP Hypertrophy App.
 
-#TuckerCarlson #CharlieKirk #ConservativeValues #PoliticalDebate #FreeSpeech #TruthMatters #ThoughtCrime #SpeakTruth #Conservative #Politics",success,2,2025-12-23T13:10:19.707168,2025-12-23T13:15:34.157692,,0,3,,,,,,
-DQuoXraEZf8-1.mp4_podcast,micwisdomdaily,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\alexjones.tv\DQuoXraEZf8-1.mp4,"The Supreme Court could be making a move that derails everything Trump's been working to rebuild, and Alex Jones isn't holding back his thoughts on what's coming. @alexjones.tv breaks down the potential legal bombshell that has everyone talking. 11/6/25
+#hamstringworkout #legcurls #hypertrophytraining #musclegrowth #trainingtips #legday #bodybuilding #fitnesstips #gymtips #exercisescience #resistancetraining #rpstrength",success,3,2025-12-26T10:33:13.309079,2025-12-26T10:37:50.430101,,0,3,,,,,,
+DIcpjjPSOOs-1.mp4_podcast,micwisdomdaily,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\realalexclark\DIcpjjPSOOs-1.mp4,"Helen Morrison just revealed why Hollywood's been obsessed with these mysterious patches for over a century—and it's not what you'd expect. @realalexclark sits down with the 5th generation CFO of @frownies to uncover how this vintage beauty secret became the clean alternative celebrities choose over injections. 💚✨
 
-#infowars #trumpwon #maganews",success,4,2025-12-23T13:11:23.877393,2025-12-23T13:15:42.510475,,0,3,,,,,,
-DRiZpH4greO-1.mp4_podcast,micnotesarchive,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\russellbrand\DRiZpH4greO-1.mp4,"The Epstein files reportedly contain names of 20 men, with Barclays' CEO among them—according to Thomas Massie's recent statements, as shared by @russellbrand
+Stream the full @cultureapothecary episode now on YouTube under 'Real Alex Clark' or your favorite podcast platform! 🌿
 
-#ThomasMassie #EpsteinFiles #Barclays #CEO #Transparency #Accountability #Truth #Politics #News #Viral #Trending #Exposed",success,3,2025-12-23T13:11:27.746021,2025-12-23T13:14:32.655590,,0,3,,,,,,
-DRKeiLVCcOw-1.mp4_podcast,micmindvault,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\restispolitics\DRKeiLVCcOw-1.mp4,"What would happen if Keir Starmer finally said what millions are thinking about Brexit? Alastair Campbell lays out the exact speech he believes needs to be delivered.
+Drop 'FROWNIES' below for the direct link 💌
 
-Via @restispolitics
+Ever heard of them before? 👀
 
-#RestIsPolitics #AlistairCampbell #KeirStarmer #Brexit #UKPolitics #LabourParty #PoliticalCommentary #BritishPolitics #Politics",success,1,2025-12-23T13:11:56.825959,2025-12-23T13:16:42.422913,,0,3,,,,,,
-DN3TUoLUC8g-1.mp4_podcast,castcoremedia,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\2bears.1cave\DN3TUoLUC8g-1.mp4,Bret maintains an unshakeable confidence about his fitness level that the guys at @2bears.1cave can't help but respect. The delusion runs deep. #2Bears1Cave #bertkreischer #delusional #delusional4eva #inshape,success,3,2025-12-23T13:14:42.708388,2025-12-23T13:18:53.868734,,0,3,,,,,,
-DNGcVc2R0P9-1.mp4_podcast,bitepodmedia,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\theadamcarollashow\DNGcVc2R0P9-1.mp4,"When you're legendary enough to make your own rules 🎸⚡
+#frownies #cleanbeauty #skincare #naturalskincare #antiaging #beautysecrets #skincareproducts #botoxalternative #podcast #podcastepisode #cultureapothecary #beautypodcast #skincaretips #naturalbeauty #beautyproducts",success,0,2025-12-26T10:38:20.785392,2025-12-26T10:41:48.080568,,2,3,2025-12-26T10:43:10.718702,,,,,
+DQNC-n8jyLP-1.mp4_podcast,micnotesarchive,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\themelrobbinspodcast\DQNC-n8jyLP-1.mp4,"Your body might be screaming what your mind won't say out loud—and jaw tension could be the messenger.
 
-@theadamcarollashow catches @dustyslay sharing the story of rock and roll excess at its finest
+When @drsanjaygupta sat down with @themelrobbinspodcast, he revealed something that changes everything about chronic pain: stress doesn't just affect your thoughts, it physically embeds itself into your muscles and joints. With over 10 million Americans experiencing jaw pain according to the National Institute of Health, this world-renowned neurosurgeon is connecting dots that traditional medicine often misses.
 
-#podcast #comedy #standup #rockandroll #rockstar #funny #comedian #dustyslay #adamcarolla",success,2,2025-12-23T13:15:44.223190,2025-12-23T13:24:59.836022,,0,3,,,,,,
-DGjXcZtMV2s-1.mp4_podcast,bitecastclips,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\michaeljknowles\DGjXcZtMV2s-1.mp4,"Michael Knowles brings religious leaders from across the theological spectrum into one explosive conversation. Fr. Gerald Murray, Protestant Rev. Darren Tyler, and progressive Rev. Alexandre da Silva Souto don't hold back on their views about mass deportations and what faith actually demands when it comes to illegal immigration. The divide? It's wider than you think. Full panel discussion available through the link in @michaeljknowles' bio.
+The truth? Your TMJ symptoms might be your body's way of processing what you haven't dealt with emotionally.
 
-#MichaelKnowles #Trump #Immigration #Christianity #FaithAndPolitics #ReligiousDebate #IllegalImmigration #ChristianValues #PoliticalDebate #Faith #Deportation #BorderSecurity #ChristianLeaders #TheologyMatters",success,4,2025-12-23T13:15:52.550632,2025-12-23T13:20:39.708625,,0,3,,,,,,
-DP9G8_8jjQ_-1.mp4_podcast,clipsonairwave,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\chriswillx\DP9G8_8jjQ_-1.mp4,"The milestone hits different when you stop to look back at the journey. @chriswillx shares what 1000 episodes really means beyond just a number.
+This conversation strips away the Band-Aid solutions and gets to the root of why pain persists—and more importantly, what actually works to reverse it.
 
-Full vlog is out now 💜
+🎧 ""Neurosurgeon's Protocol to Feel Better Now: The Best Ways to Heal Your Body & Live Pain Free""
 
-#podcast #podcasting #podcastclips #reflection #milestone #journey #creator #contentcreator #modernwisdom #chriswilliamson",success,1,2025-12-23T13:16:52.499133,2025-12-23T13:21:45.365348,,0,3,,,,,,
-C7P4qGmuJ9q-2.mp4_podcast,archipelago_one,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\timferriss\C7P4qGmuJ9q-2.mp4,"**Mini retirements aren't about escaping work—they're about redesigning life itself.** @timferriss breaks down why waiting until 65 to ""live"" is a fundamentally flawed plan, and how strategic breaks throughout your career can give you the experiences, perspective, and fulfillment most people postpone for decades. This mindset shift separates those who optimize their entire lives from those who just optimize their careers.
+Stream the full episode or find it on YouTube by searching ""The Mel Robbins Podcast Dr. Sanjay Gupta.""
 
-#timferriss #miniretirements #4hourworkweek #lifestyledesign #worklifebalance #entrepreneurmindset #personaldevelopment #productivityhacks #lifelessons #timemanagement #worksmarternotharder #selfimprovement #motivational #successmindset #entrepreneurlife",success,3,2025-12-23T13:19:03.911505,2025-12-23T13:24:20.218943,,0,3,,,,,,
-DQ5EtWqkfSK-2.mp4_podcast,warlordregent,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\profgalloway\DQ5EtWqkfSK-2.mp4,"Nicole Wallace and @profgalloway sat down for a conversation on her MSNBC podcast. Catch the full episode through his stories or head to MSNBC's YouTube channel.
+#TMJ #JawPain #ChronicPain #StressRelief #MindBodyConnection #DrSanjayGupta #MelRobbinsPodcast #PainFree #HealingJourney #MentalHealth #PhysicalHealth #Neuroscience #WellnessTips #HealthPodcast",success,1,2025-12-26T10:36:12.090124,2025-12-26T10:39:29.461178,,0,3,,,,,,
+DRvUzOzEaOS-2.mp4_podcast,micmindvault,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\alexjones.tv\DRvUzOzEaOS-2.mp4,"When @alexjones.tv connected the dots between Venezuela, the Deep State, and China in this bombshell segment, he laid out exactly how foreign powers are allegedly interfering in American democracy. He breaks down the coordination happening behind the scenes and what it means for election integrity moving forward.
 
-#MSNBC #Podcast #NicoleWallace #Media #Interview #Politics #News #PodcastEpisode",success,0,2025-12-23T13:20:29.559894,2025-12-23T13:32:20.865507,,0,3,,,,,,
-CvIojV7gGuN-1.mp4_podcast,thequietbaron,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\moreplatesmoredates\CvIojV7gGuN-1.mp4,"Blood work timing can make or break your health optimization journey. In this discussion, @moreplatesmoredates breaks down the strategic approach to scheduling your first comprehensive panel and what markers actually matter before you start experimenting with your body's biochemistry.
+#infowars #trumpwon #maganews",success,2,2025-12-26T10:36:18.551106,2025-12-26T10:39:44.891938,,0,3,,,,,,
+DKFnhL1S1un-1.mp4_podcast,castcoremedia,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\charliekirk1776\DKFnhL1S1un-1.mp4,"The perfect balance exists in Christ—love that never compromises truth, and truth that's always rooted in love. @charliekirk1776 reminds us why both matter equally.
 
-#bloodwork #bloodtest #testosterone #hormones #menshealth #healthoptimization #biohacking #trt #performanceenhancement #fitnesstips #gym #bodybuilding #moreplatesmoredates",success,4,2025-12-23T13:20:49.787860,2025-12-23T13:25:31.578173,,0,3,,,,,,
-DQKF2u6ElTC-1.mp4_podcast,thefieldsketcher,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\greatness\DQKF2u6ElTC-1.mp4,"The history books weren't written by people who stayed comfortable. 💯
+#Jesus #Faith #Truth #Love #Christian #Christianity #God #Bible #Gospel #ChristianFaith #BibleTruth #JesusChrist #FaithOverFear #ChristianLife #TruthMatters",success,4,2025-12-26T10:37:04.360019,2025-12-26T10:41:08.253495,,0,3,,,,,,
+DQC3fyDEiiZ-1.mp4_podcast,bitepodmedia,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\megynkellyshow\DQC3fyDEiiZ-1.mp4,"When George Conway tried his hand at leading protest chants, the results were... questionable. @megynkellyshow and @emilyjashinsky from @afterpartyemily break down the cringe-worthy moment that has everyone talking. Catch the complete breakdown—subscribe and download the FULL show at the link in our bio.
 
-@tonyrobbins breaks down why your current struggles are literally building the person you're meant to become. Real talk: comfort zones don't create legends. 🔥
+#megynkellyshow",failed,3,2025-12-26T10:50:45.081795,2025-12-26T10:52:01.385918,Exception: Device 98.98.125.32:20346 never appeared in ADB devices list after 60s,3,3,2025-12-26T10:55:35.039602,adb_timeout,infrastructure,,,
+DO4H5LEEpIO-2.mp4_podcast,bitecastclips,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\greatness\DO4H5LEEpIO-2.mp4,"The anticipation is building over at @greatness as they prepare to drop what might be one of their biggest School of Greatness episodes yet 👀🔥
 
-Drop a ""YES"" below for the complete episode 🎧
+Arena tours? Check. Grammy awards on the shelf? Absolutely. A voice that hits different the second you hear it? You already know 🎶✨
 
-Credit: @greatness
+But here's what makes this one special: they're diving past the spotlight and into the real talk about handling pressure, sustaining success, and the relentless pursuit of greatness when the world is watching 💯
 
-#TonyRobbins #Motivation #Mindset #PersonalGrowth #SelfDevelopment #Success #Inspiration #MotivationalQuotes #Greatness",success,1,2025-12-23T13:21:55.435014,2025-12-23T13:26:27.417231,,0,3,,,,,,
-DM04waChQ2V-2.mp4_podcast,thebaysideduke,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\charliekirk1776\DM04waChQ2V-2.mp4,"Charlie Kirk makes his return! 🔥
+Drop your predictions below 😉
 
-Fresh perspectives incoming from @charliekirk1776 as he jumps back into the conversation. The takes everyone's been waiting for are here.
+New episode launches TOMORROW!
 
-#conservative #charliekirk #turningpointusa #tpusa #politics #news #republican #trump #maga #america #usa #freedom #liberty #patriot #conservatives",success,3,2025-12-23T13:24:30.270607,2025-12-23T13:27:13.818344,,0,3,,,,,,
-DPWxarUk0mV-2.mp4_podcast,thebackroadman,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\teamcocopodcasts\DPWxarUk0mV-2.mp4,Simon Sinek gets Rob Lowe to open up about his greatest source of happiness in this candid moment from @teamcocopodcasts. Sometimes the simplest questions lead to the most genuine answers. #Literally,success,2,2025-12-23T13:25:09.888890,2025-12-23T13:28:46.914849,,0,3,,,,,,
-DQ7xmpNCD91-1.mp4_podcast,stone_mason_live,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\russellbrand\DQ7xmpNCD91-1.mp4,"Whoopi Goldberg jumps to defend pharmaceutical companies after Cheryl Hines drops a bombshell stat about $5.4 billion in vaccine injury payouts. The question that follows? ""Is that all vaccines or just the covid vaccine?"" Watch the mental gymnastics unfold as @russellbrand breaks down this telling exchange.
+#SchoolOfGreatness #PodcastEpisode #ComingSoon #Greatness #Success #Motivation #Inspiration #MusicLegend #GrammyWinner #PodcastLife #NewEpisode",success,3,2025-12-26T10:38:52.628956,2025-12-26T10:42:28.907325,,0,3,,,,,,
+DPW8aPxDYOQ-2.mp4_podcast,clipsonairwave,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\mattwalshblog\DPW8aPxDYOQ-2.mp4,"The Vatican's security might want to take notes from @mattwalshblog on this one.
 
-#vaccines #bigpharma #whoop #cherylhines #russellbrand #media #mainstream #covid #injury #payout #billions #defense #pharmaceutical",success,4,2025-12-23T13:25:41.645333,2025-12-23T13:29:36.872436,,0,3,,,,,,
-DQLEL0Zj4lh-1.mp4_podcast,sovereignclaw,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\realalexclark\DQLEL0Zj4lh-1.mp4,"Who knew your monthly cycle holds the blueprint to unlocking better skin, stable moods, and next-level energy? Emily from @littleraeofhealth returns as a fan-favorite guest on @realalexclark's podcast to decode the hormone secrets most women were never taught 🌸🩸
+#Catholic #Pope #Vatican #Christianity #Faith #Religion #TradCath #LatinMass #Christian #Jesus #Church #Catholics",success,4,2025-12-26T10:39:00.223123,2025-12-26T10:45:53.451743,,0,3,,,,,,
+DRn6u2wjvzf-2.mp4_podcast,archipelago_one,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\chriswillx\DRn6u2wjvzf-2.mp4,"The data doesn't lie—fatherlessness might be the crisis nobody wants to address. @chriswillx breaks down how this overlooked issue connects to happiness and challenges mainstream narratives that keep us from seeing the truth.
 
-As the creator of the Balanced Babe Blueprint and your go-to cycle whisperer, Emily breaks down how syncing with your body's natural rhythms can end the guessing game around PMS, cravings, fertility, and even intentional pregnancy planning 👶
+#ChrisWilliamson #TuckerCarlson #Fatherlessness #MentalHealth #Happiness #Masculinity #SocialIssues #PodcastClips #RedPill #CultureWar #FamilyValues #ModernMasculinity #SelfImprovement #Inequality #Feminism #TruthBomb",success,1,2025-12-26T10:39:39.544972,2025-12-26T10:44:23.255843,,0,3,,,,,,
+DJpwLsrybG0-1.mp4_podcast,warlordregent,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\tonyrobbins\DJpwLsrybG0-1.mp4,"Your next chapter won't write itself — and @tonyrobbins is showing up tomorrow to help you turn the page. 
 
-This third appearance on @cultureapothecary proves why she's earned ""hormone bestie"" status—practical wisdom that actually makes you feel amazing in your own skin 🩵💚🌿
+Feeling that pull toward something greater? Drop ""THRIVE"" in the comments and get the link to claim your free spot.
 
-Stream now on any podcast platform or search 'Real Alex Clark' on YouTube 📺
+May 15 at 10am PT/1pm ET, Tony and @deangraziosi are going live for Thrive in 2025 — a completely FREE 3-Day Virtual event packed with real, actionable strategies to bridge the gap between your current reality and the life you're designed for.
 
-Drop 'EMILY' in the comments for the episode link 🔗💌
+The game has shifted. Old playbooks won't cut it anymore. This is about equipping yourself with what actually works right now.
 
-#hormonehealth #cyclesyncing #womenshealth #fertility #pms #hormonalbalance #periodtalk #wellness #podcast",success,1,2025-12-23T13:26:37.477514,2025-12-23T13:30:07.665360,,0,3,,,,,,
-DN9TTuekY26-1.mp4_podcast,silverscribewindow,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\podsaveamerica\DN9TTuekY26-1.mp4,"The safety of Americans is being compromised by the MAHA agenda, according to @podsaveamerica's latest discussion.
+Comment ""THRIVE"" or hit the link in bio to register — spots are free but the impact is priceless.
 
-#podsaveamerica #crookedmedia #rfkjr",success,3,2025-12-23T13:27:23.875720,2025-12-23T13:33:43.159141,,0,3,,,,,,
-DQ61ckjjDKK-1.mp4_podcast,seegloryvault,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\pbd.podcast\DQ61ckjjDKK-1.mp4,"The accuracy is undeniable 🎯
+Stop waiting. Start building. 🚀🔥🤟
 
-Via @pbd.podcast
+#TonyRobbins #DeanGraziosi #Thrivein2025 #PersonalDevelopment #GrowthMindset #SuccessMindset #Motivation #SelfImprovement #LifeTransformation #FreeEvent",success,2,2025-12-26T10:39:54.965175,2025-12-26T10:46:31.953707,,0,3,,,,,,
+C7q6I7nAWP8-2.mp4_podcast,thequietbaron,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\theproblemdavesmith\C7q6I7nAWP8-2.mp4,"The legendary @theproblemdavesmith links up with @patrickbetdavid and the @valuetainment crew for an unforgettable evening 🔥
 
-#podcast #podcasts #podcastclips #podcasting #spotify #podcastersofinstagram #podcaster #motivation #selfimprovement #selfdevelopment #success",success,2,2025-12-23T13:36:50.764687,2025-12-23T13:41:44.936504,,2,3,2025-12-23T13:41:40.715317,,,,,
-DRndUm2Egke-1.mp4_podcast,orbmasterstrike,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\therealbradlea\DRndUm2Egke-1.mp4,"When @dakotalohan sat down with @therealbradlea for his podcast, the conversation took an unexpected turn into territory most people dismiss as conspiracy theory. The Illuminati question isn't one Brad's guest took lightly—and the story that followed might make skeptics think twice. This clip is just a glimpse of where the full conversation went. 
+#valuetainment #podcast #interview #business #entrepreneurship #networking #collaboration",success,3,2025-12-26T10:52:11.440224,2025-12-26T10:55:03.888164,,2,3,2025-12-26T10:57:05.602182,,,,,
+DMOPG9PB45m-1.mp4_podcast,thefieldsketcher,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\theadamcarollashow\DMOPG9PB45m-1.mp4,"Steve Guttenberg opens up about surviving the Palisades wildfire in this gripping moment from @theadamcarollashow 🔥
 
-🎧 Full episode available now on YouTube
+#AdamCarolla #SteveGuttenberg #PalisadesFire #Wildfire #LosAngeles #California #PodcastClips",success,0,2025-12-26T10:41:58.124163,2025-12-26T10:44:56.689376,,0,3,,,,,,
+DQqT3fVDYX8-1.mp4_podcast,thebaysideduke,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\officialbenshapiro\DQqT3fVDYX8-1.mp4,"The mayor of Zohran just showed up, and @officialbenshapiro wasn't sticking around to find out what happens next 😂
 
-#podcast #podcasting #podcastclips #illuminati #conspiracy #conspiracytiktok #conspiracytheory #deepstate #truth #truthseeker #awareness #wakeup #podcastersofinstagram #podcasters #interview",success,4,2025-12-23T13:29:46.924252,2025-12-23T13:34:43.976478,,0,3,,,,,,
-DKQCM9Pv9n7-1.mp4_podcast,kingmakerpulse,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\russellbrand\DKQCM9Pv9n7-1.mp4,"The contrast is staggering. MSNBC's coverage then versus their admission now exposes exactly what @russellbrand has been pointing out — this man's cognitive decline was undeniable, yet the narrative was carefully controlled. Who was actually calling the shots? The answer should concern everyone.
+#benshapiro #politics #debate #conservative #political #news #viral",success,3,2025-12-26T10:42:38.965116,2025-12-26T10:45:26.925376,,0,3,,,,,,
+DJ17q3jpBGq-2.mp4_podcast,thebackroadman,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\charliekirk1776\DJ17q3jpBGq-2.mp4,"The message is clear and unfiltered from @charliekirk1776 – no sugarcoating, just the truth he sees about those working against everyday Americans.
 
-#MSNBC #CognitiveDecline #MediaBias #MainstreamMedia #PoliticalDeception #Russell #RussellBrand #TruthMatters #WakeUp #QuestionEverything #MediaManipulation #Politics #Accountability",success,1,2025-12-23T13:30:17.733640,2025-12-23T13:37:52.392762,,0,3,,,,,,
-DMwMbG5JVF3-1.mp4_podcast,itsunpluggedlife,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\theadamcarollashow\DMwMbG5JVF3-1.mp4,"When @dustin_ybarra sits down with @adamcarolla, every plate becomes fair game and nobody's meal is getting eaten in peace 😂
+#TPUSA #TurningPointUSA #TurningPoint #CharlieKirk #Conservative #Politics #Truth #America",success,1,2025-12-26T10:44:33.302184,2025-12-26T10:48:06.315545,,0,3,,,,,,
+DRU1EP0jU3A-2.mp4_podcast,stone_mason_live,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\thediaryofaceopodcast\DRU1EP0jU3A-2.mp4,"Kevin Hart's mom had been telling him to read his Bible for weeks, but he kept brushing it off.
 
-via @theadamcarollashow
+He was broke, desperate, and about to lose his apartment when he finally cracked it open—months of rent money fell out.
 
-#AdamCarolla #DustinYbarra #Comedy #Podcast #FoodThief #Funny #ComedyClips #PodcastClips",success,0,2025-12-23T13:32:30.920463,2025-12-23T13:35:46.502248,,0,3,,,,,,
-DRkUhXDkorJ-2.mp4_podcast,ironwillascendant,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\officialbenshapiro\DRkUhXDkorJ-2.mp4,"The way @officialbenshapiro dismantles their entire argument without breaking a sweat 💀 Socialists really thought they had a point here until this happened
+She knew exactly what she was doing the whole time.
 
-#benshapiro #politics #debate #socialist #socialism #conservative #political #debate #usa #america #republican #facts #logic",success,3,2025-12-23T13:33:53.212957,2025-12-23T13:37:20.104362,,0,3,,,,,,
-DRxmX96kX5N-2.mp4_podcast,inreallifemaxx,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\alexjones.tv\DRxmX96kX5N-2.mp4,"Alex Jones breaks down Trump's potential move to eliminate income tax in this December analysis 🎙️ @alexjones.tv delivers the details on what could be a game-changing economic shift
+Sometimes the people who love us most teach lessons we'll never forget. What's one lesson that stuck with you?
 
-#infowars #trumpwon #maganews",success,4,2025-12-23T13:34:54.029341,2025-12-23T13:37:30.124953,,0,3,,,,,,
-C8w3ROzRd4h-1.mp4_podcast,empirestrongofmind,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\simonsinek\C8w3ROzRd4h-1.mp4,"The best leaders treat their teams the way great parents treat their children—constantly growing themselves while ensuring everyone around them grows too. @simonsinek breaks down this powerful leadership parallel.
+Drop ""Kevin"" below and I'll send you the full conversation.
 
-📍 Parker Seminars Las Vegas, February 2024
+From @thediaryofaceopodcast featuring @kevinhart4real
 
-#leadership #leadershipdevelopment #simonsinek #leaders #leadershiplessons #leadershipskills #leadershiptips #parenthood #parenting #growth #personalgrowth #motivation #motivational #inspiration #inspirational #mindset",success,0,2025-12-23T13:35:56.564825,2025-12-23T13:39:16.514955,,0,3,,,,,,
-DOozplJjgM_-1.mp4_podcast,crimsonlegionshort,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\drmikeclips\DOozplJjgM_-1.mp4,"The Goldilocks principle applies to your joints too, according to @drmikeclips—finding that sweet spot between too little and too much stress is what separates the resilient from the injured.
+#KevinHart #MotherKnowsBest #LifeLessons #Inspiration #Motivation #PodcastClips #WisdomWednesday #FamilyFirst #RealTalk #SuccessStory #Entrepreneur #Comedy #Podcast",success,0,2025-12-26T10:45:06.761721,2025-12-26T10:48:41.160920,,0,3,,,,,,
+DN1x4hq3lOD-2.mp4_podcast,sovereignclaw,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\lewishowes\DN1x4hq3lOD-2.mp4,"Looking back, @lewishowes realizes the pattern was always there. The people who genuinely cared would warn him. The red flags would show up early. But ignoring trusted voices? That's where the costly mistakes happened—in dating, business deals, and partnerships that should've never started. His advice now: protect your peace fiercely and let the people who love you be your filter. Their perspective might save you years of regret. Do you let your inner circle weigh in on big decisions?
 
-His breakdown: insufficient stress leaves you weak, excessive stress gets you hurt, but the right amount builds bulletproof joints.
+#boundaries #relationships #character #trustyourtribe #lifelessons #datingadvice #businessmindset #personalgrowth #wisdomwednesday #protectyourpeace",failed,3,2025-12-26T10:48:48.145974,2025-12-26T10:50:02.472109,Exception: UI dump failed (InvalidSessionIdException): Message: The session identified by a6265db2-e71b-4615-bcb1-0ec65aaf9862 is not known; For documentat,3,3,2025-12-26T10:53:38.092941,,unknown,,,
+DLM_guUMWfy-1.mp4_podcast,silverscribewindow,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\jayshetty\DLM_guUMWfy-1.mp4,"Jay Shetty (@jayshetty) explains how strength is built, not born—and this perspective will change everything 💭
 
-Want the complete roadmap? Drop INJURY1 below for the Injury Prevention Made Simple eBook ⬇️
+Drop a ""YES"" if this resonates with you. Don't jump to conclusions... let his full message land first 🎯
 
-Inside you'll discover:
-💪 The 7 fundamentals of safe lifting
-💪 How to optimize warm-ups, load, and volume
-💪 Strategies to reduce fatigue & train smarter
-💪 Pain signals that mean STOP
-💪 Common training mistakes to avoid
-💪 The comeback protocol post-injury
+#jayshetty #motivation #mindset #inspiration #growth #personaldevelopment #wisdom #lifelessons #motivationalquotes #selfgrowth #positivemindset #dailymotivation #inspirationalquotes #mindsetshift #growthmindset",success,4,2025-12-26T10:50:00.293769,2025-12-26T10:54:41.546491,,2,3,2025-12-26T10:54:50.233776,,,,,
+DOQzjTpCGE1-1.mp4_podcast,seegloryvault,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\themelrobbinspodcast\DOQzjTpCGE1-1.mp4,"The human body stores fat in the strangest place first—and @themelrobbinspodcast sat down with @drwilliamli to uncover the shocking truth.
 
-Train hard, train smart & grab your guide today! 💯
+According to clinical research, fat doesn't begin accumulating where most people think. The tongue is actually patient zero. That unexpected snoring? It might be your body's early warning system for weight gain.
 
-#injuryprevention #strengthtraining #mobility #trainsmart #fitnesstips #workouttips #gymtips #liftingtips #safetraining #smarttraining",success,3,2025-12-23T13:38:41.981786,2025-12-23T13:48:09.254417,,1,3,2025-12-23T13:43:31.929209,,,,,
-DHq8QA6vobX-1.mp4_podcast,bentzenithruler,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\timferriss\DHq8QA6vobX-1.mp4,"What separates the truly immortal from everyone else? According to Richard Taylor of @wetaworkshop, it's the ones who create and teach—passing knowledge forward so the next generation can carry it further.
+Dr. Li brings over three decades of metabolism research to this conversation, dismantling outdated beliefs with cutting-edge science about how our bodies actually burn fat.
 
-The craft itself doesn't matter. Just start building. Start teaching. Leave something behind.
+This episode delivers the kind of information that shifts your entire perspective on health and weight management.
 
-@timferriss dives deep into this philosophy in his full interview with Taylor—available now on Apple Podcasts, Spotify, YouTube, and everywhere you listen.
+Episode: ""Do THIS to Boost Your Metabolism, Lose Fat, & Feel Better Now With Dr. William Li"" 🎧
 
-#TimFerriss #RichardTaylor #WetaWorkshop #CreativeProcess #Legacy #Teaching #Creativity #PodcastClips #Immortality #Knowledge #NextGeneration #MakeSomething #Artists #Craftsmen #Wisdom",success,4,2025-12-23T13:38:43.056164,2025-12-23T13:41:26.322723,,1,3,2025-12-23T13:43:31.984367,,,,,
-C3IzPPhPC4Y-1.mp4_podcast,tjmexicosfinest,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\theovon\C3IzPPhPC4Y-1.mp4,"@theovon proves that even the smallest gestures can create real change in someone's day 🙏
+#melrobbins #melrobbinspodcast #podcast #weightloss #metabolism #healthylifestyle #wellness #nutrition #metabolismbooster #fatloss #healthtips #sciencebacked #drwilliamli #weightgain",success,2,2025-12-26T10:46:42.010930,2025-12-26T10:53:05.054100,,0,3,,,,,,
+DPTDaXAjOmq-2.mp4_podcast,orbmasterstrike,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\thediaryofaceopodcast\DPTDaXAjOmq-2.mp4,"Comment ""Watch"" and I'll personally DM you the full conversation.
 
-#makingadifference #kindness #positivevibes #gooddeeds #compassion #humanity #helpingothers #inspiration #spreadlove #bekind",success,1,2025-12-23T13:38:02.448785,2025-12-23T13:45:48.814567,,0,3,,,,,,
-DNWF4jdPCe7-2.mp4_podcast,rustywatermeal,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\joeroganexperience\DNWF4jdPCe7-2.mp4,"When three MMA powerhouses walk into the studio, you know the fight talk is about to hit different. @joeroganexperience brings together John Rallo @bmoremma (Shogun Fights founder & Ground Control MMA Academy owner/head coach), Matt Serra @mattserrabjj (UFC Unfiltered podcast host with Jim Norton, plus Serra BJJ owner/lead instructor), and Din Thomas (MMA analyst, actor & FightCourt host) for an absolute masterclass in combat sports conversation on JRE MMA Show 169.
+The truth about what sugar does to your body might change everything you thought you knew about food.
 
-#JRE #JoeRogan #JoeRoganExperience #JREMMShow #MMA #MixedMartialArts #UFC #BJJ #BrazilianJiuJitsu #Podcast #MMANews #CombatSports #Grappling #Fighting #JiuJitsu #UFCUnfiltered #MattSerra #DinThomas #JohnRallo #ShogunFights #FightCourt",success,0,2025-12-23T13:39:26.567592,2025-12-23T13:44:04.733124,,0,3,,,,,,
-DI1lHNAP4iN-1.mp4_podcast,RoughConcreteShifter,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\teamcocopodcasts\DI1lHNAP4iN-1.mp4,"Larry David declares himself the new sheriff in this classic moment from @teamcocopodcasts. When Larry decides to lay down the law, you know it's going to be anything but conventional. #LarryDavid #CONAF",success,4,2025-12-23T13:41:36.363857,2025-12-23T13:45:45.699732,,0,3,,,,,,
-DAEnlw6Ji-Y-2.mp4_podcast,reddyplayerwonton,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\theovon\DAEnlw6Ji-Y-2.mp4,"@theovon checking in with the crew like a true one 💯
+@robertlustigmd returns to @thediaryofaceopodcast after his first episode reached over 5 million views—and the audience demanded more answers.
 
-#theovon #theo #theovonpodcast #podcast #podcasting #podcastclips #comedy #comedian #standup #standupcomedy #funny #funnyvideos #viral",success,2,2025-12-23T13:41:55.005639,2025-12-23T13:46:24.754362,,0,3,,,,,,
-DRuxOIQidlr-1.mp4_podcast,lucysplainyoself,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\shawnryanshow\DRuxOIQidlr-1.mp4,"When a Navy SEAL joins Miami PD's drone unit, you know the story's going to be wild. 😂
+As a world-renowned glucose expert, Dr Lustig has dedicated his career to exposing the real dangers of sugar and ultra-processed foods through his clinical work with thousands of diabetes, obesity, and metabolic disease patients.
 
-The founder of Skydio, Adam Bry, shares this one with @shawnryanshow – full episode drops at 12:30PM CST.
+This conversation cuts through the confusion around modern nutrition.
 
-#drone #tech #technology #interesting #engineering #police #shawnryanshow #podcast",success,0,2025-12-23T13:44:14.786533,2025-12-23T13:48:34.168813,,0,3,,,,,,
-DQzUHrODr_j-1.mp4_podcast,LoomedTwillHook,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\chriswillx\DQzUHrODr_j-1.mp4,"A conversation that sparked massive debate: Louise Perry and Bonnie Blue sit down with @chriswillx to discuss the most controversial questions around modern sex work. Where do we draw the line between empowerment and exploitation? This exchange got the internet talking.
+Topics explored:
 
-#BonnieBlue #LouisePerry #SexWork #ModernDating #Controversy #PodcastClips #ChrisWilliamson #SocialDebate #Feminism #InternetDebate #ViralMoment #DeepTalk",success,4,2025-12-23T13:49:02.159096,2025-12-23T13:51:16.080970,,2,3,2025-12-23T13:53:52.120478,,,,,
-Cvr9WLMgyFT-1.mp4_podcast,LockedVaultDuster,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\edmylett\Cvr9WLMgyFT-1.mp4,"Google's former innovation chief just dropped a reality check that changes everything about AI's role in our future.
+- The science behind sugar addiction
+- How ultra-processed foods actually rewire the brain
+- The connection between lifestyle choices and 95% of Alzheimer's cases
+- Sugar's surprising role in depression
 
-@edmylett sits down with MO GAWDAT, ex-Chief Business Officer of GOOGLE X, for a conversation that cuts through the noise and reveals what insiders actually know about artificial intelligence.
+Dr Lustig breaks down complex health science into actionable steps anyone can follow.
 
-Mo helped build the tech that's reshaping civilization. Now he's a three-time bestselling author and hosts the #1 mental health podcast SLO MO—and he's pulling back the curtain on what most people are getting wrong.
+His message goes beyond calories and weight loss—he connects sugar consumption directly to brain function, aging, and lifespan.
 
-This conversation tackles the real questions:
-- What those working closest to AI development are actually worried about
-- The immediate threats versus long-term consequences
-- AI-generated relationships between humans and machines
-- Which jobs and careers are most vulnerable
-- Whether machines can learn ethics or experience emotions
-- Why this is humanity's new OPPENHEIMER MOMENT
-- Practical steps for using AI to benefit humanity instead of harming it
+The episode reveals how daily food choices are silently determining long-term health outcomes.
 
-No hype. No conspiracy theories. Just raw truth from someone who's been inside the room where AI decisions are made.
+For anyone questioning what their diet is really doing to them, this discussion provides crucial answers.
 
-Ed captures insights that will shift how you think about technology's trajectory and your place in what's coming next.
+#podcast #sugar #health #nutrition #diabetes #mentalhealth #alzheimers #obesity #wellness #food #healthylifestyle #science",success,1,2025-12-26T10:48:16.380851,2025-12-26T10:54:48.566100,,0,3,,,,,,
+DQwkf_xDtn1-1.mp4_podcast,kingmakerpulse,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\garyvee\DQwkf_xDtn1-1.mp4,"@garyvee breaks down why NOW is the moment to launch your venture 💡
 
-LINK IN BIO TO WATCH/LISTEN NOW!
+While AI and tech create endless opportunities, there's a massive shift happening in the opposite direction. Concert venues, sports facilities, hiking groups, and run clubs are exploding in popularity.
 
-#AI #ArtificialIntelligence #MoGawdat #GoogleX #Technology #Future #Innovation #Podcast #AIEthics #MachineLearning #TechIndustry #Leadership #PersonalDevelopment #MaxOut",success,0,2025-12-23T16:44:06.776741,2025-12-23T16:48:10.134410,,0,3,2025-12-23T13:55:44.210525,,,,,
-DML7tisydsy-2.mp4_podcast,HollowedBoneVessels,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\greatness\DML7tisydsy-2.mp4,"The difference between those who accumulate wealth and those who don't? Understanding that fortune doesn't happen overnight—it's constructed piece by piece, phase by phase 💫
+He's calling these ""walking businesses"" - ventures that get people moving and connecting in person. The digital boom is actually fueling real-world demand.
 
-Want the full breakdown? Drop a ""YES"" below for the complete episode 💛
+The question isn't IF these businesses will thrive, but WHO will be bold enough to build them.
 
-Time to check in: is your energy focused on designing what's ahead, or replaying what's behind? Share your thoughts 👇
+#garyvee #businessadvice #opportunity",success,0,2025-12-26T10:48:51.226861,2025-12-26T10:55:46.722901,,0,3,,,,,,
+DLnaa9ayEJ1-2.mp4_podcast,itsunpluggedlife,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\joeroganexperience\DLnaa9ayEJ1-2.mp4,"Joe Rogan welcomes Amjad Masad to the podcast—the founder and CEO of @repl.it Replit, revolutionizing how people code through his cloud-based platform. Beyond building tech, Masad has become a powerful voice challenging the status quo on culture and education in the industry. Episode 2344 with @joeroganexperience delivers another conversation worth your time.
 
-Via @greatness
+www.replit.com
 
-#money #financetips #wealthmindset",success,2,2025-12-23T13:46:34.793158,2025-12-23T13:51:39.707586,,0,3,,,,,,
-DRQrcBCEhBn-2.mp4_podcast,FrozenGearSmoker,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\hormozi\DRQrcBCEhBn-2.mp4,"A business only grows when the math adds up, and @hormozi breaks it down to two numbers that matter most: how much a customer is worth over time (LTV) versus what you're paying to get them in the door (CAC). Master this ratio and scaling becomes a formula, not a gamble.
+#JoeRogan #JRE #JoeRoganExperience #JoeRoganPodcast #AmjadMasad #Replit #TechFounder #CodingPlatform #TechCulture #TechEducation #CloudCoding #Entrepreneur #TechLeadership #PodcastClips",success,3,2025-12-26T10:50:12.544454,2025-12-26T10:53:04.343830,,0,3,,,,,,
+DKaoRpwOHWN-2.mp4_podcast,ironwillascendant,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\daveramsey\DKaoRpwOHWN-2.mp4,"The difference between those who build wealth and those who don't? It's not intelligence—it's the decision to keep moving forward when things get hard. @daveramsey breaks down why even the smartest people sabotage their own financial success and what you can do differently.
 
-#businessgrowth #entrepreneurship #ltv #cac #customeracquisition #businessmetrics #scaleup #businessstrategy #entrepreneurmindset #businesstips #growthhacks #startuplife",success,3,2025-12-23T13:48:19.306112,2025-12-23T13:52:02.043146,,0,3,,,,,,
-DRfpl_vEUYL-1.mp4_podcast,filbertthesmasher,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\megynkellyshow\DRfpl_vEUYL-1.mp4,"Joy Reid and other podcasters crossed a major line with their comments about Erika Kirk, and @megynkellyshow isn't holding back her disgust: ""F*cking awful."" The full breakdown is available now on YouTube.com/MegynKelly.
+#daveramsey #financialfreedom #moneymindset #wealthbuilding #personalfinance #debtfree #financialtips #moneytips #smartmoney #financialadvice #moneymanagement #richdad #financialeducation #investing",success,4,2025-12-26T10:52:15.645710,2025-12-26T10:55:22.278933,,0,3,,,,,,
+DJxE_WltdUR-1.mp4_podcast,inreallifemaxx,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\2bears.1cave\DJxE_WltdUR-1.mp4,"Tom Segura puts the viral breathing device to the test while Bert watches in typical fashion 😂 Via @2bears.1cave
 
-#megynkellyshow",success,0,2025-12-23T13:48:44.222245,2025-12-23T13:52:48.535818,,0,3,,,,,,
-DL41CvvBJ-i-1.mp4_podcast,FallenBarkSwitch,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\ultimatehumanpod\DL41CvvBJ-i-1.mp4,"The human body wasn't designed to process 30 pounds of industrial seed oils annually — yet that's exactly what's happening to millions of Americans right now. @ultimatehumanpod breaks down how these manufactured fats infiltrate your cell membranes, migrate into brain tissue, and wreak havoc on everything from your skin to your mitochondria. The damage? Hormonal chaos, chronic inflammation, relentless brain fog, and a metabolism that can't keep up. This isn't about cutting calories — it's about understanding what's actually destroying your body at a cellular level.
+#trending #tiktokmademebuyit #nasalbreathing #breathwork #podcast #comedy #2bears1cave",success,3,2025-12-26T10:53:14.408529,2025-12-26T10:55:54.160606,,0,3,,,,,,
+DLnoCvKsjnp-1.mp4_podcast,empirestrongofmind,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\russellbrand\DLnoCvKsjnp-1.mp4,"@russellbrand breaks down why chanting slogans isn't the same as creating real change. He's clear on his stance—peace in the region, self-governance and freedom for Palestinians, and an end to the violence. But he questions whether rhymes and repetitive phrases actually move the needle. His take: if people genuinely want to make a difference, they need to look at what actually works, not just what sounds good at a protest.
 
-💬 Comment ""SEED OILS"" for the full episode in your DMs!
+#russellbrand #palestine #middleeast #politicaldiscourse #freespeech #activism #peace #humanrights #politicalcommentary #criticalthinking #socialjustice #geopolitics",success,2,2025-12-26T10:53:15.098311,2025-12-26T10:57:17.338898,,0,3,,,,,,
+DHUodkzSLuL-1.mp4_podcast,crimsonlegionshort,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\realalexclark\DHUodkzSLuL-1.mp4,"Dr. Nina-Marie Rueda drops knowledge bombs about fertility and family health that Big Pharma doesn't want you hearing 💣 From heavy metals in tattoos to the salt debate during pregnancy, this Naturopathic Doctor is exposing what mainstream medicine won't tell you. She's helping families tackle everything from fertility roadblocks to childhood ADHD and eczema—with actual solutions, not just quick fixes. @realalexclark brings this eye-opening conversation to the Culture Apothecary podcast, available now on all platforms and YouTube! Drop 'PREGNANT' below to get the full episode sent straight to you 🤰🏼💚🌿
 
-#seedoils #metabolichealth #mitochondria #guthealth #antiinflammatory #hormonalhealth #brainfog #healthylifestyle #nutritionscience #wellness",success,1,2025-12-23T16:45:06.204152,2025-12-23T16:48:34.362913,,0,3,2025-12-23T14:02:16.409282,,,,,
-DMajQZXRvpy-1.mp4_podcast,EmptyFuelMatrix,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\badfriendspod\DMajQZXRvpy-1.mp4,"Bobby's airport screenings never disappoint 🛃 According to @badfriendspod, TSA has a recurring discovery situation with his luggage 🍆🤖
+#cultureapothecary #doctorninamarie #naturopathicdoctor #fertility #pregnancy #holistichealth #wellness #podcast",success,4,2025-12-26T10:58:44.804073,2025-12-26T11:00:53.221953,,1,3,2025-12-26T11:03:34.763439,,,,,
+C9TixDkPDFd-1.mp4_podcast,bentzenithruler,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\moreplatesmoredates\C9TixDkPDFd-1.mp4,"@moreplatesmoredates sits down with the legend himself to unpack a mindset that separated champions from competitors. Dorian Yates reveals why he never found value in watching bodybuilding shows—because for him, the real battle was already won before stepping on stage. The mental warfare, the discipline, the relentless pursuit of perfection—that's where victory lived. Stage time was just the victory lap.
 
-#badfriends #badfriendspod #bobbylee #andrewsantino #podcast #comedy #standup #funny #comedian #comedypodcast #podcastclips",success,2,2025-12-23T13:51:49.761729,2025-12-23T13:56:03.386420,,0,3,,,,,,
-DNn33ZWorOw-2.mp4_podcast,daisochunks,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\thediaryofaceopodcast\DNn33ZWorOw-2.mp4,"What if you could only make 20 investments in your entire life? Billionaire Investor Mohnish Pabrai breaks down Warren Buffett's legendary punch card philosophy that separates great investors from average ones.
+From The Shadow Talk With Dorian Yates Podcast | EP 5
 
-The concept is simple but powerful: treat each investment decision like it's one of only twenty you'll ever make. This mindset shift transforms how you evaluate opportunities versus the traditional index fund approach of owning everything.
+#bodybuilding #dorianyates #fitness #gym #workout #motivation #fitnessmotivation #gymmotivation #bodybuildingmotivation #muscle #training #fit #powerlifting #bodybuilder #gains #fitfam #gymlife #personaltrainer #strong #dedication",success,1,2025-12-26T10:54:58.613111,2025-12-26T10:59:07.732720,,0,3,,,,,,
+DQVEiLtiZSC-1.mp4_podcast,tjmexicosfinest,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\shawnryanshow\DQVEiLtiZSC-1.mp4,"A piece of American history just landed in unexpected hands 📖 @shawnryanshow was gifted an actual Civil War-era Bible during this unforgettable moment
 
-Comment ""Billion"" for the full conversation in your DMs.
+#history #bible #faith #shawnryanshow #podcast",success,3,2025-12-26T10:55:13.932173,2025-12-26T11:00:49.099843,,0,3,,,,,,
+DPonv-dEUuP-2.mp4_podcast,rustywatermeal,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\hormozi\DPonv-dEUuP-2.mp4,"When @hormozi talks about sacrifice, he's pointing at the real cost of ambition—the friendships that quietly fade while we're busy chasing wins that eventually lose their shine.
 
-Full conversation with Mohnish Pabrai available at @thediaryofaceopodcast
+The people who knew you before the success? Those connections don't multiply with your net worth.
 
-#warrenbuffett #investing101 #stockmarket #investingtips #financialfreedom #wealthbuilding #mohnishpabrai #investmentstrategies #stockmarketinvesting #financialeducation #valueinvesting",success,3,2025-12-23T13:52:12.108901,2025-12-23T13:56:03.653971,,0,3,,,,,,
-DOtZM9liXKh-2.mp4_podcast,contibonit,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\mattwalshblog\DOtZM9liXKh-2.mp4,"@mattwalshblog cuts through the noise with a crucial reminder: refusing to accept false equivalencies is the first step to clarity.
+#friendship #success #relationships #personalgrowth #lifelessons #priorities #realtalk #mindset #wealthy #business #entrepreneur #motivation",success,4,2025-12-26T10:55:32.322923,2025-12-26T11:02:10.351712,,0,3,,,,,,
+DQ5EtWqkfSK-2.mp4_podcast,RoughConcreteShifter,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\profgalloway\DQ5EtWqkfSK-2.mp4,"Nicole Wallace and @profgalloway sat down for a conversation on her MSNBC podcast. Catch the full episode through his stories or head to MSNBC's YouTube channel.
 
-#MattWalsh #Conservative #Politics #Truth #Media #Commentary #Viral #Trending #FYP #Political #News #MustWatch",success,0,2025-12-23T13:52:58.589293,2025-12-23T13:57:00.443522,,0,3,,,,,,
-DNuogOmRHMX-2.mp4_podcast,ClosedCircuitMute,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\restispolitics\DNuogOmRHMX-2.mp4,"Money talks louder than missiles in Moscow's playbook. 💸
+#MSNBC #Podcast #NicoleWallace #Media #Interview #Politics #News #PodcastEpisode",success,0,2025-12-26T10:55:56.769366,2025-12-26T11:01:08.131043,,0,3,,,,,,
+DQhswdsEi2v-1.mp4_podcast,reddyplayerwonton,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\icedcoffeehour\DQhswdsEi2v-1.mp4,"**112 subpoenas.** That's the staggering number Eric Trump had to deal with, and @icedcoffeehour breaks down exactly why it happened. The legal pressure was intense, but what led to this unprecedented situation? This deep dive reveals the investigations, the legal battles, and the political storm that put Eric in the hot seat.
+
+#EricTrump #TrumpFamily #Politics #LegalNews #Subpoena #PoliticalNews #Investigation #NewsBreakdown #CurrentEvents #PoliticsExplained #TrumpOrganization #LegalAnalysis #PodcastClips",success,3,2025-12-26T10:56:04.223058,2025-12-26T11:00:18.257653,,0,3,,,,,,
+DOKLRorjJzW-1.mp4_podcast,lucysplainyoself,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\drmikeclips\DOKLRorjJzW-1.mp4,"Looking at that last rep has everyone asking the same question 👀 @thorbjornsson might've had one more in the tank, or maybe not 🤣 @drmikeclips captures the moment of truth at the iconic @thorspowergym where @drmikeisraetel witnesses the breathing-heavy finale
+
+#bodybuilding #fitness #gym #workout #fitnessmotivation #training #motivation #muscle #fit #gymlife #gymmotivation #lifestyle #fitfam #exercise #gains #strength #coach #health",success,2,2025-12-26T10:57:27.405925,2025-12-26T11:00:57.069165,,0,3,,,,,,
+DRiZpH4greO-2.mp4_podcast,LoomedTwillHook,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\russellbrand\DRiZpH4greO-2.mp4,"The Epstein files reportedly contain names of 20 men, with Barclays' CEO among them—according to Thomas Massie's recent statements, as shared by @russellbrand
+
+#ThomasMassie #EpsteinFiles #Barclays #CEO #Transparency #Accountability #Truth #Politics #News #Viral #Trending #Exposed",success,1,2025-12-26T10:59:17.777415,2025-12-26T11:02:48.976516,,0,3,,,,,,
+DMssSWipkH6-2.mp4_podcast,LockedVaultDuster,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\theadamcarollashow\DMssSWipkH6-2.mp4,A question that keeps coming up: California's budget doesn't add up. @theadamcarollashow breaks down where the disconnect is happening and why residents are noticing the gap between taxes paid and services received. The math isn't mathing in the Golden State. #california #government #gavinnewsom #wheresthemoney #losangeles #explore,success,3,2025-12-26T11:00:28.301774,2025-12-26T11:04:54.914429,,0,3,,,,,,
+DQzbccxD0XJ-1.mp4_podcast,HollowedBoneVessels,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\ultimatehumanpod\DQzbccxD0XJ-1.mp4,"The body's healing power isn't unlimited—and your skincare routine might be draining it faster than you think.
+
+In this eye-opening conversation, @drbarbarasturm breaks down how aggressive exfoliation and barrier damage force your system to work overtime, depleting the very resources (collagen, elastin, fibrin) that keep skin resilient long-term. Real skin health? It's built from blood flow and regeneration, not surface-level quick fixes. Redness and tightness after your routine aren't signs it's ""working""—they're your skin waving a red flag.
+
+Stop stealing from your future self. @ultimatehumanpod dives deep into the science behind sustainable skincare.
+
+👇🏻 Comment ""SKIN"" for the full episode link.
+
+#skincare #drbarbarasturm #skinhealth #healthyskin #skincareroutine #collagen #antiaging #skintok #beautytips #skincaretips #glowingskin #skinbarrier",success,3,2025-12-26T11:00:59.156240,2025-12-26T11:04:47.167327,,0,3,,,,,,
+DQm4NGTiXAI-2.mp4_podcast,FrozenGearSmoker,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\shawnryanshow\DQm4NGTiXAI-2.mp4,"A medical professional drops a bombshell about a popular trend permanently damaging men's health. The full breakdown comes from @shawnryanshow and it's not what anyone expected.
+
+#menshealth #didyouknow #doctor #shawnryanshow #podcast",success,4,2025-12-26T11:01:03.282870,2025-12-26T11:03:47.718627,,0,3,,,,,,
+DPAQjbrkR42-2.mp4_podcast,filbertthesmasher,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\drmikeclips\DPAQjbrkR42-2.mp4,"@drmikeclips weighs in on the 10-minute backwards walking protocol and wants to hear YOUR take. Are you brave enough to give this one a shot?
+
+Full breakdown available on the @rpstrength YouTube channel
+📹️ Exercise Scientist Critiques Knees Over Toes Guy
+
+#backwardswalking #exercisescience #kneesovertoesrpstrength #fitnessreview #workoutanalysis #strengthtraining #exercisephysiology #trainingtips #fitnesstips #sciencebasedfitness #workoutroutine #fitnessexpert #exerciseanalysis #rpstrength",success,2,2025-12-26T11:01:07.111325,2025-12-26T11:05:32.191963,,0,3,,,,,,
+DHeVeqJSXYt-1.mp4_podcast,FallenBarkSwitch,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\tonyrobbins\DHeVeqJSXYt-1.mp4,"The science of living longer and healthier just got its Hollywood moment 🎬 @tonyrobbins joins @edwardnortonofficial, @peterdiamandis, @mcuban, @steveaoki, @cbum and other visionaries in Longevity Hackers—now streaming on Apple TV and Amazon. This isn't your typical documentary. It's a deep dive into real breakthroughs that are transforming aging from inevitable decline into something we can actually control. Producer Ruben Figueres and director Michal Siewierski assembled the minds behind the movement, exploring the same revolutionary concepts Tony covers in Life Force and implements at Fountain Life. The future of healthspan isn't coming—it's already here 💪🔥
+
+#longevity #tonyrobbins #healthspan #lifeforce #fountainlife #longevityhackers #biohacking #aging #wellness #documentary #health",success,0,2025-12-26T11:01:18.188038,2025-12-26T11:04:28.879348,,0,3,,,,,,
+DQK14qlAWa2-1.mp4_podcast,EmptyFuelMatrix,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\tuckercarlson\DQK14qlAWa2-1.mp4,"When ministers defend the indefensible—Christian leaders rationalizing violence against their own faithful—the moral compass has shattered. @tuckercarlson exposes this disturbing reality.
+
+#Christianity #Christian #Faith #Church #Truth #Leadership #Accountability #SpeakTruth #MoralClarity #ReligiousFreedom",success,4,2025-12-26T11:02:20.399822,2025-12-26T11:06:14.602243,,0,3,,,,,,
+DQ2y22alVwu-1.mp4_podcast,daisochunks,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\drmikeclips\DQ2y22alVwu-1.mp4,"Lou Ferrigno understood something most gym-goers miss – strategically backing off isn't weakness, it's wisdom. @drmikeclips breaks down why your best gains might come from knowing when NOT to push maximum effort. Feeling depleted? Scale back or skip entirely. That's not quitting, that's intelligent training. 💪
+
+FULL VIDEO: Exercise Scientist Critiques The PHENOMENAL Lou Ferrigno
+
+#fitness #gym #workout #bodybuilding #fitnessmotivation #gymmotivation #training #muscle #fit #motivation #lifestyle #strong #gains #louferrigno #exercisescience #trainingtips #restday #recovery",success,1,2025-12-26T11:05:20.206846,2025-12-26T11:07:41.350985,,1,3,2025-12-26T11:10:10.165018,,,,,
+DQunoWkkmqR-1.mp4_podcast,contibonit,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\jockowillink\DQunoWkkmqR-1.mp4,"Every excuse sounds reasonable until you count the cost. @jockowillink breaks down the math nobody wants to calculate—the compound interest of small failures, the hidden price of cutting corners, the running total of compromised standards. The numbers always tell the truth.
+
+#discipline #jockopodcast #jockowillink #echelonfront #leadership #motivation #disciplineequalsfreedom #mindset #success #getafterit #extremeownership #accountability",success,4,2025-12-26T11:06:23.319592,2025-12-26T11:09:01.021034,,1,3,2025-12-26T11:11:13.264160,,,,,
+DNYIqGhqdjZ-2.mp4_podcast,ClosedCircuitMute,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\podsaveamerica\DNYIqGhqdjZ-2.mp4,"Governor Gavin Newsom draws a line in the sand, distinguishing UCLA's approach from Ivy League institutions like Harvard, Brown, Penn, and Columbia when it comes to institutional integrity.
+
+Via @podsaveamerica
+
+#PodSaveAmerica #CrookedMedia #Trump #ICE",success,0,2025-12-26T11:04:38.938954,2025-12-26T11:08:02.262349,,0,3,,,,,,
+DL7xNjCPSr4-1.mp4_podcast,bondsgoldengun,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\jayshetty\DL7xNjCPSr4-1.mp4,"@jayshetty sits down with @naraaziza for a powerful conversation you don't want to miss 🎙️ They dive deep into finding your center when everything around you is moving at lightning speed, plus the art of protecting your peace in the digital age. Drop a ""YES"" in the comments and the full episode lands in your DMs 👇
+
+#JayShetty #Podcast #MentalHealth #SelfCare #Mindfulness #PersonalGrowth #SocialMediaBoundaries #InnerPeace #Wellness #SelfDevelopment #PodcastEpisode #DeepConversations",success,3,2025-12-26T11:04:57.210090,2025-12-26T11:09:20.888576,,0,3,,,,,,
+DOFaksukbHp-1.mp4_podcast,blackietheblackest,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\askvinh\DOFaksukbHp-1.mp4,"When words get stuck, silence becomes your secret weapon 🤫 @askvinh breaks down why pausing beats filler words every time.
+
+#communicationskills",success,3,2025-12-26T11:07:39.815505,2025-12-26T11:10:43.859529,,1,3,2025-12-26T11:12:29.757305,,,,,
+DGRT1_9O7mF-2.mp4_podcast,basilthymeoregano,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\foundmyfitness\DGRT1_9O7mF-2.mp4,"The data doesn't lie: physical inactivity kills at the same rate as smoking, heart disease, and diabetes. Yet resistance training remains criminally undervalued.
+
+@foundmyfitness recently testified before the Senate Aging Committee, delivering a wake-up call backed by hard science. The muscle loss statistics alone are staggering - 10% gone by age 50, up to 40% by 70 for many Americans.
+
+But here's what matters most: higher muscle mass slashes mortality risk by 30% through improved insulin sensitivity. Grip strength outperforms blood pressure as a cardiovascular death predictor. The strongest middle-aged adults cut their dementia risk by 42%.
+
+This testimony before @senateaging, made possible by Senator Rick Scott (@flsenrickscott), reframes resistance training from optional fitness activity to essential medical intervention - our most powerful weapon against aging, period.
+
+Full testimony with Q&A now live on the FoundMyFitness YouTube channel.
+
+#longevity #healthspan #aging #resistancetraining #musclemass #fitness #science #health #wellness #preventivemedicine",success,2,2025-12-26T11:05:42.248071,2025-12-26T11:09:26.546350,,0,3,,,,,,
+DRCKiFzETxv-1.mp4_podcast,AgedWalnutThrones,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\alexjones.tv\DRCKiFzETxv-1.mp4,"@alexjones.tv breaks down the lawsuit involving Kash Patel's girlfriend taking legal action against Kyle Seraphin and Elijah Schaffer in this November 13th, 2025 segment. When high-profile names collide in court, Alex has the details.
+
+#infowars #trumpwon #maganews",success,4,2025-12-26T11:06:24.644049,2025-12-26T11:10:12.004048,,0,3,,,,,,
+DOWxF-0EvhH-1.mp4_podcast,speckles_is_here,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\charliekirk1776\DOWxF-0EvhH-1.mp4,"Charlie Kirk lets the facts speak for themselves on this one 🎯
+
+Credit: @charliekirk1776
+
+#charliekirk #turningpointusa #tpusa #conservative #politics #truth #america #americafirst #maga #trump #republican #conservatives #patriot #usa #freedom #liberty #politicalmemes #political",success,1,2025-12-26T11:07:51.427319,2025-12-26T11:12:32.724137,,0,3,,,,,,
+DGllwO-vSw--2.mp4_podcast,rushhourresponse,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\thejrecompanion\DGllwO-vSw--2.mp4,"When Woody Harrelson drops wisdom on JRE Episode 2277, you know it hits different. @thejrecompanion brings you this moment from their conversation that just makes sense.
+
+Woody Harrelson: @woodyharrelson
+Joe Rogan: @joerogan
+
+Full episode linked in bio and highlights.
+
+#woodyharrelson #joerogan #jre2277 #thejrecompanion #jre #jrewoodyharrelson #joeroganpodcast #joeroganexperience",success,0,2025-12-26T11:08:12.333559,2025-12-26T11:11:57.823632,,0,3,,,,,,
+DPw3OJEEmj0-2.mp4_podcast,redcarelesscrocs,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\icedcoffeehour\DPw3OJEEmj0-2.mp4,"The downfall of Stable Ronaldo's bank account is a cautionary tale you need to hear 💸
+
+From content creator success to financial struggle—this story breaks down exactly what went wrong. Watch as @icedcoffeehour unpacks the money mistakes that led to one of gaming's biggest names losing it all.
+
+#StableRonaldo #ContentCreator #GamingNews #FinancialAdvice #MoneyMistakes #StreamerLife #GamingCommunity #ViralMoments",success,4,2025-12-26T11:09:11.078431,2025-12-26T11:11:02.286138,,0,3,,,,,,
+DRNJC4zik8r-1.mp4_podcast,ogtylerguy,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\restispolitics\DRNJC4zik8r-1.mp4,"Chinese intelligence operatives are running fake recruitment schemes to target UK officials, according to MI5's latest warning. @restispolitics breaks down this alarming espionage tactic where spies masquerade as headhunters to extract sensitive information from unsuspecting professionals in government and defense sectors.
+
+#MI5 #NationalSecurity #Espionage #China #Intelligence #UKPolitics #RestIsPolitics #CyberSecurity #SpyGames #GeopoliticalNews #DefenseSecurity",success,3,2025-12-26T11:09:30.947168,2025-12-26T11:12:30.516147,,0,3,,,,,,
+DAPYOhfPJEx-1.mp4_podcast,milkyjersey.trainer,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\hubermanlab\DAPYOhfPJEx-1.mp4,"Martha Beck's ability to transform abstract concepts into actionable steps caught @hubermanlab's attention years ago, and their recent podcast conversation proved why her work resonates with millions. Her new book ""Beyond Anxiety: Curiosity, Creativity, and Finding Your Life's Purpose"" is now available for presale—a resource he describes as spectacular and unlike anything else in personal development. The book emerged as an answer to countless listeners who wanted more of the somatic and narrative tools Martha shared during what became one of the podcast's most popular episodes. He emphasizes having zero financial ties to the work, just genuine appreciation for how it guides people toward their essential self and best possible life. Available on Amazon, Audible, and everywhere books are sold.
+
+#neuroscience #science #ciencia #neurociencia #life #essential #self #beyondanxiety #marthabeck #create",success,2,2025-12-26T11:09:36.611414,2025-12-26T11:12:52.922552,,0,3,,,,,,
+DRdD2suEdo1-2.mp4_podcast,markatetwobananas,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\ryanholiday\DRdD2suEdo1-2.mp4,"When @ryanholiday says prioritize books over articles, there's wisdom worth listening to. His live show in Seattle, WA on December 3rd goes deeper into Stoic philosophy—tickets available at dailystoiclive.com
+
+#stoicism #stoic #philosophy #stoicphilosophy #reading #books #wisdom #mindset #personalgrowth #selfimprovement #dailystoic",success,4,2025-12-26T11:10:22.068636,2025-12-26T11:13:22.481432,,0,3,,,,,,
+DQUfoZ3iaHB-2.mp4_podcast,marblebasecase,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\shawnryanshow\DQUfoZ3iaHB-2.mp4,"When California's most controversial governor sits down for a conversation, the polarizing responses speak volumes. @shawnryanshow opens up about the decision to bring Gavin Newsom onto the platform and what viewers can expect from their dialogue.
+
+#shawnryanshow #podcast",success,3,2025-12-26T11:10:53.905091,2025-12-26T11:15:17.961911,,0,3,,,,,,
+DLWdYzrsog7-2.mp4_podcast,lupethelooper,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\russellbrand\DLWdYzrsog7-2.mp4,"⚡ The power struggle nobody saw coming – @russellbrand breaks down what's really happening between Elon Musk and Donald Trump as tensions reach a boiling point.
+
+#russellbrand #elonmusk #donaldtrump #politics #news #podcast #viral #trending",success,4,2025-12-26T11:11:12.341795,2025-12-26T11:17:40.835530,,0,3,,,,,,
+DOoZ65PiSVC-1.mp4_podcast,FusedMercurySpike,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\codiesanchez\DOoZ65PiSVC-1.mp4,"@codiesanchez breaks down the real money-maker at car dealerships (hint: it's not the cars). Episode 4 of her ""Economics Of"" Series reveals why these businesses are secretly finance operations in disguise. Drop OWN IT below for your weekend event invite—3 days left to claim your spot.
+
+#BusinessStrategy #Economics #Entrepreneurship #Finance #CarDealership #BusinessEducation #WealthBuilding #PassiveIncome #SmallBusiness #BusinessOwner",success,0,2025-12-26T11:12:07.881223,2025-12-26T11:17:10.257109,,0,3,,,,,,
+DRQE0TBk22a-1.mp4_podcast,DarkLichenCoded,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\theovon\DRQE0TBk22a-1.mp4,"Theo Von breaks down the real difference between day people and night people, and honestly? He's got a point 😂 @theovon
+
+#theovon #theo #podcast #podcastclips #funny #standup #standupcomedy #comedyvideos #foryou",success,3,2025-12-26T11:12:40.595166,2025-12-26T11:16:17.964623,,0,3,,,,,,
+DEqbxmty4_A-1.mp4_podcast,choice.jonestown,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\theovon\DEqbxmty4_A-1.mp4,"The legendary @theovon linking up with @joerogan to share some real talk 🇲🇽🙏
+
+#theovon #joerogan #jre #podcast #comedy #standup #comedian #funny #podcasting #comedycentral #theo #joeroganpodcast #jreclips",success,1,2025-12-26T11:12:42.777598,2025-12-26T11:16:33.762832,,0,3,,,,,,
+DIwPcNHxvbv-1.mp4_podcast,BrokenRockPace,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\simonsinek\DIwPcNHxvbv-1.mp4,"The paradox of summiting: When you've conquered the world's highest peaks, where do you climb next? @simonsinek sits down with @coryrichards—mountain climber, photographer, and filmmaker—to explore what happens after reaching the top. From the Himalayas to rock bottom, Cory opens up about mental health battles, the fine line between survival and resilience, and the stories that changed everything. Part 1 drops now 🎧
+
+#SimonSinek #Podcast #MentalHealth #Resilience #Leadership #Inspiration #Mindset #PersonalGrowth #Mountaineering #Adventure",success,2,2025-12-26T11:13:02.984345,2025-12-26T11:17:13.459582,,0,3,,,,,,
+DM3l1VSPq7L-1.mp4_podcast,ApexStratagem,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\officialbenshapiro\DM3l1VSPq7L-1.mp4,"The Garden of Eden meets YouTube culture in this hilarious take from @officialbenshapiro. Picture it: daily uploads, forbidden fruit mukbangs, and the world's first ""we need to talk"" video. Before the fall, there was premium content.
+
+#benshapiro #comedy #bible #humor #viral #fyp #reels #trending #funny #christian #faith #relatable #memes",success,4,2025-12-26T11:13:32.546524,2025-12-26T11:16:37.546525,,0,3,,,,,,
+DKh1IdpJaQp-1.mp4_podcast,clipsonpodcast,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\teamcocopodcasts\DKh1IdpJaQp-1.mp4,"Stephen Merchant reveals how the legendary sitcom #Cheers left its mark on shaping #TheOffice. According to the co-creator, the influence runs deeper than most fans realize. 🎬
+
+via @teamcocopodcasts | #WEKYN",success,4,2025-12-26T11:21:14.415219,2025-12-26T11:23:57.778161,,2,3,2025-12-26T11:26:11.412327,,,,,
+DPBty5HEUID-2.mp4_podcast,podsnipworks,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\askvinh\DPBty5HEUID-2.mp4,"When the smartest person in the room suddenly can't string two sentences together... 😅
+
+That freeze-up moment when someone asks you a question and your brain decides to either go completely blank or turn into a rambling mess? @askvinh breaks down exactly why this happens (and how to fix it) in a recent YouTube video.
+
+Drop ""FREEZE"" in the comments to get the link sent straight to your DMs 💬
+
+#communication #communicationskills #socialskills #confidence #selfimprovement #personaldevelopment #overthinking #socialanxiety #publicspeaking #conversation",failed,3,2025-12-26T11:16:28.009805,2025-12-26T11:18:51.634005,"logged_out: create new account - Vision analysis: This screenshot shows Instagram's login screen, indicating the user has been logged out of their account. The screen displays the standard login interface with fields for username/email/phone and password, plus options to reset password or create a new account. The user needs to log back into their existing account or create a new one to continue using the app - any posting attempt failed because they're not authenticated.",1,3,,logged_out,account,,,
+DIMxonqBkSB-1.mp4_podcast,talkgembytes,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\michaeljknowles\DIMxonqBkSB-1.mp4,"In a fiery campus exchange, @michaeljknowles dismantles the arguments of a woke student defending BLM and the narrative of systemic racism
+
+#MichaelKnowles #WokeAgenda #BLM #SystemicRacism #CampusDebate #Conservative #PoliticalDebate #CollegeCampus #Woke #CriticalThinking #FreeSpeech #Politics",success,1,2025-12-26T11:16:43.841711,2025-12-26T11:19:15.685007,,0,3,,,,,,
+DDRzUNnOK8H-2.mp4_podcast,castreelworks,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\thejrecompanion\DDRzUNnOK8H-2.mp4,"Already 6 feet tall, Brian Sanchez decided to gain 7 more inches through double limb-lengthening surgery—not for height itself, but because he felt his proportions were off. The 33-year-old mortgage broker from Georgia compared his natural build to the ""Thumb Thumbs"" from Spy Kids, believing his legs were too short for his torso.
+
+Two separate procedures in Turkey at the Live Life Taller clinic—one breaking and extending his tibia and fibula in December 2022, another lengthening his femurs in March 2023—brought him to nearly 6'7"". Total investment: $106,000.
+
+His wife Nidia, standing at 5'10"", now has a drastically different view when they're together. While critics questioned why someone already above average height would pursue such extreme measures, Sanchez expressed complete satisfaction with his decision and new perspective.
+
+The story, discussed on The Joe Rogan Experience with Derek from More Plates More Dates, raises questions about where personal body autonomy meets unconventional choices. @thejrecompanion breaks down the full conversation in the episode links.
+
+Follow @moreplatesmoredates
+Follow @joerogan
+
+#moreplatesmoredates #jrec2239 #joerogan #thejrecompanion #jremoreplatesmoredates #joeroganpodcast #joeroganexperience #jre",success,4,2025-12-26T11:16:47.620034,2025-12-26T11:21:04.366681,,0,3,,,,,,
+DRdjVK1krjn-1.mp4_podcast,viraltalkfeed,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\hormozi\DRdjVK1krjn-1.mp4,"@hormozi explains why everyone gets branding wrong: they confuse understanding with execution. The concept is straightforward—the consistent implementation? That's where most businesses fail.
+
+#business #entrepreneur #brandstrategy #marketing #entrepreneurship #businessgrowth #brandbuilding #marketingtips #businessstrategy #entrepreneurmindset",success,0,2025-12-26T11:19:56.499611,2025-12-26T11:21:54.798107,,1,3,2025-12-26T11:24:46.436537,,,,,
+DQuzRwdkavu-2.mp4_podcast,reelpodsector,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\megynkellyshow\DQuzRwdkavu-2.mp4,"Tucker Carlson isn't holding back his approval of Trump's approach – from awarding ""huge style points"" to backing his stance on border security and crime. @megynkellyshow captures the full conversation.
+
+#megynkellyshow",success,3,2025-12-26T11:19:57.479762,2025-12-26T11:24:39.636476,,1,3,2025-12-26T11:24:46.289057,,,,,
+DPwVUTbFLNE-1.mp4_podcast,apodwavecentral,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\hormozi\DPwVUTbFLNE-1.mp4,"Alex Hormozi breaks down the counterintuitive truth about achievement: subtraction beats addition. Most people keep piling on goals, commitments, and distractions—but the real winners? They ruthlessly eliminate everything that doesn't serve their main objective.
+
+It's not about doing more. It's about doing less of what doesn't count.
+
+Credit: @hormozi
+
+#alexhormozi #focus #priorities #entrepreneurmindset #successmindset #personalgrowth #selfimprovement #motivationmonday #businessstrategy #goaldigger #timemanagement #productivityhacks #entrepreneurlife #growthmindset #hustleculture",success,4,2025-12-26T11:17:50.884838,2025-12-26T11:20:59.872507,,0,3,,,,,,
+DQ5ua3eDPaj-1.mp4_podcast,micdropchannel,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\profgalloway\DQ5ua3eDPaj-1.mp4,"Curtis Sliwa brought the energy to launch @profgalloway's NYC show! The legend himself set the tone for an unforgettable night.
+
+#PivotTour",success,3,2025-12-26T11:19:01.687081,2025-12-26T11:22:09.538442,,0,3,,,,,,
+DPelZv2EebZ-2.mp4_podcast,viralmicstudio,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\foundmyfitness\DPelZv2EebZ-2.mp4,"What if your bedroom has become the problem? Dr. Michael Grandner reveals how chronic insomnia rewires the brain to treat your bed as a threat—and how to undo it.
+
+This conversation with @foundmyfitness covers the science of retraining your sleep patterns, the hidden epidemic of undiagnosed sleep apnea plus CPAP alternatives, and which supplements actually work (melatonin, magnesium, L-theanine—the truth behind each).
+
+Dr. Grandner also breaks down how caffeine, alcohol, THC, CBD, and late-night meals sabotage sleep architecture, plus tactical protocols for shift workers, frequent flyers, and anyone using sleep trackers.
+
+From light exposure timing to bedtime routines that actually work, this episode delivers science-backed strategies you can start using tonight to fall asleep faster, stay asleep longer, and wake up genuinely rested.
+
+Available now on YouTube, Spotify, and Apple Podcasts.
+
+#sleep #insomnia #sleepscience #sleepapnea #circadianrhythm #sleepoptimization #melatonin #magnesium #sleephygiene #sleeproutine #sleepquality #podcast #foundmyfitness",success,1,2025-12-26T11:19:25.731956,2025-12-26T11:23:28.349533,,0,3,,,,,,
+DJ_3K2tiRbf-1.mp4_podcast,quickpodsnaps,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\themelrobbinspodcast\DJ_3K2tiRbf-1.mp4,"In a world obsessed with perfect choices, @themelrobbinspodcast drops truth: your next move matters more than making the ""right"" one. She dismantles the myth of wrong decisions and shows why forward motion beats frozen perfection. When overthinking has you stuck in place, this conversation rewires how you approach life's hardest calls.
+
+🎧 ""Trust Your Gut: How to Make a Hard Decision""
+
+#decisionmaking #trustyourgut #overcomefear #analysisparalysis #personalgrowth #selfimprovement #confidence #movingforward #podcast #motivation #mindset #lifechoices #growthmindset #inspiration #selfdevelopment",success,4,2025-12-26T11:21:09.949097,2025-12-26T11:25:07.663810,,0,3,,,,,,
+DKNiGNKv1P3-1.mp4_podcast,podmindstudio,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\tuckercarlson\DKNiGNKv1P3-1.mp4,"The moment Sen. Ron Johnson began questioning the official narratives on 9-11, the COVID vax, and America's financial collapse, everything changed. @tuckercarlson sits down with him to hear what happens when a Senator dares to ask what others won't.
+
+#TuckerCarlson #RonJohnson #COVID19 #September11 #NationalDebt #FreeSpeech #PoliticalCensorship #Senate #Congress #USPolitics #AmericanPolitics #QuestionEverything #TruthSeeker",success,4,2025-12-26T11:24:07.850588,2025-12-26T11:27:22.242382,,1,3,2025-12-26T11:28:59.895810,,,,,
+DN6igdzjjlw-2.mp4_podcast,talktrackhub,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\officialbenshapiro\DN6igdzjjlw-2.mp4,"A Minneapolis elementary student shares what happened during the school shooting. @officialbenshapiro covered this powerful testimony from the 10-year-old witness.
+
+#minnesota #minneapolis #schoolshooting #shooting #news #benshapiro #dailywire",success,0,2025-12-26T11:22:04.858372,2025-12-26T11:25:27.594029,,0,3,,,,,,
+DN8JeVijmyB-2.mp4_podcast,kianinspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\garyvee\DN8JeVijmyB-2.mp4,"The ones who show up every single day without the spotlight? @garyvee made this one for them.
+
+Not the celebrities or public figures—but the people grinding with loyalty, resilience, and grit. The ones who carry their families with accountability and patience, no matter what life throws at them.
+
+They deserve the recognition.
+
+Tag someone below who embodies this energy and give them their flowers 💐
+
+#inspiration #grit #love #garyvee",success,3,2025-12-26T11:22:19.607128,2025-12-26T11:25:55.998267,,0,3,,,,,,
+DOKIfZGkh38-2.mp4_podcast,sonbankinspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\teamcocopodcasts\DOKIfZGkh38-2.mp4,"Tony Hawk's comfort zone? Definitely four wheels over ocean waves. According to @teamcocopodcasts, the skateboarding legend admits surfboards just aren't his thing. #Literally #TonyHawk #Skateboarding #ConanOBrien #PodcastClips #TeamCoco",success,1,2025-12-26T11:23:38.429501,2025-12-26T11:27:42.997574,,0,3,,,,,,
+DQk5288Ev1X-2.mp4_podcast,walinspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\hormozi\DQk5288Ev1X-2.mp4,"The difference between making millions and keeping millions? One simple shift in perspective.
+
+@hormozi breaks down why so many people hit seven figures only to lose it all—and how to make sure you're not one of them. It's not about earning more, it's about thinking differently about what you already have.
+
+#millionaire #wealthmindset #moneymindset #financialfreedom #entrepreneurship #businesstips #wealthbuilding #millionairemindset #successtips #businessgrowth #entrepreneurlife #moneytips",success,2,2025-12-26T11:24:09.959851,2025-12-26T11:29:24.107935,,0,3,,,,,,
+DHdpIuVuwNA-1.mp4_podcast,emersoninspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\thejrecompanion\DHdpIuVuwNA-1.mp4,"Josh Waitzkin breaks down why the competitive rush toward AI development might be humanity's biggest blindspot—a perspective that'll make you rethink everything about technological progress.
+
+From The Joe Rogan Experience Episode 2292, brought to you by @thejrecompanion
+
+Stream the full conversation—episode links in bio.
+
+Follow @joerogan
+
+#joshwaitzkin #joerogan #jre2292 #thejrecompanion #jre #jrejoshwaitzkin #joeroganpodcast #joeroganexperience",success,3,2025-12-26T11:24:49.710564,2025-12-26T11:28:36.532384,,0,3,,,,,,
+DNuogOmRHMX-2.mp4_podcast,dennwilsoninspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\restispolitics\DNuogOmRHMX-2.mp4,"Money talks louder than missiles in Moscow's playbook. 💸
 
 Russia's strategy isn't just about military force—it's about weaponizing wealth to manipulate and destabilize. @restispolitics breaks down how financial influence has become the Kremlin's most dangerous export.
 
-#RestIsPolitics #Russia #Geopolitics #PoliticalPodcast #Putin #GlobalPolitics #WorldNews #Corruption #PoliticalAnalysis #CurrentAffairs #InternationalRelations #PoliticalDiscussion #PodcastClips",success,1,2025-12-23T13:59:51.175945,2025-12-23T14:01:04.423406,,2,3,2025-12-23T14:04:41.123578,,,,,
-DKcSA7jo_-s-1.mp4_podcast,bondsgoldengun,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\restispolitics\DKcSA7jo_-s-1.mp4,Ed Miliband tackles the big question: does Britain's solo effort actually move the needle on climate change? @restispolitics breaks down whether one nation can make a real dent in the global warming crisis. #politics #climatechange #edmiliband,success,2,2025-12-23T13:56:13.442867,2025-12-23T13:58:56.424990,,0,3,,,,,,
-DRsmV6Qk8NZ-2.mp4_podcast,blackietheblackest,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\pbd.podcast\DRsmV6Qk8NZ-2.mp4,"The data doesn't lie, and these numbers paint an eye-opening picture.
+#RestIsPolitics #Russia #Geopolitics #PoliticalPodcast #Putin #GlobalPolitics #WorldNews #Corruption #PoliticalAnalysis #CurrentAffairs #InternationalRelations #PoliticalDiscussion #PodcastClips",success,4,2025-12-26T11:25:17.710219,2025-12-26T11:29:14.501116,,0,3,,,,,,
+DNIpqdTt_yx-2.mp4_podcast,neilinspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\ultimatehumanpod\DNIpqdTt_yx-2.mp4,"Joy isn't meant to be a distant memory from your past. Dr. Judith Joseph breaks down anhedonia—when happiness feels impossible to grasp, even in moments that should light you up. This isn't about hustling harder or ""adulting."" It's about reclaiming what you were designed to experience.
 
-📊 @pbd.podcast breaks down statistics that challenge the mainstream narrative – a perspective worth considering regardless of where you stand.
+Catch the full conversation with @drjudithjoseph on @ultimatehumanpod to understand why settling for numbness was never the plan.
 
-Drop this in someone's feed who's ready for a fact-based conversation 👇🏽
+👇 Comment ""JOY"" below for the complete episode in your DMs.
 
-#podcast #valuetainment #patrickbetdavid #business #entrepreneur #mindset #motivation #success #entrepreneurship",success,3,2025-12-23T13:56:13.700950,2025-12-23T14:00:40.309973,,0,3,,,,,,
-DO37JGfjQ14-1.mp4_podcast,basilthymeoregano,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\thediaryofaceopodcast\DO37JGfjQ14-1.mp4,"Matthew McConaughey grew up with a household rule that became his life philosophy: eliminate ""I can't"" from your vocabulary.
+#anhedonia #mentalhealth #mentalhealthawareness #joy #happiness #depression #burnout #purpose #selfcare #wellness #healing #therapy #podcast #podcastclips #ultimatehumanpod",success,0,2025-12-26T11:25:37.653185,2025-12-26T11:29:28.971934,,0,3,,,,,,
+DRADo66EdvU-2.mp4_podcast,angelapenninspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\therealbradlea\DRADo66EdvU-2.mp4,"@therealbradlea flips Eminem into something completely unexpected—and the result hits different. This soulful reimagining proves the bars hold up in any genre. 🎤✨
 
-This single principle, enforced throughout his childhood, built the foundation for his relentless determination and ability to push past every barrier in his path.
+#eminem #soul #music #cover #acoustic #hiphop #rap #soulmusic #musiccover #viral #fyp",success,3,2025-12-26T11:26:06.059592,2025-12-26T11:29:19.753892,,0,3,,,,,,
+DHloiWHAhpz-1.mp4_podcast,carlooinspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\legionofskanks\DHloiWHAhpz-1.mp4,"@bertkreischer thought he could take on @50cent and the @legionofskanks crew breaks down how that would actually go down 💀
 
-Drop ""Matthew"" below and I'll send you the full conversation straight to your DMs.
+#LegionOfSkanks live every Monday at 8PM E only on @gasdigital",success,4,2025-12-26T11:31:25.060941,2025-12-26T11:35:59.202378,,2,3,2025-12-26T11:36:14.993183,,,,,
+DMQl5NCS0zV-2.mp4_podcast,penelopeinspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\joeroganexperience\DMQl5NCS0zV-2.mp4,"A sit-down with Texas State Representative James Talarico (@jamestalarico), who represents District 50 in the Texas House. @joeroganexperience dives into conversation with the Democratic lawmaker in episode 2352.
 
-How has this kind of thinking shown up in your own life?
+www.jamestalarico.com
 
-Via @officiallymcconaughey x @thediaryofaceopodcast
+#JoeRogan #JRE #JoeRoganExperience #JoeRoganPodcast #Podcast #JamesTalarico #Texas #Politics #TexasPolitics #Democrat #StateRepresentative",success,1,2025-12-26T11:27:53.045834,2025-12-26T11:31:19.149446,,0,3,,,,,,
+DQVJE-AAtao-2.mp4_podcast,yourmindfuelpod,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\mastersofscale\DQVJE-AAtao-2.mp4,"When The New York Times drew a line in the sand on AI, it sent ripples through the entire media industry.
 
-#MatthewMcConaughey #Mindset #SuccessMindset #Motivation #SelfBelief #PersonalGrowth #NeverGiveUp #MotivationMonday #Inspiration #PodcastClips #MindsetMatters #SuccessPrinciples #GrowthMindset",success,0,2025-12-23T13:57:10.482912,2025-12-23T14:01:52.974785,,0,3,,,,,,
-DMG_6EDz3NQ-1.mp4_podcast,AgedWalnutThrones,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\jordanbpetersonfans\DMG_6EDz3NQ-1.mp4,"The perspective shared here by jordan.b.peterson continues to spark meaningful conversations across social media. This clip showcases why his thoughts resonate with millions seeking clarity in modern life.
+Meredith Kopit Levien, President & CEO of @nytimes, sat down with @robertsafian, host of @rapidresponseshow, at Masters of Scale Summit to break down the tough calls media leaders face: protecting intellectual property while adapting to technological change.
 
-Credit to @jordanbpetersonfans for bringing these powerful moments to the community 🔥🔥
+The full conversation with @mastersofscale dives into what sustainable AI practices actually look like in modern journalism.
 
-#jordanpeterson #jordanpetersonquotes #jordanbpeterson #jordanbpetersonquotes #psychology #lifelessons #tellthetruth #tellthetruthtuesday #speaktruth #speaktruthtopower #12rulesforlife #12morerulesforlife #societyfeelings #jordanpetersononsociety #bookstagram #googleads #marketingdigital #personality",success,2,2025-12-23T16:46:06.769783,2025-12-23T16:51:05.160746,,0,3,2025-12-23T14:09:02.199626,,,,,
-DDaLPBpyQwd-2.mp4_podcast,speckles_is_here,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\joeroganexperience\DDaLPBpyQwd-2.mp4,"Cinema legends deep in conversation. Quentin Tarantino sits down with Roger Avary on @joeroganexperience episode 2240, bringing decades of filmmaking expertise and their iconic ""Pulp Fiction"" partnership to the table. The duo, who together host ""The Video Archives"" podcast, break down their craft and shared history in film. Tarantino's portfolio speaks for itself—""Once Upon a Time in Hollywood"" among countless classics—while Avary's work on ""The Rules of Attraction"" showcases his distinct directorial vision. Season 2 of their podcast available at www.patreon.com/videoarchives
+Link in bio.
 
-#JoeRogan #JRE #QuentinTarantino #RogerAvary #PulpFiction #VideoArchives #Filmmaking #Hollywood #Podcast #Directors #Screenwriting",success,2,2025-12-23T13:59:06.467527,2025-12-23T14:03:31.698823,,0,3,,,,,,
-DRqPbn9CfTp-1.mp4_podcast,rushhourresponse,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\jockowillink\DRqPbn9CfTp-1.mp4,"When the battlefield teaches you lessons that echo forever—Jocko Willink (@jockowillink) opens up about the words he can never forget.
+#AI #journalism #media #tech #leadership #business #innovation #NewYorkTimes #MastersOfScale",success,3,2025-12-26T11:28:46.589613,2025-12-26T11:31:46.226859,,0,3,,,,,,
+DRAr6Wbk85s-1.mp4_podcast,weriseandruminate,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\dave.asprey\DRAr6Wbk85s-1.mp4,"The medical system tells us to introduce peanut butter slowly but delivers multiple vaccines at once—@dave.asprey highlights this inconsistency that parents are noticing. If we can't isolate a reaction to sweet potato, how do we track responses to 8 injections in a single appointment? The disconnect isn't about being anti-anything; it's about applying the same safety logic across the board. Parents are simply asking for consistency in how we measure risk during the most vulnerable stages of development.
 
-#navyseals #military #emotional #shawnryanshow #podcast",success,3,2025-12-23T14:03:32.315006,2025-12-23T14:06:19.425343,,1,3,2025-12-23T14:08:22.264103,,,,,
-DNtqwyfQIDN-2.mp4_podcast,redcarelesscrocs,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\garyvee\DNtqwyfQIDN-2.mp4,"The legend crushed the Hot Ones challenge and @garyvee wants to know what hit different for you 🔥 Drop your favorite moment below whether this is your first watch or you've been waiting for this episode. Grab your drink and settle in 🍗
+Credit: @raising.lions.not.sheep_
 
-Don't forget to star his profile so you never miss content like this ⭐️
+@seckennedy @robertfkennedyjr
 
-#garyvee #hotones #perspective",failed,0,2025-12-23T16:53:40.402607,2025-12-23T16:56:39.759184,AttributeError: 'SmartInstagramPoster' object has no attribute 'driver',3,3,2025-12-23T16:58:30.347440,,unknown,,,
-DB1uSGvSjP0-1.mp4_podcast,ogtylerguy,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\michaeljknowles\DB1uSGvSjP0-1.mp4,"Michael J. Knowles (@michaeljknowles) questions the motivations behind certain research agendas when it comes to studying the effects of gender transition on children.
+#InformedConsent #PediatricHealth #Parenting #HealthTransparency #BiohackingKids",success,4,2025-12-26T11:29:24.571967,2025-12-26T11:32:56.577810,,0,3,,,,,,
+C_OXZniS5GT-1.mp4_podcast,madalynnnaustininspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\foundmyfitness\C_OXZniS5GT-1.mp4,"The supplement world is full of hype, but creatine continues to prove itself through rigorous scientific scrutiny. @foundmyfitness breaks down why this compound deserves attention beyond the gym—from powering cellular energy through ATP production to emerging data suggesting cognitive enhancement during periods of mental strain and exhaustion.
 
-#MichaelKnowles #Conservative #Politics #GenderIdeology #Children #Research #Studies #PoliticalCommentary #DailyWire #MediaBias #CriticalThinking #ParentalRights #TransDebate",success,0,2025-12-23T14:02:03.036856,2025-12-23T14:05:30.286899,,0,3,,,,,,
-DQ7ojcnkm1m-1.mp4_podcast,milkyjersey.trainer,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\icedcoffeehour\DQ7ojcnkm1m-1.mp4,"The moment that nearly cost RJ Mitt everything 😳
+One persistent concern? The hair loss myth. Dr. Layne Norton (@biolayne) addresses this head-on in his recent podcast appearance, clarifying that while one small study showed elevated DHT levels, no actual link to hair loss has been established in the research.
 
-One decision, one risk, and his entire career hung in the balance. @icedcoffeehour sits down with RJ Mitt to unpack the story that almost changed his life forever.
+Daily dosing recommendations hover between 5-10 grams, and the old-school loading protocol is now considered unnecessary by most experts. Experiencing digestive issues? Split your dose into smaller servings throughout the day.
 
-#RJMitt #IcedCoffeeHour #PodcastClips #CareerStory #AlmostFailed #EntrepreneurJourney #BusinessPodcast #PodcastHighlights #RiskTaker #CareerDefiningMoment #StorytimePodcast",success,2,2025-12-23T14:03:41.742873,2025-12-23T14:07:26.162907,,0,3,,,,,,
-Ckyc7eFpzwB-1.mp4_podcast,markatetwobananas,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\impacttheory\Ckyc7eFpzwB-1.mp4,".@michael_saylor breaks down why property rights might be humanity's most critical asset—and where Bitcoin fits into protecting what you've built.
+For the complete deep-dive into Layne's supplement recommendations, episode 94 of the FoundMyFitness podcast delivers three and a half hours of evidence-based insights. Stream it on Apple Podcasts, Spotify, or YouTube, with detailed show notes at foundmyfitness.com/episodes/layne-norton
 
-The MicroStrategy co-founder joins @impacttheory to explore wealth preservation strategies that actually work in today's economy.
+#creatine #supplements #fitness #brain",success,3,2025-12-26T11:32:16.529206,2025-12-26T11:36:25.767451,,1,3,2025-12-26T11:37:14.581093,,,,,
+DLluzH6y1Iz-1.mp4_podcast,itsempoweringhour,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\jordanbpetersonfans\DLluzH6y1Iz-1.mp4,"The perspective shared here by jordan.b.peterson continues to spark important conversations across social media. This thought-provoking take demonstrates why his viewpoints resonate with millions seeking clarity in today's complex world. Credit goes to @jordanbpetersonfans for consistently sharing these powerful moments that challenge conventional thinking.
 
-Full conversation available through the link in bio.
+#jordanpeterson #jordanpetersonquotes #jordanbpeterson #jordanbpetersonquotes #psychology #lifelessons #tellthetruth #tellthetruthtuesday #speaktruth #speaktruthtopower #12rulesforlife #12morerulesforlife #societyfeelings #jordanpetersononsociety #bookstagram #googleads #marketingdigital #personality",success,2,2025-12-26T11:29:34.153315,2025-12-26T11:32:51.144627,,0,3,,,,,,
+DNbWcD6SNjl-2.mp4_podcast,theheartandhustles,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\theadamcarollashow\DNbWcD6SNjl-2.mp4,"The consistency is real – @theadamcarollashow has been preaching this truth about family and education for years, and it hits even harder now 💯
 
-#cryptonews #cryptotrading #bitcoin #decentralizedeconomy #propertyrights #recession",success,0,2025-12-23T14:05:40.328340,2025-12-23T14:09:02.473457,,0,3,,,,,,
-DRh9Qj4EbG6-2.mp4_podcast,marblebasecase,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\megynkellyshow\DRh9Qj4EbG6-2.mp4,"The unlikely appearance of Rachel Maddow at Dick Cheney's funeral becomes a fascinating talking point as @megynkellyshow and @we.the.fifth unpack how deep Trump hate really runs in certain circles. Catch the complete conversation—subscribe and download the full show on your favorite podcast platform.
+#FamilyAndEducation #AdamCarolla #ParentingTruth #EducationMatters #FamilyFirst #ParentingAdvice #RealTalk #SpeakingFacts #TimelessWisdom #PodcastClips",success,0,2025-12-26T11:29:39.037147,2025-12-26T11:32:37.929905,,0,3,,,,,,
+DQ7OsBKiSQx-1.mp4_podcast,mysparkedthoughts,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\shawnryanshow\DQ7OsBKiSQx-1.mp4,"When a SEAL Team 6 operator picks their sidearm, every detail matters. This is the pistol that made the cut.
 
-#megynkellyshow",success,3,2025-12-23T14:06:29.467103,2025-12-23T14:13:17.640219,,0,3,,,,,,
-DNk-ijPvzUF-2.mp4_podcast,lupethelooper,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\markmanson\DNk-ijPvzUF-2.mp4,"The knot in your stomach isn't signaling failure—according to @markmanson, it's clarity wearing a disguise. He breaks down why feeling lost actually means you've gained something valuable: awareness of what you've paid. His advice? Quit obsessing over ten years behind you and redirect that energy into the next five minutes instead. That tiny window is where real transformation happens.
+via @shawnryanshow
 
-#mindset #perspective #lifeadvice #happiness",success,4,2025-12-23T14:06:43.675519,2025-12-23T14:13:01.893333,,0,3,,,,,,
-DPo1Epokp09-1.mp4_podcast,FusedMercurySpike,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\lewishowes\DPo1Epokp09-1.mp4,"When doubt creeps in about your work, @rickrubin's perspective might just change everything 🎯
-
-@lewishowes captured this moment that every creator needs to hear—bookmark it for those days when you're questioning your path.
-
-Drop a comment: What are you working on that deserves more of your confidence?
-
-#creativity #selfbelief #rickrubin #createwithconfidence #artistmindset #trusttheprocess #creatorlife #believeinyourself #manifestation #mindsetshift",success,2,2025-12-23T14:07:36.207828,2025-12-23T14:11:43.386186,,0,3,,,,,,
-DQfPEwUEg-b-1.mp4_podcast,DarkLichenCoded,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\greatness\DQfPEwUEg-b-1.mp4,"When @greatness throws a Halloween competition, the energy hits different 🎃⚡
-
-Those tombstones weren't just decorations—they buried guilt, envy, anger, and every obstacle blocking the path to abundance. The question is: what's getting left in the past today? 🪦✨
-
-#halloween #halloween2025 #hauntedhouse #greatness",success,0,2025-12-23T14:09:12.526259,2025-12-23T14:13:08.859540,,0,3,,,,,,
-DKzhNdauP75-2.mp4_podcast,choice.jonestown,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\jockowillink\DKzhNdauP75-2.mp4,"When fear tries to hold you back, @jockowillink explains exactly what you need to do. His approach to building unshakeable confidence isn't what most people expect—it's about facing what scares you head-on. This is the mindset that separates those who talk from those who take action.
-
-#jockowillink #confidence #motivation #fearless #mindset #disciplineequalsfreedom #leadership #selfimprovement #motivational #success #growthmindset #mentalstrength #personaldevelopment #inspiration",success,1,2025-12-23T14:09:31.915499,2025-12-23T14:13:54.563493,,0,3,,,,,,
-DLVoz2Yhq3g-1.mp4_podcast,BrokenRockPace,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\charliekirk1776\DLVoz2Yhq3g-1.mp4,"When the threat of nuclear war becomes background noise to the culture wars. @charliekirk1776 highlights the absurdity of modern priorities.
-
-#CharlieKirk #TurningPointUSA #NuclearWar #Priorities #PoliticalCommentary #Conservative #MediaCriticism #RealTalk #WakeUpAmerica #PerspectiveCheck",success,2,2025-12-23T14:18:08.579711,2025-12-23T14:20:12.977876,,2,3,2025-12-23T14:22:58.525726,,,,,
-Cx_ZNYaRLZd-2.mp4_podcast,ApexStratagem,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\tonyrobbins\Cx_ZNYaRLZd-2.mp4,"Focus isn't just a mental exercise—it's the gateway to your emotional state, and @tonyrobbins breaks down exactly why in under 30 seconds. Where your attention goes, your feelings follow. 
-
-#TonyRobbins #Focus #Mindset #PersonalDevelopment #SelfImprovement #Motivation #EmotionalMastery #LifeCoach #Inspiration #MindsetMatters #PersonalGrowth #SuccessMindset",success,4,2025-12-23T14:13:11.959462,2025-12-23T14:15:50.734675,,0,3,,,,,,
-DPeoTa9DmDn-2.mp4_podcast,clipsonpodcast,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\ryanholiday\DPeoTa9DmDn-2.mp4,"Philosophy meets the playground in these unexpected parenting guides 📚
-
-Most people don't realize these classics double as instruction manuals for raising kids. @ryanholiday breaks down how ancient wisdom translates directly to modern parenting challenges—from teaching discipline to building character in the next generation.
-
-The best parenting advice might just be hiding in your philosophy collection.
-
-#Parenting #ParentingTips #Books #BookRecommendations #Philosophy #Stoicism #RyanHoliday #ParentingAdvice #BookTok #MustRead #Wisdom #ParentLife #RaisingKids",success,0,2025-12-23T14:13:18.920682,2025-12-23T14:16:42.627365,,0,3,,,,,,
-DRVMzaukz87-2.mp4_podcast,podsnipworks,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\pbd.podcast\DRVMzaukz87-2.mp4,"Scott Jennings shares his unexpected observations from Dick Cheney's funeral service
-
-Via @pbd.podcast
-
-#ScottJennings #DickCheney #PoliticalCommentary #Funeral #WashingtonDC #Politics #PBDPodcast #Commentary #InsideView",failed,1,2025-12-23T16:54:51.824714,2025-12-23T16:56:04.281923,"logged_out: create new account - Vision analysis: This shows Instagram's login screen with the standard sign-in form, indicating the user has been logged out of their account. The ""logged_out"" error context suggests the user was automatically signed out, likely due to a session expiration or security issue. To fix this, the user needs to log back in with their credentials or create a new account if they don't have one.",2,3,2025-12-23T16:59:41.761170,logged_out,account,,,
-DNanIt2RwxF-1.mp4_podcast,talkgembytes,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\jayshetty\DNanIt2RwxF-1.mp4,"Through every face you pass today lives an untold chapter you'll never read 📖 @jayshetty reminds us that compassion begins when we acknowledge the invisible battles around us ❤️
-
-Drop a ""YES"" if this shifted your perspective 👇
-
-#jayshetty #perspective #compassion #empathy #mindfulness #awareness #kindness #wisdom #lifelessons #growth #understanding #humanity #motivation #inspiration #thoughtoftheday",success,1,2025-12-23T14:14:04.614515,2025-12-23T14:16:41.882426,,0,3,,,,,,
-DRx0A2Qk1dg-1.mp4_podcast,castreelworks,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\pbd.podcast\DRx0A2Qk1dg-1.mp4,"The numbers don't lie and Vinnie came prepared with receipts 😂
-
-via @pbd.podcast
-
-#podcast #podcasting #podcasts #vinniepolitan #truecrime #news #debate #courttv #spotifypodcast #applepodcast #shorts #reels",success,4,2025-12-23T14:16:00.799498,2025-12-23T14:18:09.656148,,0,3,,,,,,
-DH3VYqPMejs-2.mp4_podcast,viraltalkfeed,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\askvinh\DH3VYqPMejs-2.mp4,"When small talk drags on too long, this TIME framework from @askvinh shows exactly how to wrap things up smoothly without the awkward exit 😎
-
-What's your go-to conversation closer?
-
-#communication #communicationskills #socialskills #confidence #conversationstarters #confidence #selfimprovement #selfdevelopment #howtotalk #smalltalk",success,1,2025-12-23T14:23:34.767011,2025-12-23T14:24:41.180536,,2,3,2025-12-23T14:28:24.713126,,,,,
-DJtup4uuXrX-2.mp4_podcast,reelpodsector,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\askvinh\DJtup4uuXrX-2.mp4,"@neri_lewis walked away with the grand prize! 🏆
-
-@askvinh wrapped up his 5M follower celebration giveaway, and one lucky person scored the ultimate creator setup: a 13-Inch M4 MacBook Air, DJI Osmo Pocket 3 Creator Combo Kit, RODE NT-USB+ Professional USB Microphone, NEEWAR LED Light Kit, Invisible Selfie Stick & Tripod, plus 5 of his personal favorite books.
-
-The drawing happened live at 10:00 AM ACST on June 6, 2025, after entries closed earlier that morning. Participants commented TREE to register for their chance to win.
-
-A huge thanks to everyone who entered and continues supporting this amazing community ❤️
-
-#giveaway #giveawayended #winner #5million #milestone #creator #contentcreator #macbookair #dji #osmopocket3 #rode #microphone #ledlights #books #community #thankyou #instagram #instagramgiveaway",success,0,2025-12-23T14:23:18.435754,2025-12-23T14:25:50.904726,,2,3,2025-12-23T14:28:08.374163,,,,,
-C6r4JFEPDHi-1.mp4_podcast,apodwavecentral,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\moreplatesmoredates\C6r4JFEPDHi-1.mp4,"Paul Saladino breaks down the critical decision point for atherosclerosis medication in this thought-provoking discussion with @moreplatesmoredates. The conversation challenges conventional thinking about when pharmaceutical intervention becomes necessary versus lifestyle optimization. Worth watching if you're navigating cardiovascular health decisions.
-
-#paulosaladino #moreplatesmoredates #atherosclerosis #cardiovascularhealth #heartdisease #cholesterol #preventivemedicine #healthoptimization #biohacking #longevity #hearthealth #statins #functionalhealth",success,2,2025-12-23T16:51:15.233704,2025-12-23T16:57:58.740587,,0,3,2025-12-23T14:29:06.087141,,,,,
-DNGFBpMKu4Z-2.mp4_podcast,micdropchannel,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\ultimatehumanpod\DNGFBpMKu4Z-2.mp4,"The difference between treating symptoms and addressing root causes? Everything.
-
-When eczema shows up on your skin, it's actually your immune system sending signals from deep within. Surface-level solutions miss the entire point—because what matters most is happening internally with absorption and metabolism, not just what's on your plate.
-
-This insight comes from a powerful conversation on @ultimatehumanpod that challenges conventional thinking about skin health.
-
-👇 Comment ""ABSORB"" below and we'll DM you the full episode.
-
-#eczema #skinhealth #guthealth #immunesystem #holistichealth #functionalmedicine #healthpodcast #wellness #inflammation #metabolichealth",success,3,2025-12-23T14:20:13.250670,2025-12-23T14:24:19.839037,,0,3,,,,,,
-DQMq5y3CcqJ-2.mp4_podcast,viralmicstudio,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\badfriendspod\DQMq5y3CcqJ-2.mp4,"Bobby and Andrew just laid down the law on this one 🎯 @badfriendspod bringing that unfiltered energy straight to your feed. Patreon's got the full experience, and Monday's episode? Going wide, baby.
-
-#BadFriendsPod #BobbyLee #AndrewSantino #PodcastClips #ComedyPodcast #PodcastCommunity #StandUpComedy #Patreon",success,2,2025-12-23T14:20:23.030399,2025-12-23T14:24:26.904781,,0,3,,,,,,
-DOhEFonEvTI-1.mp4_podcast,quickpodsnaps,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\teamcocopodcasts\DOhEFonEvTI-1.mp4,"When your parents give you a name that doubles as a secret code 🤯 @teamcocopodcasts reveals what CONAF really stands for and honestly, we're still processing this information
-
-#CONAF #ConanOBrien #PodcastClips #FunnyPodcast #ComedyPodcast #PodcastMoments #TeamCoco",success,3,2025-12-23T14:32:58.175993,2025-12-23T14:38:12.031828,,2,3,2025-12-23T14:37:48.112422,,,,,
-DQfmlsMDY9D-2.mp4_podcast,podmindstudio,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\tuckercarlson\DQfmlsMDY9D-2.mp4,"The forests of Maine hold secrets that refuse to stay buried—@tuckercarlson ventures into terrain where the past still lingers.
-
-#Maine #HauntedForest #Supernatural #Mystery #TuckerCarlson #Unexplained #Creepy #ForestMysteries #Paranormal",success,2,2025-12-23T14:24:36.964148,2025-12-23T14:29:57.341123,,0,3,,,,,,
-DFLblVJyfAW-2.mp4_podcast,talktrackhub,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\2bears.1cave\DFLblVJyfAW-2.mp4,"@Pacman Jones breaks down exactly where his first NFL paycheck went on episode 272 of @2bears.1cave 💰
-
-#2Bears1Cave #PacmanJones #NFL #FirstCheck #Podcast #Comedy #TomSegura #BertKreischer #NFLStories #Football",success,1,2025-12-23T14:24:51.236854,2025-12-23T14:28:38.641773,,0,3,,,,,,
-DOxCbm8iZpk-1.mp4_podcast,kianinspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\lewishowes\DOxCbm8iZpk-1.mp4,"Getting knocked down 6 times? Stand up 7. @lewishowes breaks down why resilience beats perfection every single time. Sometimes the lesson you needed comes exactly when you're ready to hear it. 💪
-
-#Dream #Purpose #Resilience #GrowthMindset #MotivationDaily #SuccessMindset #NeverGiveUp #Inspiration",success,0,2025-12-23T14:26:01.978102,2025-12-23T14:30:09.928045,,0,3,,,,,,
-Cw-XRREOGQT-2.mp4_podcast,sonbankinspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\edmylett\Cw-XRREOGQT-2.mp4,"@edmylett breaks down the exact shift that separates dreamers from achievers. It's not about waiting for the perfect moment—it's about creating the conditions where impossible transforms into inevitable. This is what separates those who wish from those who win.
-
-#Motivation #Mindset #Success #PersonalDevelopment #SelfImprovement #SuccessMindset #Inspiration #GrowthMindset #Goals #MaxOut #EdMylett",success,4,2025-12-23T14:27:57.600164,2025-12-23T14:32:00.892274,,0,3,,,,,,
-DNB4_GlzZ1i-1.mp4_podcast,walinspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\greatness\DNB4_GlzZ1i-1.mp4,"Every year adds something irreplaceable—and @sagerobbins breaks down exactly what that is ✨
-
-Want the full episode? Comment ""YES"" below 👇
-
-Drop a 💛 if you appreciate who you've become 🙏
-
-via @greatness
-
-#mindset #wisdom #lifeisbeautiful",success,1,2025-12-23T14:28:48.718013,2025-12-23T14:33:10.721348,,0,3,,,,,,
-DPLU_dPDPv3-1.mp4_podcast,emersoninspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\thediaryofaceopodcast\DPLU_dPDPv3-1.mp4,"# Three minds, one impossible question: what if everything we've been told about life's meaning is wrong?
-
-A psychiatrist who sees people at rock bottom, a Christian philosopher defending divine purpose, and an atheist thinker dismantling comfortable truths walked into the same room.
-
-@thediaryofaceopodcast wasn't looking for easy answers when he sat down with Dr K (@healthygamer_gg), Greg Koukl, and Alex O'Connor (@cosmicskeptic).
-
-Dr K brings insight from working directly with those who've lost their sense of direction, translating their pain into wisdom the rest of us desperately need.
-
-Greg argues that meaning isn't something we create in our heads, it's embedded in reality by something greater than ourselves.
-
-Alex challenges both sides, questioning whether meaning exists at all or if we're just telling ourselves stories to feel better.
-
-The conversation cuts through surface-level takes on why young people are struggling with purpose, why traditional structures are crumbling, and what's actually happening beneath the cultural shift.
-
-They tackled the hard stuff: invented versus discovered meaning, whether this generation is uniquely directionless, religion's actual role in human flourishing, and how our terror of death dictates everything.
-
-No one left with all the answers, but the collision of worldviews created something more valuable than certainty.
-
-Comment 'Life' for the full conversation in your DMs.
-
-#meaningoflife #philosophy #religion #mentalhealth #existentialism #purpose #spirituality #atheism #christianity #deepconversations #podcast",success,2,2025-12-23T14:30:07.397255,2025-12-23T14:35:10.803537,,0,3,,,,,,
-DOV5iBEDwvh-1.mp4_podcast,dennwilsoninspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\markmanson\DOV5iBEDwvh-1.mp4,"Mark Manson (@markmanson) flips the script on how we think about happiness. He points out that meaningful experiences—whether it's pushing yourself in your career, navigating the complexities of relationships, or exploring new places—all come with their share of difficulty. But that's exactly what gives them value. When you focus on building something substantial rather than chasing a feeling, happiness naturally follows. It's not the destination; it's what happens along the way.
-
-#happiness #personalgrowth #mindset #motivation #lifelessons #selfimprovement #personaldevelopment #wisdom #inspiration #growth #mindfulness #purpose #meaningfullife",success,0,2025-12-23T14:30:20.001559,2025-12-23T14:34:57.252374,,0,3,,,,,,
-DQnLXJQkp0i-1.mp4_podcast,neilinspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\lewishowes\DQnLXJQkp0i-1.mp4,".@drjessicaknurick just exposed what high-fructose corn syrup really does to your body 🌽
-
-@lewishowes sat down with her to get the facts everyone's been missing.
-
-Drop ""YES"" below for the complete conversation in your DMs 👇
-
-Tag someone who's always reading food labels!
-
-#nutrition #health #wellness #healthylifestyle #healthtips #nutritionist #nutritioncoach #foodismedicine #guthealth #healthyliving #holistichealth #wellnessjourney",success,4,2025-12-23T14:32:10.940750,2025-12-23T14:36:39.727699,,0,3,,,,,,
-DNVofDpN-5Q-2.mp4_podcast,angelapenninspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\themelrobbinspodcast\DNVofDpN-5Q-2.mp4,"What if the secret to living longer and feeling happier has nothing to do with diet, exercise, or career success?
-
-According to The Harvard Study of Adult Development—the longest-running happiness research ever conducted—it all comes down to relationships. Mel Robbins breaks down why the connections in your life matter more than anything else, and challenges listeners with one simple action: stop waiting for the ""right time"" to reach out.
-
-Grab your phone. Text someone. Set up that lunch. The calendar isn't going to clear itself, and the people who matter most won't wait forever.
-
-Catch the full episode from @themelrobbinspodcast: ""5 Powerful Questions to Ask Yourself Right Now"" 🎧
-
-#MelRobbins #Relationships #HarvardStudy #Happiness #Podcast #Mindset #PersonalGrowth #SelfImprovement #LifeAdvice #Motivation",claimed,1,2025-12-23T16:56:14.347142,,,0,3,2025-12-23T14:44:32.394513,,,,,
-DP5Kkx6jKCb-1.mp4_podcast,carlooinspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\shawnryanclipped\DP5Kkx6jKCb-1.mp4,"A deep dive into the defense tech revolution as Trae Stephen's breaks down his journey from Palantir to launching Anduril, where cutting-edge AI meets national security. The co-founder's insights reveal how silicon valley innovation is reshaping America's defense capabilities in ways most people never see.
-
-via @shawnryanclipped
-
-#shawnryanshow #shawnryan #srs #anduril #palantir #traestephens #defensetech #military #specialforces #navy #navyseals #podcast #defenseindustry #technology #ai #nationalsecurity #startup #founder",success,0,2025-12-23T14:37:51.090751,2025-12-23T14:39:45.726038,,1,3,2025-12-23T14:42:41.022770,,,,,
-DQljoEljEAV-1.mp4_podcast,penelopeinspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01a\thediaryofaceopodcast\DQljoEljEAV-1.mp4,"What happens when you finally stop running from the hardest truths about yourself?
-
-@thediaryofaceopodcast sits down with researcher and author @brenebrown, whose groundbreaking work on shame and courage has reached millions through her nearly 30-million-view TED Talk.
-
-After spending over twenty years researching human connection, Brené unpacks the invisible forces that keep people trapped in cycles of hiding and pretending.
-
-The conversation explores the silent weight of shame, the relationship damage caused by emotional walls, pathways to rebuilding broken trust, and why the need to control everything often backfires.
-
-At a time when so many feel disconnected and inadequate, Brené offers clarity on the patterns most people feel but struggle to name.
-
-This episode digs into the question of what drives someone to dedicate their life to helping others face their deepest fears—and what shifts when we choose to do the same.
-
-For anyone who's ever wondered why fear shows up the way it does, this one's worth the watch.
-
-Comment 'Brene' for the full conversation sent directly to your DMs.
-
-#BreneBrown #Vulnerability #Shame #EmotionalIntelligence #MentalHealth #SelfAwareness #Courage #PersonalGrowth #Podcast #DeepConversations #HealingJourney #Authenticity",success,2,2025-12-23T14:35:20.858052,2025-12-23T14:39:55.759569,,0,3,,,,,,
-DMh_9rRAGbu-1.mp4_podcast,yourmindfuelpod,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\garyvee\DMh_9rRAGbu-1.mp4,"The weight of expectations versus the freedom of reality – @garyvee breaks down why ""supposed to"" is the phrase keeping people stuck. He explains how happiness comes from adapting to what IS rather than mourning what ""should have been."" Reality doesn't follow anyone's script, and the sooner that clicks, the lighter life gets. Worth a rewatch if this one hits different.
-
-#garyvee #mindset #motivation",success,4,2025-12-23T14:36:49.780297,2025-12-23T14:41:29.777156,,0,3,,,,,,
-DPhBHYtjEvL-1.mp4_podcast,weriseandruminate,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\shawnryanclipped\DPhBHYtjEvL-1.mp4,"Sarah Adams breaks down the threat posed by Hamza Bin Laden in this powerful segment. The intelligence insights she shares reveal why this figure remains critical to global security discussions. @shawnryanclipped brings another essential conversation to light.
-
-#shawnryanshow #podcast #sarahadams #hamzabinladen #intelligence #nationalsecurity #terrorism #cia #binladen #geopolitics #security #truthseeker #military",success,3,2025-12-23T14:38:22.109812,2025-12-23T14:42:42.617215,,0,3,,,,,,
-DPHCRCoCUoJ-1.mp4_podcast,madalynnnaustininspired,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\mattwalshblog\DPHCRCoCUoJ-1.mp4,"A country's refusal to reclaim one of its own tells you everything you need to know about Ilhan Omar's reputation. Even Somalia isn't interested in taking her back, as @mattwalshblog points out.
-
-#IlhanOmar #Somalia #Politics #Conservative #PoliticalCommentary #Congress #Immigration #MattWalsh",success,0,2025-12-23T14:39:55.810021,2025-12-23T14:44:22.376319,,0,3,,,,,,
-C7En3_MuAOG-1.mp4_podcast,itsempoweringhour,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\simonsinek\C7En3_MuAOG-1.mp4,"@simonsinek breaks down what separates good leaders from great ones—it all comes down to curiosity and growth.
-
-Featuring insights with Chris Stanley from The World Business Forum, November 2023.
-
-#leadership #simonsinek #leadershipdevelopment #personalgrowth #businessforum #motivation #leadershiplessons #continuouslearning #growthmindset #inspire",success,2,2025-12-23T14:40:05.814324,2025-12-23T14:44:09.624676,,0,3,,,,,,
-DQZoj6yDmEw-2.mp4_podcast,theheartandhustles,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01b\garyvee\DQZoj6yDmEw-2.mp4,"Gary's challenge is simple: drop that one word in the comments that changes everything 👇
-
-He wants you to say it, type it, own it. Because the moment you declare it publicly, you're already halfway there.
-
-Credit: @garyvee
-
-Pro tip: Hit that ⭐️ on his profile (follow/following button) to add him to your favorites and never miss the fire content.
-
-#discipline #motivation #inspiration #garyvee",success,1,2025-12-23T14:41:07.673908,2025-12-23T14:45:22.259008,,0,3,,,,,,
-DMLo4iCSz_y-1.mp4_podcast,mysparkedthoughts,C:\Users\asus\Desktop\projects\geelark-automation\campaigns\podcast\videos\chunk_01c\jordanbpetersonfans\DMLo4iCSz_y-1.mp4,"The question isn't whether you agree—it's whether you're willing to sit with the discomfort of what jordan.b.peterson just laid out. This perspective challenges the comfortable narratives most people cling to.
-
-Credit: @jordanbpetersonfans
-
-#jordanpeterson #jordanpetersonquotes #jordanbpeterson #jordanbpetersonquotes #psychology #lifelessons #tellthetruth #tellthetruthtuesday #speaktruth #speaktruthtopower #12rulesforlife #12morerulesforlife #societyfeelings #jordanpetersononsociety #bookstagram #googleads #marketingdigital #personality",claimed,0,2025-12-23T16:56:49.813516,,,0,3,2025-12-23T14:50:04.515004,,,,,
+#selfdefense #survival #navyseals #military #edc #shawnryanshow #podcast",success,1,2025-12-26T11:31:29.194655,2025-12-26T11:33:48.009963,,0,3,,,,,,

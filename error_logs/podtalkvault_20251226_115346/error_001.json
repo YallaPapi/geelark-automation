@@ -1,0 +1,24 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-26T11:55:20.526604",
+  "account": "podtalkvault",
+  "job_id": "_q1pT8Pot5vS-2.mp4",
+  "phase": "navigation",
+  "error_type": "max_steps",
+  "error_class": "Exception",
+  "error_message": "Max steps (30) reached",
+  "error_repr": "Exception('Max steps (30) reached')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "max_steps": 30,
+    "video_uploaded": true,
+    "video_selected": false,
+    "caption_entered": false,
+    "share_clicked": false,
+    "caption": "Work is a soul-sucking black hole that devours dreams faster than I can pour coffee down my throat"
+  },
+  "ui_elements_count": 0,
+  "ui_elements": [],
+  "screenshot_file": "error_logs\\podtalkvault_20251226_115346\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\podtalkvault_20251226_115346\\error_001_page_source.xml"
+}

@@ -1,0 +1,22 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-26T12:11:35.535915",
+  "account": "upliftunfiltered",
+  "job_id": "1AhUsDfwcrWU-2.mp4_viral",
+  "phase": "execute_job",
+  "error_type": "Exception",
+  "error_class": "Exception",
+  "error_message": "API error: 524 - ",
+  "error_repr": "Exception('API error: 524 - ')",
+  "stack_trace": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\parallel_worker.py\", line 268, in execute_posting_job\n    poster.connect()\n    ~~~~~~~~~~~~~~^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 1025, in connect\n    return self._conn.connect()\n           ~~~~~~~~~~~~~~~~~~^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\device_connection.py\", line 470, in connect\n    phone = self.find_phone()\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\device_connection.py\", line 186, in find_phone\n    result = self.client.list_phones(page=page, page_size=100)\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\geelark_client.py\", line 116, in list_phones\n    return self._request(\"/open/v1/phone/list\", data)\n           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\geelark_client.py\", line 102, in _request\n    raise Exception(f\"API error: {resp.status_code} - {resp.text}\")\nException: API error: 524 - \n",
+  "context": {
+    "video_path": "C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\campaigns\\viral\\grq\\1AhUsDfwcrWU-2.mp4",
+    "caption": "Have you ever made a choice that made your parents nervous but felt right to you?",
+    "worker_id": 3,
+    "appium_url": "http://127.0.0.1:4729",
+    "full_traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\parallel_worker.py\", line 268, in execute_posting_job\n    poster.connect()\n    ~~~~~~~~~~~~~~^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 1025, in connect\n    return self._conn.connect()\n           ~~~~~~~~~~~~~~~~~~^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\device_connection.py\", line 470, in connect\n    phone = self.find_phone()\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\device_connection.py\", line 186, in find_phone\n    result = self.client.list_phones(page=page, page_size=100)\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\geelark_client.py\", line 116, in list_phones\n    return self._request(\"/open/v1/phone/list\", data)\n           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\geelark_client.py\", line 102, in _request\n    raise Exception(f\"API error: {resp.status_code} - {resp.text}\")\nException: API error: 524 - \n"
+  },
+  "ui_elements_count": 0,
+  "ui_elements": null,
+  "screenshot_file": null
+}

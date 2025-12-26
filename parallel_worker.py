@@ -44,10 +44,41 @@ from device_connection import (
     is_adb_device_alive as ensure_device_alive,
     reconnect_adb_device as reconnect_adb
 )
+# Import DeviceManager base class for type hints
+from device_manager_base import DeviceManager
 # Comprehensive error debugging with screenshots
 from error_debugger import ErrorDebugger
 # Master ledger for tracking ALL posted videos
 from posted_ledger import record_successful_post
+
+
+def create_device_manager(account_name: str, device_type: str) -> Optional[DeviceManager]:
+    """
+    Factory function to create the appropriate DeviceManager.
+
+    Args:
+        account_name: Account/phone name for the posting job
+        device_type: 'geelark' or 'grapheneos'
+
+    Returns:
+        DeviceManager instance for grapheneos, or None for geelark
+        (geelark uses internal DeviceConnectionManager created by poster)
+    """
+    if device_type == 'geelark':
+        # For Geelark, return None - SmartInstagramPoster will create
+        # DeviceConnectionManager internally using phone_name (backward compatible)
+        return None
+    elif device_type == 'grapheneos':
+        # Import GrapheneOS components only when needed
+        from grapheneos_device_manager import GrapheneOSDeviceManager
+        from grapheneos_config import PROFILE_MAPPING, DEVICE_SERIAL
+
+        return GrapheneOSDeviceManager(
+            serial=DEVICE_SERIAL,
+            profile_mapping=PROFILE_MAPPING
+        )
+    else:
+        raise ValueError(f"Unknown device_type: {device_type}")
 
 
 # Global flag for clean shutdown
@@ -169,7 +200,8 @@ def execute_posting_job(
     config: ParallelConfig,
     logger: logging.Logger,
     tracker=None,
-    worker_id: int = None
+    worker_id: int = None,
+    device_type: str = "geelark"
 ) -> tuple:
     """
     Execute a single posting job.
@@ -181,6 +213,7 @@ def execute_posting_job(
         logger: Logger instance
         tracker: ProgressTracker instance for verification and error classification
         worker_id: Worker ID for verification
+        device_type: 'geelark' (cloud phones) or 'grapheneos' (physical Pixel)
 
     Returns:
         (success: bool, error_message: str, error_category: str, error_type: str)
@@ -210,17 +243,24 @@ def execute_posting_job(
             logger.warning(f"Job {job_id} failed pre-post verification: {error}")
             return False, f"Pre-post verification failed: {error}", 'infrastructure', 'verification_failed'
 
-    logger.info(f"Starting job {job_id}: posting to {account}")
+    logger.info(f"Starting job {job_id}: posting to {account} (device: {device_type})")
     logger.info(f"  Video: {video_path}")
     logger.info(f"  Caption: {caption[:50]}...")
 
     poster = None
+    device_manager = None
     try:
+        # Create device manager based on device type
+        device_manager = create_device_manager(account, device_type)
+
         # Create poster with this worker's Appium URL and systemPort
+        # For Geelark: device_manager=None, uses phone_name internally
+        # For GrapheneOS: device_manager provided, ignores phone_name
         poster = SmartInstagramPoster(
             phone_name=account,
             system_port=worker_config.system_port,
-            appium_url=worker_config.appium_url
+            appium_url=worker_config.appium_url,
+            device_manager=device_manager
         )
 
         # Connect to device
@@ -319,15 +359,17 @@ def execute_posting_job(
         except Exception as e:
             logger.warning(f"Cleanup error: {e}")
 
-        # Always stop the phone
-        stop_phone_by_name(account, logger)
+        # Stop the phone (Geelark only - GrapheneOS doesn't need stopping)
+        if device_type == 'geelark':
+            stop_phone_by_name(account, logger)
 
 
 def run_worker(
     worker_id: int,
     config: ParallelConfig,
     progress_file: str = None,
-    delay_between_jobs: int = None
+    delay_between_jobs: int = None,
+    device_type: str = "geelark"
 ) -> dict:
     """
     Main worker loop.
@@ -337,6 +379,7 @@ def run_worker(
         config: Parallel configuration
         progress_file: Override progress file path
         delay_between_jobs: Override delay between jobs
+        device_type: 'geelark' (cloud phones) or 'grapheneos' (physical Pixel)
 
     Returns:
         Dict with worker stats: {jobs_completed, jobs_failed, ...}
@@ -351,6 +394,7 @@ def run_worker(
 
     logger.info("="*60)
     logger.info(f"WORKER {worker_id} STARTING")
+    logger.info(f"  Device type: {device_type}")
     logger.info(f"  Appium port: {worker_config.appium_port}")
     logger.info(f"  Appium URL: {worker_config.appium_url}")
     logger.info(f"  systemPort: {worker_config.system_port}")
@@ -437,7 +481,8 @@ def run_worker(
             try:
                 success, error, error_category, error_type = execute_posting_job(
                     job, worker_config, config, logger,
-                    tracker=tracker, worker_id=worker_id
+                    tracker=tracker, worker_id=worker_id,
+                    device_type=device_type
                 )
 
                 if success:
@@ -513,6 +558,10 @@ def main():
     parser.add_argument('--num-workers', type=int, default=3, help='Total number of workers')
     parser.add_argument('--progress-file', default='parallel_progress.csv', help='Progress CSV file')
     parser.add_argument('--delay', type=int, default=10, help='Delay between jobs in seconds')
+    parser.add_argument('--device', '-d',
+                        choices=['geelark', 'grapheneos'],
+                        default='geelark',
+                        help='Device type: geelark (cloud phones) or grapheneos (physical Pixel)')
 
     args = parser.parse_args()
 
@@ -527,7 +576,8 @@ def main():
         worker_id=args.worker_id,
         config=config,
         progress_file=args.progress_file,
-        delay_between_jobs=args.delay
+        delay_between_jobs=args.delay,
+        device_type=args.device
     )
 
     # Exit with appropriate code

@@ -35,6 +35,7 @@ from appium.webdriver.common.appiumby import AppiumBy
 
 # Device connection management (extracted for better separation)
 from device_connection import DeviceConnectionManager
+from device_manager_base import DeviceManager
 # AI analysis (extracted for better separation)
 from claude_analyzer import ClaudeUIAnalyzer
 # UI interactions (extracted for better separation)
@@ -64,21 +65,52 @@ SWIPE_DURATION_MAX = Config.SWIPE_DURATION_MAX
 
 
 class SmartInstagramPoster:
-    def __init__(self, phone_name, system_port=8200, appium_url=None):
-        # Use DeviceConnectionManager for all connection lifecycle
-        self._conn = DeviceConnectionManager(
-            phone_name=phone_name,
-            system_port=system_port,
-            appium_url=appium_url or APPIUM_SERVER
-        )
-        # Expose client for compatibility
-        self.client = self._conn.client
+    def __init__(self, phone_name=None, system_port=8200, appium_url=None,
+                 device_manager: DeviceManager = None):
+        """
+        Initialize SmartInstagramPoster.
+
+        Args:
+            phone_name: Phone/account name (required if device_manager not provided)
+            system_port: Port for UiAutomator2 server
+            appium_url: Appium server URL
+            device_manager: Optional DeviceManager instance (for GrapheneOS or testing)
+                           If not provided, creates DeviceConnectionManager (Geelark)
+        """
+        # Device manager: use provided one or create DeviceConnectionManager
+        if device_manager is not None:
+            self._device_manager = device_manager
+            # For GrapheneOS, phone_name might be passed separately
+            self.phone_name = phone_name or "grapheneos_device"
+            # Create a minimal connection wrapper for Appium management
+            # GrapheneOS doesn't need the full Geelark connection flow
+            self._conn = DeviceConnectionManager(
+                phone_name=self.phone_name,
+                system_port=system_port,
+                appium_url=appium_url or APPIUM_SERVER
+            )
+            # Override the device for Appium connection
+            self._uses_external_device_manager = True
+        else:
+            # Legacy mode: use DeviceConnectionManager for Geelark
+            if phone_name is None:
+                raise ValueError("phone_name is required when device_manager is not provided")
+            self._conn = DeviceConnectionManager(
+                phone_name=phone_name,
+                system_port=system_port,
+                appium_url=appium_url or APPIUM_SERVER
+            )
+            self._device_manager = self._conn  # DeviceConnectionManager IS a DeviceManager
+            self.phone_name = phone_name
+            self._uses_external_device_manager = False
+
+        # Expose client for compatibility (only available for Geelark)
+        self.client = getattr(self._conn, 'client', None)
         # AI analyzer for UI analysis (extracted for better separation)
         self._analyzer = ClaudeUIAnalyzer()
         self.anthropic = self._analyzer.client  # For backwards compatibility
         # Hybrid Navigator - uses rules first, falls back to AI
         self._hybrid_navigator = None  # Initialized lazily with caption
-        self.phone_name = phone_name
         # UI controller (created lazily when Appium is connected)
         self._ui_controller = None
         # State tracking
@@ -940,8 +972,57 @@ Be concise and direct."""
         )
 
     def connect(self):
-        """Find phone and connect via ADB - delegates to DeviceConnectionManager"""
-        return self._conn.connect()
+        """Connect to device using DeviceManager abstraction.
+
+        For Geelark: Finds phone, starts it, enables ADB, connects Appium
+        For GrapheneOS: Verifies USB connection, switches profile, connects Appium
+        """
+        if self._uses_external_device_manager:
+            # GrapheneOS mode: use external device manager for connection
+            print(f"Connecting via {self._device_manager.device_type}...")
+            self._device_manager.ensure_connected(self.phone_name)
+
+            # Set up _conn.device for Appium (uses serial/address from device manager)
+            adb_address = self._device_manager.get_adb_address()
+            self._conn.device = adb_address
+
+            # Connect Appium directly for GrapheneOS (avoid Geelark-specific reconnect logic)
+            print(f"Connecting Appium to USB device {adb_address}...")
+            caps = self._device_manager.get_appium_caps()
+            caps['appium:systemPort'] = self._conn.system_port
+
+            options = UiAutomator2Options()
+            for key, value in caps.items():
+                if key.startswith('appium:'):
+                    options.set_capability(key, value)
+                else:
+                    setattr(options, key.replace('appium:', ''), value)
+
+            # Set standard options
+            options.platform_name = caps.get('platformName', 'Android')
+            options.automation_name = caps.get('automationName', 'UiAutomator2')
+            options.device_name = adb_address
+            options.udid = adb_address
+            options.no_reset = True
+            options.new_command_timeout = 300
+
+            for attempt in range(3):
+                try:
+                    self._conn.appium_driver = webdriver.Remote(
+                        command_executor=self._conn.appium_url,
+                        options=options
+                    )
+                    print(f"  Appium connected to GrapheneOS device!")
+                    return True
+                except Exception as e:
+                    print(f"  Appium attempt {attempt + 1}/3 failed: {e}")
+                    if attempt < 2:
+                        time.sleep(2)
+
+            raise Exception("Failed to connect Appium to GrapheneOS device after 3 attempts")
+        else:
+            # Geelark mode: use full DeviceConnectionManager flow
+            return self._conn.connect()
 
     def verify_adb_connection(self):
         """Verify device is still connected via ADB. Returns True if connected."""
@@ -1004,18 +1085,18 @@ Be concise and direct."""
             return False, f"Validation error: {str(e)}"
 
     def upload_video(self, video_path):
-        """Upload video to phone"""
+        """Upload video to phone using DeviceManager abstraction.
+
+        Works with both Geelark (API upload) and GrapheneOS (adb push).
+        """
         print(f"\nUploading video: {video_path}")
 
-        resource_url = self.client.upload_file_to_geelark(video_path)
-        print(f"  Cloud: {resource_url}")
+        # Use DeviceManager's upload_video method
+        # This abstracts away the difference between Geelark API and adb push
+        remote_path = self._device_manager.upload_video(video_path)
+        print(f"  Video uploaded to: {remote_path}")
 
-        upload_result = self.client.upload_file_to_phone(self.phone_id, resource_url)
-        task_id = upload_result.get("taskId")
-        self.client.wait_for_upload(task_id)
-        print("  Video on phone!")
-
-        # Trigger media scanner
+        # Trigger media scanner so gallery sees the video
         self.adb("am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///sdcard/Download/")
         time.sleep(3)
 
@@ -1423,35 +1504,82 @@ Be concise and direct."""
         return False
 
     def cleanup(self):
-        """Cleanup after posting - delegates to DeviceConnectionManager"""
+        """Cleanup after posting using DeviceManager abstraction.
+
+        For Geelark: Stops cloud phone to save billing minutes
+        For GrapheneOS: No-op (physical device stays on)
+        """
         print("\nCleaning up...")
         try:
             self.adb("rm -f /sdcard/Download/*.mp4")
         except Exception:
             pass  # Ignore cleanup errors - video deletion is best-effort
-        # Delegate connection cleanup to DeviceConnectionManager
-        self._conn.disconnect()
+
+        # Close Appium driver if open
+        try:
+            if self.appium_driver:
+                self.appium_driver.quit()
+                print("  Appium driver closed")
+        except Exception:
+            pass
+
+        # Use device manager's cleanup (stops Geelark phone, no-op for GrapheneOS)
+        self._device_manager.cleanup()
 
 
 def main():
-    if len(sys.argv) < 4:
-        print("Usage: python post_reel_smart.py <phone_name> <video_path> <caption>")
-        print('Example: python post_reel_smart.py talktrackhub video.mp4 "Check this out!"')
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description='Post a video to Instagram Reels',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog='''Examples:
+  # Geelark cloud phone (default)
+  python post_reel_smart.py talktrackhub video.mp4 "Check this out!"
+
+  # GrapheneOS physical device
+  python post_reel_smart.py --device grapheneos darklichencoded video.mp4 "Caption here"
+'''
+    )
+    parser.add_argument('account', help='Account/phone name')
+    parser.add_argument('video_path', help='Path to video file')
+    parser.add_argument('caption', help='Caption for the post')
+    parser.add_argument('--device', '-d',
+                        choices=['geelark', 'grapheneos'],
+                        default='geelark',
+                        help='Device type: geelark (cloud) or grapheneos (physical Pixel)')
+    parser.add_argument('--appium-url',
+                        default='http://127.0.0.1:4723',
+                        help='Appium server URL (default: http://127.0.0.1:4723)')
+
+    args = parser.parse_args()
+
+    if not os.path.exists(args.video_path):
+        print(f"Video not found: {args.video_path}")
         sys.exit(1)
 
-    phone_name = sys.argv[1]
-    video_path = sys.argv[2]
-    caption = sys.argv[3]
+    # Create device manager based on device type
+    device_manager = None
+    if args.device == 'grapheneos':
+        from grapheneos_device_manager import GrapheneOSDeviceManager
+        from grapheneos_config import PROFILE_MAPPING, DEVICE_SERIAL
+        device_manager = GrapheneOSDeviceManager(
+            serial=DEVICE_SERIAL,
+            profile_mapping=PROFILE_MAPPING
+        )
+        print(f"[DEVICE] GrapheneOS physical device (USB)")
+    else:
+        print(f"[DEVICE] Geelark cloud phone")
 
-    if not os.path.exists(video_path):
-        print(f"Video not found: {video_path}")
-        sys.exit(1)
-
-    poster = SmartInstagramPoster(phone_name)
+    poster = SmartInstagramPoster(
+        phone_name=args.account,
+        device_manager=device_manager,
+        appium_url=args.appium_url
+    )
 
     try:
         poster.connect()
-        success = poster.post(video_path, caption)
+        success = poster.post(args.video_path, args.caption)
         sys.exit(0 if success else 1)
     except Exception as e:
         print(f"ERROR: {e}")

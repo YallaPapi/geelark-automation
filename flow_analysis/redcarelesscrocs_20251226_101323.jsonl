@@ -1,0 +1,2 @@
+{"event": "session_start", "account": "redcarelesscrocs", "timestamp": "2025-12-26T10:13:23.236158"}
+{"event": "error", "timestamp": "2025-12-26T10:13:23.274068", "step": 0, "error_type": "corrupted_video", "error_message": "Video corrupted: missing moov atom (metadata)", "screen_signature": null, "ui_elements": null}

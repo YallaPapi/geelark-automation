@@ -811,10 +811,17 @@ def start_worker_process(worker_id: int, config: ParallelConfig) -> subprocess.P
         '--worker-id', str(worker_id),
         '--num-workers', str(config.num_workers),
         '--progress-file', config.progress_file,
-        '--delay', str(config.delay_between_jobs)
+        '--delay', str(config.delay_between_jobs),
+        '--device', config.device_type,
     ]
 
-    logger.info(f"Starting worker {worker_id}...")
+    # Add navigation mode flags
+    if not config.use_hybrid:
+        cmd.append('--ai-only')
+    elif not config.ai_fallback:
+        cmd.append('--no-ai-fallback')
+
+    logger.info(f"Starting worker {worker_id} (device={config.device_type})...")
 
     # Get environment with Android SDK
     env = os.environ.copy()
@@ -1409,6 +1416,12 @@ Examples:
                         help='STRICT rules-only mode - no AI rescue when rules fail. '
                              'Use this to TEST which rules work/fail. Failures are intentional!')
 
+    # Device type selection (Geelark cloud vs GrapheneOS physical)
+    parser.add_argument('--device', '-d',
+                        choices=['geelark', 'grapheneos'],
+                        default='geelark',
+                        help='Device type: geelark (cloud phones) or grapheneos (physical Pixel)')
+
     args = parser.parse_args()
 
     parallel_config = get_config(num_workers=args.workers)
@@ -1427,6 +1440,13 @@ Examples:
         parallel_config.use_hybrid = True
         parallel_config.ai_fallback = True
         logger.info("[NAV MODE] HYBRID - Rule-based navigation with AI fallback")
+
+    # Apply device type setting
+    parallel_config.device_type = args.device
+    if args.device == 'grapheneos':
+        logger.info("[DEVICE] GrapheneOS physical device (USB)")
+    else:
+        logger.info("[DEVICE] Geelark cloud phones")
 
     # ============================================================
     # STEP 1: Handle --list-campaigns (no context needed)

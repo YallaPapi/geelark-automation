@@ -1,0 +1,476 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-26T11:19:37.994015",
+  "account": "clipsonpodcast",
+  "job_id": "DKh1IdpJaQp-1.mp4",
+  "phase": "navigation",
+  "error_type": "max_steps",
+  "error_class": "Exception",
+  "error_message": "Max steps (30) reached",
+  "error_repr": "Exception('Max steps (30) reached')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "max_steps": 30,
+    "video_uploaded": true,
+    "video_selected": false,
+    "caption_entered": false,
+    "share_clicked": false,
+    "caption": "Stephen Merchant reveals how the legendary sitcom #Cheers left its mark on shaping #TheOffice. Accor"
+  },
+  "ui_elements_count": 41,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "therealdavewheeler posted a video December 9",
+      "id": "row_feed_profile_header",
+      "bounds": "[0,139][720,224]",
+      "center": [
+        360,
+        181
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,139][79,224]",
+      "center": [
+        39,
+        181
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Profile picture of therealdavewheeler",
+      "id": "row_feed_photo_profile_imageview",
+      "bounds": "[24,157][73,206]",
+      "center": [
+        48,
+        181
+      ],
+      "clickable": false
+    },
+    {
+      "text": "therealdavewheeler",
+      "desc": "therealdavewheeler",
+      "id": "row_feed_photo_profile_name",
+      "bounds": "[79,139][649,180]",
+      "center": [
+        364,
+        159
+      ],
+      "clickable": true
+    },
+    {
+      "text": " therealdavewheeler • Original audio (may include audio from The Only Law Is Love)",
+      "desc": " therealdavewheeler • Original audio (may include audio from The Only Law Is Love)",
+      "id": "secondary_label",
+      "bounds": "[79,180][649,224]",
+      "center": [
+        364,
+        202
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More actions for this post",
+      "id": "media_option_button",
+      "bounds": "[649,142][720,221]",
+      "center": [
+        684,
+        181
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "indicator_background_view",
+      "bounds": "[23,875][68,920]",
+      "center": [
+        45,
+        897
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "View tagged people",
+      "id": "indicator_icon_view",
+      "bounds": "[34,886][57,909]",
+      "center": [
+        45,
+        897
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[628,875][720,944]",
+      "center": [
+        674,
+        909
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Turn sound on",
+      "id": "",
+      "bounds": "[651,875][697,921]",
+      "center": [
+        674,
+        898
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "media_group",
+      "bounds": "[0,224][720,944]",
+      "center": [
+        360,
+        584
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[20,944][66,1019]",
+      "center": [
+        43,
+        981
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Like",
+      "id": "row_feed_button_like",
+      "bounds": "[20,944][59,1019]",
+      "center": [
+        39,
+        981
+      ],
+      "clickable": false
+    },
+    {
+      "text": "3",
+      "desc": "",
+      "id": "",
+      "bounds": "[66,944][79,1019]",
+      "center": [
+        72,
+        981
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[79,944][145,1019]",
+      "center": [
+        112,
+        981
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Comment",
+      "id": "row_feed_button_comment",
+      "bounds": "[99,944][138,1019]",
+      "center": [
+        118,
+        981
+      ],
+      "clickable": false
+    },
+    {
+      "text": "1",
+      "desc": "",
+      "id": "",
+      "bounds": "[145,944][154,1019]",
+      "center": [
+        149,
+        981
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[154,944][227,1019]",
+      "center": [
+        190,
+        981
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[237,944][293,1019]",
+      "center": [
+        265,
+        981
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Send post",
+      "id": "row_feed_button_share",
+      "bounds": "[247,944][286,1019]",
+      "center": [
+        266,
+        981
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Add to Saved",
+      "id": "row_feed_button_save",
+      "bounds": "[645,944][717,1012]",
+      "center": [
+        681,
+        978
+      ],
+      "clickable": true
+    },
+    {
+      "text": "therealdavewheeler Only Law was written while on a jog on the street behind my apartment building, or as I say it, “along th… more",
+      "desc": "",
+      "id": "",
+      "bounds": "[20,1019][720,1081]",
+      "center": [
+        370,
+        1050
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "therealdavewheeler",
+      "id": "",
+      "bounds": "[20,1019][230,1047]",
+      "center": [
+        125,
+        1033
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Only Law was written while on a jog on the street behind my apartment building, or as I say it, “along th",
+      "id": "",
+      "bounds": "[235,1019][666,1047]",
+      "center": [
+        450,
+        1033
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Only Law was written while on a jog on the street behind my apartment building, or as I say it, “along th",
+      "id": "",
+      "bounds": "[235,1019][666,1047]",
+      "center": [
+        450,
+        1033
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "more",
+      "id": "",
+      "bounds": "[641,1050][692,1078]",
+      "center": [
+        666,
+        1064
+      ],
+      "clickable": true
+    },
+    {
+      "text": "December 9",
+      "desc": "December 9",
+      "id": "",
+      "bounds": "[0,1088][720,1114]",
+      "center": [
+        360,
+        1101
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "theblackand.red posted a video December 9",
+      "id": "row_feed_profile_header",
+      "bounds": "[0,1133][720,1218]",
+      "center": [
+        360,
+        1175
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,1133][83,1218]",
+      "center": [
+        41,
+        1175
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "User avatars",
+      "id": "",
+      "bounds": "[18,1133][83,1218]",
+      "center": [
+        50,
+        1175
+      ],
+      "clickable": false
+    },
+    {
+      "text": "theblackand.red and therealdavewheeler",
+      "desc": "theblackand.red and therealdavewheeler",
+      "id": "row_feed_photo_profile_name",
+      "bounds": "[83,1133][649,1174]",
+      "center": [
+        366,
+        1153
+      ],
+      "clickable": false
+    },
+    {
+      "text": " theblackand.red • Original audio (may include audio from Inside the Light (Finland Mix))",
+      "desc": " theblackand.red • Original audio (may include audio from Inside the Light (Finland Mix))",
+      "id": "secondary_label",
+      "bounds": "[83,1174][649,1218]",
+      "center": [
+        366,
+        1196
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "More actions for this post",
+      "id": "media_option_button",
+      "bounds": "[649,1136][720,1215]",
+      "center": [
+        684,
+        1175
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "media_group",
+      "bounds": "[0,1218][720,1344]",
+      "center": [
+        360,
+        1281
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Reel by The Black And Red, 4 likes, 1 comment, December 9",
+      "id": "row_feed_photo_imageview",
+      "bounds": "[0,1218][720,1344]",
+      "center": [
+        360,
+        1281
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar",
+      "bounds": "[0,48][720,139]",
+      "center": [
+        360,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "action_bar_new_title_container",
+      "bounds": "[0,48][567,139]",
+      "center": [
+        283,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "Back",
+      "id": "action_bar_button_back",
+      "bounds": "[0,48][91,139]",
+      "center": [
+        45,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Posts",
+      "desc": "Posts",
+      "id": "action_bar_title",
+      "bounds": "[117,74][206,113]",
+      "center": [
+        161,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "follow_button",
+      "bounds": "[567,59][707,128]",
+      "center": [
+        637,
+        93
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Follow",
+      "desc": "",
+      "id": "action_bar_overflow_text",
+      "bounds": "[567,59][688,115]",
+      "center": [
+        627,
+        87
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\clipsonpodcast_20251226_111653\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\clipsonpodcast_20251226_111653\\error_001_page_source.xml"
+}

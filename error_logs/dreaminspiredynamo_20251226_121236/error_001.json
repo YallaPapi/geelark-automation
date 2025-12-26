@@ -1,0 +1,257 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-26T12:13:05.624846",
+  "account": "dreaminspiredynamo",
+  "job_id": "wSz-me2KR6zq-2.mp4",
+  "phase": "navigation",
+  "error_type": "suspended",
+  "error_class": "Exception",
+  "error_message": "suspended: we suspended your account",
+  "error_repr": "Exception('suspended: we suspended your account')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "step": 0,
+    "caption": "When your grammar is as bad as your financial advice.",
+    "video_path": "C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\campaigns\\viral\\grq\\wSz-me2KR6zq-2.mp4",
+    "video_uploaded": true,
+    "video_selected": false,
+    "caption_entered": false,
+    "share_clicked": false
+  },
+  "ui_elements_count": 21,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "Menu",
+      "id": "",
+      "bounds": "[636,51][706,116]",
+      "center": [
+        671,
+        83
+      ],
+      "clickable": true
+    },
+    {
+      "text": " ",
+      "desc": "",
+      "id": "",
+      "bounds": "[688,69][693,99]",
+      "center": [
+        690,
+        84
+      ],
+      "clickable": false
+    },
+    {
+      "text": "We suspended your account, Scott",
+      "desc": "We suspended your account, Scott",
+      "id": "",
+      "bounds": "[85,143][636,190]",
+      "center": [
+        360,
+        166
+      ],
+      "clickable": false
+    },
+    {
+      "text": "180 days left to appeal or we'll permanently disable your account",
+      "desc": "180 days left to appeal or we'll permanently disable your account",
+      "id": "",
+      "bounds": "[78,203][642,258]",
+      "center": [
+        360,
+        230
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Suspended on December 26, 2025",
+      "desc": "Suspended on December 26, 2025",
+      "id": "",
+      "bounds": "[214,271][507,298]",
+      "center": [
+        360,
+        284
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Why this happened",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,372][250,408]",
+      "center": [
+        138,
+        390
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Your account may be associated with another account that has gone against our rules. This doesn't follow our Community Standards on account integrity.",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,434][694,514]",
+      "center": [
+        360,
+        474
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,527][720,606]",
+      "center": [
+        360,
+        566
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Read more about this rule",
+      "desc": "Read more about this rule",
+      "id": "",
+      "bounds": "[85,549][694,585]",
+      "center": [
+        389,
+        567
+      ],
+      "clickable": false
+    },
+    {
+      "text": "What this means",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,632][222,668]",
+      "center": [
+        124,
+        650
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Your account is not visible to people on Instagram right now, and you cannot use it.",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,694][694,749]",
+      "center": [
+        360,
+        721
+      ],
+      "clickable": false
+    },
+    {
+      "text": "What you can do",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,788][221,824]",
+      "center": [
+        123,
+        806
+      ],
+      "clickable": false
+    },
+    {
+      "text": "If you have a Facebook or Instagram account that's suspended log into that account for more information on what to do next.",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,850][694,905]",
+      "center": [
+        360,
+        877
+      ],
+      "clickable": false
+    },
+    {
+      "text": "If you think we made a mistake, start an appeal to get back into your account.",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,931][694,986]",
+      "center": [
+        360,
+        958
+      ],
+      "clickable": false
+    },
+    {
+      "text": "You can access a copy of what you've shared on Instagram. Download a copy",
+      "desc": "You can access a copy of what you've shared on Instagram. Download a copy",
+      "id": "",
+      "bounds": "[26,999][694,1054]",
+      "center": [
+        360,
+        1026
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Download a copy",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,1028][193,1054]",
+      "center": [
+        109,
+        1041
+      ],
+      "clickable": true
+    },
+    {
+      "text": "More information",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,1080][233,1116]",
+      "center": [
+        129,
+        1098
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,1129][720,1208]",
+      "center": [
+        360,
+        1168
+      ],
+      "clickable": true
+    },
+    {
+      "text": "How we made this decision",
+      "desc": "How we made this decision",
+      "id": "",
+      "bounds": "[85,1151][694,1187]",
+      "center": [
+        389,
+        1169
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Appeal",
+      "id": "",
+      "bounds": "[26,1249][694,1318]",
+      "center": [
+        360,
+        1283
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Appeal",
+      "desc": "",
+      "id": "",
+      "bounds": "[326,1269][395,1299]",
+      "center": [
+        360,
+        1284
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\dreaminspiredynamo_20251226_121236\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\dreaminspiredynamo_20251226_121236\\error_001_page_source.xml"
+}

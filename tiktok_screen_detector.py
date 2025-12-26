@@ -72,10 +72,12 @@ class TikTokScreenDetector:
             ('UPLOAD_PROGRESS', self._detect_upload_progress),
 
             # Main flow screens (order matters)
+            # CREATE_MENU MUST be before VIDEO_EDITOR - both have "Add sound"
+            # but CREATE_MENU has duration options (10m, 60s, 15s) and PHOTO/TEXT tabs
             ('CAPTION_SCREEN', self._detect_caption_screen),
+            ('CREATE_MENU', self._detect_create_menu),  # Check BEFORE VIDEO_EDITOR
             ('VIDEO_EDITOR', self._detect_video_editor),
             ('GALLERY_PICKER', self._detect_gallery_picker),
-            ('CREATE_MENU', self._detect_create_menu),
             ('HOME_FEED', self._detect_home_feed),
         ]
 
@@ -465,40 +467,88 @@ class TikTokScreenDetector:
         """Detect sounds/effects editor screen.
 
         After selecting video, before caption screen.
-        Key indicators from flow logs:
-        - "Add sound" text
-        - Effects/Filters/Captions/Stickers in descs
-        - "Next" button text
-        - "AutoCut" text
+
+        Geelark key indicators:
         - Editor-specific IDs: fmo, fmh, fms, flf, y48
+        - "Add sound" text
+        - Effects/Filters/Captions/Stickers
+
+        GrapheneOS v43.1.4 key indicators:
+        - id='ntq' text='Next' - Next button
+        - id='d88' desc='Music' - Music icon
+        - id='ycm' - Music name text
+        - id='ntn' - Next button container
+        - id='qxr' - Your Story container
+        - Right-side editing tools with desc: Edit, Text, Stickers, Effects, etc.
+        - "Your Story" text at bottom
         """
         score = 0.0
         found = []
 
-        # Primary: Editor-specific element IDs
-        editor_ids = ['fmo', 'fmh', 'fms', 'flf', 'y48', 'fmu', 'fmw', 'fnx']
-        editor_id_count = sum(1 for eid in editor_ids if self._has_element_id(elements, eid))
-        if editor_id_count >= 3:
-            score += 0.35
-            found.append(f'editor_ids({editor_id_count})')
-        elif editor_id_count >= 1:
-            score += 0.2
-            found.append(f'editor_ids({editor_id_count})')
+        # PRIMARY: GrapheneOS Next button (id='ntq' with text='Next')
+        for el in elements:
+            if el.get('id') == 'ntq' and el.get('text', '').lower() == 'next':
+                score += 0.4
+                found.append('next_button_ntq')
+                break
 
-        # Primary: "Add sound" text (note: singular "sound")
-        if 'add sound' in all_text:
+        # PRIMARY: GrapheneOS Music indicator (id='d88' desc='Music')
+        if self._has_element_id(elements, 'd88'):
+            for el in elements:
+                if el.get('id') == 'd88' and 'music' in el.get('desc', '').lower():
+                    score += 0.35
+                    found.append('music_d88')
+                    break
+
+        # PRIMARY: GrapheneOS editing tools (check desc for tool names)
+        graphene_tools = ['edit', 'text', 'stickers', 'effects', 'video templates', 'ai meme', 'ai alive']
+        found_tools = sum(1 for tool in graphene_tools if tool in all_text)
+        if found_tools >= 4:
+            score += 0.35
+            found.append(f'graphene_tools({found_tools})')
+        elif found_tools >= 2:
+            score += 0.2
+            found.append(f'graphene_tools({found_tools})')
+
+        # PRIMARY: "Your Story" option (GrapheneOS)
+        if 'your story' in all_text:
             score += 0.25
+            found.append('your_story')
+
+        # PRIMARY: GrapheneOS IDs
+        graphene_editor_ids = ['ntq', 'ntn', 'qxr', 'd88', 'ycm', 'ce1', 'w85']
+        graphene_id_count = sum(1 for eid in graphene_editor_ids if self._has_element_id(elements, eid))
+        if graphene_id_count >= 4:
+            score += 0.3
+            found.append(f'graphene_ids({graphene_id_count})')
+        elif graphene_id_count >= 2:
+            score += 0.15
+            found.append(f'graphene_ids({graphene_id_count})')
+
+        # SECONDARY: Geelark editor-specific element IDs
+        geelark_ids = ['fmo', 'fmh', 'fms', 'flf', 'y48', 'fmu', 'fmw', 'fnx']
+        geelark_id_count = sum(1 for eid in geelark_ids if self._has_element_id(elements, eid))
+        if geelark_id_count >= 3:
+            score += 0.35
+            found.append(f'geelark_ids({geelark_id_count})')
+        elif geelark_id_count >= 1:
+            score += 0.2
+            found.append(f'geelark_ids({geelark_id_count})')
+
+        # SECONDARY: "Add sound" text
+        if 'add sound' in all_text:
+            score += 0.2
             found.append('add_sound')
 
-        # Primary: Effects/Filters options in descs
+        # SECONDARY: Effects/Filters options
         if 'effects' in all_text:
-            score += 0.2
+            score += 0.15
             found.append('effects')
         if 'filters' in all_text:
-            score += 0.15
+            score += 0.1
             found.append('filters')
 
-        # Secondary: Captions/Stickers/Text options
+        # TERTIARY: Captions/Stickers/Text options
         if 'captions' in all_text:
             score += 0.1
             found.append('captions')
@@ -506,18 +556,18 @@ class TikTokScreenDetector:
             score += 0.1
             found.append('stickers')
 
-        # Secondary: "AutoCut" feature
+        # TERTIARY: AutoCut feature
         if 'autocut' in all_text:
-            score += 0.15
+            score += 0.1
             found.append('autocut')
 
-        # Secondary: Next button (must have it to be editor)
+        # TERTIARY: Generic Next button check
         has_next = any(e.get('text', '').lower() == 'next' for e in elements)
-        if has_next:
-            score += 0.15
-            found.append('next_button')
+        if has_next and 'next_button_ntq' not in found:
+            score += 0.1
+            found.append('next_button_generic')
 
-        return min(score, 0.95), found
+        return min(score, 0.98), found
 
     def _detect_gallery_picker(self, elements, texts, descs, all_text) -> Tuple[float, List[str]]:
         """Detect gallery/video picker screen.
@@ -578,95 +628,165 @@ class TikTokScreenDetector:
         """Detect camera/create menu screen.
 
         Key indicators (from flow logs):
+        Geelark:
         - id='q76' with desc='Record video' - Record button
         - id='d24' with desc='Add sound' - Sound button
         - id='j0z' with desc='Close' - Close button
         - id='c_u' - Gallery thumbnail
+
+        GrapheneOS v43.1.4:
+        - id='d8a' with desc='Add sound' - Sound button
+        - id='r3r' - Gallery thumbnail (center bottom)
+        - id='ymg' - Gallery preview (bottom left)
+        - Camera options: Flip, Flash, Timer, Layout, Ratio, Retouch
+        - PHOTO / TEXT mode tabs (UNIQUE to camera screen!)
+
+        Common:
         - text='POST' / 'CREATE' - Action buttons
         - text='10m' / '60s' / '15s' - Duration options
         """
         score = 0.0
         found = []
 
-        # Primary: Record video button (id='q76')
+        # HIGHEST PRIORITY: PHOTO/TEXT mode tabs - UNIQUE to camera screen!
+        # The video editor does NOT have these tabs
+        has_photo = 'photo' in texts
+        has_text_tab = 'text' in texts  # "TEXT" tab on camera
+        if has_photo and has_text_tab:
+            score += 0.5  # Very strong indicator
+            found.append('photo_text_tabs')
+        elif has_photo:
+            score += 0.3
+            found.append('photo_tab')
+
+        # HIGHEST PRIORITY: Duration options (10m, 60s, 15s) - UNIQUE to camera!
+        durations = ['10m', '60s', '15s']
+        found_durations = [d for d in durations if d in texts]
+        if len(found_durations) >= 2:
+            score += 0.45  # Very strong indicator
+            found.append('duration_options_multi')
+        elif found_durations:
+            score += 0.25
+            found.append('duration_options')
+
+        # Primary: Record video button (Geelark id='q76')
         if self._has_element_id(elements, 'q76'):
             record_elem = self._get_element_by_id(elements, 'q76')
             if 'record' in record_elem.get('desc', '').lower():
-                score += 0.4
+                score += 0.35
                 found.append('record_button')
 
-        # Primary: Add sound button (id='d24')
-        if self._has_element_id(elements, 'd24'):
-            sound_elem = self._get_element_by_id(elements, 'd24')
-            if 'sound' in sound_elem.get('desc', '').lower():
-                score += 0.25
-                found.append('add_sound')
+        # Primary: Add sound button
+        # Geelark: id='d24', GrapheneOS: id='d8a'
+        for sound_id in ['d24', 'd8a']:
+            if self._has_element_id(elements, sound_id):
+                sound_elem = self._get_element_by_id(elements, sound_id)
+                if 'sound' in sound_elem.get('desc', '').lower():
+                    score += 0.25
+                    found.append(f'add_sound_{sound_id}')
+                    break
 
-        # Secondary: Close button (id='j0z')
-        if self._has_element_id(elements, 'j0z'):
-            close_elem = self._get_element_by_id(elements, 'j0z')
-            if 'close' in close_elem.get('desc', '').lower():
+        # Primary: Gallery thumbnail
+        # Geelark: id='c_u', GrapheneOS: id='r3r' or id='ymg'
+        for gallery_id in ['c_u', 'r3r', 'ymg']:
+            if self._has_element_id(elements, gallery_id):
+                score += 0.2
+                found.append(f'gallery_{gallery_id}')
+                break
+
+        # Secondary: Close button (id='j0z' or id='jix')
+        for close_id in ['j0z', 'jix']:
+            if self._has_element_id(elements, close_id):
                 score += 0.1
                 found.append('close_button')
+                break
 
-        # Secondary: Gallery thumbnail (id='c_u')
-        if self._has_element_id(elements, 'c_u'):
-            score += 0.15
-            found.append('gallery_thumbnail')
-
-        # Secondary: Duration options
-        durations = ['10m', '60s', '15s']
-        found_durations = [d for d in durations if d in texts]
-        if found_durations:
+        # Secondary: Camera control buttons (GrapheneOS)
+        camera_controls = ['flip', 'flash', 'timer', 'layout', 'ratio', 'retouch']
+        found_controls = [c for c in camera_controls if c in all_text]
+        if len(found_controls) >= 3:
+            score += 0.25
+            found.append(f'camera_controls({len(found_controls)})')
+        elif found_controls:
             score += 0.1
-            found.append('duration_options')
+            found.append('camera_controls')
 
-        # Tertiary: POST/CREATE buttons
-        if 'post' in texts or 'create' in texts:
-            score += 0.05
-            found.append('post_create')
+        # Tertiary: POST/CREATE mode tabs at bottom
+        if 'post' in texts and 'create' in texts:
+            score += 0.1
+            found.append('post_create_tabs')
 
-        return min(score, 0.95), found
+        return min(score, 0.98), found
 
     def _detect_home_feed(self, elements, texts, descs, all_text) -> Tuple[float, List[str]]:
         """Detect TikTok home feed (For You Page).
 
         Key indicators (from flow logs):
+        Geelark version:
         - id='lxd' with desc='Create' - Create button in nav
         - id='lxg' with desc='Home' - Home nav button
         - id='lxi' with desc='Profile' - Profile nav button
         - id='lxf' with desc='Friends' - Friends nav button
         - id='lxh' with desc='Inbox' - Inbox nav button
-        - text='For You' / 'Following' - Feed tabs
         - id='ia6' with desc='Search' - Search button
+
+        TikTok v43.1.4 (GrapheneOS):
+        - id='mkn' with desc='Create' - Create button in nav
+        - id='mkq' with desc='Home' - Home nav button
+        - id='mks' with desc='Profile' - Profile nav button
+        - id='mkp' with desc='Friends' - Friends nav button
+        - id='mkr' with desc='Inbox' - Inbox nav button
+        - id='irz' with desc='Search' - Search button
+
+        Common:
+        - text='For You' / 'Following' - Feed tabs
         """
         score = 0.0
         found = []
 
-        # Primary: Create button in bottom nav (id='lxd')
-        if self._has_element_id(elements, 'lxd'):
-            create_elem = self._get_element_by_id(elements, 'lxd')
-            if 'create' in create_elem.get('desc', '').lower():
-                score += 0.4
-                found.append('create_button')
+        # Primary: Create button in bottom nav
+        # Geelark: id='lxd', GrapheneOS v43.1.4: id='mkn'
+        create_found = False
+        for create_id in ['lxd', 'mkn']:
+            if self._has_element_id(elements, create_id):
+                create_elem = self._get_element_by_id(elements, create_id)
+                if 'create' in create_elem.get('desc', '').lower():
+                    score += 0.4
+                    found.append('create_button')
+                    create_found = True
+                    break
 
-        # Primary: Home nav button (id='lxg')
-        if self._has_element_id(elements, 'lxg'):
-            home_elem = self._get_element_by_id(elements, 'lxg')
-            if 'home' in home_elem.get('desc', '').lower():
-                score += 0.2
-                found.append('home_nav')
+        # Primary: Home nav button
+        # Geelark: id='lxg', GrapheneOS v43.1.4: id='mkq'
+        for home_id in ['lxg', 'mkq']:
+            if self._has_element_id(elements, home_id):
+                home_elem = self._get_element_by_id(elements, home_id)
+                if 'home' in home_elem.get('desc', '').lower():
+                    score += 0.2
+                    found.append('home_nav')
+                    break
 
         # Secondary: Other nav buttons
-        if self._has_element_id(elements, 'lxi'):  # Profile
-            score += 0.1
-            found.append('profile_nav')
-        if self._has_element_id(elements, 'lxf'):  # Friends
-            score += 0.05
-            found.append('friends_nav')
-        if self._has_element_id(elements, 'lxh'):  # Inbox
-            score += 0.05
-            found.append('inbox_nav')
+        # Profile: Geelark id='lxi', GrapheneOS v43.1.4: id='mks'
+        for profile_id in ['lxi', 'mks']:
+            if self._has_element_id(elements, profile_id):
+                score += 0.1
+                found.append('profile_nav')
+                break
+
+        # Friends: Geelark id='lxf', GrapheneOS v43.1.4: id='mkp'
+        for friends_id in ['lxf', 'mkp']:
+            if self._has_element_id(elements, friends_id):
+                score += 0.05
+                found.append('friends_nav')
+                break
+
+        # Inbox: Geelark id='lxh', GrapheneOS v43.1.4: id='mkr'
+        for inbox_id in ['lxh', 'mkr']:
+            if self._has_element_id(elements, inbox_id):
+                score += 0.05
+                found.append('inbox_nav')
+                break
 
         # Secondary: Feed tabs
         if 'for you' in all_text:
@@ -676,10 +796,13 @@ class TikTokScreenDetector:
             score += 0.1
             found.append('following_tab')
 
-        # Tertiary: Search button (id='ia6')
-        if self._has_element_id(elements, 'ia6'):
-            score += 0.05
-            found.append('search_button')
+        # Tertiary: Search button
+        # Geelark: id='ia6', GrapheneOS v43.1.4: id='irz'
+        for search_id in ['ia6', 'irz']:
+            if self._has_element_id(elements, search_id):
+                score += 0.05
+                found.append('search_button')
+                break
 
         return min(score, 0.95), found
 

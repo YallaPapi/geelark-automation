@@ -1,0 +1,202 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-26T12:20:03.605094",
+  "account": "themotivationmischief",
+  "job_id": "w-FGjr02jH93-3.mp4",
+  "phase": "navigation",
+  "error_type": "suspended",
+  "error_class": "Exception",
+  "error_message": "suspended: we suspended your account",
+  "error_repr": "Exception('suspended: we suspended your account')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "step": 0,
+    "caption": "Pioneers always spark resistanceuntil the world realizes they were right all along.",
+    "video_path": "C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\campaigns\\viral\\grq\\w-FGjr02jH93-3.mp4",
+    "video_uploaded": true,
+    "video_selected": false,
+    "caption_entered": false,
+    "share_clicked": false
+  },
+  "ui_elements_count": 16,
+  "ui_elements": [
+    {
+      "text": "",
+      "desc": "Menu",
+      "id": "",
+      "bounds": "[636,51][706,116]",
+      "center": [
+        671,
+        83
+      ],
+      "clickable": true
+    },
+    {
+      "text": " ",
+      "desc": "",
+      "id": "",
+      "bounds": "[688,69][693,99]",
+      "center": [
+        690,
+        84
+      ],
+      "clickable": false
+    },
+    {
+      "text": "We suspended your account, James",
+      "desc": "We suspended your account, James",
+      "id": "",
+      "bounds": "[78,389][642,477]",
+      "center": [
+        360,
+        433
+      ],
+      "clickable": false
+    },
+    {
+      "text": "180 days left to appeal or we'll permanently disable your account",
+      "desc": "180 days left to appeal or we'll permanently disable your account",
+      "id": "",
+      "bounds": "[78,490][642,545]",
+      "center": [
+        360,
+        517
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Suspended on December 26, 2025",
+      "desc": "Suspended on December 26, 2025",
+      "id": "",
+      "bounds": "[214,558][507,585]",
+      "center": [
+        360,
+        571
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Why this happened",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,659][250,695]",
+      "center": [
+        138,
+        677
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Your account may be associated with another account that has gone against our rules. This doesn't follow our Community Standards on account integrity.",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,721][694,801]",
+      "center": [
+        360,
+        761
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "",
+      "id": "",
+      "bounds": "[0,814][720,893]",
+      "center": [
+        360,
+        853
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Read more about this rule",
+      "desc": "Read more about this rule",
+      "id": "",
+      "bounds": "[85,836][694,872]",
+      "center": [
+        389,
+        854
+      ],
+      "clickable": false
+    },
+    {
+      "text": "What this means",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,919][222,955]",
+      "center": [
+        124,
+        937
+      ],
+      "clickable": false
+    },
+    {
+      "text": "Your account is not visible to people on Instagram right now, and you cannot use it.",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,981][694,1036]",
+      "center": [
+        360,
+        1008
+      ],
+      "clickable": false
+    },
+    {
+      "text": "What you can do",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,1075][221,1111]",
+      "center": [
+        123,
+        1093
+      ],
+      "clickable": false
+    },
+    {
+      "text": "If you have a Facebook or Instagram account that's suspended log into that account for more information on what to do next.",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,1137][694,1192]",
+      "center": [
+        360,
+        1164
+      ],
+      "clickable": false
+    },
+    {
+      "text": "If you think we made a mistake, start an appeal to get back into your account.",
+      "desc": "",
+      "id": "",
+      "bounds": "[26,1218][694,1221]",
+      "center": [
+        360,
+        1219
+      ],
+      "clickable": false
+    },
+    {
+      "text": "",
+      "desc": "Appeal",
+      "id": "",
+      "bounds": "[26,1249][694,1318]",
+      "center": [
+        360,
+        1283
+      ],
+      "clickable": true
+    },
+    {
+      "text": "Appeal",
+      "desc": "",
+      "id": "",
+      "bounds": "[326,1269][395,1299]",
+      "center": [
+        360,
+        1284
+      ],
+      "clickable": false
+    }
+  ],
+  "screenshot_file": "error_logs\\themotivationmischief_20251226_121939\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\themotivationmischief_20251226_121939\\error_001_page_source.xml"
+}

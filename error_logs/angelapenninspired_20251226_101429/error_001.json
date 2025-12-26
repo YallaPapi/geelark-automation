@@ -1,0 +1,23 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-26T10:14:49.859442",
+  "account": "angelapenninspired",
+  "job_id": "DNVofDpN-5Q-2.mp4_podcast",
+  "phase": "execute_job",
+  "error_type": "TypeError",
+  "error_class": "TypeError",
+  "error_message": "GeelarkClient.upload_file_to_phone() got an unexpected keyword argument 'file_path'",
+  "error_repr": "TypeError(\"GeelarkClient.upload_file_to_phone() got an unexpected keyword argument 'file_path'\")",
+  "stack_trace": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\parallel_worker.py\", line 272, in execute_posting_job\n    success = poster.post(\n        video_path, caption, humanize=True,\n        use_hybrid=config.use_hybrid,\n        ai_fallback=config.ai_fallback\n    )\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 1172, in post\n    self.upload_video(video_path)\n    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 1096, in upload_video\n    remote_path = self._device_manager.upload_video(video_path)\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\device_connection.py\", line 588, in upload_video\n    result = self.client.upload_file_to_phone(\n        phone_id=self.phone_id,\n        file_path=local_path\n    )\nTypeError: GeelarkClient.upload_file_to_phone() got an unexpected keyword argument 'file_path'\n",
+  "context": {
+    "video_path": "C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\campaigns\\podcast\\videos\\chunk_01b\\themelrobbinspodcast\\DNVofDpN-5Q-2.mp4",
+    "caption": "What if the secret to living longer and feeling happier has nothing to do with diet, exercise, or ca",
+    "worker_id": 2,
+    "appium_url": "http://127.0.0.1:4727",
+    "full_traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\parallel_worker.py\", line 272, in execute_posting_job\n    success = poster.post(\n        video_path, caption, humanize=True,\n        use_hybrid=config.use_hybrid,\n        ai_fallback=config.ai_fallback\n    )\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 1172, in post\n    self.upload_video(video_path)\n    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\post_reel_smart.py\", line 1096, in upload_video\n    remote_path = self._device_manager.upload_video(video_path)\n  File \"C:\\Users\\asus\\Desktop\\projects\\geelark-automation\\device_connection.py\", line 588, in upload_video\n    result = self.client.upload_file_to_phone(\n        phone_id=self.phone_id,\n        file_path=local_path\n    )\nTypeError: GeelarkClient.upload_file_to_phone() got an unexpected keyword argument 'file_path'\n"
+  },
+  "ui_elements_count": 0,
+  "ui_elements": null,
+  "screenshot_file": "error_logs\\angelapenninspired_20251226_101429\\error_001_screenshot.png",
+  "page_source_file": "error_logs\\angelapenninspired_20251226_101429\\error_001_page_source.xml"
+}

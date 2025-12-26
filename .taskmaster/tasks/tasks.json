@@ -153,9 +153,9 @@
         "testStrategy": "Run 5 follow operations on test accounts. Verify 4+ succeed (80%+ as minimum, target 92%). Check logs for any errors. Document baseline metrics including: average time per follow, AI calls per follow, failure types if any.",
         "priority": "high",
         "dependencies": [],
-        "status": "done",
+        "status": "cancelled",
         "subtasks": [],
-        "updatedAt": "2025-12-22T02:35:37.264Z"
+        "updatedAt": "2025-12-26T00:35:42.348Z"
       },
       {
         "id": "70",
@@ -167,9 +167,9 @@
         "dependencies": [
           "69"
         ],
-        "status": "in-progress",
+        "status": "cancelled",
         "subtasks": [],
-        "updatedAt": "2025-12-22T02:35:41.358Z"
+        "updatedAt": "2025-12-26T00:35:42.351Z"
       },
       {
         "id": "71",
@@ -181,8 +181,9 @@
         "dependencies": [
           "70"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "cancelled",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T00:35:42.353Z"
       },
       {
         "id": "72",
@@ -194,8 +195,9 @@
         "dependencies": [
           "71"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "cancelled",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T00:35:42.357Z"
       },
       {
         "id": "73",
@@ -207,8 +209,9 @@
         "dependencies": [
           "72"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "cancelled",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T00:35:42.359Z"
       },
       {
         "id": "74",
@@ -220,8 +223,9 @@
         "dependencies": [
           "73"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "cancelled",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T00:35:42.362Z"
       },
       {
         "id": "75",
@@ -233,8 +237,9 @@
         "dependencies": [
           "74"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "cancelled",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T00:35:42.364Z"
       },
       {
         "id": "76",
@@ -246,8 +251,9 @@
         "dependencies": [
           "75"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "cancelled",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T00:35:42.367Z"
       },
       {
         "id": "77",
@@ -259,8 +265,9 @@
         "dependencies": [
           "76"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "cancelled",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T00:35:42.370Z"
       },
       {
         "id": "78",
@@ -272,8 +279,9 @@
         "dependencies": [
           "77"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "cancelled",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T00:35:42.373Z"
       },
       {
         "id": "79",
@@ -285,8 +293,9 @@
         "dependencies": [
           "78"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "cancelled",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T00:35:42.375Z"
       },
       {
         "id": "80",
@@ -298,160 +307,383 @@
         "dependencies": [
           "79"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "cancelled",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T00:35:42.378Z"
       },
       {
-        "id": 81,
+        "id": "81",
         "title": "Update Screen Detector with Element ID Primary Matching",
         "description": "Refactor screen_detector.py to use element IDs as the primary matching criteria instead of text/description-based matching. This includes updating detection for FEED_SCREEN, PROFILE_SCREEN, CREATE_MENU, GALLERY_PICKER, VIDEO_EDITING, SHARE_PREVIEW, and SHARING_PROGRESS screens based on proven element IDs from 119 successful flow logs.",
         "details": "Based on flow log analysis, update each screen detection method:\n\n1. **FEED_SCREEN** - Add ID checks:\n   - `profile_tab` (id) - Profile tab in bottom nav\n   - `feed_tab` (id) - Home tab\n   - `clips_tab` (id) - Reels tab\n   \n2. **PROFILE_SCREEN** - Add ID checks:\n   - `action_bar_username_container` (id) - Username in action bar\n   - Look for 'Create New' in desc (not text)\n   - `row_profile_header_imageview` (id) - Profile image\n   \n3. **CREATE_MENU** - Update detection:\n   - Look for 'Create new reel' in desc (not text)\n   - `layout_container_bottom_sheet` (id) - Bottom sheet container\n   \n4. **GALLERY_PICKER** - Add ID checks:\n   - `gallery_grid_item_thumbnail` (id) - Video thumbnails\n   - `cam_dest_clips` (id) - REEL tab selector\n   - `gallery_destination_item` (id) - Destination items\n   \n5. **VIDEO_EDITING** - Add ID checks:\n   - `clips_right_action_button` (id) - Next button\n   - `clips_action_bar_*` (id pattern) - Action bar buttons\n   \n6. **SHARE_PREVIEW** - Add ID checks:\n   - `caption_input_text_view` (id) - Caption input field\n   - `share_button` (id) - Share button\n   - `action_bar_button_text` (id) - OK button for keyboard dismiss\n   \n7. **SHARING_PROGRESS** - Add ID checks:\n   - `upload_snackbar_container` (id)\n   - 'Sharing to Reels' text\n\nImplementation:\n```python\ndef _detect_feed_screen(self, elements, texts, descs, all_text):\n    # Primary: Check for element IDs\n    ids = [e.get('id', '') for e in elements]\n    has_profile_tab = 'profile_tab' in ids\n    has_feed_tab = 'feed_tab' in ids\n    has_clips_tab = 'clips_tab' in ids\n    \n    if has_profile_tab and has_feed_tab and has_clips_tab:\n        return 0.95, ['profile_tab', 'feed_tab', 'clips_tab']\n    # ... fallback to existing text-based matching\n```",
         "testStrategy": "1. Create unit tests with sample UI element dictionaries containing element IDs from real flow logs\n2. Test each screen detector method returns correct ScreenType with high confidence when IDs present\n3. Verify fallback to text-based matching when IDs not present\n4. Run against 10+ flow log files and verify 90%+ correct screen detection",
         "priority": "high",
         "dependencies": [],
-        "status": "pending",
-        "subtasks": []
+        "status": "cancelled",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T00:35:42.380Z"
       },
       {
-        "id": 82,
+        "id": "82",
         "title": "Update Action Engine with ID-First Element Lookups",
         "description": "Refactor action_engine.py to find elements by ID first, then fallback to description/text matching. Update all step handlers (Feed→Profile, Profile→Create, Create Menu→Reel, Gallery→Video, Video Edit→Next, Caption Entry, Keyboard Dismiss, and Share) with the correct element lookup order from flow log analysis.",
         "details": "Update each action handler with ID-first lookups:\n\n**Step 1: Feed → Profile**\n```python\ndef _handle_feed(self, elements):\n    # Primary: element.id == 'profile_tab'\n    for i, el in enumerate(elements):\n        if el.get('id') == 'profile_tab':\n            return Action(ActionType.TAP, target_element=i, reason='Tap profile_tab', confidence=0.98)\n    # Fallback: element.desc == 'Profile'\n    for i, el in enumerate(elements):\n        if 'profile' in el.get('desc', '').lower():\n            return Action(ActionType.TAP, target_element=i, reason='Tap Profile tab (fallback)', confidence=0.85)\n```\n\n**Step 2: Profile → Create**\n```python\ndef _handle_profile(self, elements):\n    # Primary: element.desc == 'Create New'\n    for i, el in enumerate(elements):\n        if el.get('desc', '').lower() == 'create new':\n            return Action(ActionType.TAP, target_element=i, reason=\"Tap 'Create New'\", confidence=0.98)\n    # Fallback: element.id == 'creation_tab'\n    for i, el in enumerate(elements):\n        if el.get('id') == 'creation_tab':\n            return Action(ActionType.TAP, target_element=i, confidence=0.85)\n```\n\n**Step 3: Create Menu → Reel**\n```python\ndef _handle_create_menu(self, elements):\n    # Primary: element.desc == 'Create new reel'\n    for i, el in enumerate(elements):\n        if 'create new reel' in el.get('desc', '').lower():\n            return Action(ActionType.TAP, target_element=i, reason=\"Tap 'Create new reel'\", confidence=0.98)\n```\n\n**Step 4: Gallery → Video** (see Task 83 for REEL tab logic)\n```python\ndef _handle_gallery_picker(self, elements):\n    # First check: If cam_dest_clips visible, tap it (REEL tab selection)\n    # Then: element.id == 'gallery_grid_item_thumbnail'\n```\n\n**Step 5: Video Edit → Next**\n```python\ndef _handle_video_editing(self, elements):\n    # Primary: element.id == 'clips_right_action_button'\n    for i, el in enumerate(elements):\n        if el.get('id') == 'clips_right_action_button':\n            return Action(ActionType.TAP, target_element=i, reason='Tap Next button', confidence=0.98)\n    # Fallback: element.desc == 'Next'\n```\n\n**Step 6: Caption Entry**\n```python\ndef _handle_share_preview(self, elements):\n    # Primary: element.id == 'caption_input_text_view'\n    for i, el in enumerate(elements):\n        if el.get('id') == 'caption_input_text_view':\n            return Action(ActionType.TAP, target_element=i, confidence=0.98)\n```\n\n**Step 7: Keyboard Dismiss** (see Task 84)\n\n**Step 8: Share**\n```python\n# Primary: element.id == 'share_button'\n# Fallback: element.desc == 'Share'\n```",
         "testStrategy": "1. Create test cases with element dicts containing IDs matching flow logs\n2. Verify ID-based matches return higher confidence than text-based\n3. Test fallback behavior when IDs are missing\n4. Integration test: Run full posting flow and verify correct element selection at each step",
         "priority": "high",
         "dependencies": [
-          81
+          "81"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "cancelled",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T00:35:42.383Z"
       },
       {
-        "id": 83,
+        "id": "83",
         "title": "Add REEL Tab Selection Logic in Gallery Picker",
         "description": "Add logic in GALLERY_PICKER handler to check if gallery is in REEL mode and tap cam_dest_clips element if needed before selecting a video. Flow logs show 18.6% of successful flows required tapping the REEL tab first.",
         "details": "In action_engine.py, update _handle_gallery_picker() to:\n\n1. Check if `cam_dest_clips` element exists (indicates REEL/TEMPLATES mode tabs visible)\n2. If the REEL tab is not already selected (determine by checking if thumbnails show video durations), tap cam_dest_clips first\n3. After REEL mode confirmed, proceed to tap gallery_grid_item_thumbnail\n\n```python\ndef _handle_gallery_picker(self, elements):\n    # Check if we need to tap REEL tab first\n    for i, el in enumerate(elements):\n        if el.get('id') == 'cam_dest_clips':\n            # REEL tab exists - check if we need to tap it\n            # If gallery_grid_item_thumbnail elements don't show video durations,\n            # we might be in wrong mode\n            thumbnails = [e for e in elements if e.get('id') == 'gallery_grid_item_thumbnail']\n            video_labels = [e for e in elements if e.get('id') == 'gallery_grid_item_label']\n            \n            # If no video duration labels visible, tap REEL tab\n            if not video_labels:\n                return Action(\n                    action_type=ActionType.TAP,\n                    target_element=i,\n                    reason=\"Tap REEL tab to switch to video mode\",\n                    confidence=0.95\n                )\n    \n    # If already in REEL mode or REEL tab not visible, select video\n    if self.video_selected:\n        # Look for Next button\n        for i, el in enumerate(elements):\n            if el.get('text', '').lower() == 'next':\n                return Action(ActionType.TAP, target_element=i, confidence=0.95)\n    \n    # Select first video thumbnail\n    for i, el in enumerate(elements):\n        if el.get('id') == 'gallery_grid_item_thumbnail':\n            return Action(\n                action_type=ActionType.TAP,\n                target_element=i,\n                reason=\"Tap video thumbnail to select\",\n                confidence=0.95\n            )\n```",
         "testStrategy": "1. Test with gallery UI dumps where cam_dest_clips is visible but no video labels\n2. Verify REEL tab tap is triggered\n3. Test with gallery already in REEL mode - verify direct thumbnail selection\n4. Run 20+ posting flows and verify REEL tab selection works correctly in all cases",
         "priority": "high",
         "dependencies": [
-          81,
-          82
+          "81",
+          "82"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "cancelled",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T00:35:42.385Z"
       },
       {
-        "id": 84,
+        "id": "84",
         "title": "Add OK Button Keyboard Dismissal Step",
         "description": "Add handling for keyboard dismissal after caption entry. Flow logs show 62.4% of successful flows needed to tap the OK button (action_bar_button_text with desc 'OK') before the Share button becomes tappable.",
         "details": "Update action_engine.py _handle_share_preview() to include keyboard dismissal logic:\n\n```python\ndef _handle_share_preview(self, elements):\n    # If caption not entered, focus caption field\n    if not self.caption_entered and self.caption:\n        for i, el in enumerate(elements):\n            if el.get('id') == 'caption_input_text_view':\n                return Action(ActionType.TAP, target_element=i, reason='Focus caption field', confidence=0.95)\n        return Action(ActionType.TYPE_TEXT, text_to_type=self.caption, confidence=0.8)\n    \n    # NEW: Check for OK button to dismiss keyboard\n    # This step is needed in 62.4% of flows after caption entry\n    for i, el in enumerate(elements):\n        if el.get('id') == 'action_bar_button_text' and el.get('desc', '').lower() == 'ok':\n            return Action(\n                action_type=ActionType.TAP,\n                target_element=i,\n                reason=\"Dismiss keyboard by tapping OK\",\n                confidence=0.95\n            )\n    \n    # Caption entered and keyboard dismissed, find Share button\n    for i, el in enumerate(elements):\n        if el.get('id') == 'share_button':\n            return Action(ActionType.TAP, target_element=i, reason='Tap Share', confidence=0.98)\n    \n    # Fallback: Look for Share by desc\n    for i, el in enumerate(elements):\n        if el.get('desc', '').lower() == 'share':\n            return Action(ActionType.TAP, target_element=i, reason='Tap Share (fallback)', confidence=0.85)\n```\n\nAlso update HybridNavigator state management to track keyboard_dismissed state.",
         "testStrategy": "1. Test with share preview UI dumps containing action_bar_button_text with desc='OK'\n2. Verify OK button tap is triggered when caption is entered but keyboard visible\n3. Test transition to Share button after OK dismissed\n4. Run posting flows and measure improvement in caption→share success rate",
         "priority": "high",
         "dependencies": [
-          81,
-          82
+          "81",
+          "82"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "cancelled",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T00:35:42.388Z"
       },
       {
-        "id": 85,
+        "id": "85",
         "title": "Run Podcast Campaign with Updated Hybrid Navigator",
         "description": "Reset podcast campaign progress and run with 5 workers using the updated hybrid navigator. Monitor failures in real-time via error_debugger logs and capture all failure screenshots and UI dumps for analysis.",
         "details": "Execute the following steps:\n\n1. **Reset Campaign Progress**:\n```bash\ncd /c/Users/asus/Desktop/projects/geelark-automation\npython parallel_orchestrator.py --reset-day\n```\n\n2. **Verify No Running Orchestrators**:\n```bash\npython parallel_orchestrator.py --status\n```\n\n3. **Start Podcast Campaign with Hybrid Navigator**:\n```bash\n# Ensure hybrid navigator is enabled (not AI-only mode)\n# Check post_reel_smart.py line ~45 comment about HybridNavigator\npython parallel_orchestrator.py --workers 5 --run --campaign podcast\n```\n\n4. **Monitor in Real-Time**:\n   - Watch `logs/worker_*.log` for failures\n   - Check `error_logs/` for comprehensive error captures\n   - Monitor `parallel_progress.csv` for success/failure rates\n\n5. **Capture Failure Data**:\n   - Error screenshots saved to `error_screenshots/`\n   - UI dumps in `error_logs/`\n   - Flow analysis logs in `flow_analysis/`\n\n6. **Record Statistics**:\n   - Total posts attempted\n   - Success count and rate\n   - Failure count and types\n   - Hybrid vs AI fallback usage",
         "testStrategy": "1. Verify all 5 workers start successfully\n2. Monitor for at least 20 posting attempts\n3. Record success rate and compare to baseline (88% AI-only)\n4. Collect all failure logs for Task 86 analysis",
         "priority": "high",
         "dependencies": [
-          81,
-          82,
-          83,
-          84
+          "81",
+          "82",
+          "83",
+          "84"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "cancelled",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T00:35:42.390Z"
       },
       {
-        "id": 86,
+        "id": "86",
         "title": "Analyze Podcast Failures and Fix Edge Cases",
         "description": "Review each podcast campaign failure's screenshot and UI dump. Identify missing if/else rules for popups, unexpected screens, or navigation edge cases. Update screen_detector.py and action_engine.py with fixes and document each edge case found.",
         "details": "Systematic failure analysis process:\n\n1. **Collect Failure Data**:\n```bash\n# List recent failures\ngrep -l 'failed' error_logs/*.json | head -20\n\n# View failure screenshots\nls -la error_screenshots/ | grep podcast\n```\n\n2. **Analyze Each Failure**:\n   - Open screenshot to see visual state\n   - Parse UI dump JSON to identify elements present\n   - Categorize failure type:\n     - Screen detection failure (UNKNOWN returned)\n     - Action selection failure (wrong element tapped)\n     - New popup not handled\n     - State machine stuck\n\n3. **Common Edge Cases to Check**:\n   - Meta Verified popup (already handled but verify)\n   - \"Your reel may get limited reach\" warning popup\n   - \"Suggested for you\" follow popup\n   - Onboarding tips (\"Swipe to access...\")\n   - Audio permission dialogs\n   - Location permission dialogs\n   - Network error screens\n   - \"Try again\" dialogs\n\n4. **Fix Implementation Pattern**:\n```python\n# In screen_detector.py - add new popup detection\ndef _detect_new_popup_type(self, elements, texts, descs, all_text):\n    # Check for unique identifiers from failure analysis\n    has_specific_text = 'specific popup text' in all_text\n    if has_specific_text:\n        return 0.9, ['popup_identifier']\n    return 0.0, []\n\n# In action_engine.py - add handler\ndef _handle_new_popup_type(self, elements):\n    # Dismiss by tapping appropriate button\n    for i, el in enumerate(elements):\n        if el.get('text', '').lower() in ['not now', 'skip', 'dismiss']:\n            return Action(ActionType.TAP, target_element=i, confidence=0.9)\n```\n\n5. **Document Findings**:\n   - Create `docs/edge_cases.md` listing each edge case\n   - Include screenshot reference, UI elements, and fix applied",
         "testStrategy": "1. For each identified edge case, create a test with the actual UI dump\n2. Verify screen detector correctly identifies the new screen type\n3. Verify action engine produces correct dismissal action\n4. Re-run affected posting scenarios to confirm fix",
         "priority": "high",
         "dependencies": [
-          85
+          "85"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "cancelled",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T00:35:42.393Z"
       },
       {
-        "id": 87,
+        "id": "87",
         "title": "Retry Podcast Campaign Failures",
         "description": "Reset failed podcast jobs to pending status and run retry with the updated hybrid navigator. Measure improvement in success rate after edge case fixes.",
         "details": "Execute retry process:\n\n1. **Identify Failed Jobs**:\n```bash\n# Check current progress file for failed jobs\ngrep ',failed,' parallel_progress.csv | wc -l\ngrep ',failed,' parallel_progress.csv | head -20\n```\n\n2. **Reset Failed Jobs** (create script if needed):\n```python\nimport csv\n\nwith open('parallel_progress.csv', 'r') as f:\n    rows = list(csv.DictReader(f))\n\nfor row in rows:\n    if row.get('status') == 'failed':\n        row['status'] = 'pending'\n        row['retry_count'] = str(int(row.get('retry_count', 0)) + 1)\n\nwith open('parallel_progress.csv', 'w', newline='') as f:\n    writer = csv.DictWriter(f, fieldnames=rows[0].keys())\n    writer.writeheader()\n    writer.writerows(rows)\n```\n\n3. **Run Retry with Updated Navigator**:\n```bash\npython parallel_orchestrator.py --workers 5 --run --campaign podcast\n```\n\n4. **Measure Improvement**:\n   - Original failure count\n   - Retry success count\n   - New failure count (residual)\n   - Calculate improvement percentage\n\n5. **Document Results**:\n   - Initial success rate\n   - Post-fix success rate\n   - Remaining edge cases for future work",
         "testStrategy": "1. Verify failed jobs are correctly reset to pending\n2. Run retry batch with monitoring\n3. Compare before/after success rates\n4. Identify any remaining failures for further analysis",
         "priority": "medium",
         "dependencies": [
-          86
+          "86"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "cancelled",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T00:35:42.396Z"
       },
       {
-        "id": 88,
+        "id": "88",
         "title": "Run Viral Campaign with Updated Hybrid Navigator",
         "description": "Reset viral campaign progress and run with 5 workers using the hybrid navigator. Monitor failures in real-time to capture any edge cases specific to viral campaign content.",
         "details": "Execute the following steps:\n\n1. **Reset Viral Campaign Progress**:\n```bash\ncd /c/Users/asus/Desktop/projects/geelark-automation\n# Archive current progress\ncp campaigns/viral/progress.csv campaigns/viral/progress_backup_$(date +%Y%m%d_%H%M%S).csv\n# Reset or use orchestrator\npython parallel_orchestrator.py --reset-day\n```\n\n2. **Start Viral Campaign**:\n```bash\npython parallel_orchestrator.py --workers 5 --run --campaign viral\n```\n\n3. **Monitor Execution**:\n   - Check `logs/worker_*.log` for errors\n   - Monitor `error_logs/` for new failure patterns\n   - Compare to podcast campaign behavior\n\n4. **Capture Differences**:\n   - Viral videos may have different aspect ratios\n   - Different caption lengths/formats\n   - Potentially different Instagram behavior\n\n5. **Record Statistics**:\n   - Total attempts\n   - Success/failure counts\n   - Compare to podcast campaign rates",
         "testStrategy": "1. Verify all workers process viral campaign content\n2. Monitor for minimum 20 posting attempts\n3. Compare success rate to podcast campaign\n4. Identify any viral-specific edge cases",
         "priority": "medium",
         "dependencies": [
-          87
+          "87"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "cancelled",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T00:35:42.398Z"
       },
       {
-        "id": 89,
+        "id": "89",
         "title": "Analyze Viral Failures and Fix Cross-Campaign Edge Cases",
         "description": "Perform the same failure analysis process as Task 86 for viral campaign failures. Cross-reference findings with podcast analysis to identify common patterns and add any new edge cases discovered.",
         "details": "Analyze viral campaign failures:\n\n1. **Collect Viral Failure Data**:\n```bash\n# List viral failures\ngrep -l 'viral' error_logs/*.json | xargs grep -l 'failed'\n\n# Compare to podcast failures\ndiff <(ls error_screenshots/*podcast*) <(ls error_screenshots/*viral*)\n```\n\n2. **Cross-Reference Analysis**:\n   - Compare viral failure types to podcast failure types\n   - Identify common edge cases vs campaign-specific ones\n   - Note any differences in Instagram behavior\n\n3. **Add Missing Rules**:\n   - Any new popups seen only in viral campaign\n   - Different button layouts or text\n   - Content-specific warnings (e.g., music copyright)\n\n4. **Update Detection/Action Code**:\n   - Same pattern as Task 86\n   - Ensure fixes work for both campaigns\n\n5. **Document Cross-Campaign Findings**:\n   - Update `docs/edge_cases.md`\n   - Note which edge cases are universal vs campaign-specific",
         "testStrategy": "1. Apply same testing methodology as Task 86\n2. Verify fixes work for both podcast and viral campaigns\n3. Run test posts from both campaign types to confirm\n4. Document final coverage of edge cases",
         "priority": "medium",
         "dependencies": [
-          88
+          "88"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "cancelled",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T00:35:42.400Z"
       },
       {
-        "id": 90,
+        "id": "90",
         "title": "Retry Viral Failures and Document Final Results",
         "description": "Reset failed viral jobs to pending and run retry with fully updated rules. Measure final success rates for both campaigns and document the complete comparison between AI-only and hybrid navigator approaches.",
         "details": "Complete the validation cycle:\n\n1. **Retry Viral Failures**:\n```bash\n# Same process as Task 87 but for viral campaign\npython parallel_orchestrator.py --workers 5 --run --campaign viral\n```\n\n2. **Calculate Final Metrics**:\n   - Podcast campaign:\n     - Initial hybrid success rate\n     - Post-fix success rate\n     - Final success rate after retries\n   - Viral campaign:\n     - Initial hybrid success rate\n     - Post-fix success rate\n     - Final success rate after retries\n\n3. **Compare to AI-Only Baseline**:\n   - AI-only success rate: 88-92%\n   - Hybrid navigator target: 85%+\n   - Actual hybrid achievement: X%\n\n4. **Document Results**:\n   Create `docs/hybrid_navigator_v2_results.md`:\n   ```markdown\n   # Hybrid Navigator V2 Results\n   \n   ## Performance Comparison\n   | Metric | AI-Only | Hybrid V2 |\n   |--------|---------|----------|\n   | Podcast Success Rate | 88% | X% |\n   | Viral Success Rate | 92% | X% |\n   | Avg Steps per Post | 9 | Y |\n   | Cost per Post | $0.XX | $0.XX |\n   \n   ## Edge Cases Fixed\n   1. REEL tab selection (18.6% of flows)\n   2. OK button keyboard dismiss (62.4% of flows)\n   3. [List all others]\n   \n   ## Remaining AI Fallback Cases\n   - [List any scenarios still requiring AI]\n   ```\n\n5. **Commit Final Version**:\n```bash\ngit add screen_detector.py action_engine.py hybrid_navigator.py docs/\ngit commit -m \"Hybrid Navigator V2: Data-driven fixes from flow analysis\"\n```",
         "testStrategy": "1. Verify final success rates meet 85% target\n2. Confirm all edge cases from analysis are handled\n3. Run full end-to-end test with both campaigns\n4. Document and commit final working version",
         "priority": "medium",
         "dependencies": [
-          89
+          "89"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "cancelled",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T00:35:42.402Z"
       },
       {
-        "id": 91,
+        "id": "91",
         "title": "Enable Hybrid Navigator in Production",
         "description": "Re-enable the HybridNavigator in post_reel_smart.py, replacing the AI-only mode. Update integration to use the fixed screen detector and action engine for all posting flows.",
         "details": "Production enablement steps:\n\n1. **Update post_reel_smart.py**:\n```python\n# Line ~45-46 currently has:\n# Note: HybridNavigator disabled - using AI-only mode until rules are rebuilt\n\n# Change to enable hybrid:\nfrom hybrid_navigator import HybridNavigator, create_hybrid_navigator\n\n# In SmartInstagramPoster.__init__:\nself._navigator = None  # Created lazily with caption\n\n# In post() method, replace AI-only analysis with hybrid:\ndef post(self, video_path, caption, max_steps=30, humanize=False, job_id=None):\n    # Initialize hybrid navigator\n    self._navigator = create_hybrid_navigator(\n        ai_analyzer=self._analyzer,\n        caption=caption\n    )\n    \n    # In vision-action loop:\n    result = self._navigator.navigate(elements)\n    action = result.action\n    used_ai = result.used_ai\n    \n    if used_ai:\n        print(f\"  [HYBRID] AI fallback used: {result.reason}\")\n    else:\n        print(f\"  [HYBRID] Rule-based: {result.screen_type.name}\")\n```\n\n2. **Add Statistics Logging**:\n```python\n# At end of post():\nstats = self._navigator.get_stats()\nprint(f\"\\n[HYBRID STATS] Rule-based: {stats['rule_rate_percent']:.1f}%, AI: {stats['ai_rate_percent']:.1f}%\")\nprint(f\"  Estimated savings: ${stats['estimated_savings_per_post']:.2f}\")\n```\n\n3. **Update Flow Logger**:\n   - Log whether hybrid or AI was used for each step\n   - Track rule-based vs AI fallback ratio\n\n4. **Test Integration**:\n```bash\n# Test single post\npython post_reel_smart.py test_account test_video.mp4 \"Test caption #test\"\n```",
         "testStrategy": "1. Run single posting test with hybrid enabled\n2. Verify rule-based detection triggers for known screens\n3. Verify AI fallback works for unknown screens\n4. Run batch of 10 posts and measure hybrid vs AI ratio",
         "priority": "medium",
         "dependencies": [
-          90
+          "90"
+        ],
+        "status": "cancelled",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T00:35:42.405Z"
+      },
+      {
+        "id": "92",
+        "title": "Introduce DeviceManager base abstraction",
+        "description": "Create the DeviceManager abstract base class used by both Geelark and GrapheneOS device managers.",
+        "details": "Implementation steps:\n- Create new file `device_manager_base.py` at the project root (or alongside `device_connection.py`, matching existing module layout).\n- Implement the `DeviceManager` ABC exactly as specified in the PRD, using `abc.ABC` and `@abstractmethod` for the following methods:\n  - `ensure_connected(self, account_name: str) -> bool`\n  - `get_adb_address(self) -> str`\n  - `upload_video(self, local_path: str) -> str`\n  - `get_appium_caps(self) -> Dict`\n  - `cleanup(self) -> None`\n  - `@property device_type(self) -> str`\n- Add type hints imports: `from typing import Dict, Optional` (Optional may be used by implementers even if not directly in interface).\n- Ensure module name and class name are importable from other modules (e.g. `from device_manager_base import DeviceManager`).\n- Pseudo-code:\n```python\nfrom abc import ABC, abstractmethod\nfrom typing import Dict\n\nclass DeviceManager(ABC):\n    @abstractmethod\n    def ensure_connected(self, account_name: str) -> bool:\n        ...\n\n    @abstractmethod\n    def get_adb_address(self) -> str:\n        ...\n\n    @abstractmethod\n    def upload_video(self, local_path: str) -> str:\n        ...\n\n    @abstractmethod\n    def get_appium_caps(self) -> Dict:\n        ...\n\n    @abstractmethod\n    def cleanup(self) -> None:\n        ...\n\n    @property\n    @abstractmethod\n    def device_type(self) -> str:\n        ...\n```\n- Keep the docstrings from the PRD to document Geelark vs GrapheneOS behavior expectations for each method.\n- Run static type checking (e.g. mypy if present) to confirm there are no type issues and that subclasses can implement this interface cleanly.",
+        "testStrategy": "- Run unit tests (or create one) that imports `DeviceManager` from `device_manager_base` to validate there are no circular import issues.\n- Verify that attempting to instantiate `DeviceManager` directly raises a TypeError due to abstract methods.\n- Run project-wide linting/formatting (flake8/black/ruff if configured) to ensure style compliance.\n- Run existing automated test suite to confirm no regressions from adding this module.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T00:39:28.027Z"
+      },
+      {
+        "id": "93",
+        "title": "Implement GrapheneOSDeviceManager",
+        "description": "Create `grapheneos_device_manager.py` implementing DeviceManager for GrapheneOS physical devices using adb and profile switching.",
+        "details": "Implementation steps:\n- Create new file `grapheneos_device_manager.py` alongside other core device modules.\n- Import dependencies:\n  - `import subprocess, os, time, re`\n  - `from typing import Dict, List, Optional`\n  - `from device_manager_base import DeviceManager`\n  - `from config import Config` (or the project’s configuration pattern; if Config class differs, adapt paths accordingly).\n  - Optionally import from `grapheneos_config` for serial and profile mapping once that module exists.\n- Implement `GrapheneOSDeviceManager(DeviceManager)` per PRD:\n  - `__init__(self, serial: str = <default>, profile_mapping: Dict[str, int] = None)` storing `serial`, `adb_path = Config.ADB_PATH` (or equivalent), `profile_mapping` default `{}`, and `current_profile: Optional[int] = None`.\n  - `@property device_type` returns `'grapheneos'`.\n  - Private method `_adb(self, *args) -> subprocess.CompletedProcess` that runs `[self.adb_path, '-s', self.serial] + list(args)` with `capture_output=True, text=True, timeout=30`.\n  - `ensure_connected(self, account_name: str) -> bool`:\n    - Call `_adb('get-state')`, check `'device'` in `stdout`, otherwise raise `Exception`(\"Device {serial} not connected\").\n    - Retrieve `target_profile = self.profile_mapping.get(account_name)`; if `None`, raise `Exception` for unmapped account.\n    - Get `current = self._get_current_user()`; if different from `target_profile`, call `_switch_profile(target_profile)` and set `self.current_profile = target_profile`.\n    - Return `True` on success.\n  - `_get_current_user(self) -> int`: run `_adb('shell', 'am', 'get-current-user')`, parse `stdout.strip()` as `int`.\n  - `_switch_profile(self, user_id: int) -> None`: call `_adb('shell', 'am', 'switch-user', str(user_id))`, then `time.sleep(3)` to allow switch.\n  - `get_adb_address(self) -> str`: simply return `self.serial` (used as `udid` for USB-connected Appium sessions).\n  - `upload_video(self, local_path: str) -> str`:\n    - Determine `filename = os.path.basename(local_path)` and `remote_path = f\"/sdcard/Download/{filename}\"`.\n    - Run `_adb('push', local_path, remote_path)` and if `returncode != 0`, raise exception with `stderr`.\n    - Return `remote_path` on success.\n  - `get_appium_caps(self) -> Dict` returning a dict:\n    ```python\n    return {\n        'platformName': 'Android',\n        'automationName': 'UiAutomator2',\n        'udid': self.serial,\n        'noReset': True,\n        'fullReset': False,\n        'newCommandTimeout': 300,\n    }\n    ```\n  - `cleanup(self) -> None`: `pass` (no-op for physical device).\n  - `list_profiles(self) -> List[Dict]`:\n    - Run `_adb('shell', 'pm', 'list', 'users')`.\n    - Parse each line containing `'UserInfo{'` with regex `r'UserInfo\\{(\\d+):([^:]+):'`.\n    - For matches, append dicts like `{'id': int(id), 'name': name, 'running': 'running' in line}` to `profiles` list.\n    - Return `profiles`.\n- Ensure errors from adb commands are surfaced clearly (logging if a logging system exists in project).\n- Ensure this class does not interfere with Geelark-specific modules (no imports from Geelark code).\n",
+        "testStrategy": "- On a development machine with a connected GrapheneOS Pixel, run manual smoke tests:\n  - `GrapheneOSDeviceManager().ensure_connected(account_name)` with a mapping defined in `PROFILE_MAPPING` and confirm adb profile switching (via `adb shell am get-current-user`).\n  - Use `list_profiles()` and confirm returned IDs and names match `adb shell pm list users` output.\n  - Call `upload_video('path/to/test.mp4')` and confirm file appears under `/sdcard/Download/`.\n- Write unit tests that mock `subprocess.run` to simulate:\n  - Connected and disconnected device states.\n  - Successful and failing `adb push` calls.\n  - Various `pm list users` outputs to validate regex parsing.\n- If the project uses pytest or similar, add tests in the existing tests directory, following conventions.\n- Run entire test suite to confirm no regressions.",
+        "priority": "high",
+        "dependencies": [
+          "92"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T00:40:58.022Z"
+      },
+      {
+        "id": "94",
+        "title": "Add GrapheneOS configuration module",
+        "description": "Create `grapheneos_config.py` encapsulating GrapheneOS-specific serial, profile mappings, and Pixel 7 screen coordinates.",
+        "details": "Implementation steps:\n- Create `grapheneos_config.py` in the core module directory so it is importable by workers and device managers.\n- Implement the constants exactly as in the PRD, using placeholder account names to be customized later if needed:\n```python\n\"\"\"GrapheneOS-specific configuration.\"\"\"\n\n# Pixel 7 device serial\nDEVICE_SERIAL = \"32271FDH2006RW\"\n\n# Map account names to GrapheneOS profile user IDs\nPROFILE_MAPPING = {\n    # Profile 0 (Owner) accounts\n    \"account_owner_1\": 0,\n    \"account_owner_2\": 0,\n\n    # Profile 10 accounts\n    \"account_profile1_1\": 10,\n    \"account_profile1_2\": 10,\n\n    # Profile 11 accounts\n    \"account_profile2_1\": 11,\n    \"account_profile2_2\": 11,\n}\n\n# Pixel 7 screen coordinates (1080x2400)\nPIXEL_SCREEN = {\n    'center_x': 540,\n    'center_y': 1200,\n    'feed_top_y': 600,\n    'feed_bottom_y': 1800,\n}\n```\n- Ensure that `PROFILE_MAPPING` keys line up with real account names used by campaigns (this can be done later via configuration overrides).\n- Keep this module free of side effects; it should only define constants.\n- Later tasks will wire `DEVICE_SERIAL` and `PROFILE_MAPPING` into the `GrapheneOSDeviceManager` factory.\n",
+        "testStrategy": "- Add a small unit test that imports `grapheneos_config` and asserts that:\n  - `DEVICE_SERIAL` is a non-empty string.\n  - `PROFILE_MAPPING` is a dict with int values.\n  - `PIXEL_SCREEN` has the expected keys and int values.\n- Run linter and type checker to confirm there are no import cycles.\n- Perform a manual run of the worker factory (later task) to ensure `PROFILE_MAPPING` is correctly passed into `GrapheneOSDeviceManager`.",
+        "priority": "medium",
+        "dependencies": [
+          "92",
+          "93"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T00:42:12.381Z"
+      },
+      {
+        "id": "95",
+        "title": "Refactor DeviceConnectionManager to implement DeviceManager",
+        "description": "Adapt existing Geelark DeviceConnectionManager in `device_connection.py` to implement the DeviceManager interface without changing core Geelark logic.",
+        "details": "Implementation steps:\n- Open `device_connection.py` and inspect the existing `DeviceConnectionManager` implementation (or similar Geelark manager class).\n- At the top of the file, add `from typing import Dict` (if not already present) and `from device_manager_base import DeviceManager`.\n- Change the class declaration from `class DeviceConnectionManager(...):` to `class DeviceConnectionManager(DeviceManager):`, preserving any existing base classes if necessary (multiple inheritance) as long as it does not break behavior.\n- Implement the required DeviceManager interface by mapping to existing Geelark methods without altering their internal logic:\n  - `@property device_type(self) -> str:` return `'geelark'`.\n  - `ensure_connected(self, account_name: str) -> bool`:\n    ```python\n    def ensure_connected(self, account_name: str) -> bool:\n        self.find_phone(account_name)\n        self.start_phone_if_needed()\n        self.enable_adb_with_retry()\n        return True\n    ```\n    Adjust method names if the codebase uses slightly different names (use grep to find `find_phone`, `start_phone`, `enable_adb`).\n  - `get_adb_address(self) -> str` returning `f\"{self.adb_host}:{self.adb_port}\"` (aligning with current config variables used for Appium and adb).\n  - `upload_video(self, local_path: str) -> str` delegating to the existing Geelark upload helper, e.g. `return self._upload_video_to_phone(local_path)` (confirm actual helper name via grep).\n  - `get_appium_caps(self) -> Dict` building a dict similar to existing Appium capabilities for Geelark:\n    ```python\n    return {\n        'platformName': 'Android',\n        'automationName': 'UiAutomator2',\n        'deviceName': self.phone_name,\n        'udid': f\"{self.adb_host}:{self.adb_port}\",\n        'noReset': True,\n    }\n    ```\n    Use the current names of `phone_name`, `adb_host`, and `adb_port` from `DeviceConnectionManager`.\n  - `cleanup(self) -> None` calling the existing stop/cleanup functionality, e.g. `self._stop_phone()`.\n- Do not modify any internal Geelark logic such as interaction with `geelark_client.py` or authentication flows.\n- Ensure all existing external call sites of `DeviceConnectionManager` still function (constructor signature remains unchanged for now; interface adaptation will be handled in later tasks).\n",
+        "testStrategy": "- Run the existing Geelark posting flows (e.g., `parallel_orchestrator.py` with `--device` defaulting to Geelark) to ensure everything still works.\n- Add or update unit tests for `DeviceConnectionManager` to verify:\n  - `ensure_connected` calls `find_phone`, `start_phone_if_needed`, and `enable_adb_with_retry` (using mocks).\n  - `get_adb_address` returns expected `ip:port` format.\n  - `upload_video` delegates to the existing upload helper.\n  - `get_appium_caps` contains the same values as previously used caps.\n  - `cleanup` calls the existing stop function.\n- Run the full test suite and check that no Geelark-specific behavior has regressed.",
+        "priority": "high",
+        "dependencies": [
+          "92"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T00:43:37.848Z"
+      },
+      {
+        "id": "96",
+        "title": "Make SmartInstagramPoster accept generic DeviceManager",
+        "description": "Update `post_reel_smart.py` so SmartInstagramPoster uses the DeviceManager abstraction rather than directly depending on DeviceConnectionManager.",
+        "details": "Implementation steps:\n- Open `post_reel_smart.py` and locate the `SmartInstagramPoster` class and any code constructing a `DeviceConnectionManager` or similar Geelark-specific device object.\n- Import the interface at the top: `from device_manager_base import DeviceManager` and ensure `Config` and `webdriver` imports follow existing project patterns.\n- Refactor `SmartInstagramPoster.__init__` to accept a `device_manager: DeviceManager`:\n```python\nclass SmartInstagramPoster:\n    def __init__(self,\n                 device_manager: DeviceManager,\n                 appium_url: str = None,\n                 worker_id: int = 0,\n                 ...):\n        self.device_manager = device_manager\n        self.appium_url = appium_url or Config.DEFAULT_APPIUM_URL\n        self.worker_id = worker_id\n        # keep other existing initialization logic\n```\n- Remove any internal creation of `DeviceConnectionManager` from within this class; construction will be handled by orchestration/worker layer using the factory.\n- In the `post` (or equivalent) method, replace Geelark-specific connection/upload logic with interface calls:\n```python\n# 1. Connect device\nself.device_manager.ensure_connected(self.account_name)\n\n# 2. Upload video\nremote_path = self.device_manager.upload_video(video_path)\n\n# 3. Start Appium session\ncaps = self.device_manager.get_appium_caps()\nfrom appium import webdriver\ndriver = webdriver.Remote(self.appium_url, caps)\n\n# 4. Existing hybrid navigation / posting loop remains unchanged\n\n# 5. Cleanup\nself.device_manager.cleanup()\n```\n- Ensure any references to `adb_host`, `adb_port`, or `DeviceConnectionManager` within this file are removed or replaced with the DeviceManager abstraction.\n- Adjust any command-line entry point for `post_reel_smart.py` if it currently constructs `SmartInstagramPoster` directly with Geelark; wiring of DeviceManager will be done via a factory (possibly within this script or via `parallel_worker.py`).\n",
+        "testStrategy": "- Add unit tests (or update existing ones) for `SmartInstagramPoster` that:\n  - Use a fake/mock `DeviceManager` implementing the interface.\n  - Assert that `post()` calls `ensure_connected`, `upload_video`, `get_appium_caps`, and `cleanup` in order.\n  - Confirm that the remote path returned by `upload_video` is used in the navigation/posting logic as before (if applicable).\n- Run an end-to-end test for a Geelark Instagram reel posting using the existing orchestrator flow to ensure behavior is identical.\n- Later, run a GrapheneOS single post test (`python post_reel_smart.py --device grapheneos ...`) once other tasks are complete, verifying both device types behave correctly.",
+        "priority": "high",
+        "dependencies": [
+          "92",
+          "95"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T00:45:40.918Z"
+      },
+      {
+        "id": "97",
+        "title": "Update TikTokPoster to use DeviceManager abstraction",
+        "description": "Refactor `tiktok_poster.py` so TikTokPoster depends on DeviceManager instead of a hardcoded DeviceConnectionManager.",
+        "details": "Implementation steps:\n- Open `tiktok_poster.py` and identify the main TikTok posting class (likely `TikTokPoster`) and where it interacts with the device.\n- Import `DeviceManager` at the top: `from device_manager_base import DeviceManager`.\n- Modify the TikTok poster class constructor to accept a `device_manager: DeviceManager` parameter, similar to `SmartInstagramPoster`:\n```python\nclass TikTokPoster:\n    def __init__(self,\n                 device_manager: DeviceManager,\n                 appium_url: str = None,\n                 worker_id: int = 0,\n                 ...):\n        self.device_manager = device_manager\n        self.appium_url = appium_url or Config.DEFAULT_APPIUM_URL\n        self.worker_id = worker_id\n        # keep other initialization\n```\n- Replace any logic that instantiates `DeviceConnectionManager` inside this file with use of the provided `device_manager`.\n- In the TikTok `post`/`run` method, mirror the SmartInstagramPoster flow:\n  - `self.device_manager.ensure_connected(self.account_name)` (or equivalent account reference).\n  - `remote_path = self.device_manager.upload_video(video_path)`.\n  - `caps = self.device_manager.get_appium_caps()` and use them to start an Appium `webdriver.Remote` session.\n  - Leave the TikTok navigation/post loop unchanged since it is platform agnostic.\n  - Call `self.device_manager.cleanup()` at the end (in a `finally` block if appropriate for error safety).\n- If CLI parsing in `tiktok_poster.py` currently constructs DeviceConnectionManager, update it to accept a `--device` flag or delegate DeviceManager creation to a shared factory (implemented in `parallel_worker.py` or a helper module).\n- Ensure any references to Geelark-specific fields (`adb_host`, `adb_port`, etc.) are removed or only accessed via `device_manager`.\n",
+        "testStrategy": "- Add/update unit tests for `TikTokPoster` analogous to SmartInstagramPoster tests using a mock DeviceManager:\n  - Assert correct sequence of DeviceManager calls during a TikTok post.\n  - Verify that Appium capabilities from DeviceManager are used to start the driver.\n- Run an end-to-end Geelark TikTok posting campaign with the existing orchestrator (default device type) after wiring the factory, to confirm there are no regressions.\n- Once GrapheneOS support is wired, run a single GrapheneOS TikTok post test to validate USB device flows behave correctly.",
+        "priority": "high",
+        "dependencies": [
+          "92",
+          "95"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T00:47:24.904Z"
+      },
+      {
+        "id": "98",
+        "title": "Extend parallel_orchestrator CLI with --device flag",
+        "description": "Modify `parallel_orchestrator.py` to accept a `--device` flag controlling which DeviceManager backend is used, defaulting to Geelark.",
+        "details": "Implementation steps:\n- Open `parallel_orchestrator.py` and locate the argument parser configuration (likely using argparse or click).\n- Add a new argument to the parser as described in the PRD:\n```python\nparser.add_argument('--device', '-d',\n                    choices=['geelark', 'grapheneos'],\n                    default='geelark',\n                    help='Device type: geelark (cloud) or grapheneos (physical)')\n```\n- Ensure the parsed `args.device` value is passed down to any place where workers are spawned or where DeviceManagers are created (e.g. via multiprocessing, threading, or task queue dispatch):\n  - If workers are launched with command-line arguments, include `--device` when constructing worker commands.\n  - If workers are functions within the same process, pass `device_type=args.device` as a parameter.\n- Maintain backwards compatibility: if `--device` is not provided, existing behavior (Geelark) remains the default.\n- Update any orchestrator logging to include the selected `device` type when starting campaigns, to aid debugging.\n- Ensure `--status` and other non-run commands also respect the `--device` argument where appropriate.\n",
+        "testStrategy": "- Run `python parallel_orchestrator.py --help` and verify the new `--device`/`-d` option appears with the correct choices and default.\n- Run a Geelark campaign exactly as before (without specifying `--device`) and confirm results match prior behavior.\n- Run `parallel_orchestrator.py` with `--device grapheneos` and verify that this argument is propagated to workers (e.g. by logging the device type from within `parallel_worker.py`).\n- Add/update unit tests for argument parsing, asserting default and explicit device type values.\n- If there is a dedicated CLI test suite, include new test cases for `--device` flag combinations.",
+        "priority": "medium",
+        "dependencies": [
+          "92",
+          "95"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T00:49:28.816Z"
+      },
+      {
+        "id": "99",
+        "title": "Introduce DeviceManager factory in parallel_worker",
+        "description": "Implement a factory in `parallel_worker.py` that instantiates the correct DeviceManager (Geelark or GrapheneOS) based on the device type flag and account.",
+        "details": "Implementation steps:\n- Open `parallel_worker.py` and determine how workers currently create `DeviceConnectionManager` or other device abstractions.\n- Add imports in a lazy or local-scope way to avoid circular dependencies, following the PRD pattern:\n  - In the factory function body, import:\n    - `from device_connection import DeviceConnectionManager`\n    - `from grapheneos_device_manager import GrapheneOSDeviceManager`\n    - `from grapheneos_config import PROFILE_MAPPING, DEVICE_SERIAL`\n    - `from device_manager_base import DeviceManager`\n- Implement the factory function:\n```python\ndef create_device_manager(account_name: str, device_type: str) -> DeviceManager:\n    \"\"\"Factory function to create correct device manager.\"\"\"\n    if device_type == 'geelark':\n        from device_connection import DeviceConnectionManager\n        return DeviceConnectionManager(account_name)\n    elif device_type == 'grapheneos':\n        from grapheneos_device_manager import GrapheneOSDeviceManager\n        from grapheneos_config import PROFILE_MAPPING, DEVICE_SERIAL\n        return GrapheneOSDeviceManager(serial=DEVICE_SERIAL,\n                                       profile_mapping=PROFILE_MAPPING)\n    else:\n        raise ValueError(f\"Unknown device type: {device_type}\")\n```\n- Replace existing direct usages of `DeviceConnectionManager` in `parallel_worker.py` with calls to `create_device_manager(account_name, device_type)` where `device_type` is provided from orchestrator arguments or defaults.\n- Ensure the worker code that constructs `SmartInstagramPoster` and `TikTokPoster` passes the factory-created `device_manager` instance into their constructors.\n- Confirm that workers handle device-specific exceptions gracefully and log the `device_type` for troubleshooting.\n",
+        "testStrategy": "- Add unit tests for `create_device_manager` that:\n  - Verify that `device_type='geelark'` returns an instance of `DeviceConnectionManager`.\n  - Verify that `device_type='grapheneos'` returns an instance of `GrapheneOSDeviceManager` initialized with the configured serial and profile mapping (can assert attribute values).\n  - Assert that an invalid `device_type` raises `ValueError`.\n- Run an orchestrated Geelark campaign and ensure devices are still created as before (via logging or debug prints if necessary).\n- Run a GrapheneOS campaign with a small number of workers and validate that GrapheneOSDeviceManager is instantiated and used without errors (once physical device is connected).\n- If integration tests exist for `parallel_worker`, extend them to exercise both device types.",
+        "priority": "high",
+        "dependencies": [
+          "92",
+          "93",
+          "94",
+          "95",
+          "96",
+          "97",
+          "98"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T00:53:33.549Z"
+      },
+      {
+        "id": "100",
+        "title": "Wire Pixel 7 GrapheneOS coordinates into global config",
+        "description": "Extend `config.py` with Pixel 7 screen coordinate constants and device type identifiers as specified in the PRD.",
+        "details": "Implementation steps:\n- Open `config.py` and inspect existing constants for screen coordinates and device types.\n- Add or update device type identifiers:\n```python\nDEVICE_TYPE_GEELARK = \"geelark\"\nDEVICE_TYPE_GRAPHENEOS = \"grapheneos\"\n```\n- Add Pixel 7 coordinate constants:\n```python\n# Pixel 7 screen coordinates (1080x2400 resolution)\nPIXEL_SCREEN_CENTER_X: int = 540\nPIXEL_SCREEN_CENTER_Y: int = 1200\nPIXEL_FEED_TOP_Y: int = 600\nPIXEL_FEED_BOTTOM_Y: int = 1800\nPIXEL_SWIPE_DURATION: int = 300\n```\n- Ensure naming conventions match existing config style (e.g. uppercase snake case, type hints if used elsewhere in the file).\n- If any navigation or screen detection components (e.g., `hybrid_navigator.py`, `screen_detector.py`) currently use hardcoded coordinates or generic config, consider referencing these new constants where GrapheneOS Pixel-specific behavior is desired, without altering Geelark behavior.\n- Avoid changing any existing Geelark coordinate constants; only add new ones.\n",
+        "testStrategy": "- Add or update tests for `config.py` (if present) to assert that new constants exist and have expected integer values.\n- Run pylint/flake8/mypy (if configured) to validate that new names don’t shadow existing ones and type hints are valid.\n- Perform a manual run of navigation flows on a Pixel 7 GrapheneOS device and tweak coordinates if necessary based on on-screen behavior (swiping, tapping) in subsequent tuning tasks.",
+        "priority": "medium",
+        "dependencies": [
+          "92",
+          "94"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "101",
+        "title": "Expose device selection in post_reel_smart CLI",
+        "description": "Extend the `post_reel_smart.py` standalone CLI to accept a `--device` flag and construct the appropriate DeviceManager via the shared factory for single-post testing.",
+        "details": "Implementation steps:\n- Open `post_reel_smart.py` and inspect the `if __name__ == \"__main__\":` section or equivalent CLI entrypoint.\n- Update the argument parser to accept a `--device`/`-d` flag consistent with `parallel_orchestrator.py`:\n```python\nparser.add_argument('--device', '-d',\n                    choices=['geelark', 'grapheneos'],\n                    default='geelark',\n                    help='Device type: geelark (cloud) or grapheneos (physical)')\n```\n- Import the factory or re-use the factory function implemented in `parallel_worker.py` (if module structure allows clean import); if cross-imports would cause cycles, create a small shared factory module (but prefer reuse):\n```python\nfrom parallel_worker import create_device_manager  # if safe\n```\n- In main, after parsing args, call:\n```python\ndevice_manager = create_device_manager(account_name=args.account, device_type=args.device)\nposter = SmartInstagramPoster(device_manager=device_manager, appium_url=args.appium_url, ...)\n```\n- Ensure any previous direct instantiation of `DeviceConnectionManager` is removed from this file.\n- Keep default behavior intact: if `--device` is omitted, Geelark is used.\n- Update inline usage examples or README snippets if they reference `post_reel_smart.py` without device flag; add examples for GrapheneOS single post tests as per PRD.\n",
+        "testStrategy": "- Run `python post_reel_smart.py --help` and confirm `--device` appears with correct description and default.\n- Test a Geelark single post:\n  - `python post_reel_smart.py --account my_geelark_account video.mp4 \"caption\"` (no `--device`), verifying successful post.\n- Test a GrapheneOS single post:\n  - `python post_reel_smart.py --device grapheneos --account myaccount video.mp4 \"caption\"`, using a connected Pixel 7 GrapheneOS device and validating end-to-end behavior.\n- Add unit tests around the CLI main (if testing pattern allows) to ensure that the correct DeviceManager type is created based on CLI args.",
+        "priority": "medium",
+        "dependencies": [
+          "92",
+          "93",
+          "94",
+          "95",
+          "96",
+          "99"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "102",
+        "title": "Validate Geelark campaigns with new DeviceManager abstraction",
+        "description": "Run regression tests to ensure existing Geelark campaigns still function correctly after introducing DeviceManager and refactors.",
+        "details": "Implementation steps:\n- Using the existing CLI, execute typical Geelark campaigns exactly as before (without specifying `--device`, which should default to Geelark):\n  - `python parallel_orchestrator.py --campaign podcast --workers 5 --run`\n  - `python parallel_orchestrator.py --campaign viral --workers 3 --run`\n- Monitor logs to ensure:\n  - `DeviceConnectionManager` is used via the factory.\n  - `device_type` is `geelark` across workers.\n  - No unexpected exceptions are raised from the new interface methods (`ensure_connected`, `get_appium_caps`, etc.).\n- Verify that posting behavior, throughput, success rates, and any tracking metrics (in `progress_tracker.py`, `flow_logger.py`) match or closely approximate pre-refactor baselines.\n- Confirm that the platform-agnostic modules (`hybrid_navigator.py`, `screen_detector.py`, `action_engine.py`, `appium_ui_controller.py`, etc.) remain unchanged in git diff.\n- Document any minor behavior changes observed, even if acceptable, so they can be tracked.\n",
+        "testStrategy": "- This task is primarily integration testing:\n  - Run the above orchestrator commands in a staging or development environment connected to Geelark cloud phones.\n  - Compare logs and metrics to historical runs.\n  - If an automated campaign regression suite exists, run it end-to-end.\n- Add smoke-test scripts (if not present) that can be run after each change to verify:\n  - Device connection lifecycle for `geelark` works end-to-end.\n  - Videos upload successfully and Appium sessions start using the Geelark ADB addresses.\n- Mark the task done only when Geelark parity is demonstrated to be 100% for main campaigns.",
+        "priority": "high",
+        "dependencies": [
+          "95",
+          "96",
+          "97",
+          "98",
+          "99",
+          "100"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "103",
+        "title": "End-to-end GrapheneOS Instagram posting test",
+        "description": "Perform a full end-to-end test of Instagram posting on a GrapheneOS Pixel device using the new DeviceManager pipeline.",
+        "details": "Implementation steps:\n- Connect a GrapheneOS Pixel 7 device via USB with adb enabled and ensure `adb devices` shows the serial matching `DEVICE_SERIAL` in `grapheneos_config.py`.\n- Configure `PROFILE_MAPPING` so that the test account name (`myaccount` in the PRD example) maps to a valid GrapheneOS user profile ID.\n- Run the single-post CLI as specified:\n```bash\npython post_reel_smart.py --device grapheneos --account myaccount video.mp4 \"caption\"\n```\n- Observe behavior:\n  - `ensure_connected` should:\n    - Confirm device is in `device` state via `adb get-state`.\n    - Switch into the correct profile if needed (`am switch-user`).\n  - `upload_video` should push the test video to `/sdcard/Download/`.\n  - Appium should connect via USB using `udid = serial` and navigate Instagram posting flow using existing HybridNavigator logic.\n- Adjust any timeouts or small issues encountered (e.g., need to increase `time.sleep` after profile switch) in `GrapheneOSDeviceManager` as necessary.\n- Confirm final post appears on the target Instagram account.\n",
+        "testStrategy": "- Treat this as manual integration/acceptance testing for the GrapheneOS Instagram path:\n  - Capture logs from `parallel_worker`, `post_reel_smart`, and `GrapheneOSDeviceManager` during the run.\n  - Verify that there are no unhandled exceptions; if any occur, add try/except with clear error messages or fix logic.\n  - After successful run, consider adding a minimal automated test that mocks out adb calls but exercises the `grapheneos` device path through `SmartInstagramPoster`.\n- Run `parallel_orchestrator.py --campaign podcast --device grapheneos --status` to confirm status commands succeed under GrapheneOS device type as a secondary validation.",
+        "priority": "medium",
+        "dependencies": [
+          "93",
+          "94",
+          "96",
+          "98",
+          "99",
+          "100",
+          "101"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "104",
+        "title": "End-to-end GrapheneOS TikTok posting test",
+        "description": "Perform a full end-to-end TikTok posting test on a GrapheneOS Pixel device to validate TikTokPoster with GrapheneOSDeviceManager.",
+        "details": "Implementation steps:\n- Ensure the GrapheneOS device is connected and configured as in the Instagram test (correct `DEVICE_SERIAL`, `PROFILE_MAPPING`, adb enabled).\n- Identify or add a CLI entry-point for TikTok single-post runs in `tiktok_poster.py` (if missing, mirror `post_reel_smart.py` pattern, including optional `--device` flag wired to the same DeviceManager factory).\n- Run a TikTok single-post test, such as:\n```bash\npython tiktok_poster.py --device grapheneos --account myaccount video.mp4 \"caption\"\n```\n- Observe behavior:\n  - Confirm `GrapheneOSDeviceManager.ensure_connected` is called and profile switching works.\n  - Confirm `upload_video` pushes media successfully.\n  - Validate Appium connects via USB and TikTok posting navigation completes without errors.\n- Adjust TikTok-specific timing or interactions if GrapheneOS execution characteristics (e.g. performance, animations) require minor tuning, without altering Geelark behavior.\n",
+        "testStrategy": "- Manual integration test:\n  - Capture logs around device connection, video upload, and navigation steps.\n  - Validate final TikTok post appears on the correct account.\n- If an orchestrated TikTok campaign mode exists, optionally run:\n  - `python parallel_orchestrator.py --campaign <tiktok_campaign> --device grapheneos --workers 1 --run`\n  and verify stable behavior for at least several posts.\n- After verifying stability, consider adding automated smoke tests similar to Instagram’s GrapheneOS tests, mocking adb but exercising the `grapheneos` device path through TikTokPoster.",
+        "priority": "medium",
+        "dependencies": [
+          "93",
+          "94",
+          "97",
+          "98",
+          "99",
+          "100"
         ],
         "status": "pending",
         "subtasks": []
       }
     ],
     "metadata": {
-      "created": "2025-12-22T08:17:10.031Z",
-      "updated": "2025-12-22T08:17:10.031Z",
-      "description": "Tasks for posting context"
+      "version": "1.0.0",
+      "lastModified": "2025-12-26T00:53:33.551Z",
+      "taskCount": 36,
+      "completedCount": 8,
+      "tags": [
+        "posting"
+      ]
     }
   }
 }

@@ -1,15 +1,15 @@
 """
-TikTok Video Poster - Hybrid Mode
+TikTok Video Poster - Rules-Only Mode (Default)
 
-Posts videos to TikTok using rule-based navigation with optional AI fallback.
+Posts videos to TikTok using 100% rule-based navigation.
 Based on screen detection patterns from AI-only data collection.
 
 Usage:
     python tiktok_poster.py <phone_name> <video_path> <caption>
 
 Modes:
-    --hybrid (default): Rule-based navigation with AI fallback
-    --rules-only: Strict rule-based navigation (no AI fallback)
+    --rules-only (default): 100% rule-based navigation, no AI
+    --hybrid: Rule-based with AI fallback for unknown screens
     --ai-only: Use AI for every decision (for flow mapping)
 
 Example:
@@ -18,6 +18,7 @@ Example:
 import sys
 import os
 import argparse
+import random
 
 # Fix Windows console encoding for emojis
 if sys.platform == 'win32':
@@ -41,10 +42,13 @@ from appium.options.android import UiAutomator2Options
 
 # Device connection management
 from device_connection import DeviceConnectionManager
+from device_manager_base import DeviceManager
 # UI interactions
 from appium_ui_controller import AppiumUIController
 # Flow logging for pattern analysis
 from flow_logger import FlowLogger
+# Comprehensive error debugging with screenshots
+from error_debugger import ErrorDebugger
 # Hybrid Navigator - rule-based + AI fallback
 from tiktok_hybrid_navigator import TikTokHybridNavigator
 from tiktok_screen_detector import TikTokScreenType
@@ -58,16 +62,60 @@ TIKTOK_PACKAGE = "com.zhiliaoapp.musically"
 
 
 class TikTokPoster:
-    """TikTok poster using hybrid navigation (rule-based + AI fallback)."""
+    """TikTok poster using rule-based navigation (100% deterministic by default)."""
 
-    def __init__(self, phone_name, system_port=8200, appium_url=None):
-        self._conn = DeviceConnectionManager(
-            phone_name=phone_name,
-            system_port=system_port,
-            appium_url=appium_url or Config.DEFAULT_APPIUM_URL
-        )
-        self.client = self._conn.client
-        self.phone_name = phone_name
+    # Humanization settings
+    TAP_JITTER_PX = 8  # Random offset in pixels for taps
+    DELAY_MIN_MS = 300  # Minimum delay between actions
+    DELAY_MAX_MS = 3000  # Maximum delay between actions (3 seconds)
+    SWIPE_JITTER_PX = 15  # Random offset for swipe start/end
+
+    # Random behavior settings
+    WARMUP_SCROLLS_MIN = 3  # Min scrolls before posting
+    WARMUP_SCROLLS_MAX = 7  # Max scrolls before posting
+    IDLE_ACTION_CHANCE = 0.3  # 30% chance of idle action between steps
+
+    def __init__(self, phone_name=None, system_port=8200, appium_url=None,
+                 device_manager: DeviceManager = None, humanize: bool = True):
+        """
+        Initialize TikTokPoster.
+
+        Args:
+            phone_name: Phone/account name (required if device_manager not provided)
+            system_port: Port for UiAutomator2 server
+            appium_url: Appium server URL
+            device_manager: Optional DeviceManager instance (for GrapheneOS or testing)
+                           If not provided, creates DeviceConnectionManager (Geelark)
+            humanize: Add random jitter to taps/swipes (default: True)
+        """
+        self.humanize = humanize
+
+        # Device manager: use provided one or create DeviceConnectionManager
+        if device_manager is not None:
+            self._device_manager = device_manager
+            self.phone_name = phone_name or "grapheneos_device"
+            # Create connection wrapper for Appium management
+            self._conn = DeviceConnectionManager(
+                phone_name=self.phone_name,
+                system_port=system_port,
+                appium_url=appium_url or Config.DEFAULT_APPIUM_URL
+            )
+            self._uses_external_device_manager = True
+        else:
+            # Legacy mode: use DeviceConnectionManager for Geelark
+            if phone_name is None:
+                raise ValueError("phone_name is required when device_manager is not provided")
+            self._conn = DeviceConnectionManager(
+                phone_name=phone_name,
+                system_port=system_port,
+                appium_url=appium_url or Config.DEFAULT_APPIUM_URL
+            )
+            self._device_manager = self._conn  # DeviceConnectionManager IS a DeviceManager
+            self.phone_name = phone_name
+            self._uses_external_device_manager = False
+
+        # Expose client for compatibility (only available for Geelark)
+        self.client = getattr(self._conn, 'client', None)
         self._ui_controller = None
 
         # Claude client for AI analysis (fallback)
@@ -84,6 +132,10 @@ class TikTokPoster:
         # Error tracking
         self.last_error_type = None
         self.last_error_message = None
+        self.last_screenshot_path = None
+
+        # Error debugger (initialized per post)
+        self._debugger = None
 
     @property
     def phone_id(self):
@@ -107,19 +159,133 @@ class TikTokPoster:
         """Run ADB shell command."""
         return self._conn.adb_command(cmd, timeout=timeout)
 
-    def tap(self, x, y):
-        """Tap at coordinates using Appium."""
-        if self.ui_controller:
-            print(f"  [TAP] ({x}, {y})")
+    def _add_jitter(self, x, y, jitter_px):
+        """Add random offset to coordinates for humanization."""
+        if not self.humanize:
+            return x, y
+        jitter_x = random.randint(-jitter_px, jitter_px)
+        jitter_y = random.randint(-jitter_px, jitter_px)
+        return x + jitter_x, y + jitter_y
+
+    def _random_delay(self):
+        """Add random delay between actions for humanization."""
+        if not self.humanize:
+            return
+        delay_ms = random.randint(self.DELAY_MIN_MS, self.DELAY_MAX_MS)
+        time.sleep(delay_ms / 1000.0)
+
+    def _do_warmup_scrolls(self):
+        """Browse the feed randomly before starting to post (simulates human behavior)."""
+        if not self.humanize:
+            return
+
+        num_scrolls = random.randint(self.WARMUP_SCROLLS_MIN, self.WARMUP_SCROLLS_MAX)
+        print(f"\n[WARMUP] Browsing feed ({num_scrolls} scrolls)...")
+
+        for i in range(num_scrolls):
+            # Random scroll direction (95% down, 5% up - users mostly scroll down)
+            scroll_down = random.random() < 0.95
+
+            # Random scroll distance (partial to full screen)
+            # 300 = tiny peek, 1200 = full video change
+            scroll_distance = random.randint(300, 1200)
+
+            if scroll_down:
+                start_y = random.randint(1200, 1600)
+                end_y = start_y - scroll_distance
+            else:
+                start_y = random.randint(600, 1000)
+                end_y = start_y + scroll_distance
+
+            # Random x position (users don't swipe perfectly centered)
+            x = random.randint(300, 780)
+
+            print(f"  [WARMUP] Scroll {i+1}/{num_scrolls}")
+            self.swipe(x, start_y, x, end_y, random.randint(250, 450))
+
+            # Watch the video for a bit (0.5-6 seconds - sometimes skip fast, sometimes watch)
+            watch_time = random.uniform(0.5, 6.0)
+            time.sleep(watch_time)
+
+        print(f"[WARMUP] Done browsing\n")
+
+    def _swipe_back(self):
+        """Swipe right twice to go back (required on Pixel/TikTok)."""
+        for swipe_num in range(2):
+            # Swipe from left edge to right
+            start_x = random.randint(5, 60)
+            end_x = random.randint(350, 650)
+            y = random.randint(900, 1500)
+            duration = random.randint(180, 380)
+            print(f"  [RECOVERY] Swipe back {swipe_num + 1}/2 ({start_x} -> {end_x})")
+            self.ui_controller.swipe(start_x, y, end_x, y, duration)
+
+            # Delay between swipes (500-1500ms)
+            if swipe_num == 0:
+                delay = random.randint(500, 1500) / 1000.0
+                time.sleep(delay)
+
+        time.sleep(0.5)
+
+    def _maybe_idle_action(self):
+        """Occasionally do a small idle action (micro-movement, pause, etc.)."""
+        if not self.humanize:
+            return
+
+        if random.random() > self.IDLE_ACTION_CHANCE:
+            return  # No idle action this time
+
+        action = random.choice(['pause', 'micro_scroll', 'tap_empty'])
+
+        if action == 'pause':
+            # Just pause and "look" at the screen (variable duration)
+            pause_time = random.uniform(0.3, 2.5)
+            print(f"  [IDLE] Pausing {pause_time:.1f}s")
+            time.sleep(pause_time)
+
+        elif action == 'micro_scroll':
+            # Tiny scroll that doesn't change screens
+            # Randomize everything: distance, start position, direction
+            distance = random.randint(30, 180)
+            direction = random.choice([-1, 1])
+            x = random.randint(350, 730)
+            start_y = random.randint(900, 1500)
+            end_y = start_y + (distance * direction)
+            duration = random.randint(80, 250)
+            print(f"  [IDLE] Micro-scroll ({distance}px {'down' if direction < 0 else 'up'})")
+            self.ui_controller.swipe(x, start_y, x, end_y, duration)
+            time.sleep(random.uniform(0.2, 0.5))
+
+        elif action == 'tap_empty':
+            # Tap on center-ish area (usually safe/empty space on video)
+            x = random.randint(150, 930)
+            y = random.randint(700, 1500)
+            print(f"  [IDLE] Tap empty area ({x}, {y})")
             self.ui_controller.tap(x, y)
+            time.sleep(random.uniform(0.15, 0.4))
+
+    def tap(self, x, y):
+        """Tap at coordinates using Appium with optional jitter."""
+        if self.ui_controller:
+            actual_x, actual_y = self._add_jitter(x, y, self.TAP_JITTER_PX)
+            print(f"  [TAP] ({actual_x}, {actual_y})" + (f" (jittered from {x},{y})" if self.humanize and (actual_x != x or actual_y != y) else ""))
+            self._random_delay()
+            self.ui_controller.tap(actual_x, actual_y)
         else:
             raise Exception("UI controller not initialized")
 
     def swipe(self, x1, y1, x2, y2, duration_ms=300):
-        """Swipe gesture using Appium."""
+        """Swipe gesture using Appium with optional jitter."""
         if self.ui_controller:
-            print(f"  [SWIPE] ({x1},{y1}) -> ({x2},{y2})")
-            self.ui_controller.swipe(x1, y1, x2, y2, duration_ms)
+            # Add jitter to start and end points
+            actual_x1, actual_y1 = self._add_jitter(x1, y1, self.SWIPE_JITTER_PX)
+            actual_x2, actual_y2 = self._add_jitter(x2, y2, self.SWIPE_JITTER_PX)
+            # Randomize duration slightly (±50ms)
+            if self.humanize:
+                duration_ms = duration_ms + random.randint(-50, 50)
+            print(f"  [SWIPE] ({actual_x1},{actual_y1}) -> ({actual_x2},{actual_y2})")
+            self._random_delay()
+            self.ui_controller.swipe(actual_x1, actual_y1, actual_x2, actual_y2, duration_ms)
         else:
             raise Exception("UI controller not initialized")
 
@@ -138,12 +304,74 @@ class TikTokPoster:
             raise Exception("UI controller not initialized")
 
     def connect(self):
-        """Connect to phone and Appium."""
-        return self._conn.connect()
+        """Connect to device using DeviceManager abstraction.
+
+        For Geelark: Finds phone, starts it, enables ADB, connects Appium
+        For GrapheneOS: Verifies USB connection, switches profile, connects Appium
+        """
+        if self._uses_external_device_manager:
+            # GrapheneOS mode: use external device manager for connection
+            print(f"Connecting via {self._device_manager.device_type}...")
+            self._device_manager.ensure_connected(self.phone_name)
+
+            # Set up _conn.device for Appium (uses serial/address from device manager)
+            adb_address = self._device_manager.get_adb_address()
+            self._conn.device = adb_address
+
+            # Connect Appium directly for GrapheneOS (avoid Geelark-specific reconnect logic)
+            print(f"Connecting Appium to USB device {adb_address}...")
+            caps = self._device_manager.get_appium_caps()
+            caps['appium:systemPort'] = self._conn.system_port
+
+            options = UiAutomator2Options()
+            for key, value in caps.items():
+                if key.startswith('appium:'):
+                    options.set_capability(key, value)
+                else:
+                    setattr(options, key.replace('appium:', ''), value)
+
+            # Set standard options
+            options.platform_name = caps.get('platformName', 'Android')
+            options.automation_name = caps.get('automationName', 'UiAutomator2')
+            options.device_name = adb_address
+            options.udid = adb_address
+            options.no_reset = True
+            options.new_command_timeout = 300
+
+            for attempt in range(3):
+                try:
+                    self._conn.appium_driver = webdriver.Remote(
+                        command_executor=self._conn.appium_url,
+                        options=options
+                    )
+                    print(f"  Appium connected to GrapheneOS device!")
+                    return True
+                except Exception as e:
+                    print(f"  Appium attempt {attempt + 1}/3 failed: {e}")
+                    if attempt < 2:
+                        time.sleep(2)
+
+            raise Exception("Failed to connect Appium to GrapheneOS device after 3 attempts")
+        else:
+            # Geelark mode: use full DeviceConnectionManager flow
+            return self._conn.connect()
 
     def disconnect(self):
-        """Disconnect and stop phone."""
-        return self._conn.disconnect()
+        """Cleanup after posting using DeviceManager abstraction.
+
+        For Geelark: Stops cloud phone to save billing minutes
+        For GrapheneOS: No-op (physical device stays on)
+        """
+        # Close Appium driver if open
+        try:
+            if self.appium_driver:
+                self.appium_driver.quit()
+                print("  Appium driver closed")
+        except Exception:
+            pass
+
+        # Use device manager's cleanup
+        self._device_manager.cleanup()
 
     def dump_ui(self):
         """Dump UI elements using Appium."""
@@ -192,22 +420,20 @@ class TikTokPoster:
             return [], ""
 
     def upload_video(self, video_path):
-        """Upload video to phone via Geelark API."""
+        """Upload video to phone using DeviceManager abstraction.
+
+        Works with both Geelark (API upload) and GrapheneOS (adb push).
+        """
         if self.video_uploaded:
             print("  Video already uploaded")
             return
 
         print(f"\nUploading video: {video_path}")
 
-        # Upload to Geelark cloud first
-        resource_url = self.client.upload_file_to_geelark(video_path)
-        print(f"  Cloud: {resource_url}")
-
-        # Then push to phone
-        upload_result = self.client.upload_file_to_phone(self.phone_id, resource_url)
-        task_id = upload_result.get("taskId")
-        self.client.wait_for_upload(task_id)
-        print("  Video on phone!")
+        # Use DeviceManager's upload_video method
+        # This abstracts away the difference between Geelark API and adb push
+        remote_path = self._device_manager.upload_video(video_path)
+        print(f"  Video uploaded to: {remote_path}")
         self.video_uploaded = True
 
     def detect_error_state(self, elements=None):
@@ -330,6 +556,14 @@ RESPONSE (JSON only):
         # Initialize flow logger
         flow_logger = FlowLogger(self.phone_name, log_dir="tiktok_flow_analysis")
 
+        # Initialize error debugger with screenshots at every step
+        self._debugger = ErrorDebugger(
+            account=self.phone_name,
+            job_id=f"tiktok_{int(time.time())}",
+            output_dir="tiktok_error_logs"
+        )
+        print(f"[DEBUG] Screenshots will be saved to: {self._debugger.session_dir}")
+
         # Navigation mode setup
         if use_hybrid:
             # Initialize Hybrid Navigator - rule-based detection
@@ -347,7 +581,11 @@ RESPONSE (JSON only):
             if ai_fallback:
                 print(f"[HYBRID MODE] Rule-based navigation with AI fallback")
             else:
-                print(f"[HYBRID MODE] RULES-ONLY - NO AI fallback (testing mode)")
+                print(f"[RULES-ONLY] 100% rule-based navigation (no AI)")
+            if self.humanize:
+                print(f"[HUMANIZE] Jitter: ±{self.TAP_JITTER_PX}px taps, ±{self.SWIPE_JITTER_PX}px swipes")
+                print(f"[HUMANIZE] Delays: {self.DELAY_MIN_MS}-{self.DELAY_MAX_MS}ms between actions")
+                print(f"[HUMANIZE] Warmup: {self.WARMUP_SCROLLS_MIN}-{self.WARMUP_SCROLLS_MAX} feed scrolls, {int(self.IDLE_ACTION_CHANCE*100)}% idle action chance")
         else:
             self._hybrid_navigator = None
             print(f"[AI-ONLY MODE] Using Claude for every navigation decision")
@@ -367,6 +605,9 @@ RESPONSE (JSON only):
         self.swipe(SCREEN_CENTER_X, 1000, SCREEN_CENTER_X, 400, 300)
         time.sleep(1)
 
+        # Warmup: browse feed before posting (simulates human behavior)
+        self._do_warmup_scrolls()
+
         # Vision-action loop
         for step in range(max_steps):
             print(f"\n--- Step {step + 1} ---")
@@ -375,6 +616,13 @@ RESPONSE (JSON only):
             elements, raw_xml = self.dump_ui()
             if not elements:
                 print("  No UI elements found, waiting...")
+                # Screenshot even when no elements found
+                self._debugger.log_step(
+                    step_name=f"step_{step+1}_no_elements",
+                    success=False,
+                    details={"reason": "No UI elements found"},
+                    driver=self.appium_driver
+                )
                 time.sleep(2)
                 continue
 
@@ -384,6 +632,24 @@ RESPONSE (JSON only):
                 print(f"  [ERROR DETECTED] {error_type}: {error_msg}")
                 self.last_error_type = error_type
                 self.last_error_message = f"{error_type}: {error_msg}"
+
+                # CAPTURE ERROR WITH SCREENSHOT
+                error_file = self._debugger.capture_error(
+                    error=Exception(f"{error_type}: {error_msg}"),
+                    driver=self.appium_driver,
+                    ui_elements=elements,
+                    error_type=error_type,
+                    phase="error_detection",
+                    context={
+                        "step": step + 1,
+                        "error_message": error_msg,
+                        "video_selected": self.video_selected,
+                        "caption_entered": self.caption_entered
+                    }
+                )
+                self.last_screenshot_path = error_file
+                print(f"  [DEBUG] Error captured: {error_file}")
+
                 flow_logger.log_error(error_type, error_msg, elements)
                 flow_logger.close()
                 return False
@@ -407,8 +673,8 @@ RESPONSE (JSON only):
             ai_called = False
             try:
                 if self._hybrid_navigator is not None:
-                    # HYBRID MODE: Rule-based detection with AI fallback
-                    print("  Analyzing (hybrid)...")
+                    # HYBRID/RULES-ONLY MODE: Rule-based detection
+                    print("  Analyzing (rules)...")
 
                     # Sync state with hybrid navigator
                     self._hybrid_navigator.update_state(
@@ -426,6 +692,38 @@ RESPONSE (JSON only):
                         print(f"  [AI FALLBACK] {nav_result.screen_type.name} -> {action['action']}")
                     else:
                         print(f"  [RULE] {nav_result.screen_type.name} -> {action['action']} (conf={nav_result.action_confidence:.2f})")
+
+                    # SCREENSHOT AT EVERY STEP - critical for debugging
+                    self._debugger.log_step(
+                        step_name=f"step_{step+1}_{nav_result.screen_type.name}",
+                        success=True,
+                        details={
+                            "screen_type": nav_result.screen_type.name,
+                            "action": action['action'],
+                            "confidence": nav_result.action_confidence,
+                            "used_ai": nav_result.used_ai,
+                            "elements_count": len(elements)
+                        },
+                        driver=self.appium_driver
+                    )
+
+                    # RECOVERY: If screen is UNKNOWN and no AI fallback, log and continue
+                    # Don't do blind swipes - just capture state and let flow continue
+                    if nav_result.screen_type == TikTokScreenType.UNKNOWN and not nav_result.used_ai:
+                        print(f"  [UNKNOWN SCREEN] Captured screenshot for debugging")
+                        self._debugger.capture_error(
+                            error=Exception(f"Unknown screen at step {step+1}"),
+                            driver=self.appium_driver,
+                            ui_elements=elements,
+                            error_type="unknown_screen",
+                            phase="navigation",
+                            context={
+                                "step": step + 1,
+                                "action_attempted": action['action'],
+                                "video_selected": self.video_selected,
+                                "caption_entered": self.caption_entered
+                            }
+                        )
 
                 else:
                     # AI-ONLY MODE: Use Claude for every decision
@@ -548,6 +846,22 @@ RESPONSE (JSON only):
 
             except Exception as e:
                 print(f"  Action execution error: {e}")
+
+                # CAPTURE ACTION ERROR WITH SCREENSHOT
+                self._debugger.capture_error(
+                    error=e,
+                    driver=self.appium_driver,
+                    ui_elements=elements,
+                    error_type="action_error",
+                    phase="action_execution",
+                    context={
+                        "step": step + 1,
+                        "action": action_name,
+                        "video_selected": self.video_selected,
+                        "caption_entered": self.caption_entered
+                    }
+                )
+
                 flow_logger.log_error("action_error", str(e), elements)
                 # Check if UiAutomator2 crashed
                 if 'instrumentation process is not running' in str(e):
@@ -557,11 +871,30 @@ RESPONSE (JSON only):
                     flow_logger.close()
                     return False
 
+            # NOTE: Idle actions disabled during posting flow - too risky without screen awareness
+            # self._maybe_idle_action()
+
             time.sleep(1)
 
         print(f"\n[FAILED] Max steps ({max_steps}) reached")
         self.last_error_type = "max_steps"
         self.last_error_message = f"Max steps ({max_steps}) reached without completing post"
+
+        # CAPTURE FINAL STATE WITH SCREENSHOT
+        self._debugger.capture_error(
+            error=Exception(f"Max steps ({max_steps}) reached"),
+            driver=self.appium_driver,
+            ui_elements=elements if 'elements' in dir() else None,
+            error_type="max_steps",
+            phase="completion",
+            context={
+                "max_steps": max_steps,
+                "video_selected": self.video_selected,
+                "caption_entered": self.caption_entered
+            }
+        )
+        print(f"  [DEBUG] Final state captured to: {self._debugger.session_dir}")
+
         flow_logger.log_failure("max_steps_reached")
         flow_logger.close()
         return False
@@ -569,15 +902,23 @@ RESPONSE (JSON only):
 
 def main():
     parser = argparse.ArgumentParser(description='Post video to TikTok')
-    parser.add_argument('phone_name', help='Geelark phone name')
+    parser.add_argument('phone_name', help='Account/phone name')
     parser.add_argument('video_path', help='Path to video file')
     parser.add_argument('caption', help='Caption for the video')
-    parser.add_argument('--hybrid', action='store_true', default=True,
-                        help='Use hybrid navigation (default)')
-    parser.add_argument('--rules-only', action='store_true',
-                        help='Use rules-only mode (no AI fallback)')
+    parser.add_argument('--device', '-d',
+                        choices=['geelark', 'grapheneos'],
+                        default='geelark',
+                        help='Device type: geelark (cloud) or grapheneos (physical Pixel)')
+    parser.add_argument('--appium-url',
+                        help='Appium server URL (auto-started if not specified)')
+    parser.add_argument('--rules-only', action='store_true', default=True,
+                        help='Use 100%% rule-based navigation, no AI (default)')
+    parser.add_argument('--hybrid', action='store_true',
+                        help='Use rule-based with AI fallback for unknown screens')
     parser.add_argument('--ai-only', action='store_true',
-                        help='Use AI-only mode (for flow mapping)')
+                        help='Use AI for every decision (for flow mapping)')
+    parser.add_argument('--no-humanize', action='store_true',
+                        help='Disable humanization (no jitter/delays)')
     parser.add_argument('--max-steps', type=int, default=30,
                         help='Maximum navigation steps (default: 30)')
 
@@ -588,18 +929,75 @@ def main():
         print(f"ERROR: Video not found: {args.video_path}")
         sys.exit(1)
 
-    # Determine mode
+    # Determine mode (rules-only is default)
     use_hybrid = True
-    ai_fallback = True
+    ai_fallback = False  # Default: NO AI fallback
 
     if args.ai_only:
         use_hybrid = False
         ai_fallback = False
-    elif args.rules_only:
+    elif args.hybrid:
         use_hybrid = True
-        ai_fallback = False
+        ai_fallback = True  # Enable AI fallback only if --hybrid specified
+    # else: rules-only (default) - use_hybrid=True, ai_fallback=False
 
-    poster = TikTokPoster(args.phone_name)
+    # Humanization
+    humanize = not args.no_humanize
+
+    # Create device manager and handle Appium based on device type
+    device_manager = None
+    appium_manager = None
+
+    if args.device == 'grapheneos':
+        # =====================================================================
+        # GRAPHENEOS: 1:1 PORT FROM GEELARK - AUTO-START APPIUM
+        # This mirrors exactly what parallel_worker.py does for Geelark
+        # =====================================================================
+        from grapheneos_device_manager import GrapheneOSDeviceManager
+        from grapheneos_config import PROFILE_MAPPING, DEVICE_SERIAL
+        from parallel_config import get_config
+        from appium_server_manager import AppiumServerManager, AppiumServerError
+
+        device_manager = GrapheneOSDeviceManager(
+            serial=DEVICE_SERIAL,
+            profile_mapping=PROFILE_MAPPING
+        )
+        print(f"[DEVICE] GrapheneOS physical device (USB)")
+
+        # Create config for single worker (exactly like parallel_worker does)
+        config = get_config(num_workers=1)
+        worker_config = config.get_worker(0)
+
+        # Use provided appium_url or auto-start Appium (1:1 with parallel_worker)
+        if args.appium_url:
+            appium_url = args.appium_url
+            print(f"[APPIUM] Using external Appium at {appium_url}")
+        else:
+            # Auto-start Appium - EXACTLY like parallel_worker.py line 416-423
+            appium_manager = AppiumServerManager(worker_config, config)
+            print(f"[APPIUM] Starting Appium server on port {worker_config.appium_port}...")
+            try:
+                appium_manager.start(timeout=60)
+                print(f"[APPIUM] Ready at {worker_config.appium_url}")
+            except AppiumServerError as e:
+                print(f"[APPIUM] Failed to start: {e}")
+                sys.exit(1)
+            appium_url = worker_config.appium_url
+
+        system_port = worker_config.system_port
+    else:
+        # Geelark mode - Appium expected to be managed by orchestrator or external
+        print(f"[DEVICE] Geelark cloud phone")
+        appium_url = args.appium_url or Config.DEFAULT_APPIUM_URL
+        system_port = 8200
+
+    poster = TikTokPoster(
+        phone_name=args.phone_name,
+        device_manager=device_manager,
+        appium_url=appium_url,
+        system_port=system_port,
+        humanize=humanize
+    )
     try:
         print(f"Looking for phone: {args.phone_name}")
         poster.connect()
@@ -628,6 +1026,10 @@ def main():
     finally:
         print("\nCleaning up...")
         poster.disconnect()
+        # Stop Appium if we started it (1:1 with parallel_worker cleanup)
+        if appium_manager:
+            print("[APPIUM] Stopping Appium server...")
+            appium_manager.stop()
 
 
 if __name__ == "__main__":
