@@ -52,6 +52,28 @@ from error_debugger import ErrorDebugger
 # Hybrid Navigator - rule-based + AI fallback
 from tiktok_hybrid_navigator import TikTokHybridNavigator
 from tiktok_screen_detector import TikTokScreenType
+from tiktok_id_map import set_tiktok_version
+# Account-seeded humanization
+from humanization import (
+    BehaviorProfile,
+    get_or_create_base_seed,
+    get_session_seed,
+    build_behavior_profile,
+    tap_with_jitter,
+    human_scroll_vertical,
+    human_sleep,
+    warmup_scrolls,
+    cooldown_scrolls,
+    # Logging utilities
+    HumanizationLogger,
+    get_humanization_logger,
+    reset_humanization_logger
+)
+
+# Configure logging for humanization module
+import logging
+humanization_logger = logging.getLogger('humanization')
+humanization_logger.setLevel(logging.INFO)
 
 # Screen coordinates from centralized config
 SCREEN_CENTER_X = Config.SCREEN_CENTER_X
@@ -64,19 +86,18 @@ TIKTOK_PACKAGE = "com.zhiliaoapp.musically"
 class TikTokPoster:
     """TikTok poster using rule-based navigation (100% deterministic by default)."""
 
-    # Humanization settings
-    TAP_JITTER_PX = 8  # Random offset in pixels for taps
-    DELAY_MIN_MS = 300  # Minimum delay between actions
-    DELAY_MAX_MS = 3000  # Maximum delay between actions (3 seconds)
-    SWIPE_JITTER_PX = 15  # Random offset for swipe start/end
-
-    # Random behavior settings
-    WARMUP_SCROLLS_MIN = 3  # Min scrolls before posting
-    WARMUP_SCROLLS_MAX = 7  # Max scrolls before posting
-    IDLE_ACTION_CHANCE = 0.3  # 30% chance of idle action between steps
+    # Humanization constants (legacy - now using BehaviorProfile)
+    TAP_JITTER_PX = 8
+    SWIPE_JITTER_PX = 15
+    DELAY_MIN_MS = 100
+    DELAY_MAX_MS = 400
+    WARMUP_SCROLLS_MIN = 0
+    WARMUP_SCROLLS_MAX = 3
+    IDLE_ACTION_CHANCE = 0.05
 
     def __init__(self, phone_name=None, system_port=8200, appium_url=None,
-                 device_manager: DeviceManager = None, humanize: bool = True):
+                 device_manager: DeviceManager = None, humanize: bool = True,
+                 device_type: str = 'geelark'):
         """
         Initialize TikTokPoster.
 
@@ -87,8 +108,13 @@ class TikTokPoster:
             device_manager: Optional DeviceManager instance (for GrapheneOS or testing)
                            If not provided, creates DeviceConnectionManager (Geelark)
             humanize: Add random jitter to taps/swipes (default: True)
+            device_type: 'geelark' or 'grapheneos' - used for behavior profile seeding
         """
         self.humanize = humanize
+        self.device_type = device_type
+
+        # Initialize account-seeded humanization
+        self._init_humanization(phone_name or 'unknown', device_type)
 
         # Device manager: use provided one or create DeviceConnectionManager
         if device_manager is not None:
@@ -137,6 +163,9 @@ class TikTokPoster:
         # Error debugger (initialized per post)
         self._debugger = None
 
+        # TikTok version (populated at start of post)
+        self._tiktok_version = None
+
     @property
     def phone_id(self):
         return self._conn.phone_id
@@ -155,9 +184,70 @@ class TikTokPoster:
             self._ui_controller = AppiumUIController(self.appium_driver)
         return self._ui_controller
 
+    def _init_humanization(self, phone_name: str, device_type: str):
+        """
+        Initialize account-seeded humanization profile.
+
+        Creates a BehaviorProfile unique to this account that remains
+        consistent across runs but varies between accounts.
+        """
+        # Get or create stable seed for this account
+        self._base_seed = get_or_create_base_seed(device_type, phone_name)
+
+        # Derive session seed (changes every 6 hours)
+        self._session_seed = get_session_seed(self._base_seed)
+
+        # Build profile from base seed (deterministic per account)
+        self._behavior_profile = build_behavior_profile(self._base_seed)
+
+        # Create RNG for this session
+        self._rng = random.Random(self._session_seed)
+
+        # Reset and initialize humanization logger for this session
+        self._humanization_logger = reset_humanization_logger(max_detailed_logs=20)
+        self._humanization_logger.log_session_start(
+            device_type=device_type,
+            account_name=phone_name,
+            base_seed=self._base_seed,
+            session_seed=self._session_seed,
+            profile=self._behavior_profile
+        )
+
+        # Console output for immediate visibility
+        print(f"[HUMANIZATION] Account: {phone_name}")
+        print(f"[HUMANIZATION] Base seed: {self._base_seed}")
+        print(f"[HUMANIZATION] Session seed: {self._session_seed}")
+        print(f"[HUMANIZATION] Tap jitter: {self._behavior_profile.tap_jitter_min_px:.1f}-{self._behavior_profile.tap_jitter_max_px:.1f}px")
+        print(f"[HUMANIZATION] Pre-scroll prob: {self._behavior_profile.prob_scroll_before_post:.0%}")
+
     def adb(self, cmd, timeout=30):
         """Run ADB shell command."""
         return self._conn.adb_command(cmd, timeout=timeout)
+
+    def get_tiktok_version(self) -> str:
+        """Get TikTok app version for debugging ID drift.
+
+        Uses: adb shell dumpsys package com.zhiliaoapp.musically | grep versionName
+
+        Returns:
+            Version string (e.g., "35.3.3") or "unknown" if not found.
+        """
+        try:
+            result = self.adb(f"dumpsys package {TIKTOK_PACKAGE}")
+            if result:
+                # Parse output to find versionName
+                for line in result.split('\n'):
+                    if 'versionName=' in line:
+                        # Extract version from line like "versionName=35.3.3"
+                        version = line.split('versionName=')[1].strip()
+                        # Remove trailing info if any
+                        if ' ' in version:
+                            version = version.split()[0]
+                        return version
+            return "unknown"
+        except Exception as e:
+            print(f"  [WARN] Failed to get TikTok version: {e}")
+            return "unknown"
 
     def _add_jitter(self, x, y, jitter_px):
         """Add random offset to coordinates for humanization."""
@@ -175,39 +265,27 @@ class TikTokPoster:
         time.sleep(delay_ms / 1000.0)
 
     def _do_warmup_scrolls(self):
-        """Browse the feed randomly before starting to post (simulates human behavior)."""
+        """Browse the feed randomly before starting to post (simulates human behavior).
+
+        Uses account-seeded BehaviorProfile for consistent per-account behavior.
+        """
         if not self.humanize:
             return
 
-        num_scrolls = random.randint(self.WARMUP_SCROLLS_MIN, self.WARMUP_SCROLLS_MAX)
-        print(f"\n[WARMUP] Browsing feed ({num_scrolls} scrolls)...")
+        # Use the new warmup_scrolls primitive with account-seeded profile
+        num_scrolls = warmup_scrolls(
+            driver=self.appium_driver,
+            profile=self._behavior_profile,
+            rng=self._rng,
+            screen_height=2400 if self.device_type == 'grapheneos' else 1280,
+            screen_width=1080 if self.device_type == 'grapheneos' else 720,
+            log_action=True
+        )
 
-        for i in range(num_scrolls):
-            # Random scroll direction (95% down, 5% up - users mostly scroll down)
-            scroll_down = random.random() < 0.95
-
-            # Random scroll distance (partial to full screen)
-            # 300 = tiny peek, 1200 = full video change
-            scroll_distance = random.randint(300, 1200)
-
-            if scroll_down:
-                start_y = random.randint(1200, 1600)
-                end_y = start_y - scroll_distance
-            else:
-                start_y = random.randint(600, 1000)
-                end_y = start_y + scroll_distance
-
-            # Random x position (users don't swipe perfectly centered)
-            x = random.randint(300, 780)
-
-            print(f"  [WARMUP] Scroll {i+1}/{num_scrolls}")
-            self.swipe(x, start_y, x, end_y, random.randint(250, 450))
-
-            # Watch the video for a bit (0.5-6 seconds - sometimes skip fast, sometimes watch)
-            watch_time = random.uniform(0.5, 6.0)
-            time.sleep(watch_time)
-
-        print(f"[WARMUP] Done browsing\n")
+        if num_scrolls > 0:
+            print(f"[WARMUP] Completed {num_scrolls} warmup scrolls")
+        else:
+            print(f"[WARMUP] Skipped (probability check)")
 
     def _swipe_back(self):
         """Swipe right twice to go back (required on Pixel/TikTok)."""
@@ -362,6 +440,14 @@ class TikTokPoster:
         For Geelark: Stops cloud phone to save billing minutes
         For GrapheneOS: No-op (physical device stays on)
         """
+        # Log humanization session summary
+        if hasattr(self, '_humanization_logger') and self._humanization_logger:
+            self._humanization_logger.log_session_end()
+            summary = self._humanization_logger.get_summary()
+            print(f"[HUMANIZATION] Session summary: {summary['total_actions']} actions")
+            for action_type, count in summary['actions_by_type'].items():
+                print(f"  {action_type}: {count}")
+
         # Close Appium driver if open
         try:
             if self.appium_driver:
@@ -564,6 +650,11 @@ RESPONSE (JSON only):
         )
         print(f"[DEBUG] Screenshots will be saved to: {self._debugger.session_dir}")
 
+        # Get TikTok version for ID drift debugging
+        self._tiktok_version = self.get_tiktok_version()
+        set_tiktok_version(self._tiktok_version)  # Set in ID map for logging context
+        print(f"[VERSION] TikTok version: {self._tiktok_version}")
+
         # Navigation mode setup
         if use_hybrid:
             # Initialize Hybrid Navigator - rule-based detection
@@ -576,7 +667,8 @@ RESPONSE (JSON only):
                 )
             self._hybrid_navigator = TikTokHybridNavigator(
                 ai_analyzer=ai_analyzer,
-                caption=caption
+                caption=caption,
+                device_type=self.device_type
             )
             if ai_fallback:
                 print(f"[HYBRID MODE] Rule-based navigation with AI fallback")
@@ -644,7 +736,8 @@ RESPONSE (JSON only):
                         "step": step + 1,
                         "error_message": error_msg,
                         "video_selected": self.video_selected,
-                        "caption_entered": self.caption_entered
+                        "caption_entered": self.caption_entered,
+                        "tiktok_version": self._tiktok_version
                     }
                 )
                 self.last_screenshot_path = error_file
@@ -721,7 +814,8 @@ RESPONSE (JSON only):
                                 "step": step + 1,
                                 "action_attempted": action['action'],
                                 "video_selected": self.video_selected,
-                                "caption_entered": self.caption_entered
+                                "caption_entered": self.caption_entered,
+                                "tiktok_version": self._tiktok_version
                             }
                         )
 
@@ -858,7 +952,8 @@ RESPONSE (JSON only):
                         "step": step + 1,
                         "action": action_name,
                         "video_selected": self.video_selected,
-                        "caption_entered": self.caption_entered
+                        "caption_entered": self.caption_entered,
+                        "tiktok_version": self._tiktok_version
                     }
                 )
 
@@ -890,7 +985,8 @@ RESPONSE (JSON only):
             context={
                 "max_steps": max_steps,
                 "video_selected": self.video_selected,
-                "caption_entered": self.caption_entered
+                "caption_entered": self.caption_entered,
+                "tiktok_version": self._tiktok_version
             }
         )
         print(f"  [DEBUG] Final state captured to: {self._debugger.session_dir}")
@@ -900,29 +996,152 @@ RESPONSE (JSON only):
         return False
 
 
+def setup_humanization_logging(account_name: str, log_dir: str = "logs"):
+    """Set up file logging for humanization module.
+
+    Creates a log file at logs/humanization_{account}_{timestamp}.log
+    """
+    import os
+    from datetime import datetime
+
+    os.makedirs(log_dir, exist_ok=True)
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    log_file = os.path.join(log_dir, f"humanization_{account_name}_{timestamp}.log")
+
+    # Set up file handler for humanization logger
+    file_handler = logging.FileHandler(log_file, encoding='utf-8')
+    file_handler.setLevel(logging.DEBUG)
+    file_handler.setFormatter(logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    ))
+
+    # Add to humanization logger
+    humanization_logger.addHandler(file_handler)
+
+    # Also add console handler if not already present
+    if not any(isinstance(h, logging.StreamHandler) for h in humanization_logger.handlers):
+        console_handler = logging.StreamHandler()
+        console_handler.setLevel(logging.INFO)
+        console_handler.setFormatter(logging.Formatter('%(message)s'))
+        humanization_logger.addHandler(console_handler)
+
+    print(f"[LOGGING] Humanization logs: {log_file}")
+    return log_file
+
+
 def main():
-    parser = argparse.ArgumentParser(description='Post video to TikTok')
-    parser.add_argument('phone_name', help='Account/phone name')
-    parser.add_argument('video_path', help='Path to video file')
-    parser.add_argument('caption', help='Caption for the video')
+    parser = argparse.ArgumentParser(
+        description='Post video to TikTok',
+        epilog='''
+Examples:
+  %(prog)s alice.account video.mp4 "My caption #fyp"
+  %(prog)s alice.account video.mp4 "Caption" --device grapheneos
+  %(prog)s alice.account video.mp4 "Caption" --ai-only
+        ''',
+        formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+
+    # Positional arguments (preferred)
+    parser.add_argument('phone_name', nargs='?', help='Account/phone name')
+    parser.add_argument('video_path', nargs='?', help='Path to video file')
+    parser.add_argument('caption', nargs='?', help='Caption for the video')
+
+    # Device and server options
     parser.add_argument('--device', '-d',
                         choices=['geelark', 'grapheneos'],
                         default='geelark',
                         help='Device type: geelark (cloud) or grapheneos (physical Pixel)')
     parser.add_argument('--appium-url',
                         help='Appium server URL (auto-started if not specified)')
+
+    # Navigation mode options
     parser.add_argument('--rules-only', action='store_true', default=True,
                         help='Use 100%% rule-based navigation, no AI (default)')
     parser.add_argument('--hybrid', action='store_true',
                         help='Use rule-based with AI fallback for unknown screens')
     parser.add_argument('--ai-only', action='store_true',
                         help='Use AI for every decision (for flow mapping)')
+
+    # Humanization options
     parser.add_argument('--no-humanize', action='store_true',
                         help='Disable humanization (no jitter/delays)')
     parser.add_argument('--max-steps', type=int, default=30,
                         help='Maximum navigation steps (default: 30)')
 
+    # =========================================================================
+    # LEGACY FLAGS (deprecated - for backwards compatibility)
+    # These map to positional arguments with deprecation warnings
+    # =========================================================================
+    parser.add_argument('--account', dest='legacy_account',
+                        help='DEPRECATED: Use positional phone_name instead')
+    parser.add_argument('--video', dest='legacy_video',
+                        help='DEPRECATED: Use positional video_path instead')
+    parser.add_argument('--caption-flag', dest='legacy_caption',
+                        help='DEPRECATED: Use positional caption instead')
+    parser.add_argument('--mode', dest='legacy_mode',
+                        choices=['ai-only', 'rules-only', 'hybrid'],
+                        help='DEPRECATED: Use --ai-only, --rules-only, or --hybrid instead')
+
     args = parser.parse_args()
+
+    # =========================================================================
+    # HANDLE LEGACY FLAGS WITH DEPRECATION WARNINGS
+    # =========================================================================
+    legacy_used = []
+
+    # Map legacy --account to phone_name
+    if args.legacy_account:
+        if args.phone_name:
+            print("WARNING: Both positional phone_name and --account provided. Using positional.")
+        else:
+            args.phone_name = args.legacy_account
+            legacy_used.append('--account')
+
+    # Map legacy --video to video_path
+    if args.legacy_video:
+        if args.video_path:
+            print("WARNING: Both positional video_path and --video provided. Using positional.")
+        else:
+            args.video_path = args.legacy_video
+            legacy_used.append('--video')
+
+    # Map legacy --caption-flag to caption
+    if args.legacy_caption:
+        if args.caption:
+            print("WARNING: Both positional caption and --caption-flag provided. Using positional.")
+        else:
+            args.caption = args.legacy_caption
+            legacy_used.append('--caption-flag')
+
+    # Map legacy --mode to mode flags
+    if args.legacy_mode:
+        legacy_used.append('--mode')
+        if args.legacy_mode == 'ai-only':
+            args.ai_only = True
+        elif args.legacy_mode == 'hybrid':
+            args.hybrid = True
+        # else rules-only (default)
+
+    # Show deprecation warning if legacy flags were used
+    if legacy_used:
+        print("\n" + "="*60)
+        print("DEPRECATION WARNING")
+        print("="*60)
+        print(f"Legacy flags used: {', '.join(legacy_used)}")
+        print("\nPlease use the new CLI syntax:")
+        print("  tiktok_poster.py <phone_name> <video_path> <caption> [options]")
+        print("\nExample:")
+        print("  tiktok_poster.py alice.account video.mp4 \"My caption\" --device grapheneos")
+        print("="*60 + "\n")
+
+    # Validate required arguments are present
+    if not args.phone_name:
+        parser.error("phone_name is required (positional or --account)")
+    if not args.video_path:
+        parser.error("video_path is required (positional or --video)")
+    if not args.caption:
+        parser.error("caption is required (positional or --caption-flag)")
 
     # Validate video path
     if not os.path.exists(args.video_path):
@@ -944,6 +1163,10 @@ def main():
     # Humanization
     humanize = not args.no_humanize
 
+    # Set up humanization logging to file
+    if humanize:
+        setup_humanization_logging(args.phone_name)
+
     # Create device manager and handle Appium based on device type
     device_manager = None
     appium_manager = None
@@ -953,10 +1176,51 @@ def main():
         # GRAPHENEOS: 1:1 PORT FROM GEELARK - AUTO-START APPIUM
         # This mirrors exactly what parallel_worker.py does for Geelark
         # =====================================================================
-        from grapheneos_device_manager import GrapheneOSDeviceManager
+        from grapheneos_device_manager import (
+            GrapheneOSDeviceManager,
+            validate_grapheneos_environment,
+            ADBNotFoundError,
+            NoDeviceAttachedError,
+            AppiumNotReachableError
+        )
         from grapheneos_config import PROFILE_MAPPING, DEVICE_SERIAL
         from parallel_config import get_config
         from appium_server_manager import AppiumServerManager, AppiumServerError
+
+        # =====================================================================
+        # CONNECTIVITY CHECKS - Validate environment BEFORE starting
+        # =====================================================================
+        print("\n" + "="*60)
+        print("GRAPHENEOS ENVIRONMENT VALIDATION")
+        print("="*60)
+        try:
+            # Only check Appium if user provided external URL
+            # (otherwise we auto-start it below)
+            validate_grapheneos_environment(
+                serial=DEVICE_SERIAL,
+                appium_url=args.appium_url if args.appium_url else None
+            )
+        except ADBNotFoundError as e:
+            print(f"\n[ERROR] ADB not found: {e}")
+            print("\nFix: Install Android platform-tools and add to PATH:")
+            print("  1. Download from https://developer.android.com/tools/releases/platform-tools")
+            print(f"  2. Extract and add to PATH, or set Config.ADB_PATH")
+            print(f"  3. Current ADB path: {Config.ADB_PATH}")
+            sys.exit(1)
+        except NoDeviceAttachedError as e:
+            print(f"\n[ERROR] No device attached: {e}")
+            print("\nFix: Connect GrapheneOS device via USB:")
+            print("  1. Enable USB debugging in Developer options")
+            print("  2. Connect USB cable and authorize debugging")
+            print(f"  3. Expected serial: {DEVICE_SERIAL}")
+            sys.exit(1)
+        except AppiumNotReachableError as e:
+            print(f"\n[ERROR] Appium not reachable: {e}")
+            print("\nFix: Start Appium server or let script auto-start:")
+            print("  1. Remove --appium-url flag to auto-start Appium")
+            print("  2. Or start Appium manually: appium --address 127.0.0.1 --port 4723")
+            sys.exit(1)
+        print("="*60 + "\n")
 
         device_manager = GrapheneOSDeviceManager(
             serial=DEVICE_SERIAL,
@@ -996,7 +1260,8 @@ def main():
         device_manager=device_manager,
         appium_url=appium_url,
         system_port=system_port,
-        humanize=humanize
+        humanize=humanize,
+        device_type=args.device
     )
     try:
         print(f"Looking for phone: {args.phone_name}")

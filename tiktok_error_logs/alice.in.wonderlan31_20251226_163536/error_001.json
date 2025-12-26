@@ -1,0 +1,284 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-26T16:35:48.787913",
+  "account": "alice.in.wonderlan31",
+  "job_id": "tiktok_1766738136",
+  "phase": "navigation",
+  "error_type": "unknown_screen",
+  "error_class": "Exception",
+  "error_message": "Unknown screen at step 1",
+  "error_repr": "Exception('Unknown screen at step 1')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "step": 1,
+    "action_attempted": "error",
+    "video_selected": false,
+    "caption_entered": false,
+    "tiktok_version": "43.1.4"
+  },
+  "ui_elements_count": 20,
+  "ui_elements": [
+    {
+      "bounds": "[0,0][1080,2400]",
+      "center": [
+        540,
+        1200
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.widget.FrameLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,0][1080,2400]",
+      "center": [
+        540,
+        1200
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.widget.LinearLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,0][1080,2400]",
+      "center": [
+        540,
+        1200
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.widget.FrameLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,0][1080,2400]",
+      "center": [
+        540,
+        1200
+      ],
+      "text": "",
+      "desc": "",
+      "id": "us",
+      "class": "android.widget.FrameLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,0][1080,2400]",
+      "center": [
+        540,
+        1200
+      ],
+      "text": "",
+      "desc": "",
+      "id": "content",
+      "class": "android.widget.FrameLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,0][1080,2400]",
+      "center": [
+        540,
+        1200
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.widget.FrameLayout",
+      "clickable": true,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,136][1080,2337]",
+      "center": [
+        540,
+        1236
+      ],
+      "text": "",
+      "desc": "",
+      "id": "s2q",
+      "class": "android.widget.FrameLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[172,999][907,1473]",
+      "center": [
+        539,
+        1236
+      ],
+      "text": "",
+      "desc": "Dialog",
+      "id": "zqh",
+      "class": "android.widget.FrameLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[172,999][907,1473]",
+      "center": [
+        539,
+        1236
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.widget.LinearLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[172,999][907,1062]",
+      "center": [
+        539,
+        1030
+      ],
+      "text": "",
+      "desc": "",
+      "id": "wbr",
+      "class": "android.widget.FrameLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[225,1062][854,1294]",
+      "center": [
+        539,
+        1178
+      ],
+      "text": "",
+      "desc": "",
+      "id": "ct5",
+      "class": "android.widget.FrameLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[225,1062][854,1294]",
+      "center": [
+        539,
+        1178
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.widget.LinearLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[225,1062][854,1294]",
+      "center": [
+        539,
+        1178
+      ],
+      "text": "",
+      "desc": "",
+      "id": "scv",
+      "class": "android.widget.ScrollView",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[225,1062][843,1294]",
+      "center": [
+        534,
+        1178
+      ],
+      "text": "To connect with people you know on TikTok, allow access to your contacts in your device settings.",
+      "desc": "",
+      "id": "e_h",
+      "class": "android.widget.TextView",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[172,1347][907,1473]",
+      "center": [
+        539,
+        1410
+      ],
+      "text": "",
+      "desc": "",
+      "id": "u7",
+      "class": "android.widget.FrameLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[172,1347][907,1473]",
+      "center": [
+        539,
+        1410
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.widget.LinearLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[172,1347][907,1348]",
+      "center": [
+        539,
+        1347
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.view.View",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[172,1348][907,1473]",
+      "center": [
+        539,
+        1410
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.view.ViewGroup",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[540,1348][907,1473]",
+      "center": [
+        723,
+        1410
+      ],
+      "text": "Open settings",
+      "desc": "",
+      "id": "",
+      "class": "android.widget.Button",
+      "clickable": true,
+      "enabled": true
+    },
+    {
+      "bounds": "[172,1348][539,1473]",
+      "center": [
+        355,
+        1410
+      ],
+      "text": "Don’t allow",
+      "desc": "",
+      "id": "",
+      "class": "android.widget.Button",
+      "clickable": true,
+      "enabled": true
+    }
+  ],
+  "screenshot_file": "tiktok_error_logs\\alice.in.wonderlan31_20251226_163536\\error_001_screenshot.png",
+  "page_source_file": "tiktok_error_logs\\alice.in.wonderlan31_20251226_163536\\error_001_page_source.xml"
+}

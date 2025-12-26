@@ -1,0 +1,1609 @@
+{
+  "error_id": "error_001",
+  "timestamp": "2025-12-26T15:29:41.825988",
+  "account": "alice.in.wonderlan31",
+  "job_id": "tiktok_1766734150",
+  "phase": "navigation",
+  "error_type": "unknown_screen",
+  "error_class": "Exception",
+  "error_message": "Unknown screen at step 4",
+  "error_repr": "Exception('Unknown screen at step 4')",
+  "stack_trace": "NoneType: None\n",
+  "context": {
+    "step": 4,
+    "action_attempted": "error",
+    "video_selected": false,
+    "caption_entered": false
+  },
+  "ui_elements_count": 122,
+  "ui_elements": [
+    {
+      "bounds": "[0,0][1080,2400]",
+      "center": [
+        540,
+        1200
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.widget.FrameLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,0][1080,2400]",
+      "center": [
+        540,
+        1200
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.widget.FrameLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,0][1080,2337]",
+      "center": [
+        540,
+        1168
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.widget.LinearLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,0][1080,2337]",
+      "center": [
+        540,
+        1168
+      ],
+      "text": "",
+      "desc": "",
+      "id": "content",
+      "class": "android.widget.FrameLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,0][1080,2337]",
+      "center": [
+        540,
+        1168
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.widget.FrameLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,0][1080,2337]",
+      "center": [
+        540,
+        1168
+      ],
+      "text": "",
+      "desc": "",
+      "id": "us",
+      "class": "android.widget.LinearLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,0][1080,2337]",
+      "center": [
+        540,
+        1168
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.widget.FrameLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,0][1080,2337]",
+      "center": [
+        540,
+        1168
+      ],
+      "text": "",
+      "desc": "",
+      "id": "s8e",
+      "class": "android.widget.FrameLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,0][1080,2337]",
+      "center": [
+        540,
+        1168
+      ],
+      "text": "",
+      "desc": "",
+      "id": "nor",
+      "class": "android.widget.FrameLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,0][1080,2337]",
+      "center": [
+        540,
+        1168
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.widget.FrameLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,0][1080,2337]",
+      "center": [
+        540,
+        1168
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.widget.FrameLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,0][1080,2337]",
+      "center": [
+        540,
+        1168
+      ],
+      "text": "",
+      "desc": "",
+      "id": "qre",
+      "class": "android.widget.RelativeLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,0][1080,2337]",
+      "center": [
+        540,
+        1168
+      ],
+      "text": "",
+      "desc": "",
+      "id": "d6t",
+      "class": "android.widget.FrameLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,136][1080,252]",
+      "center": [
+        540,
+        194
+      ],
+      "text": "",
+      "desc": "",
+      "id": "w_m",
+      "class": "android.widget.FrameLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,136][1080,252]",
+      "center": [
+        540,
+        194
+      ],
+      "text": "",
+      "desc": "",
+      "id": "w1v",
+      "class": "android.widget.LinearLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[16,136][131,252]",
+      "center": [
+        73,
+        194
+      ],
+      "text": "",
+      "desc": "@2131888269",
+      "id": "b98",
+      "class": "android.widget.Button",
+      "clickable": true,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,136][1080,252]",
+      "center": [
+        540,
+        194
+      ],
+      "text": "",
+      "desc": "",
+      "id": "w2y",
+      "class": "android.widget.FrameLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,253][1080,2147]",
+      "center": [
+        540,
+        1200
+      ],
+      "text": "",
+      "desc": "",
+      "id": "qrf",
+      "class": "android.widget.ScrollView",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,253][1080,1959]",
+      "center": [
+        540,
+        1106
+      ],
+      "text": "",
+      "desc": "",
+      "id": "qr8",
+      "class": "android.widget.LinearLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,253][1080,1169]",
+      "center": [
+        540,
+        711
+      ],
+      "text": "",
+      "desc": "",
+      "id": "fvz",
+      "class": "android.widget.FrameLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,253][1080,1169]",
+      "center": [
+        540,
+        711
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.view.ViewGroup",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,253][1080,1059]",
+      "center": [
+        540,
+        656
+      ],
+      "text": "",
+      "desc": "",
+      "id": "jhi",
+      "class": "android.widget.ScrollView",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,253][1080,1059]",
+      "center": [
+        540,
+        656
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.widget.LinearLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,253][1080,584]",
+      "center": [
+        540,
+        418
+      ],
+      "text": "",
+      "desc": "",
+      "id": "jia",
+      "class": "android.widget.FrameLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,274][1080,552]",
+      "center": [
+        540,
+        413
+      ],
+      "text": "",
+      "desc": "",
+      "id": "ji7",
+      "class": "android.widget.FrameLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,274][1080,552]",
+      "center": [
+        540,
+        413
+      ],
+      "text": "",
+      "desc": "",
+      "id": "ji8",
+      "class": "androidx.recyclerview.widget.RecyclerView",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[42,274][320,552]",
+      "center": [
+        181,
+        413
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.widget.FrameLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[42,274][320,552]",
+      "center": [
+        181,
+        413
+      ],
+      "text": "",
+      "desc": "",
+      "id": "ji6",
+      "class": "android.widget.ImageView",
+      "clickable": true,
+      "enabled": true
+    },
+    {
+      "bounds": "[42,274][161,332]",
+      "center": [
+        101,
+        303
+      ],
+      "text": "Cover",
+      "desc": "",
+      "id": "ji9",
+      "class": "android.widget.TextView",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[42,584][1038,1059]",
+      "center": [
+        540,
+        821
+      ],
+      "text": "",
+      "desc": "",
+      "id": "fz8",
+      "class": "android.widget.ScrollView",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[42,584][1038,1059]",
+      "center": [
+        540,
+        821
+      ],
+      "text": "",
+      "desc": "",
+      "id": "fz9",
+      "class": "android.view.ViewGroup",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[42,584][1038,670]",
+      "center": [
+        540,
+        627
+      ],
+      "text": "",
+      "desc": "",
+      "id": "w2j",
+      "class": "android.view.ViewGroup",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[42,584][1038,637]",
+      "center": [
+        540,
+        610
+      ],
+      "text": "Add a catchy title",
+      "desc": "",
+      "id": "g1c",
+      "class": "android.widget.EditText",
+      "clickable": true,
+      "enabled": true
+    },
+    {
+      "bounds": "[42,669][1038,670]",
+      "center": [
+        540,
+        669
+      ],
+      "text": "",
+      "desc": "",
+      "id": "f_f",
+      "class": "android.view.View",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[42,691][1038,1059]",
+      "center": [
+        540,
+        875
+      ],
+      "text": "Writing a long description can help get 3x more views on average.",
+      "desc": "",
+      "id": "g19",
+      "class": "android.widget.EditText",
+      "clickable": true,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,1059][1080,1169]",
+      "center": [
+        540,
+        1114
+      ],
+      "text": "",
+      "desc": "",
+      "id": "bm7",
+      "class": "android.view.View",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[42,1080][964,1154]",
+      "center": [
+        503,
+        1117
+      ],
+      "text": "",
+      "desc": "",
+      "id": "l44",
+      "class": "android.widget.LinearLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[42,1080][116,1154]",
+      "center": [
+        79,
+        1117
+      ],
+      "text": "",
+      "desc": "",
+      "id": "awo",
+      "class": "android.widget.Button",
+      "clickable": true,
+      "enabled": true
+    },
+    {
+      "bounds": "[137,1080][211,1154]",
+      "center": [
+        174,
+        1117
+      ],
+      "text": "Mention",
+      "desc": "",
+      "id": "awn",
+      "class": "android.widget.Button",
+      "clickable": true,
+      "enabled": true
+    },
+    {
+      "bounds": "[232,1080][306,1154]",
+      "center": [
+        269,
+        1117
+      ],
+      "text": "",
+      "desc": "",
+      "id": "eyq",
+      "class": "android.view.ViewGroup",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[232,1080][306,1154]",
+      "center": [
+        269,
+        1117
+      ],
+      "text": "",
+      "desc": "",
+      "id": "eyp",
+      "class": "android.widget.Button",
+      "clickable": true,
+      "enabled": true
+    },
+    {
+      "bounds": "[327,1098][328,1135]",
+      "center": [
+        327,
+        1116
+      ],
+      "text": "",
+      "desc": "",
+      "id": "lk4",
+      "class": "android.view.View",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[349,1080][590,1154]",
+      "center": [
+        469,
+        1117
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.view.ViewGroup",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[349,1080][590,1154]",
+      "center": [
+        469,
+        1117
+      ],
+      "text": "AI rewrite",
+      "desc": "",
+      "id": "afb",
+      "class": "android.widget.Button",
+      "clickable": true,
+      "enabled": false
+    },
+    {
+      "bounds": "[964,1080][1038,1154]",
+      "center": [
+        1001,
+        1117
+      ],
+      "text": "",
+      "desc": "",
+      "id": "fwf",
+      "class": "android.widget.Button",
+      "clickable": true,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,1169][1080,1185]",
+      "center": [
+        540,
+        1177
+      ],
+      "text": "",
+      "desc": "",
+      "id": "fv_",
+      "class": "android.widget.RelativeLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,1185][1080,1959]",
+      "center": [
+        540,
+        1572
+      ],
+      "text": "",
+      "desc": "",
+      "id": "qr5",
+      "class": "android.widget.RelativeLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,1185][1080,1186]",
+      "center": [
+        540,
+        1185
+      ],
+      "text": "",
+      "desc": "",
+      "id": "l8p",
+      "class": "android.view.View",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,1186][1080,1832]",
+      "center": [
+        540,
+        1509
+      ],
+      "text": "",
+      "desc": "",
+      "id": "qrz",
+      "class": "android.widget.FrameLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,1191][1080,1832]",
+      "center": [
+        540,
+        1511
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.widget.LinearLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,1191][1080,1413]",
+      "center": [
+        540,
+        1302
+      ],
+      "text": "",
+      "desc": "",
+      "id": "piy",
+      "class": "android.view.ViewGroup",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,1191][1080,1308]",
+      "center": [
+        540,
+        1249
+      ],
+      "text": "",
+      "desc": "",
+      "id": "d_j",
+      "class": "android.view.ViewGroup",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,1191][1080,1308]",
+      "center": [
+        540,
+        1249
+      ],
+      "text": "",
+      "desc": "",
+      "id": "d0z",
+      "class": "android.view.ViewGroup",
+      "clickable": true,
+      "enabled": true
+    },
+    {
+      "bounds": "[42,1233][84,1275]",
+      "center": [
+        63,
+        1254
+      ],
+      "text": "",
+      "desc": "",
+      "id": "j2c",
+      "class": "android.widget.ImageView",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[84,1191][303,1308]",
+      "center": [
+        193,
+        1249
+      ],
+      "text": "",
+      "desc": "",
+      "id": "w2j",
+      "class": "android.widget.LinearLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[100,1229][250,1279]",
+      "center": [
+        175,
+        1254
+      ],
+      "text": "Location",
+      "desc": "",
+      "id": "w4m",
+      "class": "android.widget.TextView",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[250,1229][303,1282]",
+      "center": [
+        276,
+        1255
+      ],
+      "text": "",
+      "desc": "More info",
+      "id": "jp4",
+      "class": "android.widget.ImageView",
+      "clickable": true,
+      "enabled": true
+    },
+    {
+      "bounds": "[996,1229][1038,1271]",
+      "center": [
+        1017,
+        1250
+      ],
+      "text": "",
+      "desc": "",
+      "id": "tj",
+      "class": "androidx.appcompat.widget.LinearLayoutCompat",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[996,1229][1038,1271]",
+      "center": [
+        1017,
+        1250
+      ],
+      "text": "",
+      "desc": "",
+      "id": "th",
+      "class": "android.widget.ImageView",
+      "clickable": true,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,1308][1080,1413]",
+      "center": [
+        540,
+        1360
+      ],
+      "text": "",
+      "desc": "",
+      "id": "r3n",
+      "class": "android.widget.LinearLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,1308][1080,1382]",
+      "center": [
+        540,
+        1345
+      ],
+      "text": "",
+      "desc": "",
+      "id": "r3m",
+      "class": "androidx.recyclerview.widget.RecyclerView",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[42,1308][287,1382]",
+      "center": [
+        164,
+        1345
+      ],
+      "text": "",
+      "desc": "",
+      "id": "tof",
+      "class": "android.widget.FrameLayout",
+      "clickable": true,
+      "enabled": true
+    },
+    {
+      "bounds": "[42,1308][287,1382]",
+      "center": [
+        164,
+        1345
+      ],
+      "text": "",
+      "desc": "",
+      "id": "m3f",
+      "class": "androidx.appcompat.widget.LinearLayoutCompat",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[60,1324][269,1366]",
+      "center": [
+        164,
+        1345
+      ],
+      "text": "Times Square",
+      "desc": "",
+      "id": "voh",
+      "class": "android.widget.TextView",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[308,1308][619,1382]",
+      "center": [
+        463,
+        1345
+      ],
+      "text": "",
+      "desc": "",
+      "id": "tof",
+      "class": "android.widget.FrameLayout",
+      "clickable": true,
+      "enabled": true
+    },
+    {
+      "bounds": "[308,1308][619,1382]",
+      "center": [
+        463,
+        1345
+      ],
+      "text": "",
+      "desc": "",
+      "id": "m3f",
+      "class": "androidx.appcompat.widget.LinearLayoutCompat",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[326,1324][601,1366]",
+      "center": [
+        463,
+        1345
+      ],
+      "text": "New York City Hall",
+      "desc": "",
+      "id": "voh",
+      "class": "android.widget.TextView",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[640,1308][936,1382]",
+      "center": [
+        788,
+        1345
+      ],
+      "text": "",
+      "desc": "",
+      "id": "tof",
+      "class": "android.widget.FrameLayout",
+      "clickable": true,
+      "enabled": true
+    },
+    {
+      "bounds": "[640,1308][936,1382]",
+      "center": [
+        788,
+        1345
+      ],
+      "text": "",
+      "desc": "",
+      "id": "m3f",
+      "class": "androidx.appcompat.widget.LinearLayoutCompat",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[658,1324][918,1365]",
+      "center": [
+        788,
+        1344
+      ],
+      "text": "La Pizza Italia 🇮🇹",
+      "desc": "",
+      "id": "voh",
+      "class": "android.widget.TextView",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[957,1308][1080,1382]",
+      "center": [
+        1018,
+        1345
+      ],
+      "text": "",
+      "desc": "",
+      "id": "tof",
+      "class": "android.widget.FrameLayout",
+      "clickable": true,
+      "enabled": true
+    },
+    {
+      "bounds": "[957,1308][1080,1382]",
+      "center": [
+        1018,
+        1345
+      ],
+      "text": "",
+      "desc": "",
+      "id": "m3f",
+      "class": "androidx.appcompat.widget.LinearLayoutCompat",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[975,1324][1080,1366]",
+      "center": [
+        1027,
+        1345
+      ],
+      "text": "New York Hilton Midtown",
+      "desc": "",
+      "id": "voh",
+      "class": "android.widget.TextView",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,1413][1080,1539]",
+      "center": [
+        540,
+        1476
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.widget.FrameLayout",
+      "clickable": true,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,1413][1080,1539]",
+      "center": [
+        540,
+        1476
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.widget.RelativeLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,1413][1080,1539]",
+      "center": [
+        540,
+        1476
+      ],
+      "text": "",
+      "desc": "",
+      "id": "q76",
+      "class": "android.widget.LinearLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,1413][1080,1539]",
+      "center": [
+        540,
+        1476
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "androidx.appcompat.widget.LinearLayoutCompat",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,1413][1080,1539]",
+      "center": [
+        540,
+        1476
+      ],
+      "text": "",
+      "desc": "Add link",
+      "id": "d0z",
+      "class": "android.widget.Button",
+      "clickable": true,
+      "enabled": true
+    },
+    {
+      "bounds": "[42,1455][84,1497]",
+      "center": [
+        63,
+        1476
+      ],
+      "text": "",
+      "desc": "Add",
+      "id": "j2c",
+      "class": "android.widget.ImageView",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[100,1451][258,1501]",
+      "center": [
+        179,
+        1476
+      ],
+      "text": "Add link ",
+      "desc": "",
+      "id": "w4m",
+      "class": "android.widget.TextView",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[996,1452][1038,1494]",
+      "center": [
+        1017,
+        1473
+      ],
+      "text": "",
+      "desc": "",
+      "id": "x0w",
+      "class": "android.widget.LinearLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[996,1452][1038,1494]",
+      "center": [
+        1017,
+        1473
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.widget.LinearLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[996,1452][1038,1494]",
+      "center": [
+        1017,
+        1473
+      ],
+      "text": "",
+      "desc": "",
+      "id": "j35",
+      "class": "android.widget.ImageView",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,1539][1080,1665]",
+      "center": [
+        540,
+        1602
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.widget.LinearLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,1539][1080,1665]",
+      "center": [
+        540,
+        1602
+      ],
+      "text": "",
+      "desc": "",
+      "id": "vp5",
+      "class": "android.widget.LinearLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,1539][1080,1665]",
+      "center": [
+        540,
+        1602
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "androidx.appcompat.widget.LinearLayoutCompat",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,1539][1080,1665]",
+      "center": [
+        540,
+        1602
+      ],
+      "text": "",
+      "desc": "Everyone can view this post",
+      "id": "d0z",
+      "class": "android.widget.Button",
+      "clickable": true,
+      "enabled": true
+    },
+    {
+      "bounds": "[42,1581][84,1623]",
+      "center": [
+        63,
+        1602
+      ],
+      "text": "",
+      "desc": "Public",
+      "id": "j2c",
+      "class": "android.widget.ImageView",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[100,1577][579,1627]",
+      "center": [
+        339,
+        1602
+      ],
+      "text": "Everyone can view this post",
+      "desc": "",
+      "id": "w4m",
+      "class": "android.widget.TextView",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[996,1584][1038,1641]",
+      "center": [
+        1017,
+        1612
+      ],
+      "text": "",
+      "desc": "",
+      "id": "x0w",
+      "class": "android.widget.LinearLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[996,1584][1038,1641]",
+      "center": [
+        1017,
+        1612
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "androidx.appcompat.widget.LinearLayoutCompat",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[996,1591][1038,1633]",
+      "center": [
+        1017,
+        1612
+      ],
+      "text": "",
+      "desc": "",
+      "id": "j2c",
+      "class": "android.widget.ImageView",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,1665][1080,1832]",
+      "center": [
+        540,
+        1748
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.widget.FrameLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,1665][1080,1832]",
+      "center": [
+        540,
+        1748
+      ],
+      "text": "",
+      "desc": "",
+      "id": "f6m",
+      "class": "android.widget.LinearLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,1665][1080,1832]",
+      "center": [
+        540,
+        1748
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "androidx.appcompat.widget.LinearLayoutCompat",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,1665][1080,1832]",
+      "center": [
+        540,
+        1748
+      ],
+      "text": "",
+      "desc": "More options, Privacy and more settings have been moved here.",
+      "id": "d0z",
+      "class": "android.widget.Button",
+      "clickable": true,
+      "enabled": true
+    },
+    {
+      "bounds": "[42,1707][84,1749]",
+      "center": [
+        63,
+        1728
+      ],
+      "text": "",
+      "desc": "Settings",
+      "id": "j2c",
+      "class": "android.widget.ImageView",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[100,1703][330,1753]",
+      "center": [
+        215,
+        1728
+      ],
+      "text": "More options",
+      "desc": "",
+      "id": "w4m",
+      "class": "android.widget.TextView",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[996,1710][1038,1767]",
+      "center": [
+        1017,
+        1738
+      ],
+      "text": "",
+      "desc": "",
+      "id": "x0w",
+      "class": "android.widget.LinearLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[996,1710][1038,1767]",
+      "center": [
+        1017,
+        1738
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "androidx.appcompat.widget.LinearLayoutCompat",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[996,1717][1038,1759]",
+      "center": [
+        1017,
+        1738
+      ],
+      "text": "",
+      "desc": "",
+      "id": "j2c",
+      "class": "android.widget.ImageView",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[100,1769][847,1811]",
+      "center": [
+        473,
+        1790
+      ],
+      "text": "Privacy and more settings have been moved here.",
+      "desc": "",
+      "id": "uv6",
+      "class": "android.widget.TextView",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,1832][1080,1959]",
+      "center": [
+        540,
+        1895
+      ],
+      "text": "",
+      "desc": "",
+      "id": "lao",
+      "class": "android.widget.LinearLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,1832][1080,1959]",
+      "center": [
+        540,
+        1895
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.widget.LinearLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,1832][1080,1959]",
+      "center": [
+        540,
+        1895
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.widget.LinearLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[42,1869][784,1921]",
+      "center": [
+        413,
+        1895
+      ],
+      "text": "",
+      "desc": "",
+      "id": "u7w",
+      "class": "android.widget.LinearLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[42,1874][84,1916]",
+      "center": [
+        63,
+        1895
+      ],
+      "text": "",
+      "desc": "Share",
+      "id": "t_c",
+      "class": "android.widget.ImageView",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[100,1870][244,1920]",
+      "center": [
+        172,
+        1895
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.widget.LinearLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[100,1870][244,1920]",
+      "center": [
+        172,
+        1895
+      ],
+      "text": "Share to",
+      "desc": "",
+      "id": "tbp",
+      "class": "android.widget.TextView",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[784,1848][1038,1943]",
+      "center": [
+        911,
+        1895
+      ],
+      "text": "",
+      "desc": "",
+      "id": "l4e",
+      "class": "android.widget.LinearLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[784,1848][1038,1943]",
+      "center": [
+        911,
+        1895
+      ],
+      "text": "",
+      "desc": "",
+      "id": "qzu",
+      "class": "android.widget.RadioGroup",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[816,1848][911,1943]",
+      "center": [
+        863,
+        1895
+      ],
+      "text": "",
+      "desc": "sms",
+      "id": "",
+      "class": "android.widget.RadioButton",
+      "clickable": true,
+      "enabled": true
+    },
+    {
+      "bounds": "[943,1848][1038,1943]",
+      "center": [
+        990,
+        1895
+      ],
+      "text": "",
+      "desc": "facebook",
+      "id": "",
+      "class": "android.widget.RadioButton",
+      "clickable": true,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,2147][1080,2337]",
+      "center": [
+        540,
+        2242
+      ],
+      "text": "",
+      "desc": "",
+      "id": "bw7",
+      "class": "android.widget.RelativeLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,2147][1080,2179]",
+      "center": [
+        540,
+        2163
+      ],
+      "text": "",
+      "desc": "",
+      "id": "rzz",
+      "class": "android.widget.RelativeLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,2147][1080,2179]",
+      "center": [
+        540,
+        2163
+      ],
+      "text": "",
+      "desc": "",
+      "id": "v3x",
+      "class": "android.widget.LinearLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[32,2179][1048,2305]",
+      "center": [
+        540,
+        2242
+      ],
+      "text": "",
+      "desc": "",
+      "id": "fgc",
+      "class": "android.widget.LinearLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[32,2179][529,2305]",
+      "center": [
+        280,
+        2242
+      ],
+      "text": "Drafts",
+      "desc": "",
+      "id": "fex",
+      "class": "android.widget.Button",
+      "clickable": true,
+      "enabled": true
+    },
+    {
+      "bounds": "[529,2179][550,2200]",
+      "center": [
+        539,
+        2189
+      ],
+      "text": "",
+      "desc": "",
+      "id": "cok",
+      "class": "android.view.View",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[550,2179][1048,2305]",
+      "center": [
+        799,
+        2242
+      ],
+      "text": "Post",
+      "desc": "",
+      "id": "qrb",
+      "class": "android.widget.Button",
+      "clickable": true,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,0][1080,2337]",
+      "center": [
+        540,
+        1168
+      ],
+      "text": "",
+      "desc": "",
+      "id": "",
+      "class": "android.widget.FrameLayout",
+      "clickable": false,
+      "enabled": true
+    },
+    {
+      "bounds": "[0,2337][1080,2400]",
+      "center": [
+        540,
+        2368
+      ],
+      "text": "",
+      "desc": "",
+      "id": "navigationBarBackground",
+      "class": "android.view.View",
+      "clickable": false,
+      "enabled": true
+    }
+  ],
+  "screenshot_file": "tiktok_error_logs\\alice.in.wonderlan31_20251226_152910\\error_001_screenshot.png",
+  "page_source_file": "tiktok_error_logs\\alice.in.wonderlan31_20251226_152910\\error_001_page_source.xml"
+}

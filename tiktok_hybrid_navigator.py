@@ -34,17 +34,19 @@ class TikTokHybridNavigator:
     This reduces AI calls from 100% to ~10-20%, saving significant API costs.
     """
 
-    def __init__(self, ai_analyzer=None, caption: str = ""):
+    def __init__(self, ai_analyzer=None, caption: str = "", device_type: str = "geelark"):
         """Initialize hybrid navigator.
 
         Args:
             ai_analyzer: AI analyzer function for fallback (takes elements, returns action dict).
             caption: Caption text for the post.
+            device_type: 'geelark' or 'grapheneos' - passed to action engine for coordinate fallbacks.
         """
         self.detector = TikTokScreenDetector()
-        self.engine = TikTokActionEngine(caption=caption)
+        self.engine = TikTokActionEngine(caption=caption, device_type=device_type)
         self.ai_analyzer = ai_analyzer
         self.caption = caption
+        self.device_type = device_type
 
         # State tracking
         self.video_selected = False

@@ -4,11 +4,22 @@ TikTokScreenDetector - Deterministic screen type detection for TikTok posting.
 Part of the TikTok Hybrid Posting System.
 Replaces AI calls with rule-based detection for known screens.
 
+IMPORTANT: Detection uses TEXT/DESC as PRIMARY signals (stable across TikTok versions).
+IDs are only used as BOOST signals since they change between versions (v35 vs v43).
+
 Based on flow logs collected 2024-12-24 from AI-only test runs.
+Updated 2024-12-26 for multi-device support (Geelark + GrapheneOS).
 """
 from enum import Enum, auto
 from typing import List, Dict, Tuple
 from dataclasses import dataclass
+
+# Import version-aware ID mappings
+from tiktok_id_map import (
+    get_all_known_ids,
+    get_text_patterns,
+    get_desc_patterns,
+)
 
 
 class TikTokScreenType(Enum):
@@ -65,20 +76,22 @@ class TikTokScreenDetector:
 
             # Popups (overlay other screens)
             ('POPUP_PERMISSION', self._detect_permission_popup),
-            ('POPUP_DISMISSIBLE', self._detect_dismissible_popup),
 
             # Progress/success screens
             ('SUCCESS', self._detect_success),
             ('UPLOAD_PROGRESS', self._detect_upload_progress),
 
             # Main flow screens (order matters)
-            # CREATE_MENU MUST be before VIDEO_EDITOR - both have "Add sound"
-            # but CREATE_MENU has duration options (10m, 60s, 15s) and PHOTO/TEXT tabs
+            # GALLERY_PICKER must come BEFORE POPUP_DISMISSIBLE to avoid
+            # false popup detection when gallery has a 'Close' button
             ('CAPTION_SCREEN', self._detect_caption_screen),
-            ('CREATE_MENU', self._detect_create_menu),  # Check BEFORE VIDEO_EDITOR
             ('VIDEO_EDITOR', self._detect_video_editor),
             ('GALLERY_PICKER', self._detect_gallery_picker),
+            ('CREATE_MENU', self._detect_create_menu),
             ('HOME_FEED', self._detect_home_feed),
+
+            # Generic popup detection last (fallback for true popups)
+            ('POPUP_DISMISSIBLE', self._detect_dismissible_popup),
         ]
 
     def detect(self, elements: List[Dict]) -> DetectionResult:
@@ -149,6 +162,54 @@ class TikTokScreenDetector:
     def _has_element_desc(self, elements: List[Dict], desc: str) -> bool:
         """Check if any element has the given description."""
         return any(desc.lower() in e.get('desc', '').lower() for e in elements)
+
+    def _has_any_id(self, elements: List[Dict], id_list: List[str]) -> bool:
+        """Check if any element has any of the given IDs.
+
+        Used for checking multiple version-specific IDs at once.
+
+        Args:
+            elements: List of UI elements from dump_ui()
+            id_list: List of IDs to check (e.g., ['fpj', 'g19'] for caption field)
+
+        Returns:
+            True if any element has any of the specified IDs.
+        """
+        element_ids = {e.get('id', '') for e in elements}
+        return bool(element_ids & set(id_list))
+
+    def _has_any_text(self, texts: List[str], patterns: List[str]) -> bool:
+        """Check if any text matches any of the patterns.
+
+        Args:
+            texts: List of extracted text content from elements
+            patterns: List of text patterns to match (lowercase)
+
+        Returns:
+            True if any text contains any of the patterns.
+        """
+        for text in texts:
+            for pattern in patterns:
+                if pattern.lower() in text.lower():
+                    return True
+        return False
+
+    def _has_any_desc(self, elements: List[Dict], patterns: List[str]) -> bool:
+        """Check if any element desc matches any of the patterns.
+
+        Args:
+            elements: List of UI elements
+            patterns: List of desc patterns to match
+
+        Returns:
+            True if any element desc contains any of the patterns.
+        """
+        for el in elements:
+            desc = el.get('desc', '').lower()
+            for pattern in patterns:
+                if pattern.lower() in desc:
+                    return True
+        return False
 
     def _get_element_by_id(self, elements: List[Dict], element_id: str) -> Dict:
         """Get element with given ID."""
@@ -278,16 +339,32 @@ class TikTokScreenDetector:
         return min(score, 0.98), found
 
     def _detect_dismissible_popup(self, elements, texts, descs, all_text) -> Tuple[float, List[str]]:
-        """Detect generic dismissible popup."""
-        dismiss_markers = ['not now', 'skip', 'maybe later', 'dismiss', 'no thanks',
-                          "don't allow", 'cancel']
+        """Detect generic dismissible popup.
+
+        Handles permission dialogs, contact prompts, and other dismissible popups.
+        """
+        # Dismiss markers - include both ASCII and Unicode apostrophe variants
+        dismiss_markers = [
+            'not now', 'skip', 'maybe later', 'dismiss', 'no thanks',
+            "don't allow", "don't allow",  # ASCII and Unicode apostrophe
+            'cancel', 'deny', 'later', 'close'
+        ]
         found = [m for m in dismiss_markers if m in all_text]
 
-        # Must have dismiss option AND be a small popup (fewer elements)
-        if found and len(elements) < 20:
-            return 0.85, found
-        elif found:
-            return 0.6, found
+        # Also check for dialog/popup indicators
+        has_dialog = any('dialog' in d.lower() for d in descs)
+
+        # Must have dismiss option
+        if found:
+            # Small popup (fewer elements) = high confidence
+            if len(elements) <= 25:
+                return 0.90, found + (['dialog'] if has_dialog else [])
+            # Larger screen but still has dismiss option
+            else:
+                return 0.75, found
+        # Dialog indicator without clear dismiss text
+        elif has_dialog:
+            return 0.5, ['dialog_indicator']
         return 0.0, []
 
     # ==================== Progress/Success Detection ====================
@@ -386,423 +463,401 @@ class TikTokScreenDetector:
     def _detect_caption_screen(self, elements, texts, descs, all_text) -> Tuple[float, List[str]]:
         """Detect caption/description entry screen.
 
-        Key indicators (from flow logs):
-        - id='fpj' - Description field with 'Add description...' hint
-        - id='d1k' text='Edit cover'
-        - id='auj' text='Hashtags'
-        - id='aui' text='Mention'
-        - id='pvl' / id='pvz' / id='pwo' - Post button
-        - id='f6a' desc='Save draft'
+        DETECTION PRIORITY (text/desc primary, IDs as boost):
+        1. PRIMARY: Text patterns - 'description', 'add description', 'boost views'
+        2. PRIMARY: 'Post' button text
+        3. SECONDARY: Desc patterns - 'post', 'draft'
+        4. TERTIARY: ID boost (version-specific, NOT primary signal)
         """
         score = 0.0
         found = []
 
-        # Primary: Description field (id='fpj') - THE KEY INDICATOR
-        if self._has_element_id(elements, 'fpj'):
-            fpj_elem = self._get_element_by_id(elements, 'fpj')
-            text = fpj_elem.get('text', '').lower()
-            if 'description' in text or 'add description' in text or text:
-                # Even if it has caption text (filled in), it's still the caption screen
-                score += 0.45
-                found.append('description_field_fpj')
+        # ===== PRIMARY: Text-based detection (stable across versions) =====
 
-        # Primary: Post button with IDs (id='pvl' / 'pvz' / 'pwo')
-        post_ids = ['pvl', 'pvz', 'pwo']
-        for pid in post_ids:
-            if self._has_element_id(elements, pid):
-                elem = self._get_element_by_id(elements, pid)
-                if 'post' in elem.get('text', '').lower() or 'post' in elem.get('desc', '').lower():
-                    score += 0.35
-                    found.append(f'post_button_{pid}')
-                    break
+        # Description field text patterns
+        description_patterns = get_text_patterns('description_text')
+        if self._has_any_text([all_text], description_patterns):
+            score += 0.35
+            found.append('description_text')
 
-        # Secondary: Edit cover (id='d1k')
-        if self._has_element_id(elements, 'd1k'):
-            score += 0.1
-            found.append('edit_cover')
+        # Post button text (exact match)
+        if any(t.strip() == 'post' for t in texts):
+            score += 0.30
+            found.append('post_button_text')
 
-        # Secondary: Hashtags button (id='auj')
-        if self._has_element_id(elements, 'auj'):
-            score += 0.1
-            found.append('hashtags_button')
+        # Title field text
+        title_patterns = get_text_patterns('title_text')
+        if self._has_any_text([all_text], title_patterns):
+            score += 0.15
+            found.append('title_text')
 
-        # Secondary: Mention button (id='aui')
-        if self._has_element_id(elements, 'aui'):
+        # ===== SECONDARY: Desc-based detection =====
+
+        # Post button desc
+        post_desc_patterns = get_desc_patterns('post_desc')
+        if self._has_any_desc(elements, post_desc_patterns):
+            score += 0.20
+            found.append('post_desc')
+
+        # Draft button desc
+        draft_desc_patterns = get_desc_patterns('draft_desc')
+        if self._has_any_desc(elements, draft_desc_patterns):
+            score += 0.10
+            found.append('draft_desc')
+
+        # Edit cover text
+        cover_patterns = get_text_patterns('cover_text')
+        if self._has_any_text([all_text], cover_patterns):
+            score += 0.10
+            found.append('cover_text')
+
+        # Hashtag/mention text
+        if self._has_any_text([all_text], get_text_patterns('hashtag_text')):
             score += 0.05
-            found.append('mention_button')
+            found.append('hashtag_text')
 
-        # Secondary: Save draft (id='f6a')
-        if self._has_element_id(elements, 'f6a'):
+        # ===== TERTIARY: ID boost (NOT primary signal) =====
+
+        # Caption field IDs (version-specific: fpj for v35, g19/g1c for v43)
+        caption_ids = get_all_known_ids('caption_field')
+        if self._has_any_id(elements, caption_ids):
+            score += 0.10
+            found.append('caption_id_boost')
+
+        # Post button IDs (version-specific: pwo/pvz/pvl for v35, qrb for v43)
+        post_ids = get_all_known_ids('post_button')
+        if self._has_any_id(elements, post_ids):
+            score += 0.10
+            found.append('post_id_boost')
+
+        # Edit cover IDs
+        cover_ids = get_all_known_ids('edit_cover')
+        if self._has_any_id(elements, cover_ids):
             score += 0.05
-            found.append('save_draft')
+            found.append('cover_id_boost')
 
-        # Tertiary: Description hint text (fallback for older flows)
-        desc_patterns = [
-            'describe your video',
-            'add a description',
-            'write a caption',
-        ]
-        for pattern in desc_patterns:
-            if pattern in all_text:
-                score += 0.2
-                found.append(pattern)
-                break
+        # Draft button IDs
+        draft_ids = get_all_known_ids('drafts')
+        if self._has_any_id(elements, draft_ids):
+            score += 0.05
+            found.append('draft_id_boost')
 
-        # Tertiary: Post button (text = "Post") - fallback
-        if score < 0.7 and 'post' in texts:
-            for elem in elements:
-                if elem.get('text', '').strip().lower() == 'post':
-                    score += 0.25
-                    found.append('post_button_text')
-                    break
+        # Visibility settings text (additional signal)
+        if 'everyone can view' in all_text or 'who can view' in all_text:
+            score += 0.10
+            found.append('visibility_settings')
 
-        # Tertiary: Visibility settings
-        if 'everyone can view' in all_text:
-            score += 0.1
-            found.append('visibility_everyone')
-
-        return min(score, 0.98), found
+        return min(score, 0.95), found
 
     def _detect_video_editor(self, elements, texts, descs, all_text) -> Tuple[float, List[str]]:
         """Detect sounds/effects editor screen.
 
-        After selecting video, before caption screen.
-
-        Geelark key indicators:
-        - Editor-specific IDs: fmo, fmh, fms, flf, y48
-        - "Add sound" text
-        - Effects/Filters/Captions/Stickers
-
-        GrapheneOS v43.1.4 key indicators:
-        - id='ntq' text='Next' - Next button
-        - id='d88' desc='Music' - Music icon
-        - id='ycm' - Music name text
-        - id='ntn' - Next button container
-        - id='qxr' - Your Story container
-        - Right-side editing tools with desc: Edit, Text, Stickers, Effects, etc.
-        - "Your Story" text at bottom
+        DETECTION PRIORITY (text/desc primary, IDs as boost):
+        1. PRIMARY: Text patterns - 'add sound', 'effects', 'filters', 'next'
+        2. SECONDARY: Edit tool descs - 'effects', 'text', 'stickers'
+        3. TERTIARY: ID boost (editor-specific IDs)
         """
         score = 0.0
         found = []
 
-        # PRIMARY: GrapheneOS Next button (id='ntq' with text='Next')
-        for el in elements:
-            if el.get('id') == 'ntq' and el.get('text', '').lower() == 'next':
-                score += 0.4
-                found.append('next_button_ntq')
-                break
+        # ===== PRIMARY: Text-based detection (stable across versions) =====
 
-        # PRIMARY: GrapheneOS Music indicator (id='d88' desc='Music')
-        if self._has_element_id(elements, 'd88'):
-            for el in elements:
-                if el.get('id') == 'd88' and 'music' in el.get('desc', '').lower():
-                    score += 0.35
-                    found.append('music_d88')
-                    break
-
-        # PRIMARY: GrapheneOS editing tools (check desc for tool names)
-        graphene_tools = ['edit', 'text', 'stickers', 'effects', 'video templates', 'ai meme', 'ai alive']
-        found_tools = sum(1 for tool in graphene_tools if tool in all_text)
-        if found_tools >= 4:
-            score += 0.35
-            found.append(f'graphene_tools({found_tools})')
-        elif found_tools >= 2:
-            score += 0.2
-            found.append(f'graphene_tools({found_tools})')
-
-        # PRIMARY: "Your Story" option (GrapheneOS)
-        if 'your story' in all_text:
-            score += 0.25
-            found.append('your_story')
-
-        # PRIMARY: GrapheneOS IDs
-        graphene_editor_ids = ['ntq', 'ntn', 'qxr', 'd88', 'ycm', 'ce1', 'w85']
-        graphene_id_count = sum(1 for eid in graphene_editor_ids if self._has_element_id(elements, eid))
-        if graphene_id_count >= 4:
-            score += 0.3
-            found.append(f'graphene_ids({graphene_id_count})')
-        elif graphene_id_count >= 2:
-            score += 0.15
-            found.append(f'graphene_ids({graphene_id_count})')
-
-        # SECONDARY: Geelark editor-specific element IDs
-        geelark_ids = ['fmo', 'fmh', 'fms', 'flf', 'y48', 'fmu', 'fmw', 'fnx']
-        geelark_id_count = sum(1 for eid in geelark_ids if self._has_element_id(elements, eid))
-        if geelark_id_count >= 3:
-            score += 0.35
-            found.append(f'geelark_ids({geelark_id_count})')
-        elif geelark_id_count >= 1:
-            score += 0.2
-            found.append(f'geelark_ids({geelark_id_count})')
-
-        # SECONDARY: "Add sound" text
-        if 'add sound' in all_text:
-            score += 0.2
+        # "Add sound" text (note: singular "sound")
+        add_sound_patterns = get_text_patterns('add_sound')
+        if self._has_any_text([all_text], add_sound_patterns):
+            score += 0.30
             found.append('add_sound')
 
-        # SECONDARY: Effects/Filters options
-        if 'effects' in all_text:
-            score += 0.15
-            found.append('effects')
-        if 'filters' in all_text:
-            score += 0.1
-            found.append('filters')
+        # Edit tools text (effects, filters, text, stickers)
+        edit_tools = get_text_patterns('edit_tools')
+        tools_found = sum(1 for tool in edit_tools if tool in all_text)
+        if tools_found >= 3:
+            score += 0.30
+            found.append(f'edit_tools({tools_found})')
+        elif tools_found >= 2:
+            score += 0.20
+            found.append(f'edit_tools({tools_found})')
+        elif tools_found >= 1:
+            score += 0.10
+            found.append(f'edit_tools({tools_found})')
 
-        # TERTIARY: Captions/Stickers/Text options
-        if 'captions' in all_text:
-            score += 0.1
-            found.append('captions')
-        if 'stickers' in all_text:
-            score += 0.1
-            found.append('stickers')
+        # Next button text (required for editor)
+        editor_next_patterns = get_text_patterns('editor_next')
+        if self._has_any_text(texts, editor_next_patterns):
+            score += 0.25
+            found.append('next_button')
 
-        # TERTIARY: AutoCut feature
+        # ===== SECONDARY: Additional text signals =====
+
+        # AutoCut feature
         if 'autocut' in all_text:
-            score += 0.1
+            score += 0.10
             found.append('autocut')
 
-        # TERTIARY: Generic Next button check
-        has_next = any(e.get('text', '').lower() == 'next' for e in elements)
-        if has_next and 'next_button_ntq' not in found:
-            score += 0.1
-            found.append('next_button_generic')
+        # Captions editing option
+        if 'captions' in all_text:
+            score += 0.05
+            found.append('captions')
 
-        return min(score, 0.98), found
+        # ===== TERTIARY: ID boost (NOT primary signal) =====
+
+        # Editor next button IDs
+        editor_next_ids = get_all_known_ids('editor_next')
+        if self._has_any_id(elements, editor_next_ids):
+            score += 0.10
+            found.append('next_id_boost')
+
+        # Music indicator IDs
+        music_ids = get_all_known_ids('music_indicator')
+        if self._has_any_id(elements, music_ids):
+            score += 0.05
+            found.append('music_id_boost')
+
+        # Add sound button IDs
+        add_sound_ids = get_all_known_ids('add_sound')
+        if self._has_any_id(elements, add_sound_ids):
+            score += 0.05
+            found.append('sound_id_boost')
+
+        return min(score, 0.95), found
 
     def _detect_gallery_picker(self, elements, texts, descs, all_text) -> Tuple[float, List[str]]:
         """Detect gallery/video picker screen.
 
-        Key indicators (from flow logs):
-        - id='x4d' with text='Recents' - Gallery selector
-        - id='tvr' with text='Next' - Next button
-        - id='b6x' with desc='Close' - Gallery close
-        - text='Videos' / 'Photos' / 'All' - Filter tabs
-        - text='Select multiple' - Multi-select option
+        DETECTION PRIORITY (text/desc primary, IDs as boost):
+        1. PRIMARY: Text patterns - 'recents', 'next', 'videos', 'photos'
+        2. SECONDARY: Desc patterns - 'close'
+        3. TERTIARY: ID boost (gallery-specific IDs)
+
+        NOTE: This must score HIGH enough (>0.75) to beat POPUP_DISMISSIBLE
+        which triggers on 'close' button presence.
         """
         score = 0.0
         found = []
 
-        # Primary: Recents selector (id='x4d')
-        if self._has_element_id(elements, 'x4d'):
-            recents_elem = self._get_element_by_id(elements, 'x4d')
-            if 'recents' in recents_elem.get('text', '').lower():
-                score += 0.35
-                found.append('recents_selector')
+        # ===== PRIMARY: Text-based detection (stable across versions) =====
 
-        # Primary: Next button (id='tvr')
-        if self._has_element_id(elements, 'tvr'):
-            next_elem = self._get_element_by_id(elements, 'tvr')
-            if next_elem.get('text', '').lower() == 'next':
-                score += 0.35
-                found.append('next_button_id')
+        # Recents text - strong gallery indicator
+        recents_patterns = get_text_patterns('recents_text')
+        if self._has_any_text(texts, recents_patterns):
+            score += 0.40  # Increased from 0.35
+            found.append('recents_text')
 
-        # Secondary: Gallery close button (id='b6x')
-        if self._has_element_id(elements, 'b6x'):
-            score += 0.15
-            found.append('gallery_close')
+        # Next button text
+        next_patterns = get_text_patterns('next_text')
+        if self._has_any_text(texts, next_patterns):
+            score += 0.30
+            found.append('next_text')
 
-        # Secondary: Media filter tabs
-        media_tabs = ['videos', 'photos', 'all', 'live photos']
+        # Media filter tabs (videos, photos, all, ai gallery)
+        media_tabs = ['videos', 'photos', 'all', 'live photos', 'ai gallery']
         found_tabs = [t for t in media_tabs if t in texts]
         if found_tabs:
-            score += 0.1
-            found.append('media_tabs')
+            # More tabs = higher confidence
+            if len(found_tabs) >= 2:
+                score += 0.30  # Multiple tabs = strong gallery signal
+            else:
+                score += 0.15
+            found.append(f'media_tabs({len(found_tabs)})')
 
-        # Secondary: Select multiple option
+        # Select multiple option - definitive gallery indicator
         if 'select multiple' in all_text:
-            score += 0.1
+            score += 0.15  # Increased from 0.10
             found.append('multi_select')
 
-        # Tertiary: Video duration labels (MM:SS format)
-        # These indicate video thumbnails are visible
-        for elem in elements:
-            text = elem.get('text', '')
-            if elem.get('id') == 'faj' and ':' in text:
-                score += 0.1
-                found.append('video_duration')
-                break
+        # ===== SECONDARY: Desc-based detection =====
+
+        # Close button desc (only add if we have other gallery markers)
+        close_patterns = get_desc_patterns('close_desc')
+        if self._has_any_desc(elements, close_patterns) and found:
+            score += 0.10
+            found.append('close_desc')
+
+        # ===== TERTIARY: ID boost (NOT primary signal) =====
+
+        # Recents tab IDs
+        recents_ids = get_all_known_ids('recents_tab')
+        if self._has_any_id(elements, recents_ids):
+            score += 0.10
+            found.append('recents_id_boost')
+
+        # Gallery next button IDs
+        gallery_next_ids = get_all_known_ids('gallery_next')
+        if self._has_any_id(elements, gallery_next_ids):
+            score += 0.10
+            found.append('next_id_boost')
+
+        # Gallery close IDs
+        gallery_close_ids = get_all_known_ids('gallery_close')
+        if self._has_any_id(elements, gallery_close_ids):
+            score += 0.05
+            found.append('close_id_boost')
+
+        # Duration label IDs (video thumbnails)
+        duration_ids = get_all_known_ids('duration_label')
+        if self._has_any_id(elements, duration_ids):
+            score += 0.05
+            found.append('duration_id_boost')
 
         return min(score, 0.95), found
 
     def _detect_create_menu(self, elements, texts, descs, all_text) -> Tuple[float, List[str]]:
         """Detect camera/create menu screen.
 
-        Key indicators (from flow logs):
-        Geelark:
-        - id='q76' with desc='Record video' - Record button
-        - id='d24' with desc='Add sound' - Sound button
-        - id='j0z' with desc='Close' - Close button
-        - id='c_u' - Gallery thumbnail
-
-        GrapheneOS v43.1.4:
-        - id='d8a' with desc='Add sound' - Sound button
-        - id='r3r' - Gallery thumbnail (center bottom)
-        - id='ymg' - Gallery preview (bottom left)
-        - Camera options: Flip, Flash, Timer, Layout, Ratio, Retouch
-        - PHOTO / TEXT mode tabs (UNIQUE to camera screen!)
-
-        Common:
-        - text='POST' / 'CREATE' - Action buttons
-        - text='10m' / '60s' / '15s' - Duration options
+        DETECTION PRIORITY (text/desc primary, IDs as boost):
+        1. PRIMARY: Text patterns - 'photo', 'text', duration options
+        2. PRIMARY: Desc patterns - 'record video', 'add sound', 'close'
+        3. TERTIARY: ID boost (camera-specific IDs)
         """
         score = 0.0
         found = []
 
-        # HIGHEST PRIORITY: PHOTO/TEXT mode tabs - UNIQUE to camera screen!
-        # The video editor does NOT have these tabs
-        has_photo = 'photo' in texts
-        has_text_tab = 'text' in texts  # "TEXT" tab on camera
-        if has_photo and has_text_tab:
-            score += 0.5  # Very strong indicator
-            found.append('photo_text_tabs')
-        elif has_photo:
-            score += 0.3
+        # ===== PRIMARY: Text-based detection (stable across versions) =====
+
+        # Photo/Text tab options
+        photo_patterns = get_text_patterns('photo_tab')
+        text_patterns = get_text_patterns('text_tab')
+        if self._has_any_text(texts, photo_patterns):
+            score += 0.20
             found.append('photo_tab')
+        if self._has_any_text(texts, text_patterns):
+            score += 0.15
+            found.append('text_tab')
 
-        # HIGHEST PRIORITY: Duration options (10m, 60s, 15s) - UNIQUE to camera!
-        durations = ['10m', '60s', '15s']
-        found_durations = [d for d in durations if d in texts]
-        if len(found_durations) >= 2:
-            score += 0.45  # Very strong indicator
-            found.append('duration_options_multi')
-        elif found_durations:
+        # Duration options (10m, 60s, 15s, 3m, etc.)
+        duration_patterns = get_text_patterns('duration_options')
+        duration_found = sum(1 for d in duration_patterns if d in texts)
+        if duration_found >= 2:
+            score += 0.30
+            found.append(f'duration_options({duration_found})')
+        elif duration_found >= 1:
+            score += 0.15
+            found.append('duration_option')
+
+        # ===== SECONDARY: Desc-based detection =====
+
+        # Record video desc
+        record_patterns = get_desc_patterns('record_desc')
+        if self._has_any_desc(elements, record_patterns):
             score += 0.25
-            found.append('duration_options')
+            found.append('record_desc')
 
-        # Primary: Record video button (Geelark id='q76')
-        if self._has_element_id(elements, 'q76'):
-            record_elem = self._get_element_by_id(elements, 'q76')
-            if 'record' in record_elem.get('desc', '').lower():
-                score += 0.35
-                found.append('record_button')
+        # Add sound desc
+        add_sound_patterns = get_desc_patterns('add_sound_desc')
+        if self._has_any_desc(elements, add_sound_patterns):
+            score += 0.20
+            found.append('add_sound_desc')
 
-        # Primary: Add sound button
-        # Geelark: id='d24', GrapheneOS: id='d8a'
-        for sound_id in ['d24', 'd8a']:
-            if self._has_element_id(elements, sound_id):
-                sound_elem = self._get_element_by_id(elements, sound_id)
-                if 'sound' in sound_elem.get('desc', '').lower():
-                    score += 0.25
-                    found.append(f'add_sound_{sound_id}')
-                    break
+        # Close button desc
+        close_patterns = get_desc_patterns('close_desc')
+        if self._has_any_desc(elements, close_patterns):
+            score += 0.10
+            found.append('close_desc')
 
-        # Primary: Gallery thumbnail
-        # Geelark: id='c_u', GrapheneOS: id='r3r' or id='ymg'
-        for gallery_id in ['c_u', 'r3r', 'ymg']:
-            if self._has_element_id(elements, gallery_id):
-                score += 0.2
-                found.append(f'gallery_{gallery_id}')
-                break
+        # ===== TERTIARY: ID boost (NOT primary signal) =====
 
-        # Secondary: Close button (id='j0z' or id='jix')
-        for close_id in ['j0z', 'jix']:
-            if self._has_element_id(elements, close_id):
-                score += 0.1
-                found.append('close_button')
-                break
+        # Record button IDs
+        record_ids = get_all_known_ids('record_button')
+        if self._has_any_id(elements, record_ids):
+            score += 0.10
+            found.append('record_id_boost')
 
-        # Secondary: Camera control buttons (GrapheneOS)
-        camera_controls = ['flip', 'flash', 'timer', 'layout', 'ratio', 'retouch']
-        found_controls = [c for c in camera_controls if c in all_text]
-        if len(found_controls) >= 3:
-            score += 0.25
-            found.append(f'camera_controls({len(found_controls)})')
-        elif found_controls:
-            score += 0.1
-            found.append('camera_controls')
+        # Add sound button IDs
+        sound_ids = get_all_known_ids('add_sound')
+        if self._has_any_id(elements, sound_ids):
+            score += 0.05
+            found.append('sound_id_boost')
 
-        # Tertiary: POST/CREATE mode tabs at bottom
-        if 'post' in texts and 'create' in texts:
-            score += 0.1
-            found.append('post_create_tabs')
+        # Gallery thumbnail IDs
+        gallery_ids = get_all_known_ids('gallery_thumb')
+        if self._has_any_id(elements, gallery_ids):
+            score += 0.10
+            found.append('gallery_id_boost')
 
-        return min(score, 0.98), found
+        # Close button IDs
+        close_ids = get_all_known_ids('close_button')
+        if self._has_any_id(elements, close_ids):
+            score += 0.05
+            found.append('close_id_boost')
+
+        return min(score, 0.95), found
 
     def _detect_home_feed(self, elements, texts, descs, all_text) -> Tuple[float, List[str]]:
         """Detect TikTok home feed (For You Page).
 
-        Key indicators (from flow logs):
-        Geelark version:
-        - id='lxd' with desc='Create' - Create button in nav
-        - id='lxg' with desc='Home' - Home nav button
-        - id='lxi' with desc='Profile' - Profile nav button
-        - id='lxf' with desc='Friends' - Friends nav button
-        - id='lxh' with desc='Inbox' - Inbox nav button
-        - id='ia6' with desc='Search' - Search button
-
-        TikTok v43.1.4 (GrapheneOS):
-        - id='mkn' with desc='Create' - Create button in nav
-        - id='mkq' with desc='Home' - Home nav button
-        - id='mks' with desc='Profile' - Profile nav button
-        - id='mkp' with desc='Friends' - Friends nav button
-        - id='mkr' with desc='Inbox' - Inbox nav button
-        - id='irz' with desc='Search' - Search button
-
-        Common:
-        - text='For You' / 'Following' - Feed tabs
+        DETECTION PRIORITY (text/desc primary, IDs as boost):
+        1. PRIMARY: Text patterns - 'for you', 'following'
+        2. PRIMARY: Desc patterns - 'create', 'home', 'profile'
+        3. TERTIARY: ID boost (nav button IDs)
         """
         score = 0.0
         found = []
 
-        # Primary: Create button in bottom nav
-        # Geelark: id='lxd', GrapheneOS v43.1.4: id='mkn'
-        create_found = False
-        for create_id in ['lxd', 'mkn']:
-            if self._has_element_id(elements, create_id):
-                create_elem = self._get_element_by_id(elements, create_id)
-                if 'create' in create_elem.get('desc', '').lower():
-                    score += 0.4
-                    found.append('create_button')
-                    create_found = True
-                    break
+        # ===== PRIMARY: Text-based detection (stable across versions) =====
 
-        # Primary: Home nav button
-        # Geelark: id='lxg', GrapheneOS v43.1.4: id='mkq'
-        for home_id in ['lxg', 'mkq']:
-            if self._has_element_id(elements, home_id):
-                home_elem = self._get_element_by_id(elements, home_id)
-                if 'home' in home_elem.get('desc', '').lower():
-                    score += 0.2
-                    found.append('home_nav')
-                    break
+        # For You tab text
+        for_you_patterns = get_text_patterns('for_you_text')
+        if self._has_any_text([all_text], for_you_patterns):
+            score += 0.30
+            found.append('for_you_text')
 
-        # Secondary: Other nav buttons
-        # Profile: Geelark id='lxi', GrapheneOS v43.1.4: id='mks'
-        for profile_id in ['lxi', 'mks']:
-            if self._has_element_id(elements, profile_id):
-                score += 0.1
-                found.append('profile_nav')
-                break
+        # Following tab text
+        following_patterns = get_text_patterns('following_text')
+        if self._has_any_text([all_text], following_patterns):
+            score += 0.20
+            found.append('following_text')
 
-        # Friends: Geelark id='lxf', GrapheneOS v43.1.4: id='mkp'
-        for friends_id in ['lxf', 'mkp']:
-            if self._has_element_id(elements, friends_id):
-                score += 0.05
-                found.append('friends_nav')
-                break
+        # ===== SECONDARY: Desc-based detection =====
 
-        # Inbox: Geelark id='lxh', GrapheneOS v43.1.4: id='mkr'
-        for inbox_id in ['lxh', 'mkr']:
-            if self._has_element_id(elements, inbox_id):
-                score += 0.05
-                found.append('inbox_nav')
-                break
+        # Create button desc
+        create_patterns = get_desc_patterns('create_desc')
+        if self._has_any_desc(elements, create_patterns):
+            score += 0.25
+            found.append('create_desc')
 
-        # Secondary: Feed tabs
-        if 'for you' in all_text:
+        # Home button desc
+        home_patterns = get_desc_patterns('home_desc')
+        if self._has_any_desc(elements, home_patterns):
             score += 0.15
-            found.append('for_you_tab')
-        if 'following' in all_text:
-            score += 0.1
-            found.append('following_tab')
+            found.append('home_desc')
 
-        # Tertiary: Search button
-        # Geelark: id='ia6', GrapheneOS v43.1.4: id='irz'
-        for search_id in ['ia6', 'irz']:
-            if self._has_element_id(elements, search_id):
-                score += 0.05
-                found.append('search_button')
-                break
+        # Profile button desc
+        profile_patterns = get_desc_patterns('profile_desc')
+        if self._has_any_desc(elements, profile_patterns):
+            score += 0.10
+            found.append('profile_desc')
+
+        # Search button desc
+        search_patterns = get_desc_patterns('search_desc')
+        if self._has_any_desc(elements, search_patterns):
+            score += 0.05
+            found.append('search_desc')
+
+        # ===== TERTIARY: ID boost (NOT primary signal) =====
+
+        # Create button IDs
+        create_ids = get_all_known_ids('create_button')
+        if self._has_any_id(elements, create_ids):
+            score += 0.10
+            found.append('create_id_boost')
+
+        # Home nav IDs
+        home_ids = get_all_known_ids('home_nav')
+        if self._has_any_id(elements, home_ids):
+            score += 0.05
+            found.append('home_id_boost')
+
+        # Profile nav IDs
+        profile_ids = get_all_known_ids('profile_nav')
+        if self._has_any_id(elements, profile_ids):
+            score += 0.05
+            found.append('profile_id_boost')
+
+        # Search button IDs
+        search_ids = get_all_known_ids('search_button')
+        if self._has_any_id(elements, search_ids):
+            score += 0.05
+            found.append('search_id_boost')
 
         return min(score, 0.95), found
 

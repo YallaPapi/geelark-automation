@@ -14,6 +14,9 @@ Usage:
         profile_mapping=PROFILE_MAPPING
     )
 
+    # Validate environment before starting
+    manager.validate_environment(appium_url="http://127.0.0.1:4723")
+
     # Connect for a specific account (switches to correct profile)
     manager.ensure_connected("my_instagram_account")
 
@@ -29,12 +32,235 @@ import os
 import time
 import re
 import logging
-from typing import Dict, List, Optional
+import requests
+from typing import Dict, List, Optional, Tuple
 
 from device_manager_base import DeviceManager
 from config import Config
 
 logger = logging.getLogger(__name__)
+
+
+# =============================================================================
+# Connectivity Validation Exceptions
+# =============================================================================
+
+class ADBNotFoundError(Exception):
+    """Raised when ADB is not installed or not in PATH."""
+    pass
+
+
+class NoDeviceAttachedError(Exception):
+    """Raised when no Android device is attached via ADB."""
+    pass
+
+
+class AppiumNotReachableError(Exception):
+    """Raised when Appium server is not reachable."""
+    pass
+
+
+# =============================================================================
+# Standalone Connectivity Check Functions
+# =============================================================================
+
+def check_adb_installed(adb_path: str = None) -> Tuple[bool, str]:
+    """
+    Check if ADB is installed and accessible.
+
+    Args:
+        adb_path: Path to ADB executable (uses Config.ADB_PATH if not provided)
+
+    Returns:
+        Tuple of (success: bool, version_or_error: str)
+
+    Raises:
+        ADBNotFoundError: If ADB is not found or cannot be executed
+    """
+    adb_path = adb_path or Config.ADB_PATH
+
+    try:
+        result = subprocess.run(
+            [adb_path, 'version'],
+            capture_output=True,
+            text=True,
+            timeout=10
+        )
+        if result.returncode == 0:
+            # Extract version from output
+            version_line = result.stdout.strip().split('\n')[0]
+            logger.info(f"ADB found: {version_line}")
+            return True, version_line
+        else:
+            error_msg = f"ADB returned error: {result.stderr.strip()}"
+            logger.error(error_msg)
+            raise ADBNotFoundError(error_msg)
+    except FileNotFoundError:
+        error_msg = f"ADB not found at path: {adb_path}. Install Android platform-tools and add to PATH."
+        logger.error(error_msg)
+        raise ADBNotFoundError(error_msg)
+    except subprocess.TimeoutExpired:
+        error_msg = "ADB command timed out"
+        logger.error(error_msg)
+        raise ADBNotFoundError(error_msg)
+    except Exception as e:
+        error_msg = f"Failed to run ADB: {e}"
+        logger.error(error_msg)
+        raise ADBNotFoundError(error_msg)
+
+
+def check_device_attached(adb_path: str = None, serial: str = None) -> Tuple[bool, List[str]]:
+    """
+    Check if any Android device is attached via ADB.
+
+    Args:
+        adb_path: Path to ADB executable
+        serial: Optional specific serial to check for
+
+    Returns:
+        Tuple of (success: bool, list of attached device serials)
+
+    Raises:
+        NoDeviceAttachedError: If no devices are attached
+    """
+    adb_path = adb_path or Config.ADB_PATH
+
+    try:
+        result = subprocess.run(
+            [adb_path, 'devices'],
+            capture_output=True,
+            text=True,
+            timeout=10
+        )
+
+        devices = []
+        for line in result.stdout.strip().split('\n')[1:]:  # Skip header
+            if '\tdevice' in line and 'offline' not in line:
+                device_serial = line.split('\t')[0]
+                devices.append(device_serial)
+
+        if not devices:
+            error_msg = "No devices attached. Connect a device via USB and enable USB debugging."
+            logger.error(error_msg)
+            raise NoDeviceAttachedError(error_msg)
+
+        # If specific serial requested, check for it
+        if serial and serial not in devices:
+            error_msg = f"Device {serial} not found. Available: {devices}"
+            logger.error(error_msg)
+            raise NoDeviceAttachedError(error_msg)
+
+        logger.info(f"Found {len(devices)} device(s): {devices}")
+        return True, devices
+
+    except subprocess.TimeoutExpired:
+        error_msg = "ADB devices command timed out"
+        logger.error(error_msg)
+        raise NoDeviceAttachedError(error_msg)
+    except NoDeviceAttachedError:
+        raise
+    except Exception as e:
+        error_msg = f"Failed to list devices: {e}"
+        logger.error(error_msg)
+        raise NoDeviceAttachedError(error_msg)
+
+
+def check_appium_status(appium_url: str = "http://127.0.0.1:4723") -> Tuple[bool, Dict]:
+    """
+    Check if Appium server is reachable and ready.
+
+    Args:
+        appium_url: Appium server URL (e.g., "http://127.0.0.1:4723")
+
+    Returns:
+        Tuple of (success: bool, status_dict)
+
+    Raises:
+        AppiumNotReachableError: If Appium is not reachable
+    """
+    status_url = f"{appium_url.rstrip('/')}/status"
+
+    try:
+        response = requests.get(status_url, timeout=5)
+        if response.status_code == 200:
+            status = response.json()
+            logger.info(f"Appium ready at {appium_url}")
+            return True, status
+        else:
+            error_msg = f"Appium returned status {response.status_code}"
+            logger.error(error_msg)
+            raise AppiumNotReachableError(error_msg)
+    except requests.ConnectionError:
+        error_msg = f"Appium not reachable at {appium_url}. Start Appium server first."
+        logger.error(error_msg)
+        raise AppiumNotReachableError(error_msg)
+    except requests.Timeout:
+        error_msg = f"Appium connection timed out at {appium_url}"
+        logger.error(error_msg)
+        raise AppiumNotReachableError(error_msg)
+    except Exception as e:
+        error_msg = f"Failed to check Appium status: {e}"
+        logger.error(error_msg)
+        raise AppiumNotReachableError(error_msg)
+
+
+def validate_grapheneos_environment(
+    adb_path: str = None,
+    serial: str = None,
+    appium_url: str = None
+) -> Dict[str, any]:
+    """
+    Validate the complete GrapheneOS automation environment.
+
+    Performs all connectivity checks in order:
+    1. ADB installed
+    2. Device attached
+    3. Appium reachable
+
+    Args:
+        adb_path: Path to ADB executable
+        serial: Device serial to check for
+        appium_url: Appium server URL
+
+    Returns:
+        Dict with validation results:
+        {
+            'adb_version': str,
+            'devices': List[str],
+            'appium_status': Dict,
+        }
+
+    Raises:
+        ADBNotFoundError, NoDeviceAttachedError, or AppiumNotReachableError
+    """
+    results = {}
+
+    print("[ENV CHECK] Validating GrapheneOS automation environment...")
+
+    # 1. Check ADB
+    print("  [1/3] Checking ADB installation...")
+    _, adb_version = check_adb_installed(adb_path)
+    results['adb_version'] = adb_version
+    print(f"        ✓ {adb_version}")
+
+    # 2. Check device
+    print("  [2/3] Checking device connection...")
+    _, devices = check_device_attached(adb_path, serial)
+    results['devices'] = devices
+    print(f"        ✓ Found device(s): {devices}")
+
+    # 3. Check Appium (only if URL provided)
+    if appium_url:
+        print(f"  [3/3] Checking Appium at {appium_url}...")
+        _, appium_status = check_appium_status(appium_url)
+        results['appium_status'] = appium_status
+        print(f"        ✓ Appium ready")
+    else:
+        print("  [3/3] Skipping Appium check (will be auto-started)")
+        results['appium_status'] = None
+
+    print("[ENV CHECK] All checks passed!")
+    return results
 
 
 class GrapheneOSDeviceManager(DeviceManager):
@@ -197,7 +423,7 @@ class GrapheneOSDeviceManager(DeviceManager):
 
     def upload_video(self, local_path: str) -> str:
         """
-        Push video to device via ADB.
+        Push video to device via ADB and trigger media scan.
 
         Args:
             local_path: Path to local video file
@@ -227,7 +453,31 @@ class GrapheneOSDeviceManager(DeviceManager):
         if result.returncode != 0:
             raise Exception(f"File not found after push: {remote_path}")
 
-        logger.info(f"Successfully uploaded to {remote_path}")
+        # CRITICAL: Trigger media scan so the video appears in gallery
+        # Without this, TikTok won't see the uploaded video!
+        print(f"  [MEDIA SCAN] Triggering media scan for {remote_path}")
+        scan_result = self._adb(
+            'shell', 'am', 'broadcast',
+            '-a', 'android.intent.action.MEDIA_SCANNER_SCAN_FILE',
+            '-d', f'file://{remote_path}'
+        )
+        print(f"  [MEDIA SCAN] Broadcast result: {scan_result.stdout.strip()}")
+
+        # Also try the newer content provider method (for Android 10+)
+        print(f"  [MEDIA SCAN] Running content scan_volume...")
+        scan2_result = self._adb(
+            'shell', 'content', 'call',
+            '--method', 'scan_volume',
+            '--uri', 'content://media',
+            '--arg', 'external_primary'
+        )
+        print(f"  [MEDIA SCAN] Content result: {scan2_result.stdout.strip()}")
+
+        # Wait for media scan to complete
+        print(f"  [MEDIA SCAN] Waiting 3s for scan to complete...")
+        time.sleep(3)
+
+        print(f"  [MEDIA SCAN] Done! Video should now appear in TikTok gallery")
         return remote_path
 
     def get_appium_caps(self) -> Dict:
@@ -301,6 +551,30 @@ class GrapheneOSDeviceManager(DeviceManager):
             # Swipe up to unlock (for lock screens without security)
             self._adb('shell', 'input', 'swipe', '540', '1800', '540', '800', '300')
             time.sleep(0.5)
+
+    def validate_environment(self, appium_url: str = None) -> Dict:
+        """
+        Validate the automation environment before starting.
+
+        Performs connectivity checks:
+        1. ADB is installed
+        2. This device is attached
+        3. Appium is reachable (if URL provided)
+
+        Args:
+            appium_url: Optional Appium URL to check
+
+        Returns:
+            Dict with validation results
+
+        Raises:
+            ADBNotFoundError, NoDeviceAttachedError, or AppiumNotReachableError
+        """
+        return validate_grapheneos_environment(
+            adb_path=self.adb_path,
+            serial=self.serial,
+            appium_url=appium_url
+        )
 
     def __repr__(self) -> str:
         """String representation."""

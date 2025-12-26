@@ -4,13 +4,18 @@ TikTokActionEngine - Deterministic action selection for TikTok posting.
 Part of the TikTok Hybrid Posting System.
 Knows what action to take for each screen type during video posting flow.
 
+IMPORTANT: Actions use version-aware IDs from tiktok_id_map.py.
+Coordinate fallbacks are device-specific (Geelark 720x1280 vs GrapheneOS 1080x2400).
+
 Based on flow logs collected 2024-12-24 from AI-only test runs.
+Updated 2024-12-26 for multi-device support (Geelark + GrapheneOS).
 """
 from enum import Enum, auto
 from typing import List, Dict, Optional, Tuple
 from dataclasses import dataclass
 
 from tiktok_screen_detector import TikTokScreenType
+from tiktok_id_map import get_all_known_ids, get_fallback_coords, get_screen_size
 
 
 class ActionType(Enum):
@@ -44,17 +49,20 @@ class TikTokActionEngine:
     """Determines what action to take based on screen type and state."""
 
     def __init__(self, caption: str = "", video_selected: bool = False,
-                 caption_entered: bool = False):
+                 caption_entered: bool = False, device_type: str = "geelark"):
         """Initialize with posting state.
 
         Args:
             caption: The caption to post with the video.
             video_selected: Whether a video has been selected.
             caption_entered: Whether the caption has been entered.
+            device_type: "geelark" or "grapheneos" - determines coordinate fallbacks.
         """
         self.caption = caption
         self.video_selected = video_selected
         self.caption_entered = caption_entered
+        self.device_type = device_type
+        self.screen_size = get_screen_size(device_type)
 
         # Build action handlers for each screen type
         self.handlers = {
@@ -95,27 +103,58 @@ class TikTokActionEngine:
         if caption_entered is not None:
             self.caption_entered = caption_entered
 
+    def _find_element_by_any_id(self, elements: List[Dict], element_key: str) -> Optional[Tuple[int, Dict]]:
+        """Find element matching any known ID for the element key.
+
+        Args:
+            elements: UI elements from dump_ui()
+            element_key: Key from tiktok_id_map (e.g., 'create_button', 'post_button')
+
+        Returns:
+            Tuple of (index, element) or None if not found.
+        """
+        known_ids = get_all_known_ids(element_key)
+        for i, el in enumerate(elements):
+            if el.get('id', '') in known_ids:
+                return i, el
+        return None
+
+    def _get_fallback_coords(self, element_key: str) -> Tuple[int, int]:
+        """Get device-specific fallback coordinates for an element.
+
+        Args:
+            element_key: Key from tiktok_id_map (e.g., 'create_button', 'post_button')
+
+        Returns:
+            (x, y) coordinates appropriate for the device type.
+        """
+        coords = get_fallback_coords(self.device_type, element_key)
+        if coords:
+            return coords
+        # Default to center of screen if not defined
+        return (self.screen_size[0] // 2, self.screen_size[1] // 2)
+
     # ==================== Screen Handlers ====================
 
     def _handle_home_feed(self, elements: List[Dict]) -> Action:
         """Handle TikTok home feed - tap Create button.
 
-        Key elements from flow logs:
-        Geelark: id='lxd' with desc='Create' - Create button in bottom nav
-        GrapheneOS v43.1.4: id='mkn' with desc='Create' - Create button in bottom nav
+        Uses version-aware IDs from tiktok_id_map:
+        - v35 (Geelark): id='lxd' with desc='Create'
+        - v43 (GrapheneOS): id='mkn' with desc='Create'
         """
-        # Primary: Find Create button by ID (lxd for Geelark, mkn for GrapheneOS v43.1.4)
-        for create_id in ['lxd', 'mkn']:
-            for i, el in enumerate(elements):
-                if el.get('id', '') == create_id:
-                    desc = el.get('desc', '').lower()
-                    if 'create' in desc:
-                        return Action(
-                            action_type=ActionType.TAP,
-                            target_element=i,
-                            reason=f"Tap Create button (id='{create_id}', desc='Create')",
-                            confidence=0.98
-                        )
+        # Primary: Find Create button by any known ID
+        result = self._find_element_by_any_id(elements, 'create_button')
+        if result:
+            i, el = result
+            desc = el.get('desc', '').lower()
+            if 'create' in desc:
+                return Action(
+                    action_type=ActionType.TAP,
+                    target_element=i,
+                    reason=f"Tap Create button (id='{el.get('id')}', desc='Create')",
+                    confidence=0.98
+                )
 
         # Secondary: Find by desc only
         for i, el in enumerate(elements):
@@ -128,115 +167,145 @@ class TikTokActionEngine:
                     confidence=0.9
                 )
 
-        # Tertiary: Coordinate fallback (center bottom)
+        # Tertiary: Device-specific coordinate fallback
+        coords = self._get_fallback_coords('create_button')
         return Action(
             action_type=ActionType.TAP_COORDINATE,
-            coordinates=(360, 1322),  # Create button position from flow logs
-            reason="Tap Create button area (coordinate fallback)",
+            coordinates=coords,
+            reason=f"Tap Create button ({self.device_type} coords: {coords})",
             confidence=0.7
         )
 
     def _handle_create_menu(self, elements: List[Dict]) -> Action:
-        """Handle camera/create menu - tap gallery to upload video.
+        """Handle camera/create menu - tap gallery thumbnail to upload video.
 
-        Key elements from flow logs:
-        Geelark:
-        - id='c_u' - Gallery thumbnail (tap to open gallery)
-        - id='q76' with desc='Record video' - Record button (not what we want)
+        The gallery thumbnail is in the BOTTOM-LEFT corner of the camera screen.
+        It shows a preview of the most recent photo/video.
 
-        GrapheneOS v43.1.4:
-        - id='r3r' - Gallery thumbnail (center bottom, clickable)
-        - id='ymg' - Gallery preview (bottom left)
+        Uses version-aware IDs from tiktok_id_map:
+        - v35 (Geelark): id='c_u' - Gallery thumbnail
+        - v43 (GrapheneOS): id='ymg' - Gallery thumbnail (r3r is RECORD button!)
         """
-        # Primary: Find gallery thumbnail by ID
-        # Geelark: c_u, GrapheneOS: r3r, ymg
-        gallery_ids = ['c_u', 'r3r', 'ymg']
-        for gallery_id in gallery_ids:
-            for i, el in enumerate(elements):
-                if el.get('id', '') == gallery_id and el.get('clickable', False):
-                    return Action(
-                        action_type=ActionType.TAP,
-                        target_element=i,
-                        reason=f"Tap gallery thumbnail (id='{gallery_id}') to select video",
-                        confidence=0.95
-                    )
+        import re
 
-        # Secondary: Find gallery by ID without clickable check
-        for gallery_id in gallery_ids:
-            for i, el in enumerate(elements):
-                if el.get('id', '') == gallery_id:
-                    return Action(
-                        action_type=ActionType.TAP,
-                        target_element=i,
-                        reason=f"Tap gallery thumbnail (id='{gallery_id}')",
-                        confidence=0.9
-                    )
+        # Primary: Find gallery thumbnail by any known ID
+        result = self._find_element_by_any_id(elements, 'gallery_thumb')
+        if result:
+            i, el = result
+            # Verify it's in the bottom-left area (not center where record button is)
+            bounds = el.get('bounds', '')
+            if bounds:
+                match = re.match(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]', bounds)
+                if match:
+                    x1, y1, x2, y2 = map(int, match.groups())
+                    center_x = (x1 + x2) // 2
+                    # On TikTok camera, gallery is on LEFT side (x < 300 for 1080 wide screen)
+                    if center_x < self.screen_size[0] * 0.3:
+                        return Action(
+                            action_type=ActionType.TAP,
+                            target_element=i,
+                            reason=f"Tap gallery thumbnail (id='{el.get('id')}') to select video",
+                            confidence=0.95
+                        )
 
-        # Tertiary: Find gallery by looking at bottom-left corner elements
+        # Secondary: Look for clickable element in bottom-left corner
+        # Gallery thumbnail is typically a square in the bottom-left
         for i, el in enumerate(elements):
-            if el.get('id', '') == 'frz':  # Gallery thumbnail containers
-                return Action(
-                    action_type=ActionType.TAP,
-                    target_element=i,
-                    reason="Tap gallery thumbnail (id='frz')",
-                    confidence=0.85
-                )
+            if not el.get('clickable'):
+                continue
+            bounds = el.get('bounds', '')
+            if bounds:
+                match = re.match(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]', bounds)
+                if match:
+                    x1, y1, x2, y2 = map(int, match.groups())
+                    center_x = (x1 + x2) // 2
+                    center_y = (y1 + y2) // 2
+                    width = x2 - x1
+                    height = y2 - y1
+                    # Gallery thumbnail: bottom-left, roughly square, reasonable size
+                    is_left = center_x < self.screen_size[0] * 0.25
+                    is_bottom = center_y > self.screen_size[1] * 0.7
+                    is_square = 0.7 < (width / max(height, 1)) < 1.4
+                    is_reasonable_size = 50 < width < 300
+                    if is_left and is_bottom and is_square and is_reasonable_size:
+                        return Action(
+                            action_type=ActionType.TAP,
+                            target_element=i,
+                            reason=f"Tap gallery thumbnail (bottom-left, {width}x{height})",
+                            confidence=0.85
+                        )
 
-        # Quaternary: Coordinate fallback (gallery thumbnail position)
-        # GrapheneOS: gallery is at center-bottom around (540, 1900)
-        # Geelark: gallery is at (580, 1165)
+        # Tertiary: Device-specific coordinate fallback for bottom-left corner
+        # TikTok gallery thumbnail is in bottom-left of camera screen
+        if self.device_type == "grapheneos":
+            # 1080x2400 screen: gallery is around (100, 1850)
+            coords = (100, 1850)
+        else:
+            # 720x1280 screen: gallery is around (80, 1100)
+            coords = (80, 1100)
         return Action(
             action_type=ActionType.TAP_COORDINATE,
-            coordinates=(540, 1900),  # GrapheneOS gallery position from flow logs
-            reason="Tap gallery area (coordinate fallback)",
+            coordinates=coords,
+            reason=f"Tap gallery thumbnail ({self.device_type} bottom-left: {coords})",
             confidence=0.7
         )
 
     def _handle_gallery_picker(self, elements: List[Dict]) -> Action:
         """Handle gallery picker - select video and tap Next.
 
-        Key elements from flow logs:
-        - id='tvr' with text='Next' - Next button (only works after video is selected)
-        - id='x4d' with text='Recents' - Album selector
-        - id='faj' - Video duration label (NOT clickable! Just text)
-        - id='gvi' - Video selection checkbox (CLICKABLE)
-        - id='m65' - Video thumbnail container (not clickable)
-        - Clickable thumbnails have no id but are clickable=true
+        Uses version-aware IDs from tiktok_id_map:
+        - gallery_next: v35='tvr', v43='tvr' (same)
+        - recents_tab: v35='x4d', etc.
+        - duration_label: v35='faj', etc.
+        - video_checkbox: v35='gvi', etc.
 
         IMPORTANT: Must tap a video thumbnail FIRST, then tap Next.
         The Next button is present but disabled until a video is selected.
         """
+        import re
+
         # STEP 1: If video is already selected, just tap Next
         if self.video_selected:
+            result = self._find_element_by_any_id(elements, 'gallery_next')
+            if result:
+                i, el = result
+                if el.get('text', '').lower() == 'next':
+                    return Action(
+                        action_type=ActionType.TAP,
+                        target_element=i,
+                        reason=f"Tap Next button (id='{el.get('id')}') - video already selected",
+                        confidence=0.98
+                    )
+            # Fallback: Find by text
             for i, el in enumerate(elements):
-                if el.get('id', '') == 'tvr':
-                    if el.get('text', '').lower() == 'next':
-                        return Action(
-                            action_type=ActionType.TAP,
-                            target_element=i,
-                            reason="Tap Next button (id='tvr') - video already selected",
-                            confidence=0.98
-                        )
+                if el.get('text', '').lower() == 'next':
+                    return Action(
+                        action_type=ActionType.TAP,
+                        target_element=i,
+                        reason="Tap Next button (text match) - video already selected",
+                        confidence=0.95
+                    )
 
         # STEP 2: Need to select a video first
-        # Strategy: Find duration labels (faj), then find the CLICKABLE thumbnail nearby
+        # Strategy: Find duration labels, then find the CLICKABLE thumbnail nearby
 
         # First, collect video durations to identify which thumbnails have videos
         video_positions = []
+        duration_ids = get_all_known_ids('duration_label')
         for i, el in enumerate(elements):
-            if el.get('id', '') == 'faj':
+            if el.get('id', '') in duration_ids:
                 text = el.get('text', '')
                 if ':' in text:  # Looks like a duration (MM:SS)
                     bounds = el.get('bounds', '')
                     if bounds:
-                        import re
                         match = re.match(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]', bounds)
                         if match:
                             x1, y1, x2, y2 = map(int, match.groups())
                             # Duration is in bottom-right, thumbnail is up and left
-                            # Typical thumbnail is 236x238 pixels
-                            thumb_center_x = x1 - 80  # Move left from duration label
-                            thumb_center_y = y1 - 100  # Move up from duration label
+                            # Scale offset based on device screen size
+                            scale = self.screen_size[0] / 720.0
+                            thumb_center_x = x1 - int(80 * scale)
+                            thumb_center_y = y1 - int(100 * scale)
                             video_positions.append((thumb_center_x, thumb_center_y, text))
 
         # Primary: Find clickable thumbnail containers (no id but clickable, square shape)
@@ -245,16 +314,18 @@ class TikTokActionEngine:
             if el.get('clickable') and not el.get('id'):
                 bounds = el.get('bounds', '')
                 if bounds:
-                    import re
                     match = re.match(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]', bounds)
                     if match:
                         x1, y1, x2, y2 = map(int, match.groups())
                         width = x2 - x1
                         height = y2 - y1
-                        # Video thumbnails are roughly square, ~200-250px each
-                        if 180 < width < 280 and 180 < height < 280:
-                            # Must be in gallery area (y between 190-1200)
-                            if 150 < y1 < 1200:
+                        # Video thumbnails are roughly square, scale for device
+                        min_size = int(180 * (self.screen_size[0] / 720.0))
+                        max_size = int(400 * (self.screen_size[0] / 720.0))
+                        if min_size < width < max_size and min_size < height < max_size:
+                            # Must be in gallery area
+                            gallery_max_y = int(1200 * (self.screen_size[1] / 1280.0))
+                            if 150 < y1 < gallery_max_y:
                                 self.video_selected = True
                                 return Action(
                                     action_type=ActionType.TAP,
@@ -263,68 +334,72 @@ class TikTokActionEngine:
                                     confidence=0.93
                                 )
 
-        # Secondary: Find gvi checkbox as fallback (selection indicator)
-        for i, el in enumerate(elements):
-            if el.get('id', '') == 'gvi' and el.get('clickable'):
+        # Secondary: Find video checkbox as fallback
+        result = self._find_element_by_any_id(elements, 'video_checkbox')
+        if result:
+            i, el = result
+            if el.get('clickable'):
                 bounds = el.get('bounds', '')
                 if bounds:
-                    import re
                     match = re.match(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]', bounds)
                     if match:
                         _, y1, _, y2 = map(int, match.groups())
-                        # Gallery area is between y=190 and y=1200
-                        if 150 < y1 < 1200:
+                        gallery_max_y = int(1200 * (self.screen_size[1] / 1280.0))
+                        if 150 < y1 < gallery_max_y:
                             self.video_selected = True
                             return Action(
                                 action_type=ActionType.TAP,
                                 target_element=i,
-                                reason=f"Tap video selection checkbox (id='gvi')",
+                                reason=f"Tap video selection checkbox (id='{el.get('id')}')",
                                 confidence=0.85
                             )
 
-        # Tertiary: Use coordinate tap on first video position from faj analysis
+        # Tertiary: Use coordinate tap on first video position from duration analysis
         if video_positions:
             x, y, duration = video_positions[0]
             self.video_selected = True
             return Action(
                 action_type=ActionType.TAP_COORDINATE,
                 coordinates=(x, y),
-                reason=f"Tap video with duration {duration} (coordinate from faj)",
+                reason=f"Tap video with duration {duration} (coordinate from duration label)",
                 confidence=0.8
             )
 
-        # Quaternary: Default coordinate fallback
-        # Videos are typically in a 3-column grid starting around y=250
+        # Quaternary: Device-specific default coordinate fallback
+        # First video thumbnail position
+        if self.device_type == "grapheneos":
+            coords = (180, 500)  # Scaled for 1080x2400
+        else:
+            coords = (121, 312)  # Original Geelark position
         self.video_selected = True
         return Action(
             action_type=ActionType.TAP_COORDINATE,
-            coordinates=(121, 312),  # First video thumbnail center from flow logs
-            reason="Tap first video thumbnail (coordinate fallback)",
+            coordinates=coords,
+            reason=f"Tap first video thumbnail ({self.device_type} coords: {coords})",
             confidence=0.7
         )
 
     def _handle_video_editor(self, elements: List[Dict]) -> Action:
         """Handle sounds/effects editor - tap Next to proceed.
 
+        Uses version-aware IDs from tiktok_id_map:
+        - editor_next: v35='ntq'/'ntn', v43='ntq'
+
         This screen appears after video selection with options for
         sounds, effects, text, etc. We want to skip and proceed.
-
-        GrapheneOS: Next button at bottom-right (796, 2181)
-        Geelark: Next button at top-right
         """
-        # Primary: Find Next button by id (GrapheneOS: ntn or ntq)
-        for i, el in enumerate(elements):
-            el_id = el.get('id', '')
-            text = el.get('text', '').lower()
-            if el_id in ['ntn', 'ntq'] and (text == 'next' or el.get('clickable', False)):
-                return Action(
-                    action_type=ActionType.TAP,
-                    target_element=i,
-                    reason=f"Tap Next button (id='{el_id}') to proceed to caption",
-                    confidence=0.98
-                )
+        # Primary: Find Next button by known ID
+        result = self._find_element_by_any_id(elements, 'editor_next')
+        if result:
+            i, el = result
+            return Action(
+                action_type=ActionType.TAP,
+                target_element=i,
+                reason=f"Tap Next button (id='{el.get('id')}') to proceed to caption",
+                confidence=0.98
+            )
 
-        # Secondary: Find Next button by text
+        # Secondary: Find Next button by text/desc
         for i, el in enumerate(elements):
             text = el.get('text', '').lower()
             desc = el.get('desc', '').lower()
@@ -347,69 +422,79 @@ class TikTokActionEngine:
                     confidence=0.85
                 )
 
-        # Quaternary: Coordinate fallback
-        # GrapheneOS: Next button at bottom-right (796, 2181)
-        # Geelark: Next button at top-right (650, 100)
-        # Use GrapheneOS position as it's more common now
+        # Quaternary: Device-specific coordinate fallback
+        coords = self._get_fallback_coords('next_button')
         return Action(
             action_type=ActionType.TAP_COORDINATE,
-            coordinates=(796, 2181),  # GrapheneOS bottom-right Next button
-            reason="Tap Next button area (coordinate fallback)",
-            confidence=0.7
+            coordinates=coords,
+            reason=f"Tap Next button area ({self.device_type} coords: {coords})",
+            confidence=0.6
         )
 
     def _handle_caption_screen(self, elements: List[Dict]) -> Action:
         """Handle caption screen - enter caption and tap Post.
 
-        Key elements (from flow logs):
-        - id='fpj' - Description field with 'Add description...'
-        - id='pvl' / 'pvz' / 'pwo' - Post button
-        - id='d1k' - Edit cover
-        - id='auj' - Hashtags
+        Uses version-aware IDs from tiktok_id_map:
+        - caption_field: v35='fpj', v43='g19'
+        - title_field: v43='g1c'
+        - post_button: v35='pwo'/'pvz'/'pvl', v43='qrb'
         """
         # STEP 1: Enter caption if not done yet
         if not self.caption_entered and self.caption:
-            # Primary: Find description field by ID (id='fpj')
-            for i, el in enumerate(elements):
-                if el.get('id', '') == 'fpj':
-                    return Action(
-                        action_type=ActionType.TYPE_TEXT,
-                        target_element=i,
-                        text_to_type=self.caption,
-                        reason="Type caption into description field (id='fpj')",
-                        confidence=0.98
-                    )
+            # Primary: Find description field by any known ID
+            result = self._find_element_by_any_id(elements, 'caption_field')
+            if result:
+                i, el = result
+                return Action(
+                    action_type=ActionType.TYPE_TEXT,
+                    target_element=i,
+                    text_to_type=self.caption,
+                    reason=f"Type caption into description field (id='{el.get('id')}')",
+                    confidence=0.98
+                )
 
-            # Secondary: Look for description input field by text
+            # Secondary: Try title field (GrapheneOS v43 uses this)
+            result = self._find_element_by_any_id(elements, 'title_field')
+            if result:
+                i, el = result
+                return Action(
+                    action_type=ActionType.TYPE_TEXT,
+                    target_element=i,
+                    text_to_type=self.caption,
+                    reason=f"Type caption into title field (id='{el.get('id')}')",
+                    confidence=0.95
+                )
+
+            # Tertiary: Look for description input field by text
             for i, el in enumerate(elements):
                 text = el.get('text', '').lower()
                 desc = el.get('desc', '').lower()
                 if ('describe' in text or 'describe' in desc or
                     'caption' in text or 'caption' in desc or
-                    'add a description' in text or 'add description' in text):
+                    'add a description' in text or 'add description' in text or
+                    'title' in text):
                     return Action(
                         action_type=ActionType.TYPE_TEXT,
                         target_element=i,
                         text_to_type=self.caption,
-                        reason="Type caption into description field",
+                        reason="Type caption into description field (text match)",
                         confidence=0.9
                     )
 
         # STEP 2: Tap Post button
-        # Primary: Post button by ID (id='pvl', 'pvz', 'pwo')
-        post_ids = ['pwo', 'pvz', 'pvl']  # pwo has text='Post', most reliable
-        for pid in post_ids:
-            for i, el in enumerate(elements):
-                if el.get('id', '') == pid:
-                    text = el.get('text', '').lower()
-                    desc = el.get('desc', '').lower()
-                    if 'post' in text or 'post' in desc:
-                        return Action(
-                            action_type=ActionType.TAP,
-                            target_element=i,
-                            reason=f"Tap Post button (id='{pid}')",
-                            confidence=0.98
-                        )
+        # Primary: Post button by any known ID
+        result = self._find_element_by_any_id(elements, 'post_button')
+        if result:
+            i, el = result
+            text = el.get('text', '').lower()
+            desc = el.get('desc', '').lower()
+            if 'post' in text or 'post' in desc or el.get('id'):
+                return Action(
+                    action_type=ActionType.TAP,
+                    target_element=i,
+                    reason=f"Tap Post button (id='{el.get('id')}')",
+                    confidence=0.98
+                )
 
         # Secondary: Post button by text
         for i, el in enumerate(elements):
@@ -433,10 +518,13 @@ class TikTokActionEngine:
                     confidence=0.9
                 )
 
+        # Quaternary: Device-specific coordinate fallback
+        coords = self._get_fallback_coords('post_button')
         return Action(
-            action_type=ActionType.NEED_AI,
-            reason="Could not find Post button on caption screen",
-            confidence=0.0
+            action_type=ActionType.TAP_COORDINATE,
+            coordinates=coords,
+            reason=f"Tap Post button area ({self.device_type} coords: {coords})",
+            confidence=0.6
         )
 
     def _handle_upload_progress(self, elements: List[Dict]) -> Action:
@@ -504,29 +592,44 @@ class TikTokActionEngine:
 
     def _handle_dismissible_popup(self, elements: List[Dict]) -> Action:
         """Handle dismissible popup - tap dismiss option."""
-        dismiss_options = ['not now', 'skip', 'maybe later', 'dismiss',
-                          'no thanks', 'cancel', "don't allow"]
+        # Dismiss keywords - check if any appear in text (substring match)
+        dismiss_keywords = [
+            'not now', 'skip', 'maybe later', 'dismiss', 'no thanks',
+            'cancel', "don't allow", "don't allow", 'deny', 'later', 'close'
+        ]
 
-        # Find dismiss button
+        # Find dismiss button by text (contains check)
         for i, el in enumerate(elements):
             text = el.get('text', '').lower()
-            if text in dismiss_options:
+            if not text:
+                continue
+            # Check exact match first
+            if text in dismiss_keywords:
                 return Action(
                     action_type=ActionType.TAP,
                     target_element=i,
-                    reason=f"Tap '{text}' to dismiss popup",
-                    confidence=0.9
+                    reason=f"Tap '{el.get('text')}' to dismiss popup",
+                    confidence=0.95
                 )
+            # Check substring match (e.g., "Don't allow" contains "don't allow")
+            for keyword in dismiss_keywords:
+                if keyword in text:
+                    return Action(
+                        action_type=ActionType.TAP,
+                        target_element=i,
+                        reason=f"Tap '{el.get('text')}' to dismiss popup",
+                        confidence=0.9
+                    )
 
         # Secondary: Check desc
         for i, el in enumerate(elements):
             desc = el.get('desc', '').lower()
-            for option in dismiss_options:
-                if option in desc:
+            for keyword in dismiss_keywords:
+                if keyword in desc:
                     return Action(
                         action_type=ActionType.TAP,
                         target_element=i,
-                        reason=f"Tap dismiss button (desc contains '{option}')",
+                        reason=f"Tap dismiss button (desc contains '{keyword}')",
                         confidence=0.85
                     )
 
