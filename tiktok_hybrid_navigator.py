@@ -51,6 +51,7 @@ class TikTokHybridNavigator:
         # State tracking
         self.video_selected = False
         self.caption_entered = False
+        self.videos_tab_selected = False
 
         # Stuck detection - track consecutive same-screen appearances
         self._same_screen_attempts = 0
@@ -61,7 +62,8 @@ class TikTokHybridNavigator:
         self.ai_calls = 0
         self.rule_based_steps = 0
 
-    def update_state(self, video_selected: bool = None, caption_entered: bool = None):
+    def update_state(self, video_selected: bool = None, caption_entered: bool = None,
+                     videos_tab_selected: bool = None):
         """Update posting state."""
         if video_selected is not None:
             self.video_selected = video_selected
@@ -69,6 +71,9 @@ class TikTokHybridNavigator:
         if caption_entered is not None:
             self.caption_entered = caption_entered
             self.engine.caption_entered = caption_entered
+        if videos_tab_selected is not None:
+            self.videos_tab_selected = videos_tab_selected
+            self.engine.videos_tab_selected = videos_tab_selected
 
     def navigate(self, elements: List[Dict]) -> NavigationResult:
         """Decide next action using hybrid approach.

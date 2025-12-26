@@ -63,6 +63,8 @@ class TikTokActionEngine:
         self.caption_entered = caption_entered
         self.device_type = device_type
         self.screen_size = get_screen_size(device_type)
+        # Track if we've already tapped the Videos tab filter
+        self.videos_tab_selected = False
 
         # Build action handlers for each screen type
         self.handlers = {
@@ -96,12 +98,15 @@ class TikTokActionEngine:
         handler = self.handlers.get(screen_type, self._handle_unknown)
         return handler(elements)
 
-    def update_state(self, video_selected: bool = None, caption_entered: bool = None):
+    def update_state(self, video_selected: bool = None, caption_entered: bool = None,
+                     videos_tab_selected: bool = None):
         """Update posting state flags."""
         if video_selected is not None:
             self.video_selected = video_selected
         if caption_entered is not None:
             self.caption_entered = caption_entered
+        if videos_tab_selected is not None:
+            self.videos_tab_selected = videos_tab_selected
 
     def _find_element_by_any_id(self, elements: List[Dict], element_key: str) -> Optional[Tuple[int, Dict]]:
         """Find element matching any known ID for the element key.
@@ -251,7 +256,7 @@ class TikTokActionEngine:
         )
 
     def _handle_gallery_picker(self, elements: List[Dict]) -> Action:
-        """Handle gallery picker - select video and tap Next.
+        """Handle gallery picker - FIRST tap Videos tab, THEN select video, THEN tap Next.
 
         Uses version-aware IDs from tiktok_id_map:
         - gallery_next: v35='tvr', v43='tvr' (same)
@@ -259,10 +264,20 @@ class TikTokActionEngine:
         - duration_label: v35='faj', etc.
         - video_checkbox: v35='gvi', etc.
 
-        IMPORTANT: Must tap a video thumbnail FIRST, then tap Next.
-        The Next button is present but disabled until a video is selected.
+        CRITICAL FIX (2024-12-26):
+        The gallery opens on "All" by default showing photos AND videos.
+        We MUST tap "Videos" tab FIRST to filter out photos, otherwise we'll
+        tap a photo thumbnail instead of the uploaded video.
+
+        Flow:
+        1. Tap "Videos" tab to filter gallery (if not done yet)
+        2. Select a video thumbnail (must have duration label MM:SS)
+        3. Tap "Next" to proceed
         """
         import re
+
+        # Helper to get all texts in lowercase for searching
+        all_texts = [el.get('text', '').lower() for el in elements]
 
         # STEP 1: If video is already selected, just tap Next
         if self.video_selected:
@@ -286,32 +301,115 @@ class TikTokActionEngine:
                         confidence=0.95
                     )
 
-        # STEP 2: Need to select a video first
-        # Strategy: Find duration labels, then find the CLICKABLE thumbnail nearby
+        # STEP 2: Tap "Videos" tab FIRST to filter out photos
+        # This is CRITICAL - otherwise we tap photos instead of videos!
+        if not self.videos_tab_selected:
+            print(f"  [ACTION] Looking for 'Videos' tab to filter gallery...")
+            # Look for "Videos" tab element
+            for i, el in enumerate(elements):
+                text = el.get('text', '').lower().strip()
+                # Match exactly "videos" (the tab filter)
+                if text == 'videos':
+                    self.videos_tab_selected = True
+                    print(f"  [ACTION] Found 'Videos' tab at element {i}, tapping to filter out photos")
+                    return Action(
+                        action_type=ActionType.TAP,
+                        target_element=i,
+                        reason="Tap 'Videos' tab to filter gallery (CRITICAL: filters out photos)",
+                        confidence=0.98
+                    )
 
-        # First, collect video durations to identify which thumbnails have videos
-        video_positions = []
-        duration_ids = get_all_known_ids('duration_label')
-        for i, el in enumerate(elements):
-            if el.get('id', '') in duration_ids:
-                text = el.get('text', '')
-                if ':' in text:  # Looks like a duration (MM:SS)
+            # If we can't find "Videos" tab by text, try by position
+            # On TikTok gallery, tabs are usually: All | Videos | Photos | Live Photos
+            # Look for clickable elements in the tab bar area (top of gallery)
+            tab_candidates = []
+            for i, el in enumerate(elements):
+                if el.get('clickable'):
                     bounds = el.get('bounds', '')
                     if bounds:
                         match = re.match(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]', bounds)
                         if match:
                             x1, y1, x2, y2 = map(int, match.groups())
-                            # Duration is in bottom-right, thumbnail is up and left
-                            # Scale offset based on device screen size
-                            scale = self.screen_size[0] / 720.0
-                            thumb_center_x = x1 - int(80 * scale)
-                            thumb_center_y = y1 - int(100 * scale)
-                            video_positions.append((thumb_center_x, thumb_center_y, text))
+                            # Tab bar is near the top, below header
+                            # Typically y is between 100-250 on a 2400 tall screen
+                            if y1 < self.screen_size[1] * 0.15:
+                                text = el.get('text', '').lower()
+                                tab_candidates.append((i, x1, text))
 
-        # Primary: Find clickable thumbnail containers (no id but clickable, square shape)
-        # These are the ACTUAL video thumbnails that select when tapped
+            # Sort by x position (left to right)
+            tab_candidates.sort(key=lambda x: x[1])
+
+            # "Videos" is usually the second tab (after "All" or "Recents")
+            if len(tab_candidates) >= 2:
+                # Tap the second tab
+                second_tab_idx = tab_candidates[1][0]
+                self.videos_tab_selected = True
+                return Action(
+                    action_type=ActionType.TAP,
+                    target_element=second_tab_idx,
+                    reason="Tap second tab (likely 'Videos') to filter gallery",
+                    confidence=0.75
+                )
+
+            # Fallback: If only one or no tabs found, assume videos are already shown
+            # or tap coordinate where Videos tab usually is
+            if self.device_type == "grapheneos":
+                # Videos tab is roughly at x=300 on 1080 wide screen
+                coords = (300, 150)
+            else:
+                coords = (200, 120)
+
+            self.videos_tab_selected = True
+            return Action(
+                action_type=ActionType.TAP_COORDINATE,
+                coordinates=coords,
+                reason=f"Tap 'Videos' tab area ({self.device_type} coords: {coords})",
+                confidence=0.6
+            )
+
+        # STEP 3: Videos tab is selected, now find and tap a VIDEO thumbnail
+        # Videos have duration labels (MM:SS format) - photos don't!
+        print(f"  [ACTION] Videos tab selected, now looking for video thumbnails with duration labels...")
+
+        # First, collect video durations to identify which thumbnails have videos
+        video_positions = []
+        duration_ids = get_all_known_ids('duration_label')
         for i, el in enumerate(elements):
-            if el.get('clickable') and not el.get('id'):
+            text = el.get('text', '')
+            # Duration format: MM:SS or M:SS (e.g., "0:15", "1:30", "10:45")
+            if re.match(r'^\d{1,2}:\d{2}$', text.strip()):
+                bounds = el.get('bounds', '')
+                if bounds:
+                    match = re.match(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]', bounds)
+                    if match:
+                        x1, y1, x2, y2 = map(int, match.groups())
+                        # Duration label is typically in bottom-right of thumbnail
+                        # Calculate thumbnail center (left and up from duration label)
+                        scale = self.screen_size[0] / 720.0
+                        thumb_center_x = x1 - int(80 * scale)
+                        thumb_center_y = y1 - int(100 * scale)
+                        video_positions.append((i, thumb_center_x, thumb_center_y, text.strip()))
+
+        # If we found videos by duration label, tap the first one
+        if video_positions:
+            print(f"  [ACTION] Found {len(video_positions)} video(s) with duration labels: {[v[3] for v in video_positions]}")
+            # Get the first video's position
+            _, x, y, duration = video_positions[0]
+            self.video_selected = True
+            print(f"  [ACTION] Tapping video at ({x}, {y}) with duration {duration}")
+            return Action(
+                action_type=ActionType.TAP_COORDINATE,
+                coordinates=(x, y),
+                reason=f"Tap video thumbnail with duration {duration}",
+                confidence=0.92
+            )
+        else:
+            print(f"  [ACTION] No duration labels found, will try finding clickable thumbnails...")
+
+        # Secondary: Find clickable thumbnail containers in the video grid
+        # After tapping Videos tab, all visible thumbnails should be videos
+        for i, el in enumerate(elements):
+            if el.get('clickable'):
                 bounds = el.get('bounds', '')
                 if bounds:
                     match = re.match(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]', bounds)
@@ -322,19 +420,21 @@ class TikTokActionEngine:
                         # Video thumbnails are roughly square, scale for device
                         min_size = int(180 * (self.screen_size[0] / 720.0))
                         max_size = int(400 * (self.screen_size[0] / 720.0))
+                        # Check it's a reasonable thumbnail size and in gallery area
                         if min_size < width < max_size and min_size < height < max_size:
-                            # Must be in gallery area
+                            # Must be in gallery area (below tabs, above bottom bar)
+                            gallery_min_y = int(200 * (self.screen_size[1] / 1280.0))
                             gallery_max_y = int(1200 * (self.screen_size[1] / 1280.0))
-                            if 150 < y1 < gallery_max_y:
+                            if gallery_min_y < y1 < gallery_max_y:
                                 self.video_selected = True
                                 return Action(
                                     action_type=ActionType.TAP,
                                     target_element=i,
-                                    reason=f"Tap video thumbnail ({width}x{height})",
-                                    confidence=0.93
+                                    reason=f"Tap video thumbnail ({width}x{height}) in Videos tab",
+                                    confidence=0.85
                                 )
 
-        # Secondary: Find video checkbox as fallback
+        # Tertiary: Find video checkbox as fallback
         result = self._find_element_by_any_id(elements, 'video_checkbox')
         if result:
             i, el = result
@@ -351,24 +451,15 @@ class TikTokActionEngine:
                                 action_type=ActionType.TAP,
                                 target_element=i,
                                 reason=f"Tap video selection checkbox (id='{el.get('id')}')",
-                                confidence=0.85
+                                confidence=0.8
                             )
 
-        # Tertiary: Use coordinate tap on first video position from duration analysis
-        if video_positions:
-            x, y, duration = video_positions[0]
-            self.video_selected = True
-            return Action(
-                action_type=ActionType.TAP_COORDINATE,
-                coordinates=(x, y),
-                reason=f"Tap video with duration {duration} (coordinate from duration label)",
-                confidence=0.8
-            )
-
         # Quaternary: Device-specific default coordinate fallback
-        # First video thumbnail position
+        # First video thumbnail position (in the Videos tab, first item)
         if self.device_type == "grapheneos":
-            coords = (180, 500)  # Scaled for 1080x2400
+            # First thumbnail in a 3-column grid on 1080 wide screen
+            # Each thumb is ~354px wide, first one centered at ~177px
+            coords = (180, 450)  # Adjusted y to be in gallery area
         else:
             coords = (121, 312)  # Original Geelark position
         self.video_selected = True
@@ -376,7 +467,7 @@ class TikTokActionEngine:
             action_type=ActionType.TAP_COORDINATE,
             coordinates=coords,
             reason=f"Tap first video thumbnail ({self.device_type} coords: {coords})",
-            confidence=0.7
+            confidence=0.65
         )
 
     def _handle_video_editor(self, elements: List[Dict]) -> Action:
